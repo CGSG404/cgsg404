@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
+
+@layer base {
+  :root {
+    --background: 222 22% 7%;
+    --foreground: 210 40% 98%;
+
+    --card: 218 25% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 218 25% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 142 76% 50%;
+    --primary-foreground: 222 22% 7%;
+
+    --secondary: 262 83% 70%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142 76% 50%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 218 25% 12%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 142 76% 50%;
+    --sidebar-primary-foreground: 222 22% 7%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 142 76% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-casino-dark text-foreground font-inter;
+    background: linear-gradient(135deg, #0e1117 0%, #11141c 100%);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .neon-border {
+    @apply border border-casino-neon-green/30 shadow-[0_0_15px_rgba(0,255,153,0.3)];
+  }
+  
+  .neon-text {
+    @apply text-casino-neon-green;
+    text-shadow: 0 0 10px rgba(0, 255, 153, 0.5);
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-[0_10px_40px_rgba(0,255,153,0.1)];
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Logo slider animation */
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-slide-left {
+  animation: slide-left 30s linear infinite;
+}
