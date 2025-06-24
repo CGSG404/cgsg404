@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CasinoCard from './CasinoCard';
+import { motion } from 'framer-motion';
 
 interface Casino {
   id: number;
@@ -242,14 +243,19 @@ const CasinoListings = () => {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <h2 className="text-4xl font-bold mb-4">
             Online <span className="gradient-text">Casino Directory</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-3xl mx-auto">
             Explore our comprehensive database of online casinos with detailed safety ratings, reviews, and exclusive bonus offers.
           </p>
-        </div>
+        </motion.div>
 
         {/* Search and Controls */}
         <div className="bg-casino-card-bg border border-casino-border-subtle rounded-lg p-6 mb-8">
