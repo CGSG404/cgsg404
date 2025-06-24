@@ -22,4 +22,5 @@ export default defineConfig(({ mode }) => ({
   preview: {
     allowedHosts: ['cgsg404.onrender.com'],
   },
+
 }));
