@@ -107,6 +107,7 @@ const App = () => {
                   <Route path="/games" element={<Games />} />
                   <Route path="/guide" element={<Guide />} />
                   <Route path="/list-report" element={<ListReport />} />
+                  <Route path="/news" element={<News />} />
                     <Route path="/reviews" element={<Reviews />} />
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     <Route path="/error" element={<SimpleErrorPage />} />
