@@ -47,31 +47,43 @@ const ForumCategories = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-      {forumCategories.map((category) => (
-        <Card key={category.id} className="bg-casino-card-bg border-casino-border-subtle hover:border-casino-neon-green/50 transition-all duration-300 group cursor-pointer">
-          <CardHeader>
-            <div className="flex items-start gap-4">
-              <div className={`p-3 rounded-lg ${category.color}`}>
-                <category.icon className="w-6 h-6" />
+    <div className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {forumCategories.map((category) => (
+          <Card 
+            key={category.id} 
+            className="bg-casino-card-bg/80 border-casino-border-subtle hover:border-casino-neon-green/50 transition-all duration-300 group cursor-pointer h-full flex flex-col"
+          >
+            <CardHeader className="pb-3">
+              <div className="flex items-start gap-4">
+                <div className={`p-3 rounded-lg ${category.color} flex-shrink-0`}>
+                  <category.icon className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-white group-hover:text-casino-neon-green transition-colors text-lg md:text-xl line-clamp-2">
+                    {category.name}
+                  </CardTitle>
+                  <p className="text-gray-400 text-sm mt-1 line-clamp-2">{category.description}</p>
+                </div>
               </div>
-              <div className="flex-1">
-                <CardTitle className="text-white group-hover:text-casino-neon-green transition-colors">
-                  {category.name}
-                </CardTitle>
-                <p className="text-gray-400 text-sm mt-2">{category.description}</p>
+            </CardHeader>
+            <CardContent className="pt-0 mt-auto">
+              <div className="flex flex-wrap justify-between gap-2 text-xs md:text-sm text-gray-400">
+                <span className="inline-flex items-center gap-1 bg-casino-dark/50 px-2 py-1 rounded">
+                  <MessageCircle className="w-3 h-3" />
+                  {category.topics.toLocaleString()} topics
+                </span>
+                <span className="inline-flex items-center gap-1 bg-casino-dark/50 px-2 py-1 rounded">
+                  {category.posts.toLocaleString()} posts
+                </span>
+                <span className="inline-flex items-center gap-1 bg-casino-dark/50 px-2 py-1 rounded">
+                  Last: {category.lastPost}
+                </span>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-between text-sm text-gray-400">
-              <span>{category.topics} topics</span>
-              <span>{category.posts} posts</span>
-              <span>Last: {category.lastPost}</span>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

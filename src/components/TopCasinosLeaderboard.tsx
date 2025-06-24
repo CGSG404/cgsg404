@@ -12,7 +12,7 @@ const TopCasinosLeaderboard = () => {
       rating: 4.9,
       bonus: '100% up to $1000 + 200 Free Spins',
       safetyIndex: 'Very High',
-      logo: '/public/casino-logos/RR-logos.gif',
+      logo: '/casino-logos/RR-logos.gif',
       playUrl: '#',
       features: ['Live Dealers', '24/7 Support', 'Crypto Payments']
     },
@@ -22,7 +22,7 @@ const TopCasinosLeaderboard = () => {
       rating: 4.8,
       bonus: '150% up to $750 + 100 Free Spins',
       safetyIndex: 'Very High',
-      logo: '/public/casino-logos/GE8-logos.jpg',
+      logo: '/casino-logos/GE8-logos.jpg',
       playUrl: '#',
       features: ['VIP Program', 'Fast Withdrawals', 'Mobile App']
     },
@@ -32,7 +32,7 @@ const TopCasinosLeaderboard = () => {
       rating: 4.7,
       bonus: '200% up to $500 + 50 Free Spins',
       safetyIndex: 'High',
-      logo: '/public/casino-logos/MBS8-logos.jpg',
+      logo: '/casino-logos/MBS8-logos.jpg',
       playUrl: '#',
       features: ['Slot Tournaments', 'Weekly Bonuses', 'Live Chat']
     },
@@ -42,7 +42,7 @@ const TopCasinosLeaderboard = () => {
       rating: 4.6,
       bonus: '125% up to $800 + 150 Free Spins',
       safetyIndex: 'High',
-      logo: '/public/casino-logos/Merlion-logos.jpg',
+      logo: '/casino-logos/Merlion-logos.jpg',
       playUrl: '#',
       features: ['Table Games', 'Sports Betting', 'Loyalty Rewards']
     },
@@ -52,7 +52,7 @@ const TopCasinosLeaderboard = () => {
       rating: 4.5,
       bonus: '100% up to $600 + 75 Free Spins',
       safetyIndex: 'High',
-      logo: '/public/casino-logos/KOI8-logos.png',
+      logo: '/casino-logos/KOI8-logos.png',
       playUrl: '#',
       features: ['Asian Games', 'Multiple Languages', 'Secure Banking']
     }
@@ -87,16 +87,22 @@ const TopCasinosLeaderboard = () => {
   const getSafetyColor = (index: string) => {
     switch (index) {
       case 'Very High':
-        return 'bg-green-500 text-white';
+        return 'bg-green-600 hover:bg-green-700 text-white border-green-500';
       case 'High':
-        return 'bg-blue-500 text-white';
+        return 'bg-blue-600 hover:bg-blue-700 text-white border-blue-500';
       default:
-        return 'bg-gray-500 text-white';
+        return 'bg-gray-600 hover:bg-gray-700 text-white border-gray-500';
+    }
+  };
+
+  const handleCardClick = (url: string) => {
+    if (url && url !== '#') {
+      window.open(url, '_blank');
     }
   };
 
   return (
-    <Card className="bg-casino-card-bg border-casino-border-subtle">
+    <Card id="top-casinos-leaderboard" className="border-casino-neon-purple/30 bg-casino-card-bg/80 backdrop-blur-sm overflow-hidden shadow-2xl">
       <CardHeader>
         <CardTitle className="text-center text-2xl gradient-text flex items-center justify-center gap-2">
           <Trophy className="w-8 h-8 text-casino-neon-green" />
@@ -107,7 +113,8 @@ const TopCasinosLeaderboard = () => {
         {topCasinos.map((casino) => (
           <div
             key={casino.rank}
-            className={`relative p-4 rounded-lg border transition-all duration-300 hover:scale-105 ${
+            onClick={() => handleCardClick(casino.playUrl)}
+            className={`relative p-4 rounded-lg border transition-all duration-300 hover:scale-105 cursor-pointer ${
               casino.rank === 1
                 ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border-yellow-400/30 shadow-lg shadow-yellow-400/20'
                 : 'bg-casino-dark-lighter border-casino-border-subtle hover:border-casino-neon-green/30'
@@ -120,10 +127,10 @@ const TopCasinosLeaderboard = () => {
               </Badge>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                {/* Rank Icon */}
-                <div className="flex-shrink-0">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-start sm:items-center space-x-4">
+                {/* Rank Icon - Hide on mobile */}
+                <div className="hidden sm:flex flex-shrink-0">
                   {getRankIcon(casino.rank)}
                 </div>
 
@@ -141,15 +148,19 @@ const TopCasinosLeaderboard = () => {
                 </div>
 
                 {/* Casino Info */}
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-white text-lg">{casino.name}</h3>
-                    <Badge className={`${getSafetyColor(casino.safetyIndex)} text-xs`}>
-                      {casino.safetyIndex}
-                    </Badge>
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
+                    <h3 className="font-bold text-white text-lg leading-tight sm:leading-normal">{casino.name}</h3>
+                    <div className="flex-shrink-0">
+                      <Badge 
+                        className={`${getSafetyColor(casino.safetyIndex)} text-[10px] sm:text-xs whitespace-nowrap`}
+                      >
+                        {casino.safetyIndex === 'Very High' ? 'Very High Safety' : 'High Safety'}
+                      </Badge>
+                    </div>
                   </div>
                   
-                  <div className="flex items-center space-x-2 mb-2">
+                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2">
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
                         <Star
@@ -163,7 +174,7 @@ const TopCasinosLeaderboard = () => {
                     <span className="text-gray-400 text-sm">({casino.rating}/5)</span>
                   </div>
 
-                  <div className="text-casino-neon-green text-sm font-semibold mb-2">
+                  <div className="text-casino-neon-green text-xs sm:text-sm font-semibold mb-2 line-clamp-2">
                     {casino.bonus}
                   </div>
 
@@ -181,19 +192,22 @@ const TopCasinosLeaderboard = () => {
                 </div>
               </div>
 
-              {/* Play Button */}
-              <div className="flex-shrink-0">
+              {/* Play Button - Full width on mobile, auto on larger screens */}
+              <div className="w-full sm:w-auto flex-shrink-0 mt-2 sm:mt-0">
                 <Button
-                  className={`${
+                  className={`w-full sm:w-auto ${
                     casino.rank === 1
                       ? 'bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90'
                       : 'bg-casino-neon-purple text-white hover:bg-casino-neon-purple/90'
                   } font-bold transition-all duration-200`}
-                  onClick={() => window.open(casino.playUrl, '_blank')}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Mencegah event bubbling ke parent
+                    window.open(casino.playUrl, '_blank');
+                  }}
                 >
-                  <span className="flex items-center gap-2">
-                    Play Now
-                    <ExternalLink className="w-4 h-4" />
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="whitespace-nowrap">Play Now</span>
+                    <ExternalLink className="w-4 h-4 flex-shrink-0" />
                   </span>
                 </Button>
               </div>

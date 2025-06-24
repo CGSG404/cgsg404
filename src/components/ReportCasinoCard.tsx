@@ -135,14 +135,18 @@ const ReportCasinoCard = ({ casino }: CasinoCardProps) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <Button className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold">
-              <Gift className="w-4 h-4 mr-2" />
-              Get Bonus
-            </Button>
-            <Button variant="outline" className="border-casino-neon-green/50 text-casino-neon-green hover:bg-casino-neon-green/10">
-              Read Review
-            </Button>
+          <div className="mb-3">
+            <a 
+              href={casino.links.bonus} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="block w-full"
+            >
+              <Button className="w-full bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold">
+                <Gift className="w-4 h-4 mr-2" />
+                Get Bonus
+              </Button>
+            </a>
           </div>
 
           {/* Report Issue Button */}

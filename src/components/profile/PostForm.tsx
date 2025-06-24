@@ -9,7 +9,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
-const PostForm = () => {
+interface PostFormProps {
+  onPostCreated?: (userId?: string) => void;
+}
+
+const PostForm: React.FC<PostFormProps> = ({ onPostCreated }) => {
   const [content, setContent] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -43,7 +47,20 @@ const PostForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || (!content.trim() && !image)) return;
+    if (!user) {
+    toast.error('You must be logged in to post');
+    return;
+  }
+  
+  if (!content.trim() && !image) {
+    toast.error('Post cannot be empty');
+    return;
+  }
+  
+  if (content.length > 500) {
+    toast.error('Post is too long (max 500 characters)');
+    return;
+  }
 
     setPosting(true);
 
@@ -79,8 +96,10 @@ const PostForm = () => {
       setImage(null);
       setImagePreview(null);
       
-      // Refresh the page to show new post
-      window.location.reload();
+      // Trigger post created callback if provided
+      if (onPostCreated) {
+        onPostCreated();
+      }
     } catch (error: any) {
       console.error('Error creating post:', error);
       toast.error('Failed to create post');

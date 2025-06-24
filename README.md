@@ -1,73 +1,105 @@
-# Welcome to your Lovable project
+# Global Chat Application
 
-## Project info
+Sebuah aplikasi obrolan global real-time yang dibangun dengan Next.js, TypeScript, dan Supabase. Aplikasi ini memungkinkan pengguna untuk berkomunikasi secara real-time dengan pengguna lain yang terhubung.
 
-**URL**: https://lovable.dev/projects/33411b62-656b-4e68-bbee-085ed802c22d
+## 🚀 Fitur Utama
 
-## How can I edit this code?
+- **Obrolan Real-time** - Kirim dan terima pesan secara instan
+- **Autentikasi Pengguna** - Login dengan Google OAuth
+- **Tampilan Responsif** - Berfungsi dengan baik di perangkat desktop dan mobile
+- **Dark/Light Mode** - Dukungan tema gelap dan terang
+- **Indikator Online** - Melihat jumlah pengguna online
+- **Riwayat Pesan** - Pesan tersimpan dan dapat dilihat kapan saja
 
-There are several ways of editing your application.
+## 🛠 Teknologi yang Digunakan
 
-**Use Lovable**
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **Backend**: Supabase (Auth, Database, Realtime)
+- **State Management**: React Hooks
+- **Icons**: Lucide Icons
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/33411b62-656b-4e68-bbee-085ed802c22d) and start prompting.
+## 🚀 Cara Menjalankan
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prasyarat
 
-**Use your preferred IDE**
+- Node.js (v16 atau lebih baru)
+- npm atau yarn
+- Akun Supabase
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Instalasi
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone repositori ini:
+   ```bash
+   git clone [URL_REPOSITORY]
+   cd cgsg404
+   ```
 
-Follow these steps:
+2. Install dependencies:
+   ```bash
+   npm install
+   # atau
+   yarn install
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. Buat file `.env.local` di root direktori dan isi dengan:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4. Jalankan aplikasi:
+   ```bash
+   npm run dev
+   # atau
+   yarn dev
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+5. Buka [http://localhost:8080](http://localhost:8080) di browser Anda.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## 🔒 Konfigurasi Supabase
 
-**Edit a file directly in GitHub**
+1. Buat project baru di [Supabase](https://supabase.com/)
+2. Aktifkan Authentication dan pilih provider Google
+3. Buat tabel `chat_messages` dengan skema berikut:
+   ```sql
+   CREATE TABLE public.chat_messages (
+     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+     user_id UUID REFERENCES auth.users NOT NULL,
+     message TEXT NOT NULL,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+   );
+   ```
+4. Aktifkan Row Level Security (RLS) dan tambahkan policies:
+   ```sql
+   -- Enable RLS
+   ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+   -- Policy untuk membaca pesan
+   CREATE POLICY "Enable read access for all users"
+   ON public.chat_messages
+   FOR SELECT
+   USING (true);
 
-**Use GitHub Codespaces**
+   -- Policy untuk menulis pesan
+   CREATE POLICY "Enable insert for authenticated users only"
+   ON public.chat_messages
+   FOR INSERT
+   TO authenticated
+   WITH CHECK (true);
+   ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🤝 Berkontribusi
 
-## What technologies are used for this project?
+1. Fork repositori ini
+2. Buat branch fitur baru (`git checkout -b fitur/namafitur`)
+3. Commit perubahan Anda (`git commit -m 'Menambahkan fitur baru'`)
+4. Push ke branch (`git push origin fitur/namafitur`)
+5. Buat Pull Request
 
-This project is built with:
+## 📝 Lisensi
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Dilisensikan di bawah [MIT License](LICENSE).
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/33411b62-656b-4e68-bbee-085ed802c22d) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Dibuat dengan ❤️ oleh Tim CGSG404

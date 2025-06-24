@@ -24,22 +24,34 @@ interface ChatMessage {
   is_edited?: boolean;
 }
 
+interface Message {
+  id: string;
+  text: string;
+}
+
 const ForumChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editingMessage, setEditingMessage] = useState<{id: string, text: string} | null>(null);
+  const [sending, setSending] = useState(false);
+  const [editingMessage, setEditingMessage] = useState<Message | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
-  const { user } = useAuth();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
-    fetchMessages();
-    setupRealtimeSubscription();
+    const initChat = async () => {
+      await fetchMessages();
+      const unsubscribe = setupRealtimeSubscription();
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    };
+    
+    initChat();
   }, []);
 
   useEffect(() => {
@@ -54,39 +66,38 @@ const ForumChat = () => {
     setLoading(true);
     setError(null);
     try {
+      // First, fetch all messages
       const { data: messagesData, error: messagesError } = await supabase
         .from('chat_messages')
-        .select(`
-          *,
-          profiles:user_id (id, username, avatar_url)
-        `)
+        .select('*')
         .order('created_at', { ascending: true })
         .limit(50);
 
       if (messagesError) throw messagesError;
 
-      if (messagesData && messagesData.length > 0) {
-        const userIds = [...new Set(messagesData.map(msg => msg.user_id))];
-        
-        const { data: profilesData, error: profilesError } = await supabase
-          .from('profiles')
-          .select('id, username, avatar_url')
-          .in('id', userIds);
+      // Then, fetch profiles for all unique user IDs
+      const userIds = [...new Set(messagesData?.map(msg => msg.user_id))];
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('id, username, avatar_url')
+        .in('id', userIds);
 
-        if (profilesError) {
-          console.error('Error fetching profiles:', profilesError);
-        }
+      const profilesMap = new Map(profilesData?.map(profile => [profile.id, profile]) || []);
 
-        const messagesWithProfiles = messagesData.map(message => ({
-          ...message,
-          profiles: profilesData?.find(profile => profile.id === message.user_id) || null
-        }));
+      // Combine messages with their respective profiles
+      const formattedMessages = (messagesData || []).map(msg => ({
+        id: msg.id,
+        message: msg.message,
+        created_at: msg.created_at,
+        user_id: msg.user_id,
+        is_edited: false,
+        profiles: profilesMap.get(msg.user_id) || null
+      }));
 
-        setMessages(messagesWithProfiles);
-      }
+      setMessages(formattedMessages);
     } catch (error) {
-      console.error('Error fetching messages:', error);
-      toast.error('Failed to load chat messages');
+      console.error('Error fetching forum messages:', error);
+      toast.error('Failed to load forum messages');
     } finally {
       setLoading(false);
     }
@@ -110,16 +121,17 @@ const ForumChat = () => {
 
   const setupRealtimeSubscription = () => {
     const channel = supabase
-      .channel('public:chat_messages')
+      .channel('chat_messages')
       .on(
         'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
+        { 
+          event: 'INSERT', 
+          schema: 'public', 
           table: 'chat_messages',
+          filter: 'event=eq.insert'
         },
         async (payload: any) => {
-          if (payload.eventType === 'INSERT') {
+          if (payload.new) {
             const profile = await fetchUserProfile(payload.new.user_id);
             setMessages((prev) => [
               ...prev,
@@ -128,36 +140,24 @@ const ForumChat = () => {
                 message: payload.new.message,
                 created_at: payload.new.created_at,
                 user_id: payload.new.user_id,
+                is_edited: false,
                 profiles: profile
-              },
+              }
             ]);
-          } else if (payload.eventType === 'UPDATE') {
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg.id === payload.new.id
-                  ? { 
-                      ...msg, 
-                      message: payload.new.message,
-                      is_edited: true 
-                    }
-                  : msg
-              )
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setMessages((prev) => prev.filter((msg) => msg.id !== payload.old.id));
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Forum chat subscription status:', status);
+      });
 
     return () => {
-      supabase.removeChannel(channel);
+      channel.unsubscribe();
     };
   };
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!newMessage.trim() || !user) return;
 
     setSending(true);
@@ -187,6 +187,7 @@ const ForumChat = () => {
       }
 
       setNewMessage('');
+      inputRef.current?.focus();
     } catch (error) {
       console.error('Error sending message:', error);
       toast.error('Failed to send message');
@@ -211,6 +212,9 @@ const ForumChat = () => {
         .eq('id', messageId);
         
       if (error) throw error;
+      
+      // Update UI by removing the deleted message
+      setMessages(prev => prev.filter(msg => msg.id !== messageId));
       toast.success('Message deleted');
     } catch (error) {
       console.error('Error deleting message:', error);

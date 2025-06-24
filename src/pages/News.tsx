@@ -1,7 +1,6 @@
 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ArticleComments from '@/components/news/ArticleComments';
 import { Calendar, User, Tag } from 'lucide-react';
 
 const News = () => {
@@ -135,8 +134,6 @@ const News = () => {
                 </div>
               </div>
             </div>
-            {/* Featured Article Comments */}
-            <ArticleComments articleId={newsArticles[0].id} />
           </div>
         </div>
 
@@ -178,8 +175,6 @@ const News = () => {
                   </div>
                 </div>
               </article>
-              {/* Article Comments */}
-              <ArticleComments articleId={article.id} />
             </div>
           ))}
         </div>

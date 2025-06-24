@@ -1,5 +1,8 @@
 
 import { useState } from 'react';
+import emailjs from '@emailjs/browser';
+import { EMAILJS_CONFIG } from '@/config/emailConfig';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -27,12 +30,45 @@ const ReportDialog = ({ open, onOpenChange, casinoName }: ReportDialogProps) => 
     email: '',
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Report submitted:', formData);
-    setIsSubmitted(true);
-    // Here you would typically send the data to your backend
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Kirim email menggunakan EmailJS
+      await emailjs.send(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
+        {
+          casino_name: formData.casinoName,
+          issue: formData.issue,
+          date: formData.date || 'Not specified',
+          email: formData.email || 'Not provided',
+          timestamp: new Date().toLocaleString(),
+        },
+        EMAILJS_CONFIG.PUBLIC_KEY
+      );
+
+      // Tampilkan notifikasi sukses
+      toast.success('Report submitted successfully!', {
+        description: 'Thank you for your feedback. We will review it shortly.'
+      });
+      
+      // Reset form dan tampilkan pesan sukses
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('Failed to send report:', err);
+      setError('Failed to submit report. Please try again later.');
+      toast.error('Failed to submit report', {
+        description: 'Please try again or contact support if the problem persists.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -86,18 +122,22 @@ const ReportDialog = ({ open, onOpenChange, casinoName }: ReportDialogProps) => 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg bg-casino-card-bg border-casino-border-subtle">
-        <DialogHeader>
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-5 h-5 text-casino-neon-green" />
-            <DialogTitle className="text-xl text-white">Report an Issue with This Casino</DialogTitle>
+      <DialogContent className="w-[95vw] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl bg-casino-card-bg border-casino-border-subtle max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="px-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-casino-neon-green flex-shrink-0" />
+              <DialogTitle className="text-lg sm:text-xl text-white leading-tight">
+                Report an Issue with This Casino
+              </DialogTitle>
+            </div>
           </div>
-          <DialogDescription className="text-gray-300">
+          <DialogDescription className="text-gray-300 text-sm sm:text-base px-1">
             Help us keep our community safe. If you've experienced problems with this casino, please share the details below so we can investigate and take action if needed.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4 px-1">
           <div className="space-y-2">
             <Label htmlFor="casinoName" className="text-gray-300">Casino Name</Label>
             <Input
@@ -147,27 +187,32 @@ const ReportDialog = ({ open, onOpenChange, casinoName }: ReportDialogProps) => 
             />
           </div>
 
-          <div className="bg-casino-dark/50 border border-casino-border-subtle rounded-lg p-3 mt-4">
+          <div className="bg-casino-dark/50 border border-casino-border-subtle rounded-lg p-3 mt-4 text-sm sm:text-base">
             <p className="text-sm text-gray-400">
               <strong>Additional Notes:</strong> All reports are confidential. We do not share your contact details with the casino. Submitting a report helps us protect other players and ensure transparency in our reviews.
             </p>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          {error && (
+            <div className="text-red-400 text-sm bg-red-900/30 border border-red-800 rounded-md p-3">
+              {error}
+            </div>
+          )}
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="flex-1 border-casino-border-subtle text-gray-300 hover:bg-casino-dark hover:text-white"
+              className="w-full sm:flex-1 border-casino-border-subtle text-gray-300 hover:bg-casino-dark hover:text-white"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold"
-              disabled={!formData.issue.trim()}
+              className="w-full sm:flex-1 bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold"
+              disabled={!formData.issue.trim() || isSubmitting}
             >
-              Submit Report
+              {isSubmitting ? 'Sending...' : 'Submit Report'}
             </Button>
           </div>
         </form>

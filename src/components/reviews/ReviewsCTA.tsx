@@ -1,7 +1,13 @@
 
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Target, Filter, Award } from 'lucide-react';
+
+const scrollToLeaderboard = () => {
+  // Navigate to games page with the leaderboard hash
+  window.location.href = '/games#top-casinos-leaderboard';
+};
 
 const ReviewsCTA = () => {
   return (
@@ -30,7 +36,10 @@ const ReviewsCTA = () => {
             </div>
           </div>
           
-          <Button className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold px-8 py-3 text-lg">
+          <Button 
+            onClick={scrollToLeaderboard}
+            className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold px-8 py-3 text-lg"
+          >
             Find My Perfect Casino
           </Button>
         </CardContent>

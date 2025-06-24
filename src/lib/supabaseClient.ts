@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://hyuomkqzebyiagrmj1ks.supabase.co'; // Ganti dengan URL Anda
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Ganti dengan anon key Anda
+const supabaseUrl = 'https://plhpubcmugqosexcgdhj.supabase.co'; // Ganti dengan URL Anda
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsaHB1YmNtdWdxb3NleGNnZGhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2OTM1MjQsImV4cCI6MjA2NjI2OTUyNH0.RvL-jUkEiCBrCywqC5dC2c8VxSt6ifjBRekkm82sMH4'; // Ganti dengan anon key Anda
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

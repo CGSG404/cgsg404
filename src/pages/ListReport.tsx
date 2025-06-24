@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Card } from '@/components/ui/card';
-import { AlertTriangle, Calendar, FileText } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import ReportCard from '@/components/ReportCard';
 
 interface ReportData {
   id: string;
@@ -111,38 +112,14 @@ const ListReport = () => {
 
         <div className="space-y-6">
           {reports.map((report) => (
-            <Card 
-              key={report.id} 
-              className="bg-casino-card-bg border-casino-border-subtle p-6 hover:border-red-500/30 transition-all duration-300"
-            >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-xl font-bold text-white">
-                      🟥 {report.casinoName}
-                    </h3>
-                    <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(report.status)}`}>
-                      {getStatusIcon(report.status)}
-                      {report.status}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      <span>Terakhir dilaporkan: {report.lastReported}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-2">
-                    <FileText className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-gray-300 leading-relaxed">
-                      <span className="font-medium text-white">Masalah:</span> {report.summary}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Card>
+            <ReportCard
+              key={report.id}
+              casinoName={report.casinoName}
+              reportDate={report.lastReported}
+              issue={report.summary}
+              isLicensed={report.status === 'Tidak Terlisensi' ? false : true}
+              className="w-full"
+            />
           ))}
         </div>
 

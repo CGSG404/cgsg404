@@ -1,12 +1,13 @@
 
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { SimpleErrorPage } from '@/components/ErrorPage';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
+import LiveChat from '@/components/LiveChat';
 
 // Types
 type ProtectedRouteProps = {
@@ -27,7 +28,7 @@ const News = lazy(() => import('@/pages/News'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Reviews = lazy(() => import('@/pages/Reviews'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
-const AdminDashboard = lazy(() => import('@/pages/AdminDashboard'));
+const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
 
 // Initialize React Query
 const queryClient = new QueryClient({
@@ -54,12 +55,19 @@ const LoadingFallback = () => (
 );
 
 // Protected route component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  // Add your authentication logic here
-  const isAuthenticated = true; // Replace with actual auth check
+const ProtectedRoute = ({ children }: { children: React.ReactNode | (({ user }: { user: any }) => React.ReactNode) }) => {
+  const { user, loading } = useAuth();
   
-  if (!isAuthenticated) {
+  if (loading) {
+    return <LoadingFallback />;
+  }
+  
+  if (!user) {
     return <Navigate to="/signin" replace />;
+  }
+  
+  if (typeof children === 'function') {
+    return <>{children({ user })}</>;
   }
   
   return <>{children}</>;
@@ -81,16 +89,16 @@ const App = () => {
   }
 
   return (
-    <ErrorBoundary fallback={<SimpleErrorPage />}>
+    <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider>
-            <Suspense fallback={<LoadingFallback />}>
-              <BrowserRouter>
+            <BrowserRouter>
+              <Suspense fallback={<LoadingFallback />}>
                 <Routes>
                   <Route path="/" element={<Index />} />
-                  <Route path="/signin" element={<Auth />} />
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/best-bonuses" element={<BestBonuses />} />
                   <Route path="/bonuses" element={<Bonuses />} />
                   <Route path="/casinos" element={<Casinos />} />
@@ -99,29 +107,14 @@ const App = () => {
                   <Route path="/guide" element={<Guide />} />
                   <Route path="/list-report" element={<ListReport />} />
                   <Route path="/news" element={<News />} />
-                  <Route
-                    path="/profile"
-                    element={
-                      <ProtectedRoute>
-                        <Profile />
-                      </ProtectedRoute>
-                    }
-                  />
                   <Route path="/reviews" element={<Reviews />} />
-                  <Route
-                    path="/admin"
-                    element={
-                      <ProtectedRoute>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
                   <Route path="/error" element={<SimpleErrorPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-              </BrowserRouter>
-              <Toaster position="top-center" />
-            </Suspense>
+              </Suspense>
+            </BrowserRouter>
+            <Toaster position="top-right" />
+            <LiveChat />
           </TooltipProvider>
         </AuthProvider>
       </QueryClientProvider>

@@ -1,8 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, Shield, Gift, ThumbsUp, ThumbsDown, ExternalLink } from 'lucide-react';
-import { useState } from 'react';
+import { Shield, Gift, ThumbsUp, ThumbsDown, ExternalLink } from 'lucide-react';
 
 interface ReviewCardProps {
   casino: {
@@ -21,34 +20,6 @@ interface ReviewCardProps {
 }
 
 const ReviewCard = ({ casino }: ReviewCardProps) => {
-  const [userRating, setUserRating] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
-
-  // Fungsi kirim rating ke backend
-  const submitRating = async (rating: number) => {
-    setIsSubmitting(true);
-    setSubmitMessage('');
-    try {
-      const res = await fetch('/api/rate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          casinoId: casino.id,
-          rating,
-          // userId: ... (jika ada sistem user)
-        }),
-      });
-      if (res.ok) {
-        setSubmitMessage('Thank you for your rating!');
-      } else {
-        setSubmitMessage('Failed to submit rating.');
-      }
-    } catch {
-      setSubmitMessage('Failed to submit rating.');
-    }
-    setIsSubmitting(false);
-  };
 
   return (
     <Card className="bg-casino-card-bg border-casino-border-subtle overflow-hidden hover:scale-105 transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,255,153,0.1)]">
@@ -70,17 +41,7 @@ const ReviewCard = ({ casino }: ReviewCardProps) => {
             <div>
               <h3 className="text-xl font-bold text-white mb-1">{casino.name}</h3>
               <div className="flex items-center space-x-2">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-4 h-4 ${
-                        i < Math.floor(casino.rating) ? 'text-yellow-400 fill-current' : 'text-gray-600'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span className="text-gray-400 text-sm">({casino.rating}/5)</span>
+                <span className="text-gray-400 text-sm">Rating: {casino.rating}/5</span>
               </div>
             </div>
           </div>
@@ -141,37 +102,7 @@ const ReviewCard = ({ casino }: ReviewCardProps) => {
           </div>
         </div>
 
-        {/* User Rating */}
-        <div className="flex items-center gap-2 mt-4">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star
-              key={star}
-              className={`w-6 h-6 cursor-pointer transition ${
-                userRating >= star ? 'text-yellow-400 fill-current' : 'text-gray-400'
-              }`}
-              onClick={() => {
-                setUserRating(star);
-                submitRating(star);
-              }}
-              style={{ pointerEvents: isSubmitting ? 'none' : 'auto' }}
-            />
-          ))}
-          {userRating > 0 && (
-            <span className="ml-2 text-sm text-gray-300">You rated: {userRating}</span>
-          )}
-          {submitMessage && (
-            <span className="ml-4 text-xs text-green-400">{submitMessage}</span>
-          )}
-        </div>
-
-        {/* Action Button */}
-        <Button 
-          className="w-full bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold transition-all duration-200"
-          onClick={() => window.open(casino.reviewUrl, '_blank')}
-        >
-          <ExternalLink className="w-4 h-4 mr-2" />
-          Read Full Review
-        </Button>
+        {/* Removed Read Full Review Button */}
       </CardContent>
     </Card>
   );
