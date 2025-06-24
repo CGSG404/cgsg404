@@ -9,7 +9,7 @@ const CasinoSlideshow = () => {
   const slides = [
     {
       id: 1,
-      image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=400&fit=crop',
+      image: 'https://chatgpt.com/c/685a6b3a-cb90-8012-b207-7e973badd202',
       title: 'Premium Casino Experience',
       description: 'Discover the world of online gaming'
     },

@@ -262,7 +262,9 @@ const LiveChat = () => {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-96 bg-gradient-to-br from-casino-dark-800 to-casino-darker rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] flex flex-col h-[600px] z-50 overflow-hidden border border-casino-neon-green/20 backdrop-blur-sm">
+    <div
+      className="fixed bottom-2 right-2 w-full max-w-[95vw] h-[70vh] sm:bottom-6 sm:right-6 sm:w-96 sm:h-[600px] bg-gradient-to-br from-casino-dark-800 to-casino-darker rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] flex flex-col z-50 overflow-hidden border border-casino-neon-green/20 backdrop-blur-sm"
+    >
       {/* Header */}
       <div className="bg-gradient-to-r from-casino-neon-green/10 to-casino-neon-green/5 border-b border-casino-neon-green/20 text-white p-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
