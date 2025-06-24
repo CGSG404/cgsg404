@@ -90,12 +90,13 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <BrowserRouter>
-              <Suspense fallback={<LoadingFallback />}>
-                <Routes>
+      <div data-testid="app">
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <TooltipProvider>
+              <BrowserRouter>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
@@ -106,18 +107,19 @@ const App = () => {
                   <Route path="/games" element={<Games />} />
                   <Route path="/guide" element={<Guide />} />
                   <Route path="/list-report" element={<ListReport />} />
-                  <Route path="/news" element={<News />} />
-                  <Route path="/reviews" element={<Reviews />} />
-                  <Route path="/error" element={<SimpleErrorPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </BrowserRouter>
-            <Toaster position="top-right" />
-            <LiveChat />
-          </TooltipProvider>
-        </AuthProvider>
-      </QueryClientProvider>
+                    <Route path="/reviews" element={<Reviews />} />
+                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/error" element={<SimpleErrorPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </BrowserRouter>
+              <Toaster position="top-right" />
+              <LiveChat />
+            </TooltipProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </div>
     </ErrorBoundary>
   );
 };

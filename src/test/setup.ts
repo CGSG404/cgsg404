@@ -1,27 +1,46 @@
-// Basic test setup
-if (!window.ResizeObserver) {
-    class ResizeObserverStub {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-    window.ResizeObserver = ResizeObserverStub;
+import '@testing-library/jest-dom/vitest';
+import { afterEach, vi } from 'vitest';
+import { cleanup } from '@testing-library/react';
+
+// Mock global window object
+const mockWindow = {
+  ResizeObserver: class ResizeObserverStub {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  },
+  matchMedia: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }),
+  IntersectionObserver: class IntersectionObserverStub {
+    root = null;
+    rootMargin = '';
+    thresholds = [];
+    
+    constructor() {}
+    
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() { return []; }
   }
-  
-  // Mock matchMedia
-  if (!window.matchMedia) {
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: (query: string) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: () => {},
-        removeListener: () => {},
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        dispatchEvent: () => false,
-      }),
-    });
-  }
-  
+};
+
+// Override global window object
+Object.defineProperty(global, 'window', {
+  value: mockWindow,
+  writable: true,
+});
+
+// Add cleanup after each test
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});
