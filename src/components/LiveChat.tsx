@@ -315,7 +315,7 @@ const LiveChat = () => {
                   const { error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                      redirectTo: `${window.location.origin}/forum`
+                      redirectTo: `${window.location.origin}/auth/callback`
                     }
                   });
                   
