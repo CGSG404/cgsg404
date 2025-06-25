@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   preview: {
-    allowedHosts: ['cgsg404.onrender.com'],
+    allowedHosts: ['cgsg404.onrender.com', 'gurusingapore.com'],
   },
 
 }));
