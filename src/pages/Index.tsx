@@ -1,8 +1,8 @@
 import Navbar from '@/components/Navbar';
+import HeroSection from '@/components/HeroSection';
 import HeroSlider from '@/components/HeroSlider';
 import FeaturedCasinos from '@/components/FeaturedCasinos';
 import LogoSlider from '@/components/LogoSlider';
-import StatsGrid from '@/components/StatsGrid';
 import Chart from '@/components/Chart';
 import Footer from '@/components/Footer';
 import InfoCard from '@/components/InfoCard';
@@ -12,6 +12,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-casino-dark">
       <Navbar />
+      <HeroSection />
       <HeroSlider />
 
       {/* Bonus Info Section */}
@@ -44,7 +45,6 @@ const Index = () => {
       </div>
 
       <LogoSlider />
-      <StatsGrid />
       <Chart />
       <Footer />
     </div>
