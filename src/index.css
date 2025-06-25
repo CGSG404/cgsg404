@@ -3,6 +3,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem)); /* 50% for the duplicated content, 0.5rem for the gap */
+    }
+  }
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
 
 @layer base {
