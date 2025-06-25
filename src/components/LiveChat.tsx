@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Send, MessageCircle, X, Users, Smile } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDistanceToNow } from 'date-fns';
-import { id } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 
 declare global {
   interface Window {
@@ -376,10 +376,7 @@ const LiveChat = () => {
                 )}
                 <p className="text-sm break-words">{message.content}</p>
                 <div className={`text-xs mt-1 opacity-70 ${message.user_id === user?.id ? 'text-right' : 'text-left'}`}>
-                  {formatDistanceToNow(new Date(message.created_at), { 
-                    addSuffix: true,
-                    locale: id 
-                  })}
+                  {formatDistanceToNow(new Date(message.created_at), { addSuffix: true, locale: enUS })}
                 </div>
               </div>
             </div>
