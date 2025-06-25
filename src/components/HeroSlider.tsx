@@ -75,8 +75,8 @@ const HeroSlider: React.FC = () => {
             delay: 3000,
             disableOnInteraction: false,
           }}
-          spaceBetween={15}
-          slidesPerView={1.3}
+          spaceBetween={30}
+          slidesPerView={1}
           pagination={{ clickable: true }}
           navigation={true}
           breakpoints={{
