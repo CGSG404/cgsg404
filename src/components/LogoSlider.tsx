@@ -13,30 +13,33 @@ const logos = [
   { name: 'partner3' },
 ];
 
+const PIXELS_PER_SECOND = 50;
+
 const LogoSlider: React.FC = () => {
   const logosRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [animationWidth, setAnimationWidth] = useState(0);
+  const [animationConfig, setAnimationConfig] = useState({ width: 0, duration: 20 });
 
   useEffect(() => {
-    const calculateWidth = () => {
+    const calculateAnimation = () => {
       if (logosRef.current && containerRef.current) {
         const logosWidth = logosRef.current.scrollWidth;
         const containerWidth = containerRef.current.offsetWidth;
         const scrollWidth = logosWidth - containerWidth;
-        
+
         if (scrollWidth > 0) {
-          setAnimationWidth(-scrollWidth);
+          const duration = scrollWidth / PIXELS_PER_SECOND;
+          setAnimationConfig({ width: -scrollWidth, duration });
         } else {
-          setAnimationWidth(0); // No animation if content fits
+          setAnimationConfig({ width: 0, duration: 0 }); // No animation if content fits
         }
       }
     };
 
-    calculateWidth();
+    calculateAnimation();
 
-    window.addEventListener('resize', calculateWidth);
-    return () => window.removeEventListener('resize', calculateWidth);
+    window.addEventListener('resize', calculateAnimation);
+    return () => window.removeEventListener('resize', calculateAnimation);
   }, []);
 
   return (
@@ -67,12 +70,12 @@ const LogoSlider: React.FC = () => {
           <motion.div
             ref={logosRef}
             className="flex w-max"
-            animate={{ x: [0, animationWidth] }}
+            animate={{ x: [0, animationConfig.width] }}
             transition={{
               x: {
                 repeat: Infinity,
                 repeatType: 'mirror',
-                duration: 10,
+                duration: animationConfig.duration,
                 ease: 'linear',
               },
             }}
