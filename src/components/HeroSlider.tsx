@@ -1,3 +1,12 @@
+/**
+ * @component HeroSlider
+ * @description Komponen React yang menampilkan kumpulan card casino dalam slider horizontal.
+ * - Menggunakan SwiperJS untuk fungsionalitas slider otomatis (auto-slide).
+ * - Setiap card berisi nama kasino, rating, bonus, dan safety index.
+ * - Card memiliki background gelap, sudut membulat, dan tombol "Get Bonus".
+ * - Mendukung gestur swipe di perangkat mobile dan auto-slide setiap 3 detik.
+ * - Dibuat responsif menggunakan Tailwind CSS.
+ */
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
