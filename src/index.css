@@ -96,9 +96,14 @@
   }
 
   body {
-    @apply bg-casino-dark text-foreground font-inter;
+    @apply bg-background text-foreground relative font-inter;
     background: linear-gradient(135deg, #0e1117 0%, #11141c 100%);
     min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    @apply absolute inset-0 bg-neon-gradient opacity-10 blur-[100px] -z-10;
   }
 }
 

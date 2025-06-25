@@ -50,63 +50,72 @@ const casinoData = [
 const HeroSlider: React.FC = () => {
   return (
     <div className="relative w-full container mx-auto py-8 md:py-12">
-      <Swiper
-        modules={[Autoplay, Pagination, Navigation]}
-        loop={true}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-        }}
-        spaceBetween={30}
-        slidesPerView={1}
-        pagination={{ clickable: true }}
-        navigation={true}
-        breakpoints={{
-          640: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-          },
-          1024: {
-            slidesPerView: 3,
-            spaceBetween: 30,
-          },
-        }}
-        className="mySwiper"
-      >
-        {casinoData.map((casino) => (
-          <SwiperSlide key={casino.id}>
-            <div className="bg-casino-card-bg border border-gray-700/50 rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:border-casino-neon-green/50 h-full flex flex-col justify-between">
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold text-white">{casino.name}</h3>
-                  <div className="flex items-center gap-1 bg-gray-800/70 px-2 py-1 rounded-full text-sm flex-shrink-0">
-                    <Star className="w-4 h-4 text-yellow-400" />
-                    <span className="text-white font-semibold">{casino.rating}</span>
+      <div className="absolute inset-0 bg-neon-gradient opacity-20 blur-3xl -z-10"></div>
+      <div className="relative z-10">
+        {/* Title Section */}
+        <div className="text-center mb-8 md:mb-12 animate-fade-in">
+          <h2 className="text-3xl md:text-4xl font-bold text-white">Pilihan Kasino Online Teratas Kami</h2>
+          <p className="text-lg text-gray-400 mt-2">Temukan penawaran terbaik dari kasino paling tepercaya.</p>
+        </div>
+
+        <Swiper
+          modules={[Autoplay, Pagination, Navigation]}
+          loop={true}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          spaceBetween={30}
+          slidesPerView={1}
+          pagination={{ clickable: true }}
+          navigation={true}
+          breakpoints={{
+            640: {
+              slidesPerView: 2,
+              spaceBetween: 20,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 30,
+            },
+          }}
+          className="mySwiper"
+        >
+          {casinoData.map((casino) => (
+            <SwiperSlide key={casino.id} className="py-4">
+              <div className="bg-casino-card-bg border border-gray-700/50 rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:border-casino-neon-green/50 active:scale-100 active:border-casino-neon-green h-full flex flex-col justify-between cursor-pointer">
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-bold text-white">{casino.name}</h3>
+                    <div className="flex items-center gap-1 bg-gray-800/70 px-2 py-1 rounded-full text-sm flex-shrink-0">
+                      <Star className="w-4 h-4 text-yellow-400" />
+                      <span className="text-white font-semibold">{casino.rating}</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center gap-3">
+                      <Gift className="w-5 h-5 text-casino-neon-green" />
+                      <p className="text-gray-300">{casino.bonus}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Shield className="w-5 h-5 text-casino-neon-green" />
+                      <p className="text-gray-300">Safety Index: {casino.safetyIndex}%</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center gap-3">
-                    <Gift className="w-5 h-5 text-casino-neon-green" />
-                    <p className="text-gray-300">{casino.bonus}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Shield className="w-5 h-5 text-casino-neon-green" />
-                    <p className="text-gray-300">Safety Index: {casino.safetyIndex}%</p>
-                  </div>
+                <div className="p-6 pt-0">
+                  <Button className="w-full bg-casino-neon-green text-casino-dark font-bold hover:bg-casino-neon-green/90 transition-colors">
+                    Get Bonus
+                    <ExternalLink className="w-4 h-4 ml-2" />
+                  </Button>
                 </div>
               </div>
-
-              <div className="p-6 pt-0">
-                <Button className="w-full bg-casino-neon-green text-casino-dark font-bold hover:bg-casino-neon-green/90 transition-colors">
-                  Get Bonus
-                  <ExternalLink className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </div>
   );
 };
