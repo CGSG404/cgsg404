@@ -25,16 +25,19 @@ const Index = () => {
               icon={<Gift />}
               title="Bonus Tanpa Deposit"
               description="Dapatkan bonus eksklusif tanpa perlu melakukan deposit. Cukup daftar dan klaim hadiah Anda untuk mulai bermain."
+              className="w-full"
             />
             <InfoCard
               icon={<PartyPopper />}
               title="Bonus Selamat Datang"
               description="Gandakan atau bahkan tigakali lipatkan deposit pertama Anda dengan penawaran selamat datang yang menggiurkan dari kasino mitra kami."
+              className="w-full"
             />
             <InfoCard
               icon={<Ticket />}
               title="Putaran Gratis (Free Spins)"
               description="Nikmati putaran gratis di berbagai permainan slot populer. Kesempatan emas untuk menang besar tanpa mempertaruhkan uang Anda."
+              className="w-full"
             />
           </div>
         </div>
