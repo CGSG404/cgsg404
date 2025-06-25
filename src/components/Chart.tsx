@@ -56,6 +56,7 @@ const Chart = () => {
                   }}
                 />
                 <Line 
+                  isAnimationActive={false}
                   type="monotone" 
                   dataKey="casinos" 
                   stroke="#00ff99" 
@@ -64,6 +65,7 @@ const Chart = () => {
                   name="New Casinos"
                 />
                 <Line 
+                  isAnimationActive={false}
                   type="monotone" 
                   dataKey="reviews" 
                   stroke="#8b5cf6" 
@@ -99,6 +101,7 @@ const Chart = () => {
                   }}
                 />
                 <Bar 
+                  isAnimationActive={false}
                   dataKey="count" 
                   fill="#00ff99"
                   radius={[4, 4, 0, 0]}

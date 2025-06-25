@@ -49,7 +49,7 @@ const LogoSlider: React.FC = () => {
               >
                 <div
                   className="w-40 h-20 bg-gray-800/50 rounded-lg flex items-center justify-center 
-                            border border-gray-700/50 hover:border-casino-neon-green/30 transition-all duration-300
+                            border border-gray-700/50 hover:border-casino-neon-green/30 transition-[transform,border-color] duration-300
                             transform hover:scale-110"
                 >
                   <span className="text-gray-400 hover:text-casino-neon-green text-sm font-medium transition-colors duration-300">
