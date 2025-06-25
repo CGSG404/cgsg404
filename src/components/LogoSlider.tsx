@@ -13,7 +13,7 @@ const logos = [
   { name: 'partner3' },
 ];
 
-const PIXELS_PER_SECOND = 50;
+const PIXELS_PER_SECOND = 30;
 
 const LogoSlider: React.FC = () => {
   const logosRef = useRef<HTMLDivElement>(null);
