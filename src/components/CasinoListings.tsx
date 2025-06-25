@@ -26,186 +26,186 @@ interface Casino {
   playUrl: string;
 }
 
+// Static data moved outside the component to prevent re-creation on every render.
+const casinos: Casino[] = [
+  {
+    id: 1,
+    name: 'Royal Spin Casino',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.8,
+    safetyIndex: 'Very High',
+    bonus: '300% Welcome Bonus up to $3,000 + 150 Free Spins',
+    features: ['Live Dealers', 'Crypto Payments', 'Mobile App', '24/7 Support'],
+    description: 'Premium online casino with exceptional game variety and top-tier security. Licensed and regulated with fast withdrawals.',
+    badges: ['Top Rated', 'Licensed'],
+    isNew: false,
+    links: {
+      bonus: '/bonuses/royal-spin',
+      review: '/reviews/royal-spin',
+      complaint: '/complaints/royal-spin'
+    },
+    playUrl: 'https://royalspin.example.com',
+  },
+  {
+    id: 2,
+    name: 'Neon Palace',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.7,
+    safetyIndex: 'Very High',
+    bonus: '200% Match Bonus up to $2,000 + 100 Free Spins',
+    features: ['Slots', 'Live Casino', 'Sports Betting', 'VIP Program'],
+    description: 'Modern casino platform with cutting-edge technology and extensive game library from top providers.',
+    badges: ['Popular', 'VIP'],
+    isNew: true,
+    links: {
+      bonus: '/bonuses/neon-palace',
+      review: '/reviews/neon-palace',
+      complaint: '/complaints/neon-palace'
+    },
+    playUrl: 'https://neonpalace.example.com',
+  },
+  {
+    id: 3,
+    name: 'Lucky Stars Casino',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.6,
+    safetyIndex: 'High',
+    bonus: '150% Welcome Package up to $1,500 + 75 Free Spins',
+    features: ['Blackjack', 'Roulette', 'Poker', 'Jackpot Games'],
+    description: 'Classic casino experience with traditional games and progressive jackpots. Established reputation.',
+    badges: ['Established', 'Jackpots'],
+    isNew: false,
+    links: {
+      bonus: '/bonuses/lucky-stars',
+      review: '/reviews/lucky-stars',
+      complaint: '/complaints/lucky-stars'
+    },
+    playUrl: 'https://luckystars.example.com',
+  },
+  {
+    id: 4,
+    name: 'Diamond Elite',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.9,
+    safetyIndex: 'Very High',
+    bonus: '400% Mega Bonus up to $4,000 + 200 Free Spins',
+    features: ['High Roller', 'Private Tables', 'Concierge', 'Exclusive Games'],
+    description: 'Luxury casino experience designed for high rollers with exclusive games and personalized service.',
+    badges: ['VIP', 'High Roller', 'Exclusive'],
+    isNew: true,
+    links: {
+      bonus: '/bonuses/diamond-elite',
+      review: '/reviews/diamond-elite',
+      complaint: '/complaints/diamond-elite'
+    },
+    playUrl: 'https://diamondelite.example.com',
+  },
+  {
+    id: 5,
+    name: 'Crypto Casino Pro',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.5,
+    safetyIndex: 'High',
+    bonus: '250% Crypto Bonus up to 5 BTC + 125 Free Spins',
+    features: ['Bitcoin', 'Ethereum', 'Anonymous Play', 'Fast Withdrawals'],
+    description: 'Leading cryptocurrency casino with anonymous gaming and lightning-fast crypto transactions.',
+    badges: ['Crypto', 'Anonymous'],
+    isNew: true,
+    links: {
+      bonus: '/bonuses/crypto-pro',
+      review: '/reviews/crypto-pro',
+      complaint: '/complaints/crypto-pro'
+    },
+    playUrl: 'https://cryptopro.example.com',
+  },
+  {
+    id: 6,
+    name: 'Classic Vegas',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.4,
+    safetyIndex: 'High',
+    bonus: '100% Match Bonus up to $1,000 + 50 Free Spins',
+    features: ['Slots', 'Table Games', 'Video Poker', 'Bingo'],
+    description: 'Traditional Vegas-style casino with classic games and authentic casino atmosphere online.',
+    badges: ['Classic', 'Traditional'],
+    isNew: false,
+    links: {
+      bonus: '/bonuses/classic-vegas',
+      review: '/reviews/classic-vegas',
+      complaint: '/complaints/classic-vegas'
+    },
+    playUrl: 'https://classicvegas.example.com',
+  },
+  {
+    id: 7,
+    name: 'Spin Master',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.3,
+    safetyIndex: 'Medium',
+    bonus: '175% Bonus up to $1,750 + 88 Free Spins',
+    features: ['5000+ Slots', 'Megaways', 'Progressive Slots', 'Tournaments'],
+    description: 'Slot specialist casino with the largest collection of slot games and regular tournaments.',
+    badges: ['Slots', 'Tournaments'],
+    isNew: false,
+    links: {
+      bonus: '/bonuses/spin-master',
+      review: '/reviews/spin-master',
+      complaint: '/complaints/spin-master'
+    },
+    playUrl: 'https://spinmaster.example.com',
+  },
+  {
+    id: 8,
+    name: 'Live Casino Hub',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.6,
+    safetyIndex: 'High',
+    bonus: '125% Live Casino Bonus up to $1,250 + Live Chips',
+    features: ['Live Dealers', 'Multiple Studios', 'HD Streaming', 'Chat Features'],
+    description: 'Specialized live casino platform with professional dealers and multiple studio locations.',
+    badges: ['Live Casino', 'HD Quality'],
+    isNew: true,
+    links: {
+      bonus: '/bonuses/live-hub',
+      review: '/reviews/live-hub',
+      complaint: '/complaints/live-hub'
+    },
+    playUrl: 'https://livehub.example.com',
+  },
+  {
+    id: 9,
+    name: 'Mobile Casino Plus',
+    logo: '/casino-logos/01COMING SOON.png',
+    rating: 4.2,
+    safetyIndex: 'Medium',
+    bonus: '200% Mobile Bonus up to $2,000 + 100 Mobile Spins',
+    features: ['Mobile Optimized', 'Touch Interface', 'Offline Mode', 'Push Notifications'],
+    description: 'Mobile-first casino designed specifically for smartphone and tablet gaming experience.',
+    badges: ['Mobile', 'Touch Optimized'],
+    isNew: true,
+    links: {
+      bonus: '/bonuses/mobile-plus',
+      review: '/reviews/mobile-plus',
+      complaint: '/complaints/mobile-plus'
+    },
+    playUrl: 'https://mobileplus.example.com',
+    }
+];
+
+const tabs = [
+    { id: 'all', label: 'All Casinos', count: casinos.length },
+    { id: 'best', label: 'Best Casinos', count: casinos.filter(c => c.safetyIndex === 'Very High').length },
+    { id: 'new', label: 'New Casinos', count: casinos.filter(c => c.isNew).length },
+    { id: 'bonuses', label: 'Best Bonuses', count: casinos.filter(c => c.bonus.includes('200%') || c.bonus.includes('300%') || c.bonus.includes('400%')).length },
+];
+
 const CasinoListings = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('safety');
   const [activeTab, setActiveTab] = useState('all');
 
-  // Expanded casino data
-  const casinos: Casino[] = [
-    {
-      id: 1,
-      name: 'Royal Spin Casino',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.8,
-      safetyIndex: 'Very High',
-      bonus: '300% Welcome Bonus up to $3,000 + 150 Free Spins',
-      features: ['Live Dealers', 'Crypto Payments', 'Mobile App', '24/7 Support'],
-      description: 'Premium online casino with exceptional game variety and top-tier security. Licensed and regulated with fast withdrawals.',
-      badges: ['Top Rated', 'Licensed'],
-      isNew: false,
-      links: {
-        bonus: '/bonuses/royal-spin',
-        review: '/reviews/royal-spin',
-        complaint: '/complaints/royal-spin'
-      },
-      playUrl: 'https://royalspin.example.com',
-    },
-    {
-      id: 2,
-      name: 'Neon Palace',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.7,
-      safetyIndex: 'Very High',
-      bonus: '200% Match Bonus up to $2,000 + 100 Free Spins',
-      features: ['Slots', 'Live Casino', 'Sports Betting', 'VIP Program'],
-      description: 'Modern casino platform with cutting-edge technology and extensive game library from top providers.',
-      badges: ['Popular', 'VIP'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/neon-palace',
-        review: '/reviews/neon-palace',
-        complaint: '/complaints/neon-palace'
-      },
-      playUrl: 'https://neonpalace.example.com',
-    },
-    {
-      id: 3,
-      name: 'Lucky Stars Casino',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.6,
-      safetyIndex: 'High',
-      bonus: '150% Welcome Package up to $1,500 + 75 Free Spins',
-      features: ['Blackjack', 'Roulette', 'Poker', 'Jackpot Games'],
-      description: 'Classic casino experience with traditional games and progressive jackpots. Established reputation.',
-      badges: ['Established', 'Jackpots'],
-      isNew: false,
-      links: {
-        bonus: '/bonuses/lucky-stars',
-        review: '/reviews/lucky-stars',
-        complaint: '/complaints/lucky-stars'
-      },
-      playUrl: 'https://luckystars.example.com',
-    },
-    {
-      id: 4,
-      name: 'Diamond Elite',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.9,
-      safetyIndex: 'Very High',
-      bonus: '400% Mega Bonus up to $4,000 + 200 Free Spins',
-      features: ['High Roller', 'Private Tables', 'Concierge', 'Exclusive Games'],
-      description: 'Luxury casino experience designed for high rollers with exclusive games and personalized service.',
-      badges: ['VIP', 'High Roller', 'Exclusive'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/diamond-elite',
-        review: '/reviews/diamond-elite',
-        complaint: '/complaints/diamond-elite'
-      },
-      playUrl: 'https://diamondelite.example.com',
-    },
-    {
-      id: 5,
-      name: 'Crypto Casino Pro',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.5,
-      safetyIndex: 'High',
-      bonus: '250% Crypto Bonus up to 5 BTC + 125 Free Spins',
-      features: ['Bitcoin', 'Ethereum', 'Anonymous Play', 'Fast Withdrawals'],
-      description: 'Leading cryptocurrency casino with anonymous gaming and lightning-fast crypto transactions.',
-      badges: ['Crypto', 'Anonymous'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/crypto-pro',
-        review: '/reviews/crypto-pro',
-        complaint: '/complaints/crypto-pro'
-      },
-      playUrl: 'https://cryptopro.example.com',
-    },
-    {
-      id: 6,
-      name: 'Classic Vegas',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.4,
-      safetyIndex: 'High',
-      bonus: '100% Match Bonus up to $1,000 + 50 Free Spins',
-      features: ['Slots', 'Table Games', 'Video Poker', 'Bingo'],
-      description: 'Traditional Vegas-style casino with classic games and authentic casino atmosphere online.',
-      badges: ['Classic', 'Traditional'],
-      isNew: false,
-      links: {
-        bonus: '/bonuses/classic-vegas',
-        review: '/reviews/classic-vegas',
-        complaint: '/complaints/classic-vegas'
-      },
-      playUrl: 'https://classicvegas.example.com',
-    },
-    {
-      id: 7,
-      name: 'Spin Master',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.3,
-      safetyIndex: 'Medium',
-      bonus: '175% Bonus up to $1,750 + 88 Free Spins',
-      features: ['5000+ Slots', 'Megaways', 'Progressive Slots', 'Tournaments'],
-      description: 'Slot specialist casino with the largest collection of slot games and regular tournaments.',
-      badges: ['Slots', 'Tournaments'],
-      isNew: false,
-      links: {
-        bonus: '/bonuses/spin-master',
-        review: '/reviews/spin-master',
-        complaint: '/complaints/spin-master'
-      },
-      playUrl: 'https://spinmaster.example.com',
-    },
-    {
-      id: 8,
-      name: 'Live Casino Hub',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.6,
-      safetyIndex: 'High',
-      bonus: '125% Live Casino Bonus up to $1,250 + Live Chips',
-      features: ['Live Dealers', 'Multiple Studios', 'HD Streaming', 'Chat Features'],
-      description: 'Specialized live casino platform with professional dealers and multiple studio locations.',
-      badges: ['Live Casino', 'HD Quality'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/live-hub',
-        review: '/reviews/live-hub',
-        complaint: '/complaints/live-hub'
-      },
-      playUrl: 'https://livehub.example.com',
-    },
-    {
-      id: 9,
-      name: 'Mobile Casino Plus',
-      logo: '/casino-logos/01COMING SOON.png',
-      rating: 4.2,
-      safetyIndex: 'Medium',
-      bonus: '200% Mobile Bonus up to $2,000 + 100 Mobile Spins',
-      features: ['Mobile Optimized', 'Touch Interface', 'Offline Mode', 'Push Notifications'],
-      description: 'Mobile-first casino designed specifically for smartphone and tablet gaming experience.',
-      badges: ['Mobile', 'Touch Optimized'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://mobileplus.example.com',
-    }
-  ];
-
-  const tabs = [
-    { id: 'all', label: 'All Casinos', count: casinos.length },
-    { id: 'best', label: 'Best Casinos', count: casinos.filter(c => c.safetyIndex === 'Very High').length },
-    { id: 'new', label: 'New Casinos', count: casinos.filter(c => c.isNew).length },
-    { id: 'bonuses', label: 'Best Bonuses', count: casinos.filter(c => c.bonus.includes('200%') || c.bonus.includes('300%') || c.bonus.includes('400%')).length },
-  ];
-
   const filteredAndSortedCasinos = useMemo(() => {
-    let filtered = casinos.filter(casino => {
+    const filtered = casinos.filter(casino => {
       const matchesSearch = casino.name.toLowerCase().includes(searchTerm.toLowerCase());
       
       switch (activeTab) {
@@ -220,24 +220,28 @@ const CasinoListings = () => {
       }
     });
 
-    // Sort casinos
-    filtered.sort((a, b) => {
+    // Sort casinos without mutating the original array
+    const sorted = [...filtered].sort((a, b) => {
       switch (sortBy) {
-        case 'safety':
+        case 'safety': {
           const safetyOrder = { 'Very High': 4, 'High': 3, 'Medium': 2, 'Low': 1 };
           return safetyOrder[b.safetyIndex] - safetyOrder[a.safetyIndex];
-        case 'name':
+        }
+        case 'name': {
           return a.name.localeCompare(b.name);
-        case 'newest':
+        }
+        case 'newest': {
           return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
-        case 'rating':
+        }
+        case 'rating': {
           return b.rating - a.rating;
+        }
         default:
           return 0;
       }
     });
 
-    return filtered;
+    return sorted;
   }, [searchTerm, activeTab, sortBy, casinos]);
 
   return (

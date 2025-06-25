@@ -1,50 +1,28 @@
 
 import { Button } from './ui/button';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
-import { useRouteError, isRouteErrorResponse, Link, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useRouteError, isRouteErrorResponse, Link } from 'react-router-dom';
 
 interface ErrorPageProps {
   error?: Error;
   resetError?: () => void;
 }
 
-export function ErrorPage({ error: propError, resetError }: ErrorPageProps = {}) {
-  const [routeError, setRouteError] = useState<unknown>(null);
-  const [isInRouter, setIsInRouter] = useState(false);
-  const location = useLocation();
+export function ErrorPage() {
+  const error = useRouteError();
 
-  // Try to get route error, but handle the case where we're not in a data router
-  useEffect(() => {
-    try {
-      const error = useRouteError();
-      setRouteError(error);
-      setIsInRouter(true);
-    } catch {
-      // We're not in a data router context, use prop error instead
-      setIsInRouter(false);
-    }
-  }, []);
-
-  // Use route error if available, otherwise use prop error
-  const error = isInRouter ? routeError : propError;
-  
   let errorMessage = 'An unexpected error occurred';
   let statusCode = 500;
 
-  if (isInRouter && isRouteErrorResponse(error)) {
+  if (isRouteErrorResponse(error)) {
     statusCode = error.status;
-    errorMessage = error.statusText || error.data?.message || errorMessage;
+    errorMessage = error.statusText || (error.data as any)?.message || errorMessage;
   } else if (error instanceof Error) {
     errorMessage = error.message;
   }
 
   const handleRefresh = () => {
-    if (resetError) {
-      resetError();
-    } else {
-      window.location.reload();
-    }
+    window.location.reload();
   };
 
   return (
@@ -78,7 +56,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps = {})
           
           <Button variant="outline" onClick={handleRefresh}>
             <RefreshCw className="mr-2 h-4 w-4" />
-            {resetError ? 'Try Again' : 'Refresh Page'}
+            Refresh Page
           </Button>
         </div>
       </div>

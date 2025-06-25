@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 // Define the logos
@@ -14,8 +14,30 @@ const logos = [
 ];
 
 const LogoSlider: React.FC = () => {
-  // Duplicate logos to ensure the slider is wide enough for a seamless loop
-  const extendedLogos = [...logos, ...logos, ...logos];
+  const logosRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [animationWidth, setAnimationWidth] = useState(0);
+
+  useEffect(() => {
+    const calculateWidth = () => {
+      if (logosRef.current && containerRef.current) {
+        const logosWidth = logosRef.current.scrollWidth;
+        const containerWidth = containerRef.current.offsetWidth;
+        const scrollWidth = logosWidth - containerWidth;
+        
+        if (scrollWidth > 0) {
+          setAnimationWidth(-scrollWidth);
+        } else {
+          setAnimationWidth(0); // No animation if content fits
+        }
+      }
+    };
+
+    calculateWidth();
+
+    window.addEventListener('resize', calculateWidth);
+    return () => window.removeEventListener('resize', calculateWidth);
+  }, []);
 
   return (
     <section className="py-12 md:py-16 bg-casino-dark">
@@ -36,13 +58,26 @@ const LogoSlider: React.FC = () => {
         </motion.div>
 
         <div
+          ref={containerRef}
           className="w-full overflow-hidden group py-4"
           style={{
             maskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)',
           }}
         >
-          <div className="flex w-max animate-[scroll_40s_linear_infinite] group-hover:[animation-play-state:paused]">
-            {extendedLogos.map((logo, index) => (
+          <motion.div
+            ref={logosRef}
+            className="flex w-max"
+            animate={{ x: [0, animationWidth] }}
+            transition={{
+              x: {
+                repeat: Infinity,
+                repeatType: 'mirror',
+                duration: 10,
+                ease: 'linear',
+              },
+            }}
+          >
+            {logos.map((logo, index) => (
               <div
                 key={`${logo.name}-${index}`}
                 className="flex-shrink-0 px-4"
@@ -58,7 +93,7 @@ const LogoSlider: React.FC = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
