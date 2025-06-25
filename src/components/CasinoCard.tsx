@@ -234,7 +234,7 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
     <Card className={`bg-casino-card-bg border-casino-border-subtle overflow-hidden transition-all duration-300 hover:scale-105 hover:${getSafetyGlow(casino.safetyIndex)} group cursor-pointer`}>
       <div className="p-6">
         {/* Header with Logo and Basic Info */}
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex flex-wrap items-start justify-between gap-y-2 mb-4">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
               <img 
@@ -248,7 +248,7 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
               />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center flex-wrap gap-2 mb-1">
                 <h3 className="text-xl font-bold text-white truncate">{casino.name}</h3>
                 {casino.isNew && (
                   <Badge className="bg-casino-neon-green text-casino-dark text-xs font-bold animate-pulse">
@@ -303,7 +303,7 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
           }`}
           onClick={handleBonusClick}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-2">
             <div className="flex items-center">
               <Gift className="w-4 h-4 mr-2 text-casino-neon-green" />
               <span className="font-semibold text-sm text-casino-neon-green">
