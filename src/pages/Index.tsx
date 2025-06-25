@@ -1,12 +1,14 @@
+import { lazy, Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import HeroSlider from '@/components/HeroSlider';
 import FeaturedCasinos from '@/components/FeaturedCasinos';
-import LogoSlider from '@/components/LogoSlider';
-import Chart from '@/components/Chart';
-import Footer from '@/components/Footer';
 import InfoCard from '@/components/InfoCard';
 import { Gift, PartyPopper, Ticket } from 'lucide-react';
+
+const LogoSlider = lazy(() => import('@/components/LogoSlider'));
+const Chart = lazy(() => import('@/components/Chart'));
+const Footer = lazy(() => import('@/components/Footer'));
 
 const Index = () => {
   return (
@@ -44,9 +46,11 @@ const Index = () => {
         </div>
       </div>
 
-      <LogoSlider />
-      <Chart />
-      <Footer />
+      <Suspense fallback={null}>
+        <LogoSlider />
+        <Chart />
+        <Footer />
+      </Suspense>
     </div>
   );
 };
