@@ -310,7 +310,6 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
                 {casino.bonus}
               </span>
             </div>
-            <ExternalLink className="w-3 h-3 text-casino-neon-green/70" />
           </div>
         </div>
         

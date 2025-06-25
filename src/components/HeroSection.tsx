@@ -12,17 +12,16 @@ const stats = [
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative text-center pt-20 pb-10 md:pt-32 md:pb-16 bg-casino-dark overflow-hidden">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 -z-10 bg-casino-dark" />
-      <div 
-        className="absolute -top-1/4 left-1/2 -translate-x-1/2 w-full h-full -z-10"
-        style={{
-          background: 'radial-gradient(circle at center, rgba(0, 255, 153, 0.1), transparent 60%)',
-        }}
-      />
+    <section className="relative text-center pt-20 pb-10 md:pt-32 md:pb-16">
+      <div className="absolute inset-0 bg-casino-dark z-0" />
+
+      {/* Background Glow */}
+      <div className="absolute inset-0 z-10 blur-3xl">
+        <div className="absolute -top-1/4 left-0 w-3/4 h-3/4 bg-casino-neon-green/30 rounded-full" />
+        <div className="absolute -bottom-1/4 right-0 w-3/4 h-3/4 bg-casino-neon-purple/30 rounded-full" />
+      </div>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
