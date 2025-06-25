@@ -9,6 +9,40 @@
       transform: translate(calc(-50% - 0.5rem)); /* 50% for the duplicated content, 0.5rem for the gap */
     }
   }
+
+  /* Custom Swiper Styles */
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #4ade80 !important; /* casino-neon-green */
+    background-color: rgba(26, 31, 46, 0.7); /* semi-transparent dark bg */
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .swiper-button-next:hover,
+  .swiper-button-prev:hover {
+    background-color: rgba(74, 222, 128, 0.2);
+  }
+
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 1.25rem !important;
+    font-weight: 700;
+  }
+
+  .swiper-pagination-bullet {
+    background-color: #9ca3af !important; /* gray-400 */
+    opacity: 0.5;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .swiper-pagination-bullet-active {
+    background-color: #4ade80 !important; /* casino-neon-green */
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */

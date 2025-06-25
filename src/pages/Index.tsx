@@ -1,6 +1,5 @@
-
 import Navbar from '@/components/Navbar';
-import HeroSection from '@/components/HeroSection';
+import HeroSlider from '@/components/HeroSlider';
 import FeaturedCasinos from '@/components/FeaturedCasinos';
 import LogoSlider from '@/components/LogoSlider';
 import StatsGrid from '@/components/StatsGrid';
@@ -13,8 +12,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-casino-dark">
       <Navbar />
-      <HeroSection />
-      <FeaturedCasinos />
+      <HeroSlider />
 
       {/* Bonus Info Section */}
       <div className="py-20 px-4 sm:px-6 lg:px-8 bg-casino-darker">
