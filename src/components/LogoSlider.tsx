@@ -70,6 +70,7 @@ const LogoSlider: React.FC = () => {
           <motion.div
             ref={logosRef}
             className="flex w-max"
+            style={{ willChange: 'transform' }}
             animate={{ x: [0, animationConfig.width] }}
             transition={{
               x: {
