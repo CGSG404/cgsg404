@@ -179,23 +179,7 @@ const News = () => {
           ))}
         </div>
 
-        {/* Newsletter Signup */}
-        <div className="mt-16 bg-casino-card-bg rounded-lg border border-casino-border-subtle p-8 text-center">
-          <h3 className="text-2xl font-bold mb-4 gradient-text">Stay in the Loop</h3>
-          <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
-            Subscribe to our newsletter and never miss important updates about the online casino industry.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 bg-casino-dark border border-casino-border-subtle rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-casino-neon-green"
-            />
-            <button className="px-6 py-3 bg-casino-neon-green text-casino-dark font-semibold rounded-lg hover:bg-casino-neon-green/90 transition-colors">
-              Subscribe
-            </button>
-          </div>
-        </div>
+        
       </div>
       <Footer />
     </div>

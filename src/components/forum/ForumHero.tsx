@@ -1,4 +1,5 @@
 
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
 const ForumHero = () => {
@@ -6,7 +7,12 @@ const ForumHero = () => {
     <div className="relative py-20 bg-gradient-to-br from-casino-dark via-casino-card-bg to-casino-dark">
       <div className="absolute inset-0 bg-gradient-to-r from-casino-neon-green/5 to-transparent"></div>
       <div className="container mx-auto px-4 relative">
-        <div className="text-center max-w-4xl mx-auto">
+        <motion.div
+          className="text-center max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Casino <span className="gradient-text">Community Forum</span>
           </h1>
@@ -21,7 +27,7 @@ const ForumHero = () => {
               Browse Topics
             </Button>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

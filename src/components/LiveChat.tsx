@@ -229,8 +229,9 @@ const LiveChat = () => {
   if (!isOpen) {
     return (
       <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-casino-neon-green text-casino-dark p-4 rounded-full shadow-lg hover:bg-casino-neon-green/90 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed top-1/2 -translate-y-1/2 right-6 bg-casino-neon-green text-casino-dark p-4 rounded-full shadow-lg hover:bg-casino-neon-green/90 transition-colors z-50"
+        aria-label="Toggle Live Chat"
       >
         <MessageCircle className="h-6 w-6" />
       </button>

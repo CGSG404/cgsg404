@@ -1,4 +1,5 @@
 
+import { motion } from 'framer-motion';
 import { Star, Shield, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -6,7 +7,12 @@ const ReviewsHero = () => {
   return (
     <section className="relative py-20 bg-gradient-to-br from-casino-dark via-casino-dark-lighter to-casino-dark">
       <div className="container mx-auto px-4 text-center">
-        <div className="max-w-4xl mx-auto">
+        <motion.div
+          className="max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Trusted Online Casino <span className="gradient-text">Reviews</span> by Real Players & Experts
           </h1>
@@ -34,7 +40,7 @@ const ReviewsHero = () => {
           <Button className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold px-8 py-3 text-lg">
             Browse All Reviews
           </Button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
