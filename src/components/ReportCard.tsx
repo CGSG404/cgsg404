@@ -31,7 +31,7 @@ const ReportCard = ({
       <Card className="bg-casino-card-bg border-casino-border-subtle p-6 hover:border-red-500/30 transition-all duration-300 h-full">
         <div className="flex flex-col h-full">
           <div className="flex-1">
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-3">
               <motion.h3 
                 className="text-xl font-bold text-white"
                 whileHover={{ x: 2 }}
