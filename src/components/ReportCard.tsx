@@ -7,6 +7,7 @@ interface ReportCardProps {
   reportDate: string;
   issue: string;
   isLicensed: boolean;
+  reportUrl: string;
   className?: string;
 }
 
@@ -15,6 +16,7 @@ const ReportCard = ({
   reportDate,
   issue,
   isLicensed = false,
+  reportUrl,
   className = ''
 }: ReportCardProps) => {
   return (
@@ -88,13 +90,16 @@ const ReportCard = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <motion.button
+            <motion.a
+              href={reportUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm font-medium text-red-400 hover:text-red-300 transition-colors"
               whileHover={{ x: 2 }}
               whileTap={{ scale: 0.98 }}
             >
               Laporkan Masalah Lainnya →
-            </motion.button>
+            </motion.a>
           </motion.div>
         </div>
       </Card>
