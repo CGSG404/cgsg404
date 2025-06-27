@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import Head from 'next/head';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import HeroSlider from '@/components/HeroSlider';
@@ -13,6 +14,11 @@ const Footer = lazy(() => import('@/components/Footer'));
 const Index = () => {
   return (
     <div className="min-h-screen bg-casino-dark">
+      <Head>
+        <title>CGSG - Your Ultimate Guide to Online Casinos & Bonuses</title>
+        <meta name="description" content="Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling." />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Navbar />
       <HeroSection />
       <HeroSlider />
@@ -21,25 +27,25 @@ const Index = () => {
       <div className="py-20 px-4 sm:px-6 lg:px-8 bg-casino-darker">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-white text-center mb-12">
-            Temukan Bonus Terbaik Untuk Anda
+            FAQ: Why Must Follow CGSG?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <InfoCard
               icon={<Gift />}
-              title="Bonus Tanpa Deposit"
-              description="Dapatkan bonus eksklusif tanpa perlu melakukan deposit. Cukup daftar dan klaim hadiah Anda untuk mulai bermain."
+              title="Free Credit Bonus"
+              description="Get exclusive bonuses without the need to make a deposit. Simply register and claim your rewards to start playing."
               className="w-full"
             />
             <InfoCard
               icon={<PartyPopper />}
-              title="Bonus Selamat Datang"
-              description="Gandakan atau bahkan tigakali lipatkan deposit pertama Anda dengan penawaran selamat datang yang menggiurkan dari kasino mitra kami."
+              title="Welcome Bonus"
+              description="Double or even triple your first deposit with lucrative welcome offers from our partner casinos."
               className="w-full"
             />
             <InfoCard
               icon={<Ticket />}
-              title="Putaran Gratis (Free Spins)"
-              description="Nikmati putaran gratis di berbagai permainan slot populer. Kesempatan emas untuk menang besar tanpa mempertaruhkan uang Anda."
+              title="Free Spins"
+              description="Enjoy free spins on a variety of popular slot games. A golden opportunity to win big without risking your money."
               className="w-full"
             />
           </div>
@@ -56,3 +62,8 @@ const Index = () => {
 };
 
 export default Index;
+
+export async function getStaticProps() {
+  return { props: {}, revalidate: 3600 };
+}
+

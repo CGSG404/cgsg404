@@ -6,20 +6,20 @@ import type { Database } from './types';
 const DEFAULT_SUPABASE_URL = 'https://your-project-url.supabase.co';
 const DEFAULT_SUPABASE_KEY = 'your-anon-key';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_KEY;
 
 // Log for debugging in development
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV === 'development') {
   console.log('Supabase URL:', supabaseUrl.replace(/\w{20,}/g, '***'));
   console.log('Supabase Key:', supabaseAnonKey ? '***' + supabaseAnonKey.slice(-4) : 'Not found');
 }
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('❌ Missing Supabase environment variables');
-  console.log('Please create a .env file with:');
-  console.log('VITE_SUPABASE_URL=your_supabase_url');
-  console.log('VITE_SUPABASE_ANON_KEY=your_supabase_anon_key');
+  console.log('Please create a .env.local file with:');
+  console.log('NEXT_PUBLIC_SUPABASE_URL=your_supabase_url');
+  console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key');
 }
 
 // Create and export the Supabase client
@@ -34,7 +34,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 
 // Add error handling for auth state changes
 supabase.auth.onAuthStateChange((event, session) => {
-  if (import.meta.env.DEV) {
+  if (process.env.NODE_ENV === 'development') {
     console.log('Auth state changed:', event, session);
   }
 });

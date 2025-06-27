@@ -236,11 +236,11 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
         {/* Header with Logo and Basic Info */}
         <div className="flex flex-wrap items-start justify-between gap-y-2 mb-4">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-14 h-14 bg-white rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
               <img 
                 src={casino.logo} 
                 alt={casino.name}
-                className="w-12 h-12 object-contain"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iOCIgZmlsbD0iIzBmMTUyYSIvPgo8dGV4dCB4PSIyNCIgeT0iMzAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMDBmZjk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DPC90ZXh0Pgo8L3N2Zz4K';
@@ -262,7 +262,7 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
-                        i < casino.rating ? 'text-yellow-400 fill-current' : 'text-gray-600'
+                        i < Math.round(casino.rating) ? 'text-yellow-400 fill-current' : 'text-gray-600'
                       }`}
                     />
                   ))}
@@ -306,9 +306,7 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-2">
             <div className="flex items-center">
               <Gift className="w-4 h-4 mr-2 text-casino-neon-green" />
-              <span className="font-semibold text-sm text-casino-neon-green">
-                {casino.bonus}
-              </span>
+              <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-sm text-casino-neon-green">{casino.bonus}</span>
             </div>
           </div>
         </div>
@@ -378,7 +376,6 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
               Report
             </Button>
           </div>
-          
           {/* Bonus Details - Show when this card's bonus is active */}
           {isCurrentCasino && (
             <div className="mt-4 p-4 bg-casino-dark-lighter/30 rounded-lg border border-casino-neon-green/30 animate-fadeIn">

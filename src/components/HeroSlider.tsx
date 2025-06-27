@@ -21,50 +21,95 @@ import 'swiper/css/navigation';
 const casinoData = [
   {
     id: 1,
-    name: 'Vegas Royale',
+    name: 'OnePlay Singapore',
     rating: 4.8,
-    bonus: '100% up to $500',
-    safetyIndex: 95,
+    bonus: '168% Welcome Bonus',
+    safetyIndex: 90,
+    url: 'https://1playsg.vip/RF29551A809',
   },
   {
     id: 2,
-    name: 'Galaxy Spins',
-    rating: 4.9,
-    bonus: '200 Free Spins',
-    safetyIndex: 98,
+    name: 'BK888 Singapore',
+    rating: 4.8,
+    bonus: '150% Welcome Bonus',
+    safetyIndex: 90,
+    url: 'https://bk888.co/BK88829A860350',
   },
   {
     id: 3,
-    name: 'Jackpot City',
+    name: 'MBS888 Singapore',
     rating: 4.7,
-    bonus: '$1600 Welcome Bonus',
-    safetyIndex: 92,
+    bonus: '100% Welcome Bonus',
+    safetyIndex: 90,
+    url: 'https://mbs888.online/RF295818622',
   },
   {
     id: 4,
-    name: 'Spin Palace',
-    rating: 4.6,
-    bonus: '150% Match Bonus',
-    safetyIndex: 94,
+    name: 'GE8 Singapore',
+    rating: 4.8,
+    bonus: 'Welcome Bonus Up To 120%',
+    safetyIndex: 90,
+    url: 'https://ge88sg.com/RF295830131',
+  },
+  {
+    id: 5,
+    name: 'PHOENIX168 Singapore',
+    rating: 4.8,
+    bonus: 'Welcome Bonus Up To 168%',
+    safetyIndex: 90,
+    url: 'https://ph168sg.com/RF12500610',
+  },
+  {
+    id: 6,
+    name: 'RR4WIN Singapore',
+    rating: 4.7,
+    bonus: '100% Welcome Bonus',
+    safetyIndex: 90,
+    url: 'https://rr4winsg.com/RF301019686',
+  },
+  {
+    id: 7,
+    name: 'EEBET77 Singapore',
+    rating: 4.7,
+    bonus: 'Slot Welcome Bonus Up To 200%',
+    safetyIndex: 90,
+    url: 'https://eebet77.net/RF29555120A',
+  },
+  {
+    id: 8,
+    name: 'ICLUB365 Singapore',
+    rating: 4.7,
+    bonus: 'Welcome Bonus Up To 100%',
+    safetyIndex: 90,
+    url: 'https://iclub365.com/RF29555299A',
+  },
+  {
+    id: 9,
+    name: 'KOI8 Singapore',
+    rating: 4.7,
+    bonus: 'Welcome Bonus Up To 120%',
+    safetyIndex: 90,
+    url: 'https://koi8.me/RF295196092',
   },
     {
-    id: 5,
-    name: 'Ruby Fortune',
+    id: 10,
+    name: 'TOP1 Singapore',
     rating: 4.8,
-    bonus: '$750 Bonus',
-    safetyIndex: 96,
+    bonus: '80% Welcome Bonus',
+    safetyIndex: 90,
+    url: 'https://top1sg.com/RF295196839',
   },
 ];
 
 const HeroSlider: React.FC = () => {
   return (
-    <div className="relative w-full container mx-auto py-8 md:py-12">
+    <div id="top-casinos" className="relative w-full container mx-auto py-8 md:py-12">
       <div className="absolute inset-0 bg-neon-gradient opacity-10 -z-10"></div>
       <div className="relative z-10">
         {/* Title Section */}
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">Pilihan Kasino Online Teratas Kami</h2>
-          <p className="text-lg text-gray-400 mt-2">Temukan penawaran terbaik dari kasino paling tepercaya.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white">Top Casinos</h2>
+          <p className="text-lg text-gray-400 mt-2">Find the best deals from the most trusted casinos.</p>
         </div>
 
         <Swiper
@@ -120,10 +165,12 @@ const HeroSlider: React.FC = () => {
                 </div>
 
                 <div className="p-6 pt-0">
-                  <Button className="w-full bg-casino-neon-green text-casino-dark font-bold hover:bg-casino-neon-green/90 transition-colors">
+                  <a href={casino.url} target="_blank" rel="noopener noreferrer" className="block">
+                    <Button className="w-full bg-casino-neon-green text-casino-dark font-bold hover:bg-casino-neon-green/90 transition-colors">
                     Get Bonus
                     <ExternalLink className="w-4 h-4 ml-2" />
                   </Button>
+                  </a>
                 </div>
               </div>
             </SwiperSlide>

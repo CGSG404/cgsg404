@@ -75,7 +75,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode | (({ user }: 
 
 const App = () => {
   // Check for maintenance mode
-  const isMaintenance = import.meta.env.VITE_ENABLE_MAINTENANCE === 'true';
+  const isMaintenance = process.env.NEXT_PUBLIC_ENABLE_MAINTENANCE === 'true';
 
   if (isMaintenance) {
     return (

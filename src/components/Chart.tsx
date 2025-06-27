@@ -4,26 +4,26 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 const Chart = () => {
   const reviewData = [
-    { month: 'Jan', casinos: 45, reviews: 892 },
-    { month: 'Feb', casinos: 52, reviews: 1023 },
-    { month: 'Mar', casinos: 48, reviews: 967 },
-    { month: 'Apr', casinos: 61, reviews: 1205 },
-    { month: 'May', casinos: 55, reviews: 1087 },
-    { month: 'Jun', casinos: 67, reviews: 1342 },
+    { month: 'Jan', casinos: 0, reviews: 0 },
+    { month: 'Feb', casinos: 0, reviews: 0 },
+    { month: 'Mar', casinos: 0, reviews: 0 },
+    { month: 'Apr', casinos: 20, reviews: 20 },
+    { month: 'May', casinos: 91, reviews: 91 },
+    { month: 'Jun', casinos: 106, reviews: 106 },
   ];
 
   const safetyData = [
-    { rating: 'Very High', count: 145, color: '#10b981' },
-    { rating: 'High', count: 289, color: '#3b82f6' },
-    { rating: 'Medium', count: 167, color: '#f59e0b' },
-    { rating: 'Low', count: 43, color: '#ef4444' },
+    { rating: 'Very High', count: 10, color: '#10b981' },
+    { rating: 'High', count: 10, color: '#3b82f6' },
+    { rating: 'Medium', count: 129, color: '#f59e0b' },
+    { rating: 'Low', count: 203, color: '#ef4444' },
   ];
 
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">
+          <h2 className="text-4xl font-bold mb-4 text-white">
             Review <span className="gradient-text">Analytics</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">

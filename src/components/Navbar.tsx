@@ -80,10 +80,10 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-neon-gradient rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-neon-gradient rounded-xl flex items-center justify-center">
               <Star className="w-6 h-6 text-casino-dark" />
             </div>
-            <span className="text-xl font-bold gradient-text">CGSG</span>
+            <span className="text-xl gradient-text font-normal">CGSG</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -157,7 +157,7 @@ const Navbar = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-casino-border-subtle hover:bg-casino-dark"
+                    className="border-casino-border-subtle hover:bg-casino-dark text-white"
                   >
                     <User className="w-4 h-4 mr-2" />
                     Sign In
@@ -179,6 +179,7 @@ const Navbar = () => {
         {/* Mobile Menu */}
         <AnimatePresence>
           {isMenuOpen && (
+            
             <motion.div
               initial={{ opacity: 0, y: -16 }}
               animate={{ opacity: 1, y: 0 }}

@@ -27,11 +27,11 @@ const ReviewCard = ({ casino }: ReviewCardProps) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-14 h-14 bg-white rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
               <img 
                 src={casino.logo} 
                 alt={casino.name}
-                className="w-12 h-12 object-contain"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iOCIgZmlsbD0iIzBmMTUyYSIvPgo8dGV4dCB4PSIyNCIgeT0iMzAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMDBmZjk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DPC90ZXh0Pgo8L3N2Zz4K';
@@ -60,7 +60,7 @@ const ReviewCard = ({ casino }: ReviewCardProps) => {
           </div>
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-casino-neon-green" />
-            <span className="text-gray-300 text-sm">{casino.bonus}</span>
+            <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-sm text-casino-neon-green">300% Welcome Bonus up to $3,000 + 150 Free Spins</span>
           </div>
         </div>
 

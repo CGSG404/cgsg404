@@ -1,9 +1,12 @@
-
+import { useState } from 'react';
+import Head from 'next/head';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Calendar, User, Tag } from 'lucide-react';
 
 const News = () => {
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
   const newsArticles = [
     {
       id: 1,
@@ -69,14 +72,22 @@ const News = () => {
 
   const categories = ["All", "Regulation", "Bonuses", "Technology", "Games", "Industry", "Safety"];
 
+  const filteredArticles = selectedCategory === 'All'
+    ? newsArticles
+    : newsArticles.filter(article => article.category === selectedCategory);
+
   return (
     <div className="min-h-screen bg-casino-dark">
+      <Head>
+        <title>Casino News - Latest Updates & Trends | CGSG</title>
+        <meta name="description" content="Stay updated with the latest news, trends, and developments in the online casino industry. Find articles on regulations, bonuses, technology, and more." />
+      </Head>
       <Navbar />
       <div className="container mx-auto px-4 py-16">
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
-            Casino <span className="gradient-text">News</span>
+            <span className="text-white">Casino</span> <span className="gradient-text">News</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Stay updated with the latest news, trends, and developments in the online casino industry.
@@ -88,58 +99,21 @@ const News = () => {
           {categories.map((category) => (
             <button
               key={category}
-              className="px-6 py-2 rounded-full bg-casino-card-bg border border-casino-border-subtle text-gray-300 hover:text-casino-neon-green hover:border-casino-neon-green/30 transition-all duration-200"
+              onClick={() => setSelectedCategory(category)}
+              className={`px-6 py-2 rounded-full border font-medium transition-all duration-200 ${
+                selectedCategory === category
+                  ? 'bg-casino-neon-green text-casino-dark border-casino-neon-green'
+                  : 'bg-casino-card-bg border-casino-border-subtle text-gray-300 hover:text-casino-neon-green hover:border-casino-neon-green/30'
+              }`}
             >
               {category}
             </button>
           ))}
         </div>
 
-        {/* Featured Article */}
-        <div className="mb-16">
-          <div className="bg-casino-card-bg rounded-lg border border-casino-border-subtle overflow-hidden card-hover">
-            <div className="md:flex">
-              <div className="md:w-1/2">
-                <img 
-                  src={newsArticles[0].image} 
-                  alt={newsArticles[0].title}
-                  className="w-full h-64 md:h-full object-cover"
-                />
-              </div>
-              <div className="md:w-1/2 p-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="px-3 py-1 bg-casino-neon-green/20 text-casino-neon-green rounded-full text-sm font-medium">
-                    Featured
-                  </span>
-                  <span className="px-3 py-1 bg-casino-border-subtle text-gray-300 rounded-full text-sm">
-                    {newsArticles[0].category}
-                  </span>
-                </div>
-                <h2 className="text-2xl font-bold mb-4 text-white hover:text-casino-neon-green transition-colors cursor-pointer">
-                  {newsArticles[0].title}
-                </h2>
-                <p className="text-gray-400 mb-6">
-                  {newsArticles[0].excerpt}
-                </p>
-                <div className="flex items-center gap-6 text-sm text-gray-500">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    <span>{newsArticles[0].author}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{newsArticles[0].date}</span>
-                  </div>
-                  <span>{newsArticles[0].readTime}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* News Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {newsArticles.slice(1).map((article) => (
+          {filteredArticles.map((article) => (
             <div key={article.id}>
               <article className="bg-casino-card-bg rounded-lg border border-casino-border-subtle overflow-hidden card-hover cursor-pointer">
                 <img 
@@ -187,3 +161,8 @@ const News = () => {
 };
 
 export default News;
+
+export async function getStaticProps() {
+  return { props: {}, revalidate: 1800 };
+}
+

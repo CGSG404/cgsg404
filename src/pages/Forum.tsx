@@ -1,4 +1,3 @@
-
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ForumHero from '@/components/forum/ForumHero';
@@ -18,7 +17,7 @@ const Forum = () => {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-12 px-4">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Forum <span className="gradient-text">Categories</span>
+              <span className="text-white">Forum</span> <span className="gradient-text">Categories</span>
             </h2>
             <p className="text-gray-400 text-base md:text-lg max-w-3xl mx-auto">
               Explore different topics and join conversations that interest you

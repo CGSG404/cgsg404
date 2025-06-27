@@ -1,25 +1,26 @@
+// src/test/env.ts  (versi Next.js)
 export const env = {
-    VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-    VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
-    VITE_SENTRY_DSN: import.meta.env.VITE_SENTRY_DSN,
-    VITE_APP_ENV: import.meta.env.VITE_APP_ENV || 'development',
-    VITE_APP_NAME: import.meta.env.VITE_APP_NAME || 'Neon Casino Guide',
-    VITE_APP_URL: import.meta.env.VITE_APP_URL || 'http://localhost:5173',
-    VITE_ENABLE_ANALYTICS: import.meta.env.VITE_ENABLE_ANALYTICS === 'true',
-    VITE_ENABLE_MAINTENANCE: import.meta.env.VITE_ENABLE_MAINTENANCE === 'true',
-  } as const;
-  
-  // Validate required environment variables in production
-  if (import.meta.env.PROD) {
-    const requiredVars = ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY'];
-    const missingVars = requiredVars.filter((key) => !import.meta.env[key]);
-  
-    if (missingVars.length > 0) {
-      console.error(
-        'Missing required environment variables:', 
-        missingVars.join('\n')
-      );
-      throw new Error('Missing required environment variables');
-    }
+  NEXT_PUBLIC_SUPABASE_URL:        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY:   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  NEXT_PUBLIC_SENTRY_DSN:          process.env.NEXT_PUBLIC_SENTRY_DSN,
+  NEXT_PUBLIC_APP_ENV:             process.env.NEXT_PUBLIC_APP_ENV ?? 'development',
+  NEXT_PUBLIC_APP_NAME:            process.env.NEXT_PUBLIC_APP_NAME ?? 'Neon Casino Guide',
+  NEXT_PUBLIC_APP_URL:             process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+  NEXT_PUBLIC_ENABLE_ANALYTICS:    process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === 'true',
+  NEXT_PUBLIC_ENABLE_MAINTENANCE:  process.env.NEXT_PUBLIC_ENABLE_MAINTENANCE === 'true',
+} as const
+
+// Validasi di production
+if (process.env.NODE_ENV === 'production') {
+  const requiredVars = [
+    'NEXT_PUBLIC_SUPABASE_URL',
+    'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  ] as const
+
+  const missing = requiredVars.filter((key) => !process.env[key])
+
+  if (missing.length) {
+    console.error('Missing required env vars:\n' + missing.join('\n'))
+    throw new Error('Missing required environment variables')
   }
-  
+}

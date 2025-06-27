@@ -13,7 +13,7 @@ const ReviewsHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
             Trusted Online Casino <span className="gradient-text">Reviews</span> by Real Players & Experts
           </h1>
           

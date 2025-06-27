@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 
 // Define the logos
 const logos = [
-  { name: 'gopuff' },
-  { name: 'chatbase' },
-  { name: 'betashares' },
-  { name: 'submagic' },
-  { name: 'mozilla' },
-  { name: 'partner1' },
-  { name: 'partner2' },
-  { name: 'partner3' },
+  { name: 'Game Curacao' },
+  { name: 'PAGCOR' },
+  { name: 'bmm' },
+  { name: 'iTechLabs' },
+  { name: 'GODADDY' },
+  { name: 'iovation' },
+  { name: 'ThreatMetrix' },
+  { name: 'TST VERIFIED' },
 ];
 
 const PIXELS_PER_SECOND = 30;
@@ -53,10 +53,10 @@ const LogoSlider: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-            Trusted by Leading Brands
+          Thank You For Supported
           </h3>
           <p className="text-gray-400 text-sm md:text-base">
-            Join thousands of satisfied users worldwide
+          Join thousands of satisfied users worldwide
           </p>
         </motion.div>
 
