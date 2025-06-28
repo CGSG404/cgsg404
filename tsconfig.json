@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "ES2017",
     "lib": [
       "dom",
       "dom.iterable",
@@ -15,27 +16,34 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
+    // ✅ Tambahkan types secara eksplisit
+    "types": [
+      "react",
+      "react-dom"
     ],
+    "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [
         "src/*"
       ]
     },
-    "target": "ES2017"
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "next-temp/**/*",
+    "src/**/*",
+    "types/**/*.d.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "next-temp",
+    "src/test/**/*"
   ]
 }

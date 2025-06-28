@@ -50,11 +50,8 @@ const Navbar = () => {
       navigate('/signin', { state: { from: window.location.pathname } });
       return;
     }
-    navigate('/profile');
     setShowProfile(false);
-    
     setIsNavigating(true);
-    setShowProfile(false);
     
     try {
       const { data, error } = await import('@/integrations/supabase/client').then(module => 
@@ -65,7 +62,11 @@ const Navbar = () => {
           .single()
       );
       
-      navigate(`/profile/${data.username}`);
+      if (data && data.username) {
+        navigate(`/profile/${data.username}`);
+      } else {
+        toast.error('Profile data not found');
+      }
     } catch (error) {
       console.error('Profile navigation error:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to load profile');
