@@ -16,7 +16,7 @@ const IndexPage = () => {
   return (
     <div className="min-h-screen bg-casino-dark">
       <Head>
-        <title>CGSG - Your Ultimate Guide to Online Casinos & Bonuses</title>
+        <title>Guru Singapore - Your Ultimate Guide to Online Casinos & Bonuses</title>
         <meta name="description" content="Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
