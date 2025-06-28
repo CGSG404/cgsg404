@@ -99,21 +99,21 @@ const Footer = () => {
             <div className="flex flex-col items-center">
               <Shield className="w-8 h-8 text-casino-neon-green mb-2" />
               <div className="text-lg font-bold text-white">
-                <CountUp end={100} duration={1.5} separator="," />+
+                <CountUp end={26}duration={1.5} separator="," />+
               </div>
               <div className="text-gray-400 text-sm">Verified Casinos</div>
             </div>
             <div className="flex flex-col items-center">
               <Users className="w-8 h-8 text-blue-400 mb-2" />
               <div className="text-lg font-bold text-white">
-                <CountUp end={1500} duration={1.5} separator="," />+
+                <CountUp end={1081} duration={1.5} separator="," />+
               </div>
               <div className="text-gray-400 text-sm">Forum Members Activies</div>
             </div>
             <div className="flex flex-col items-center">
               <Gift className="w-8 h-8 text-casino-neon-purple mb-2" />
               <div className="text-lg font-bold text-white">
-                <CountUp end={850} duration={1.5} separator="," />+
+                <CountUp end={800} duration={1.5} separator="," />+
               </div>
               <div className="text-gray-400 text-sm">Active Bonuses</div>
             </div>
