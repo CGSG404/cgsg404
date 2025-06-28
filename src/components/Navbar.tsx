@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Menu, Star, User, LogOut, UserCircle, Settings, LayoutDashboard } from 'lucide-react';
@@ -146,7 +145,7 @@ const Navbar = () => {
                   variant="outline"
                   size="sm"
                   onClick={handleSignOut}
-                  className="border-casino-border-subtle hover:bg-casino-dark"
+                  className="border-casino-border-subtle hover:bg-casino-dark text-white"
                 >
                   <LogOut className="w-4 h-4 mr-2" />
                   Sign Out
