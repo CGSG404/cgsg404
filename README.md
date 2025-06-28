@@ -1,105 +1,106 @@
 # Global Chat Application
 
-Sebuah aplikasi obrolan global real-time yang dibangun dengan Next.js, TypeScript, dan Supabase. Aplikasi ini memungkinkan pengguna untuk berkomunikasi secara real-time dengan pengguna lain yang terhubung.
+A real-time global chat application built with Next.js, TypeScript and Supabase. The application allows users to communicate instantly with other connected users.
 
-## 🚀 Fitur Utama
+## Key Features
 
-- **Obrolan Real-time** - Kirim dan terima pesan secara instan
-- **Autentikasi Pengguna** - Login dengan Google OAuth
-- **Tampilan Responsif** - Berfungsi dengan baik di perangkat desktop dan mobile
-- **Dark/Light Mode** - Dukungan tema gelap dan terang
-- **Indikator Online** - Melihat jumlah pengguna online
-- **Riwayat Pesan** - Pesan tersimpan dan dapat dilihat kapan saja
+- Live Chat** - Get the latest information instantly!
+- Automatic login** - Sign in via Google OAuth
+- **Tampilan Responsif** - available on desktop and mobile devices
+- Dark/Light Mode** - show and change themes
+- **Indikator Online** - access to tons of information online
+- **Riwayat Pesan** - delete content anywhere, anytime
 
-## 🛠 Teknologi yang Digunakan
+## 🛠 Technology Used
 
 - **Frontend**: Next.js, React, TypeScript, Tailwind CSS
 - **Backend**: Supabase (Auth, Database, Realtime)
 - **State Management**: React Hooks
 - **Icons**: Lucide Icons
 
-## 🚀 Cara Menjalankan
+## 🚀 How to Run
 
-### Prasyarat
+### Prerequisites
 
-- Node.js (v16 atau lebih baru)
-- npm atau yarn
-- Akun Supabase
+- Node.js (v16 or later)
+- npm or yarn
+- Supabase account
 
 ### Instalasi
 
-1. Clone repositori ini:
+1. Clone this repository:
    ```bash
-   git clone [URL_REPOSITORY]
-   cd cgsg404
-   ```
+ git clone [URL_REPOSITORY]
+ cd cgsg404
+ ```
 
 2. Install dependencies:
    ```bash
-   npm install
-   # atau
-   yarn install
-   ```
+ npm install
+   # or
+ yarn install
+ ````
 
-3. Buat file `.env.local` di root direktori dan isi dengan:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
+3. Create a `.env.local` file in the root directory and fill it with:
+   ``env
+ NEXT_PUBLIC_SUPABASE_URL = your_supabase_url
+ NEXT_PUBLIC_SUPABASE_ANON_KEY = your_supabase_anon_key
+ ``
 
-4. Jalankan aplikasi:
+4. Run the application:
    ```bash
-   npm run dev
-   # atau
-   yarn dev
-   ```
+ npm run dev
+   # or
+ dev thread
+ ```
 
-5. Buka [http://localhost:8080](http://localhost:8080) di browser Anda.
+5. Open [http://localhost:8080](http://localhost:8080) in your browser.
 
-## 🔒 Konfigurasi Supabase
+## 🔒 Supabase Configuration
 
-1. Buat project baru di [Supabase](https://supabase.com/)
-2. Aktifkan Authentication dan pilih provider Google
-3. Buat tabel `chat_messages` dengan skema berikut:
+1. Create a new project in [Supabase](https://supabase.com/)
+2. Enable Authentication and select Google provider
+3. Create the `chat_messages` table with the following schema:
    ```sql
-   CREATE TABLE public.chat_messages (
-     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-     user_id UUID REFERENCES auth.users NOT NULL,
-     message TEXT NOT NULL,
-     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-   );
-   ```
-4. Aktifkan Row Level Security (RLS) dan tambahkan policies:
-   ```sql
+ CREATE TABLE public.chat_messages(
+ id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+ user_id UUID REFERENCES auth.users NOT NULL,
+ message TEXT NOT NULL,
+ created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+ );
+ ```''
+
+4. Create a new table in [Database]. Enable Row Level Security (RLS) and add policies:
+   ``sql
    -- Enable RLS
-   ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
+ ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
 
-   -- Policy untuk membaca pesan
-   CREATE POLICY "Enable read access for all users"
-   ON public.chat_messages
-   FOR SELECT
-   USING (true);
+   -- Policy for reading messages
+ CREATE POLICY "Enable read access for all users"
+ ON public.chat_messages
+ FOR SELECT
+ USING (true);
 
-   -- Policy untuk menulis pesan
-   CREATE POLICY "Enable insert for authenticated users only"
-   ON public.chat_messages
-   FOR INSERT
-   TO authenticated
-   WITH CHECK (true);
-   ```
+   -- Policy for writing messages
+ CREATE POLICY "Enable insert for authenticated users only"
+ ON public.chat_messages
+ FOR INSERT
+ TO authenticated
+ WITH CHECK(true);
+ ```
 
-## 🤝 Berkontribusi
+## 🤝 Contribute
 
-1. Fork repositori ini
-2. Buat branch fitur baru (`git checkout -b fitur/namafitur`)
-3. Commit perubahan Anda (`git commit -m 'Menambahkan fitur baru'`)
-4. Push ke branch (`git push origin fitur/namafitur`)
-5. Buat Pull Request
+1. Fork this repository
+2. Create a new feature branch (`git checkout -b feature/feature name`)
+3. Commit your changes (`git commit -m ‘Added new feature’`)
+4. Push to the branch (`git push origin feature/feature name`)
+5. Make a Pull Request
 
-## 📝 Lisensi
+## 📝 License
 
-Dilisensikan di bawah [MIT License](LICENSE).
+Licensed under the [MIT License](LICENSE).
 
 ---
 
-Dibuat dengan ❤️ oleh Tim CGSG404
+Created with ❤️ by Team CGSG404
