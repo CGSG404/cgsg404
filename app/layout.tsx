@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gurusingapore.com'),
   title: {
     default: 'CGSG - Casino & Gaming Guide',
     template: '%s | CGSG',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'CGSG - Casino & Gaming Guide',
     description: 'Your ultimate guide to online casinos and gaming.',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gurusingapore.com',
     siteName: 'CGSG',
     images: [
       {
