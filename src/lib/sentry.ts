@@ -7,7 +7,7 @@ interface ErrorInfo {
 }
 
 export const logError = ({ error, context = {} }: ErrorInfo) => {
-  if (import.meta.env.PROD) {
+  if (process.env.NODE_ENV === 'production') {
     // In production, you would send this to your error tracking service
     console.error('Error:', error, 'Context:', context);
   } else {
@@ -22,7 +22,7 @@ export const logError = ({ error, context = {} }: ErrorInfo) => {
 };
 
 export const logInfo = (message: string, data?: unknown) => {
-  if (import.meta.env.DEV) {
+  if (process.env.NODE_ENV === 'development') {
     console.info(`[INFO] ${message}`, data || '');
   }
 };

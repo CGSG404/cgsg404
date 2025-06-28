@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, Shield, Target, Gift, Heart } from 'lucide-react';
 
@@ -37,10 +36,10 @@ const GuideComingSoon = () => {
           </div>
           
           <h2 className="text-3xl font-bold mb-4">
-            Casino <span className="gradient-text">Learning Center</span>
+            <span className="text-white">Casino</span> <span className="gradient-text">Learning Center</span>
           </h2>
           
-          <p className="text-gray-300 text-lg mb-6">
+          <p className="text-gray-400 text-lg mb-6 max-w-2xl mx-auto">
             Comprehensive guides and tutorials are coming soon. In the meantime, here are some essential tips:
           </p>
         </CardContent>

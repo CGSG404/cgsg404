@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CasinoCard from './CasinoCard';
 import { motion } from 'framer-motion';
+import { useIsDesktop } from '@/hooks/useIsDesktop';
 
 interface Casino {
   id: number;
@@ -32,9 +33,9 @@ const casinos: Casino[] = [
     id: 1,
     name: 'Royal Spin Casino',
     logo: '/casino-logos/01COMING SOON.png',
-    rating: 4.8,
+    rating: 4.0,
     safetyIndex: 'Very High',
-    bonus: '300% Welcome Bonus up to $3,000 + 150 Free Spins',
+    bonus: '100% Welcome Bonus up to $3,000 + 150 Free Spins',
     features: ['Live Dealers', 'Crypto Payments', 'Mobile App', '24/7 Support'],
     description: 'Premium online casino with exceptional game variety and top-tier security. Licensed and regulated with fast withdrawals.',
     badges: ['Top Rated', 'Licensed'],
@@ -203,6 +204,7 @@ const CasinoListings = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('safety');
   const [activeTab, setActiveTab] = useState('all');
+  const isDesktop = useIsDesktop();
 
   const filteredAndSortedCasinos = useMemo(() => {
     const filtered = casinos.filter(casino => {
@@ -247,20 +249,6 @@ const CasinoListings = () => {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <h2 className="text-4xl font-bold mb-4">
-            Online <span className="gradient-text">Casino Directory</span>
-          </h2>
-          <p className="text-gray-400 text-lg max-w-3xl mx-auto">
-            Explore our comprehensive database of online casinos with detailed safety ratings, reviews, and exclusive bonus offers.
-          </p>
-        </motion.div>
-
         {/* Search and Controls */}
         <div className="bg-casino-card-bg border border-casino-border-subtle rounded-lg p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">

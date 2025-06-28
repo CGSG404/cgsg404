@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Gift, Gamepad2, Heart, Award, TrendingUp, Users, Clock } from 'lucide-react';
 
@@ -107,7 +106,7 @@ const GuideTopics = () => {
     <div className="mb-16">
       <div className="text-center mb-12">
         <h3 className="text-2xl font-bold mb-4">
-          Comprehensive <span className="gradient-text">Learning Topics</span>
+          <span className="text-white">Comprehensive</span> <span className="gradient-text">Learning Topics</span>
         </h3>
         <p className="text-gray-400 text-lg max-w-3xl mx-auto">
           From beginner basics to advanced strategies, our upcoming guides will cover everything you need to know about online casino gaming.

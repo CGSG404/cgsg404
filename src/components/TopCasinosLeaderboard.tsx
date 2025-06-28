@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -72,17 +71,21 @@ const TopCasinosLeaderboard = () => {
   };
 
   const getRankBadgeColor = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black border-yellow-300';
-      case 2:
-        return 'bg-gradient-to-r from-gray-300 to-gray-500 text-black border-gray-200';
-      case 3:
-        return 'bg-gradient-to-r from-amber-400 to-amber-600 text-black border-amber-300';
-      default:
-        return 'bg-gradient-to-r from-blue-400 to-blue-600 text-white border-blue-300';
-    }
-  };
+  switch (rank) {
+    case 1:
+      return 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black border-yellow-300';
+    case 2:
+      return 'bg-gradient-to-r from-gray-300 to-gray-500 text-black border-gray-200';
+    case 3:
+      return 'bg-gradient-to-r from-amber-400 to-amber-600 text-black border-amber-300';
+    default:
+      return 'bg-gradient-to-r from-blue-400 to-blue-600 text-white border-blue-300';
+  }
+};
+
+
+
+
 
   const getSafetyColor = (index: string) => {
     switch (index) {
@@ -121,10 +124,8 @@ const TopCasinosLeaderboard = () => {
             }`}
           >
             {/* Rank Badge */}
-            <div className="absolute -top-2 -left-2">
-              <Badge className={`${getRankBadgeColor(casino.rank)} border-2 font-bold text-lg px-3 py-1`}>
-                #{casino.rank}
-              </Badge>
+            <div className="absolute top-2 left-2">
+              <Badge className={`${getRankBadgeColor(casino.rank)} text-xs px-2 py-1 rounded-full shadow-md`}>#{casino.rank}</Badge>
             </div>
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -135,11 +136,11 @@ const TopCasinosLeaderboard = () => {
                 </div>
 
                 {/* Casino Logo */}
-                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-14 h-14 bg-white rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
                   <img
                     src={casino.logo}
                     alt={casino.name}
-                    className="w-10 h-10 object-contain"
+                    className="w-full h-full object-contain"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzBmMTUyYSIvPgo8dGV4dCB4PSIyMCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMDBmZjk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DPC90ZXh0Pgo8L3N2Zz4K';
@@ -166,7 +167,7 @@ const TopCasinosLeaderboard = () => {
                         <Star
                           key={i}
                           className={`w-4 h-4 ${
-                            i < Math.floor(casino.rating) ? 'text-yellow-400 fill-current' : 'text-gray-600'
+                            i < Math.round(casino.rating) ? 'text-yellow-400 fill-current' : 'text-gray-600'
                           }`}
                         />
                       ))}
@@ -174,16 +175,14 @@ const TopCasinosLeaderboard = () => {
                     <span className="text-gray-400 text-sm">({casino.rating}/5)</span>
                   </div>
 
-                  <div className="text-casino-neon-green text-xs sm:text-sm font-semibold mb-2 line-clamp-2">
-                    {casino.bonus}
-                  </div>
-
+                  <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-sm text-casino-neon-green mb-2 line-clamp-2">300% Welcome Bonus up to $3,000 + 150 Free Spins</span>
+                    
                   <div className="flex flex-wrap gap-1">
                     {casino.features.map((feature, index) => (
                       <Badge
                         key={index}
                         variant="secondary"
-                        className="bg-casino-dark text-gray-300 text-xs"
+                        className="bg-casino-dark text-gray-300 text-xs border border-casino-neon-green"
                       >
                         {feature}
                       </Badge>

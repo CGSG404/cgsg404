@@ -52,7 +52,7 @@ const FeaturedTopics = () => {
   ];
 
   return (
-    <div className="w-full">
+    <div id="featured-topics" className="w-full">
       <h3 className="text-2xl font-bold mb-6 text-center">
         <span className="gradient-text">Featured Topics</span>
       </h3>

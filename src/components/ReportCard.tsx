@@ -55,7 +55,7 @@ const ReportCard = ({
                 }}
               >
                 <AlertTriangle className="w-4 h-4" />
-                {isLicensed ? 'Terlisensi' : 'Tidak Terlisensi'}
+                {isLicensed ? 'Licensed' : 'Unlicensed'}
               </motion.div>
             </div>
 
@@ -67,7 +67,7 @@ const ReportCard = ({
             >
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>Terakhir dilaporkan: {reportDate}</span>
+                <span>Time Reported: {reportDate}</span>
               </div>
             </motion.div>
 
@@ -79,7 +79,7 @@ const ReportCard = ({
             >
               <FileText className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
               <p className="text-gray-300 leading-relaxed">
-                <span className="font-medium text-white">Masalah:</span> {issue}
+                <span className="font-medium text-white">Problem:</span> {issue}
               </p>
             </motion.div>
           </div>
@@ -98,7 +98,7 @@ const ReportCard = ({
               whileHover={{ x: 2 }}
               whileTap={{ scale: 0.98 }}
             >
-              Laporkan Masalah Lainnya →
+              Check Domain →
             </motion.a>
           </motion.div>
         </div>
