@@ -60,7 +60,7 @@ const ReviewCard = ({ casino }: ReviewCardProps) => {
           </div>
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-casino-neon-green" />
-            <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-sm text-casino-neon-green">300% Welcome Bonus up to $3,000 + 150 Free Spins</span>
+            <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-sm text-casino-neon-green">{casino.bonus}</span>
           </div>
         </div>
 
