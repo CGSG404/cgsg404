@@ -53,7 +53,7 @@ const LogoSlider: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-          Thank You For Supported
+          Thank You For Supports
           </h3>
           <p className="text-gray-400 text-sm md:text-base">
           Join thousands of satisfied users worldwide

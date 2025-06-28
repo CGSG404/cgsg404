@@ -9,33 +9,33 @@ const CasinoSlideshow = () => {
   const slides = [
     {
       id: 1,
-      image: 'https://chatgpt.com/c/685a6b3a-cb90-8012-b207-7e973badd202',
-      title: 'Premium Casino Experience',
-      description: 'Discover the world of online gaming'
+      image: '/slider-logos-card/top5-casinos.png',
+      title: 'Top 5 Leaderboard',
+      description: 'Your Safety, Our Priority – Top Casinos You Can Rely On'
     },
     {
       id: 2,
-      image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop',
-      title: 'Modern Gaming Platform',
-      description: 'Advanced technology meets classic casino games'
+      image: '/slider-logos-card/powerful-casinos.png',
+      title: 'No More Fear',
+      description: 'We Made Your Gameplay Powerful'
     },
     {
       id: 3,
-      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop',
-      title: 'Secure & Reliable',
-      description: 'State-of-the-art security for your gaming'
+      image: '/slider-logos-card/guruacademy.png',
+      title: 'Guru Academy Casino',
+      description: 'Play With Knowledge, Win With Strategy'
     },
     {
       id: 4,
-      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop',
-      title: 'Live Gaming Action',
-      description: 'Real-time casino games and tournaments'
+      image: '/slider-logos-card/with-guru.png',
+      title: 'Guru Guide Your Game Play',
+      description: 'Find Out More About Casino'
     },
     {
       id: 5,
-      image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop',
-      title: 'Mobile Gaming',
-      description: 'Play anywhere, anytime on any device'
+      image: '/slider-logos-card/anywhere.png',
+      title: 'Guru & Ys - Always With You',
+      description: 'We Never Sleep To Helping You'
     }
   ];
 

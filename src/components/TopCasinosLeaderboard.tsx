@@ -7,53 +7,53 @@ const TopCasinosLeaderboard = () => {
   const topCasinos = [
     {
       rank: 1,
-      name: 'Royal Casino Palace',
-      rating: 4.9,
-      bonus: '100% up to $1000 + 200 Free Spins',
+      name: 'Phoenix168 Singapore',
+      rating: 4.8,
+      bonus: 'Welcome Bonus Up To 168% + 100% Bonus Limited Offer',
       safetyIndex: 'Very High',
-      logo: '/casino-logos/RR-logos.gif',
-      playUrl: '#',
-      features: ['Live Dealers', '24/7 Support', 'Crypto Payments']
+      logo: '/casino-logos/ph168-logos.png',
+      playUrl: 'https://ph168sg.com/RF12500610',
+      features: ['VIP Program', 'Fast Withdrawals', 'Local Payments']
     },
     {
       rank: 2,
-      name: 'Golden Eagle Casino',
+      name: 'BK88 Singapore',
       rating: 4.8,
-      bonus: '150% up to $750 + 100 Free Spins',
+      bonus: '150% Welcome Bonus + Free Credit 365 Days',
       safetyIndex: 'Very High',
-      logo: '/casino-logos/GE8-logos.jpg',
-      playUrl: '#',
-      features: ['VIP Program', 'Fast Withdrawals', 'Mobile App']
+      logo: '/casino-logos/bk88-logos.png',
+      playUrl: 'https://bk888.co/BK88829A860350',
+      features: ['VIP Program', 'Fast Withdrawals', 'Local Payments']
     },
     {
       rank: 3,
-      name: 'Marina Bay Slots',
-      rating: 4.7,
-      bonus: '200% up to $500 + 50 Free Spins',
-      safetyIndex: 'High',
-      logo: '/casino-logos/MBS8-logos.jpg',
-      playUrl: '#',
-      features: ['Slot Tournaments', 'Weekly Bonuses', 'Live Chat']
+      name: 'TOP1 Singapore',
+      rating: 4.8,
+      bonus: '80% Welcome Bonus + Rescue Bonus',
+      safetyIndex: 'Very High',
+      logo: '/casino-logos/top1-logos.png',
+      playUrl: 'https://top1sg.com/RF295196839',
+      features: ['VIP Program', 'Fast Wirdrawals', 'Local & Crypto Payments']
     },
     {
       rank: 4,
-      name: 'Merlion Gaming',
-      rating: 4.6,
-      bonus: '125% up to $800 + 150 Free Spins',
-      safetyIndex: 'High',
-      logo: '/casino-logos/Merlion-logos.jpg',
-      playUrl: '#',
-      features: ['Table Games', 'Sports Betting', 'Loyalty Rewards']
+      name: 'OnePlay Singapore',
+      rating: 4.8,
+      bonus: '168% Welcome Bonus + Weekly Mission Up To $228',
+      safetyIndex: 'Very High',
+      logo: '/casino-logos/1play-logos.png',
+      playUrl: 'https://1playsg.vip/RF29551A809',
+      features: ['VIP Program', 'Fast Withdrawals', 'Local Payments']
     },
     {
       rank: 5,
-      name: 'Koi Palace Casino',
-      rating: 4.5,
-      bonus: '100% up to $600 + 75 Free Spins',
-      safetyIndex: 'High',
-      logo: '/casino-logos/KOI8-logos.png',
-      playUrl: '#',
-      features: ['Asian Games', 'Multiple Languages', 'Secure Banking']
+      name: 'GE8 Singapore',
+      rating: 4.8,
+      bonus: 'Welcome Bonus Up To 120% + 100% High Rescue Bonus',
+      safetyIndex: 'Very High',
+      logo: '/casino-logos/ge8-logos.png',
+      playUrl: 'https://ge88sg.com/RF295830131',
+      features: ['VIP Program', 'Fast Withdrawals', 'Local & Crypto Payments']
     }
   ];
 
@@ -138,9 +138,9 @@ const TopCasinosLeaderboard = () => {
                 {/* Casino Logo */}
                 <div className="w-14 h-14 bg-white rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
                   <img
-                    src={casino.logo}
                     alt={casino.name}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain rounded-lg"
+                    src={casino.logo}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzBmMTUyYSIvPgo8dGV4dCB4PSIyMCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMDBmZjk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DPC90ZXh0Pgo8L3N2Zz4K';
@@ -175,7 +175,7 @@ const TopCasinosLeaderboard = () => {
                     <span className="text-gray-400 text-sm">({casino.rating}/5)</span>
                   </div>
 
-                  <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-sm text-casino-neon-green mb-2 line-clamp-2">300% Welcome Bonus up to $3,000 + 150 Free Spins</span>
+                  <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-sm text-casino-neon-green mb-2 line-clamp-2">{casino.bonus}</span>
                     
                   <div className="flex flex-wrap gap-1">
                     {casino.features.map((feature, index) => (
