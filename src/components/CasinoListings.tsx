@@ -67,7 +67,7 @@ const casinos: Casino[] = [
   },
   {
     id: 3,
-    name: 'Top1',
+    name: 'TOP1',
     logo: '/casino-logos/top1-logos.png',
     rating: 4.8,
     safetyIndex: 'Very High',

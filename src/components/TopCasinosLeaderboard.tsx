@@ -17,7 +17,7 @@ const TopCasinosLeaderboard = () => {
     },
     {
       rank: 2,
-      name: 'Bk88',
+      name: 'BK88',
       rating: 4.8,
       bonus: '150% Welcome Bonus + Free Credit 365 Days',
       safetyIndex: 'Very High',
@@ -27,7 +27,7 @@ const TopCasinosLeaderboard = () => {
     },
     {
       rank: 3,
-      name: 'Top1',
+      name: 'TOP1',
       rating: 4.8,
       bonus: '80% Welcome Bonus + Rescue Bonus',
       safetyIndex: 'Very High',
@@ -47,7 +47,7 @@ const TopCasinosLeaderboard = () => {
     },
     {
       rank: 5,
-      name: 'Ge8',
+      name: 'GE8',
       rating: 4.8,
       bonus: 'Welcome Bonus Up To 120% + 100% High Rescue Bonus',
       safetyIndex: 'Very High',
