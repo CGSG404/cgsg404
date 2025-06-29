@@ -25,6 +25,7 @@ const Games = lazy(() => import('@/pages/Games'));
 const Guide = lazy(() => import('@/pages/Guide'));
 const ListReport = lazy(() => import('@/pages/ListReport'));
 const News = lazy(() => import('@/pages/News'));
+const NewsDetail = lazy(() => import('@/pages/NewsDetail'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Reviews = lazy(() => import('@/pages/Reviews'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
@@ -108,6 +109,7 @@ const App = () => {
                   <Route path="/guide" element={<Guide />} />
                   <Route path="/list-report" element={<ListReport />} />
                   <Route path="/news" element={<News />} />
+                  <Route path="/news/:id" element={<NewsDetail />} />
                     <Route path="/reviews" element={<Reviews />} />
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     <Route path="/error" element={<SimpleErrorPage />} />
