@@ -31,7 +31,7 @@ interface Casino {
 const casinos: Casino[] = [
   {
     id: 1,
-    name: 'DUCKYLUCK Singapore',
+    name: 'Ducky Luck',
     logo: '/casino-logos/ducky luck.png',
     rating: 4.0,
     safetyIndex: 'Medium',
@@ -49,7 +49,7 @@ const casinos: Casino[] = [
   },
   {
     id: 2,
-    name: 'SPEEDSGD Singapore',
+    name: 'Speed Sgd',
     logo: '/casino-logos/speedsgd-logos.png',
     rating: 4.5,
     safetyIndex: 'High',
@@ -67,7 +67,7 @@ const casinos: Casino[] = [
   },
   {
     id: 3,
-    name: 'TOP1 Singapore',
+    name: 'Top1',
     logo: '/casino-logos/top1-logos.png',
     rating: 4.8,
     safetyIndex: 'Very High',

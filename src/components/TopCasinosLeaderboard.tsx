@@ -7,7 +7,7 @@ const TopCasinosLeaderboard = () => {
   const topCasinos = [
     {
       rank: 1,
-      name: 'Phoenix168 Singapore',
+      name: 'Phoenix168',
       rating: 4.8,
       bonus: 'Welcome Bonus Up To 168% + 100% Bonus Limited Offer',
       safetyIndex: 'Very High',
@@ -17,7 +17,7 @@ const TopCasinosLeaderboard = () => {
     },
     {
       rank: 2,
-      name: 'BK88 Singapore',
+      name: 'Bk88',
       rating: 4.8,
       bonus: '150% Welcome Bonus + Free Credit 365 Days',
       safetyIndex: 'Very High',
@@ -27,7 +27,7 @@ const TopCasinosLeaderboard = () => {
     },
     {
       rank: 3,
-      name: 'TOP1 Singapore',
+      name: 'Top1',
       rating: 4.8,
       bonus: '80% Welcome Bonus + Rescue Bonus',
       safetyIndex: 'Very High',
@@ -37,7 +37,7 @@ const TopCasinosLeaderboard = () => {
     },
     {
       rank: 4,
-      name: 'OnePlay Singapore',
+      name: 'OnePlay',
       rating: 4.8,
       bonus: '168% Welcome Bonus + Weekly Mission Up To $228',
       safetyIndex: 'Very High',
@@ -47,7 +47,7 @@ const TopCasinosLeaderboard = () => {
     },
     {
       rank: 5,
-      name: 'GE8 Singapore',
+      name: 'Ge8',
       rating: 4.8,
       bonus: 'Welcome Bonus Up To 120% + 100% High Rescue Bonus',
       safetyIndex: 'Very High',
