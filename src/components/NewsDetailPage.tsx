@@ -8,7 +8,7 @@ import { Calendar, User, Tag, ChevronLeft } from 'lucide-react';
 // NOTE: in production replace this with API fetching; for demo reuse static list
 const newsArticles = [
   {
-    id: '1',
+    id: 'Online-Casino-Singapore-Test-Luck',
     title: 'New Online Casino Regulations Set to Launch in 2024',
     content:
       'Full article content here. Major changes coming to the online gambling industry with enhanced player protection measures and stricter licensing requirements. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.',

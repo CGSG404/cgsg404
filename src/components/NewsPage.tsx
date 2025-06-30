@@ -9,7 +9,7 @@ const NewsPage = () => {
   // List of news articles (in a real app this would come from an API)
   const newsArticles = [
     {
-      id: 1,
+      id: 'Online-Casino-Singapore-Test-Luck/',
       title: 'New Online Casino Regulations Set to Launch in 2024',
       excerpt:
         'Major changes coming to the online gambling industry with enhanced player protection measures and stricter licensing requirements.',
