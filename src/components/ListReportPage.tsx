@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Search } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ReportCard from '@/components/ReportCard';
@@ -31,13 +31,16 @@ const ListReportPage = () => {
           </p>
         </div>
         <div className="mb-8 flex justify-center">
-          <input
-            type="text"
-            placeholder="Search casino..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="px-4 py-2 rounded border border-casino-border-subtle w-full max-w-md"
-          />
+          <div className="relative w-full max-w-md">
+            <input
+              type="text"
+              placeholder="Search for a casino report by name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full px-6 py-4 pl-16 text-lg bg-casino-card-bg border border-casino-border-subtle rounded-full text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-casino-neon-green/50 transition-all duration-300"
+            />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" />
+          </div>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredReports.length === 0 ? (
