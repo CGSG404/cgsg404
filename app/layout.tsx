@@ -13,16 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gurusingapore.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com'),
   title: {
-    default: 'CGSG - Casino & Gaming Guide',
+    default: 'CGSG - CasinoGuru Singapore',
     template: '%s | CGSG',
   },
-  description: 'Your ultimate guide to online casinos and gaming.',
+  description: 'Casino Guru Singapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
   openGraph: {
-    title: 'CGSG - Casino & Gaming Guide',
-    description: 'Your ultimate guide to online casinos and gaming.',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gurusingapore.com',
+    title: 'CGSG - CasinoGuru Singapore.',
+    description: 'Casino Guru Singapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com',
     siteName: 'CGSG',
     images: [
       {
@@ -37,8 +37,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CGSG - Casino & Gaming Guide',
-    description: 'Your ultimate guide to online casinos and gaming.',
+    title: 'CGSG - GuruSingapore',
+    description: 'Casino Guru Singapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
     images: ['/og-image.png'],
   },
   icons: {
