@@ -130,21 +130,21 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-casino-border-subtle pt-6 flex flex-col md:flex-row justify-between items-center">
           <div className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2025 CGSG. All rights reserved. | CasinoGuru Singapore. | Play Responsibly.
+            2025 CGSG. All rights reserved. | CasinoGuru Singapore. | Play Responsibly.
           </div>
           <div className="flex space-x-6 text-sm">
-            <button
+            <Link
+              to="/privacy-policy"
               className="text-gray-400 hover:text-casino-neon-green transition-colors"
-              onClick={() => setOpenModal('privacy')}
             >
               Privacy Policy
-            </button>
-            <button
+            </Link>
+            <Link
+              to="/terms-of-service"
               className="text-gray-400 hover:text-casino-neon-green transition-colors"
-              onClick={() => setOpenModal('terms')}
             >
               Terms of Service
-            </button>
+            </Link>
             <a
               href="https://t.me/ysfcreatorr" // ganti dengan link kontak Anda
               target="_blank"
@@ -165,24 +165,8 @@ const Footer = () => {
               className="absolute top-2 right-2 text-gray-400 hover:text-white"
               onClick={() => setOpenModal(null)}
             >
-              ✕
+              
             </button>
-            {openModal === 'privacy' && (
-              <>
-                <h2 className="text-xl font-bold mb-4 text-white">Privacy Policy</h2>
-                <p className="text-gray-300 text-sm">Last Updated: June 22, 2025
-                We value your privacy. This policy outlines how we collect, use, and protect your information.</p>
-                <p className="text-yellow-300 text-sm">Writed By CGSG x YS.</p>
-              </>
-            )}
-            {openModal === 'terms' && (
-              <>
-                <h2 className="text-xl font-bold mb-4 text-white">Terms of Service</h2>
-                <p className="text-gray-300 text-sm">Last Updated: June 22, 2025
-                By accessing or using our website, you agree to be bound by these Terms of Service. Please read them carefully before using any features on this platform.</p>
-                <p className="text-yellow-300 text-sm">Writed By CGSG x YS.</p>
-              </>
-            )}
             {openModal === 'stories' && (
               <>
                 <h2 className="text-xl font-bold mb-4 text-white">Success Stories</h2>
