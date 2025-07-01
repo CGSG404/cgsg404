@@ -1,9 +1,11 @@
+"use client";
+import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Head from 'next/head';
 
-const PrivacyPolicy = () => {
-  return (
+const PrivacyPolicy = () => (
+
     <div className="min-h-screen flex flex-col bg-casino-dark text-white">
       <Head>
         <title>Privacy Policy | CGSG</title>
@@ -28,6 +30,5 @@ const PrivacyPolicy = () => {
       <Footer />
     </div>
   );
-};
 
-export default PrivacyPolicy;
+export default dynamic(() => Promise.resolve(PrivacyPolicy), { ssr: false });

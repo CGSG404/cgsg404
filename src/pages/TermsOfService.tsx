@@ -1,9 +1,11 @@
+"use client";
+import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Head from 'next/head';
 
-const TermsOfService = () => {
-  return (
+const TermsOfService = () => (
+
     <div className="min-h-screen flex flex-col bg-casino-dark text-white">
       <Head>
         <title>Terms of Service | CGSG</title>
@@ -33,6 +35,5 @@ const TermsOfService = () => {
       <Footer />
     </div>
   );
-};
 
-export default TermsOfService;
+export default dynamic(() => Promise.resolve(TermsOfService), { ssr: false });
