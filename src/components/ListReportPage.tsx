@@ -1,14 +1,32 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { AlertTriangle, Search } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ReportCard from '@/components/ReportCard';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 import { Card } from '@/components/ui/card';
+import ReportDialog from '@/components/ReportDialog';
+import { Button } from '@/components/ui/button';
+import BackToTop from '@/components/BackToTop';
 
 // Jika Anda punya data asli, import di sini. Jika tidak, gunakan dummy:
 import { reports as reportData, ReportData } from '@/data/reportData';
 
 const ListReportPage = () => {
+  const [reportOpen, setReportOpen] = useState(false);
+  const [showBackTop, setShowBackTop] = useState(false);
+
+  // toggle buttons based on scroll
+  useEffect(() => {
+    const onScroll = () => {
+      setShowBackTop(window.scrollY > 500);
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
   const [reports, setReports] = useState<ReportData[]>(reportData);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
@@ -18,10 +36,19 @@ const ListReportPage = () => {
     return term ? reports.filter((r: ReportData) => r.casinoName.toLowerCase().includes(term)) : reports;
   }, [search, reports]);
 
+  // Split reports into chunks of 5 for mobile slider
+  const chunkedReports = useMemo(() => {
+    const result: ReportData[][] = [];
+    for (let i = 0; i < filteredReports.length; i += 5) {
+      result.push(filteredReports.slice(i, i + 5));
+    }
+    return result;
+  }, [filteredReports]);
+
   return (
     <div className="min-h-screen bg-casino-dark font-sans">
       <Navbar />
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto max-w-7xl px-4 py-16">
         <div className="text-center mb-12 text-white">
           <h1 className="text-4xl font-bold mb-4">
             Casino <span className="gradient-text">List Report</span>
@@ -42,7 +69,37 @@ const ListReportPage = () => {
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" />
           </div>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Mobile Slider */}
+        <div className="sm:hidden">
+          <Swiper
+            modules={[Pagination]}
+            pagination={{ clickable: true }}
+            spaceBetween={16}
+            slidesPerView={1}
+            className="pb-8"
+          >
+            {chunkedReports.map((group, idx) => (
+              <SwiperSlide key={idx} className="pb-4">
+                <div className="flex flex-col gap-4">
+                  {group.map((report) => (
+                    <ReportCard
+                      key={report.id}
+                      casinoName={report.casinoName}
+                      reportDate={report.lastReported}
+                      issue={report.summary}
+                      isLicensed={report.status !== 'Unlicensed'}
+                      reportUrl={report.url}
+                      className="h-full"
+                    />
+                  ))}
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        {/* Desktop Grid */}
+        <div className="hidden sm:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredReports.length === 0 ? (
             <Card className="bg-casino-card-bg border-casino-border-subtle p-6 text-center">
               <AlertTriangle className="w-8 h-8 text-yellow-400 mx-auto mb-4" />
@@ -76,6 +133,19 @@ const ListReportPage = () => {
         </div>
       </div>
       <Footer />
+      {/* Global Report Dialog */}
+      <ReportDialog open={reportOpen} onOpenChange={setReportOpen} casinoName="" />
+      {/* Floating Buttons */}
+      {showBackTop ? (
+        <BackToTop />
+      ) : (
+        <Button
+          onClick={() => setReportOpen(true)}
+          className="fixed bottom-6 right-6 z-50 bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 shadow-lg px-5 py-3 rounded-full"
+        >
+          Report an Issue
+        </Button>
+      )}
     </div>
   );
 };

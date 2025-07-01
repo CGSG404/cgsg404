@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Calendar, FileText } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -19,7 +20,8 @@ const ReportCard = ({
   reportUrl,
   className = ''
 }: ReportCardProps) => {
-  return (
+  const [open, setOpen] = useState(false);
+  return (<>
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -30,7 +32,7 @@ const ReportCard = ({
       }}
       className={className}
     >
-      <Card className="bg-casino-card-bg border-casino-border-subtle p-6 hover:border-red-500/30 transition-all duration-300 h-full">
+      <Card className="bg-casino-card-bg border-casino-border-subtle p-6 hover:border-red-500/30 transition-all duration-300 h-full min-h-[300px]">
         <div className="flex flex-col h-full">
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-3">
@@ -78,14 +80,24 @@ const ReportCard = ({
               transition={{ delay: 0.2 }}
             >
               <FileText className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-              <p className="text-gray-300 leading-relaxed">
-                <span className="font-medium text-white">Problem:</span> {issue}
-              </p>
+              <div className="flex-1 overflow-hidden">
+                <p className="text-gray-300 leading-relaxed break-words line-clamp-3">
+                  <span className="font-medium text-white">Problem:</span> {issue}
+                </p>
+                {issue.length > 100 && (
+                  <button
+                    onClick={() => setOpen(true)}
+                    className="text-casino-neon-green text-sm mt-1 hover:underline"
+                  >
+                    Read More
+                  </button>
+                )}
+              </div>
             </motion.div>
           </div>
 
           <motion.div 
-            className="mt-4 pt-4 border-t border-casino-border-subtle/50 flex justify-end"
+            className="mt-auto pt-2 border-t border-casino-border-subtle/50 flex justify-end"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -104,7 +116,32 @@ const ReportCard = ({
         </div>
       </Card>
     </motion.div>
+      {open && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center px-4"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="bg-casino-card-bg border border-casino-border-subtle rounded-lg max-w-lg w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold text-white mb-4">{casinoName} – Full Report</h3>
+            <p className="text-gray-300 whitespace-pre-wrap break-words">
+              {issue}
+            </p>
+            <button
+              onClick={() => setOpen(false)}
+              className="mt-6 text-casino-neon-green hover:underline"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
 export default ReportCard;
+
+// ---------- Modal overlay component inside ReportCard file ----------

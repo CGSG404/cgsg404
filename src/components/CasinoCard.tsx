@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Shield, Gift, ExternalLink, AlertTriangle, X } from 'lucide-react';
+import { Star, StarHalf, Shield, Gift, ExternalLink, AlertTriangle, X } from 'lucide-react';
 import ReportDialog from './ReportDialog';
 
 // Context untuk mengelola state modal bonus
@@ -258,14 +258,18 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-4 h-4 ${
-                        i < Math.round(casino.rating) ? 'text-yellow-400 fill-current' : 'text-gray-600'
-                      }`}
-                    />
-                  ))}
+                  {[...Array(5)].map((_, i) => {
+                    const diff = casino.rating - i;
+                    if (diff >= 1) {
+                      // Full star
+                      return <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />;
+                    } else if (diff >= 0.5) {
+                      // Half star
+                      return <StarHalf key={i} className="w-4 h-4 text-yellow-400 fill-current" />;
+                    }
+                    // Empty star
+                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                  })}
                 </div>
                 <span className="text-gray-400 text-sm">({casino.rating}/5)</span>
               </div>

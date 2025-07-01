@@ -145,7 +145,7 @@ const ReportDialog = ({ open, onOpenChange, casinoName }: ReportDialogProps) => 
               value={formData.casinoName}
               onChange={(e) => handleInputChange('casinoName', e.target.value)}
               className="bg-casino-dark border-casino-border-subtle text-white"
-              readOnly
+              readOnly={!!casinoName}
             />
           </div>
 

@@ -8,59 +8,26 @@ import { Calendar, User, Tag, ChevronLeft } from 'lucide-react';
 // NOTE: in production replace this with API fetching; for demo reuse static list
 const newsArticles = [
   {
-    id: 'Online-Casino-Singapore-Test-Luck',
-    title: 'New Online Casino Regulations Set to Launch in 2024',
+    id: '1',
+    title: 'CGSG Domain Officially Launched: Marking a New Era of Safer and More Trusted Online Gambling',
     content:
-      'Full article content here. Major changes coming to the online gambling industry with enhanced player protection measures and stricter licensing requirements. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.',
-    author: 'Casino Expert Team',
-    date: 'December 15, 2024',
-    category: 'Regulation',
-    image: '/placeholder.svg',
-    readTime: '5 min read',
+      'Singapore July 2 2025 – CGSG (Casino Gaming Singapore Group) has officially launched its new domain marking a major milestone in the organizations commitment to a safer, more responsible, and strictly regulated online gambling industry. With this launch, CGSG is introducing a new standard across its ecosystem, emphasizing enhanced player protection and stricter licensing requirements for all partner platforms. Key features such as advanced identity verification, responsible gaming controls, and real-time activity monitoring are now mandatory for all operational partners. This domain launch is more than just a new digital identity — it symbolizes a broader industry transformation toward transparency, integrity, and social responsibility In addition to improving safety and player experience, CGSG is tightening its licensing process through regular audits, legal verification of operations, and ethical assessments for every operator seeking to join its network, This domain launch represents the first step in a series of major updates that CGSG is implementing as part of its serious commitment to building a sustainable and trusted online gambling ecosystem.',
+    author: 'Moderator CGSG',
+    date: 'July 2, 2025',
+    category: 'CGSG',
+    image: '/news-banner/domain1.png',
+    readTime: 'CGSG News',
   },
   {
     id: '2',
-    title: 'Top 10 Casino Bonuses This Month',
+    title: 'Coming Soon',
     content:
-      'Full article content here. Discover the most generous welcome bonuses and promotional offers available at leading online casinos. Donec ullamcorper nulla non metus auctor fringilla.',
-    author: 'Bonus Hunter',
-    date: 'December 12, 2024',
-    category: 'Bonuses',
-    image: '/placeholder.svg',
-    readTime: '8 min read',
-  },
-  {
-    id: '3',
-    title: 'Cryptocurrency Gambling: The Future is Here',
-    content:
-      'Full article content here. How Bitcoin and other cryptocurrencies are revolutionizing online casino payments and what it means for players. Cras mattis consectetur purus sit amet fermentum.',
-    author: 'Tech Analyst',
-    date: 'December 10, 2024',
-    category: 'Technology',
-    image: '/placeholder.svg',
-    readTime: '6 min read',
-  },
-  {
-    id: '4',
-    title: 'Live Dealer Games: Bridging Online and Land-Based Casinos',
-    content:
-      "Full article content here. The rise of live dealer technology and how it's creating more immersive gaming experiences.",
-    author: 'Game Reviewer',
-    date: 'December 8, 2024',
-    category: 'Games',
-    image: '/placeholder.svg',
-    readTime: '7 min read',
-  },
-  {
-    id: '5',
-    title: 'Mobile Casino Gaming Statistics 2024',
-    content:
-      'Full article content here. Latest data shows mobile gaming now accounts for over 60% of all online casino activity worldwide.',
-    author: 'Data Team',
-    date: 'December 5, 2024',
-    category: 'Industry',
-    image: '/placeholder.svg',
-    readTime: '4 min read',
+      'Coming Soon.',
+    author: 'Moderator CGSG',
+    date: 'July 2, 2025',
+    category: 'Gaming',
+    image: '/news-banner/coming-soon.png',
+    readTime: 'CGSG News',
   },
 ];
 

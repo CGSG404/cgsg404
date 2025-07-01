@@ -8,21 +8,21 @@ const GuideTopics = () => {
       title: 'Casino Safety & Security',
       description: 'Learn to identify licensed casinos, check SSL certificates, and verify fair gaming practices.',
       level: 'Beginner',
-      readTime: '5 min'
+      readTime: 'July 2'
     },
     {
       icon: Gift,
       title: 'Understanding Casino Bonuses',
       description: 'Master welcome bonuses, free spins, cashback offers, and wagering requirements.',
       level: 'Beginner',
-      readTime: '8 min'
+      readTime: 'July 2'
     },
     {
       icon: Gamepad2,
       title: 'Game Rules & Basics',
       description: 'Essential strategies for slots, blackjack, roulette, poker, and live dealer games.',
       level: 'Beginner',
-      readTime: '12 min'
+      readTime: 'July 2'
     }
   ];
 
@@ -32,21 +32,21 @@ const GuideTopics = () => {
       title: 'Advanced Gaming Strategies',
       description: 'Card counting, bankroll management, and probability calculations for experienced players.',
       level: 'Advanced',
-      readTime: '15 min'
+      readTime: 'July 2'
     },
     {
       icon: Award,
       title: 'VIP Programs & Loyalty',
       description: 'Maximize rewards, understand tier systems, and leverage exclusive benefits.',
       level: 'Intermediate',
-      readTime: '10 min'
+      readTime: 'July 2'
     },
     {
       icon: Users,
       title: 'Live Casino Etiquette',
       description: 'Proper behavior, tipping customs, and communication with live dealers.',
       level: 'Intermediate',
-      readTime: '7 min'
+      readTime: 'July 2'
     }
   ];
 
@@ -56,14 +56,14 @@ const GuideTopics = () => {
       title: 'Responsible Gambling',
       description: 'Recognize warning signs, set healthy limits, and access support resources.',
       level: 'Essential',
-      readTime: '10 min'
+      readTime: 'July 2'
     },
     {
       icon: Clock,
       title: 'Time Management',
       description: 'Balance gaming with daily life and avoid excessive play sessions.',
       level: 'Essential',
-      readTime: '6 min'
+      readTime: 'July 2'
     }
   ];
 
@@ -80,7 +80,7 @@ const GuideTopics = () => {
                 </div>
                 <div className="text-right">
                   <div className="text-xs text-gray-400">{topic.level}</div>
-                  <div className="text-xs text-casino-neon-green">{topic.readTime} read</div>
+                  <div className="text-xs text-casino-neon-green">{topic.readTime} 2025</div>
                 </div>
               </div>
               
@@ -93,7 +93,7 @@ const GuideTopics = () => {
               </p>
 
               <div className="mt-4 pt-4 border-t border-casino-border-subtle">
-                <span className="text-xs text-gray-500">Coming Soon</span>
+                <span className="text-xs text-yellow-500">Writed by Moderator CGSG</span>
               </div>
             </CardContent>
           </Card>

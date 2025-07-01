@@ -49,9 +49,9 @@ const ForumStats = () => {
   const [isInView, setIsInView] = useState(false);
   
   const forumStats = [
-    { label: "Total Members", value: "12,847", icon: Users },
+    { label: "Total Members", value: "1,081", icon: Users },
     { label: "Total Topics", value: "3,218", icon: MessageCircle },
-    { label: "Total Posts", value: "21,554", icon: TrendingUp },
+    { label: "Total Posts", value: "2,180", icon: TrendingUp },
     { label: "Online Now", value: "287", icon: Clock }
   ];
   

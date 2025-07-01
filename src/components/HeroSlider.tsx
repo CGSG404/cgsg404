@@ -30,9 +30,9 @@ const casinoData = [
   {
     id: 2,
     name: 'BK888 Singapore',
-    rating: 4.8,
+    rating: 4.5,
     bonus: '150% Welcome Bonus',
-    safetyIndex: 90,
+    safetyIndex: 80,
     url: 'https://bk888.co/BK88829A860350',
   },
   {
@@ -40,7 +40,7 @@ const casinoData = [
     name: 'MBS888 Singapore',
     rating: 4.5,
     bonus: '100% Welcome Bonus',
-    safetyIndex: 90,
+    safetyIndex: 80,
     url: 'https://mbs888.online/RF295818622',
   },
   {
@@ -64,7 +64,7 @@ const casinoData = [
     name: 'RR4WIN Singapore',
     rating: 4.5,
     bonus: '100% Welcome Bonus',
-    safetyIndex: 90,
+    safetyIndex: 80,
     url: 'https://rr4winsg.com/RF301019686',
   },
   {
@@ -72,15 +72,15 @@ const casinoData = [
     name: 'EEBET77 Singapore',
     rating: 4.5,
     bonus: 'Slot Welcome Bonus Up To 200%',
-    safetyIndex: 90,
+    safetyIndex: 80,
     url: 'https://eebet77.net/RF29555120A',
   },
   {
     id: 8,
-    name: 'ICLUB365 Singapore',
+    name: 'SGD2U Singapore',
     rating: 4.5,
-    bonus: 'Welcome Bonus Up To 100%',
-    safetyIndex: 90,
+    bonus: 'Welcome Bonus Up To 240%',
+    safetyIndex: 80,
     url: 'https://iclub365.com/RF29555299A',
   },
   {
@@ -88,7 +88,7 @@ const casinoData = [
     name: 'KOI8 Singapore',
     rating: 4.5,
     bonus: 'Welcome Bonus Up To 120%',
-    safetyIndex: 90,
+    safetyIndex: 80,
     url: 'https://koi8.me/RF295196092',
   },
     {

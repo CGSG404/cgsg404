@@ -8,10 +8,10 @@ const FeaturedTopics = () => {
     {
       id: 1,
       title: "Best Online Casinos for 2024 - Community Picks",
-      author: "CasinoExpert92",
+      author: "Moderator CGSG",
       replies: 156,
       views: 2834,
-      lastReply: "15 minutes ago",
+      lastReply: "2 July 2025",
       isPinned: true,
       isHot: true,
       category: "Casino Reviews"
@@ -19,10 +19,10 @@ const FeaturedTopics = () => {
     {
       id: 2,
       title: "New Pragmatic Play Slots - What's Your Favorite?",
-      author: "SlotLover",
+      author: "Moderator CGSG",
       replies: 89,
       views: 1567,
-      lastReply: "1 hour ago",
+      lastReply: "2 July 2025",
       isPinned: false,
       isHot: true,
       category: "Slot Strategies"
@@ -30,10 +30,10 @@ const FeaturedTopics = () => {
     {
       id: 3,
       title: "Withdrawal Issues with XYZ Casino - Need Help",
-      author: "PlayerInNeed",
+      author: "Moderator CGSG",
       replies: 23,
       views: 445,
-      lastReply: "2 hours ago",
+      lastReply: "2 July 2025",
       isPinned: false,
       isHot: false,
       category: "Payment Methods"
@@ -41,10 +41,10 @@ const FeaturedTopics = () => {
     {
       id: 4,
       title: "200% Welcome Bonus at ABC Casino - Worth It?",
-      author: "BonusHunter",
+      author: "Moderator CGSG",
       replies: 67,
       views: 1123,
-      lastReply: "3 hours ago",
+      lastReply: "2 July 2025",
       isPinned: false,
       isHot: false,
       category: "Bonus Hunting"

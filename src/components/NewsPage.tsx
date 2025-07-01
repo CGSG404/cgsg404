@@ -4,64 +4,35 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Calendar, User, Tag } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const NewsPage = () => {
   // List of news articles (in a real app this would come from an API)
   const newsArticles = [
     {
-      id: 'Online-Casino-Singapore-Test-Luck/',
-      title: 'New Online Casino Regulations Set to Launch in 2024',
+      id: 1,
+      title: 'CGSG Domain Officially Launched: Marking a New Era of Safer and More Trusted Online Gambling',
       excerpt:
-        'Major changes coming to the online gambling industry with enhanced player protection measures and stricter licensing requirements.',
-      author: 'Casino Expert Team',
-      date: 'December 15, 2024',
-      category: 'Regulation',
-      image: '/placeholder.svg',
-      readTime: '5 min read',
+        'Singapore July 2 2025 – CGSG (Casino Gaming Singapore Group) has officially launched its new domain marking a major milestone.',
+      author: 'Moderator CGSG',
+      date: 'July 2, 2025',
+      category: 'CGSG',
+      image: '/news-banner/domain1.png',
+      readTime: 'CGSG News',
     },
     {
       id: 2,
-      title: 'Top 10 Casino Bonuses This Month',
+      title: 'Coming Soon',
       excerpt:
-        'Discover the most generous welcome bonuses and promotional offers available at leading online casinos.',
-      author: 'Bonus Hunter',
-      date: 'December 12, 2024',
-      category: 'Bonuses',
-      image: '/placeholder.svg',
-      readTime: '8 min read',
-    },
-    {
-      id: 3,
-      title: 'Cryptocurrency Gambling: The Future is Here',
-      excerpt:
-        'How Bitcoin and other cryptocurrencies are revolutionizing online casino payments and what it means for players.',
-      author: 'Tech Analyst',
-      date: 'December 10, 2024',
-      category: 'Technology',
-      image: '/placeholder.svg',
-      readTime: '6 min read',
-    },
-    {
-      id: 4,
-      title: 'Live Dealer Games: Bridging Online and Land-Based Casinos',
-      excerpt:
-        "The rise of live dealer technology and how it's creating more immersive gaming experiences.",
-      author: 'Game Reviewer',
-      date: 'December 8, 2024',
-      category: 'Games',
-      image: '/placeholder.svg',
-      readTime: '7 min read',
-    },
-    {
-      id: 5,
-      title: 'Mobile Casino Gaming Statistics 2024',
-      excerpt:
-        'Latest data shows mobile gaming now accounts for over 60% of all online casino activity worldwide.',
-      author: 'Data Team',
-      date: 'December 5, 2024',
-      category: 'Industry',
-      image: '/placeholder.svg',
-      readTime: '4 min read',
+        'Coming Soon.',
+      author: 'GURU x YS',
+      date: 'July 2, 2025',
+      category: 'Gaming',
+      image: '/news-banner/coming-soon.png',
+      readTime: 'CGSG News',
     },
   ];
 
@@ -80,7 +51,7 @@ const NewsPage = () => {
       </Head>
       <Navbar />
 
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto max-w-7xl px-4 py-16">
         {/* Page Heading */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
@@ -109,7 +80,49 @@ const NewsPage = () => {
         </div>
 
         {/* Articles Grid */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Mobile Slider */}
+        <div className="sm:hidden">
+          <Swiper
+            modules={[Pagination]}
+            pagination={{ clickable: true }}
+            spaceBetween={16}
+            slidesPerView={1.1}
+            className="pb-8"
+          >
+            {filteredArticles.map((article) => (
+              <SwiperSlide key={article.id} className="pb-4 h-auto">
+                <article className="bg-casino-card-bg/60 border border-casino-border-subtle rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
+                  <img src={article.image} alt={article.title} className="w-full h-40 object-cover" />
+                  <div className="p-6 flex flex-col gap-4">
+                    <h2 className="text-xl font-semibold line-clamp-2 min-h-[56px]">
+                      {article.title}
+                    </h2>
+                    <p className="text-gray-400 text-sm line-clamp-3 min-h-[72px]">
+                      {article.excerpt}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400">
+                      <span className="flex items-center gap-1">
+                        <User className="w-4 h-4" /> {article.author}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" /> {article.date}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Tag className="w-4 h-4" /> {article.category}
+                      </span>
+                    </div>
+                    <Link to={`/news/${article.id}`} className="mt-2 inline-block text-casino-neon-green hover:underline text-sm font-medium">
+                      Read More →
+                    </Link>
+                  </div>
+                </article>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        {/* Desktop Grid */}
+        <div className="hidden sm:grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {filteredArticles.map((article) => (
             <article
               key={article.id}

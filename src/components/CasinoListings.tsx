@@ -1,5 +1,9 @@
 
 import { useState, useMemo } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 import { Search, Filter, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -92,7 +96,7 @@ const casinos: Casino[] = [
     bonus: '150% Welcome Bonus + Free Credit 365 Days',
     features: ['Live Service', 'Lucky Draw', 'Local Payments'],
     description: 'Enjoy a massive 150% Welcome Bonus plus Free Credit available 365 days a year.',
-    badges: ['Top5', 'Event Games', 'Hot Games', 'Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Licensed By CGSG'],
+    badges: ['Top 5', 'Event Games', 'Hot Games', 'Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Licensed By CGSG'],
     isNew: true,
     links: {
       bonus: '/bonuses/diamond-elite',
@@ -164,7 +168,7 @@ const casinos: Casino[] = [
     bonus: 'Welcome Bonus Up To 120% + 365 Days Hot Bonus',
     features: ['Live Service', 'Local & Crypto Payments', 'Lucky Wheel'],
     description: 'Enjoy up to 120% Welcome Bonus + Hot Bonuses every day, 365 days non-stop.',
-    badges: ['Top5', 'Slot Games', 'Live Games', 'Sport Games', 'App Games', 'Other Games', 'Not Licensed By CGSG'],
+    badges: ['Top 5', 'Slot Games', 'Live Games', 'Sport Games', 'App Games', 'Other Games', 'Not Licensed By CGSG'],
     isNew: true,
     links: {
       bonus: '/bonuses/live-hub',
@@ -182,7 +186,7 @@ const casinos: Casino[] = [
     bonus: 'Welcome Bonus Up To 168% + VIP Loyalty',
     features: ['Live Service', 'Mobile App', 'Local Payments'],
     description: 'Unlock up to 168% Welcome Bonus + enjoy exclusive perks with our VIP Loyalty Program.',
-    badges: ['Slot Games', 'Live Games', 'Sport Games', '4D Lottery', 'Other Games', 'Not Lisenced By CGSG'],
+    badges: ['Top 5', 'Slot Games', 'Live Games', 'Sport Games', '4D Lottery', 'Other Games', 'Not Lisenced By CGSG'],
     isNew: true,
     links: {
       bonus: '/bonuses/mobile-plus',
@@ -208,6 +212,186 @@ const casinos: Casino[] = [
         complaint: '/complaints/mobile-plus'
       },
       playUrl: 'https://rr4winsg.com/RF301019686',
+    },
+    {
+      id: 11,
+      name: 'KOI8',
+      logo: '/casino-logos/koi8-logos.png',
+      rating: 4.5,
+      safetyIndex: 'High',
+      bonus: 'Welcome Bonus Up To 120% + 100% High Rescue',
+      features: ['Live Service', 'Lucky Wheel', 'Local & Crypto Payments'],
+      description: '120% to Start 100% to Recover. No One Loses Alone.',
+      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://koi8.me/RF295196092',
+    },
+    {
+      id: 12,
+      name: 'EEBET 77',
+      logo: '/casino-logos/eebet77-logos.png',
+      rating: 4.5,
+      safetyIndex: 'High',
+      bonus: 'Welcome Bonus Up To 350% + Weekly Rescue',
+      features: ['Live Service', 'Lucky Wheel', 'Local & Crypto Payments'],
+      description: 'Start Big with 350% Welcome Bonus — Stay Safe with Weekly Rescue.',
+      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Fishing Games', 'Aviator', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://eebet77.net/RF29555120A',
+    },
+    {
+      id: 13,
+      name: 'Iclub 365',
+      logo: '/casino-logos/iclub365-logos.png',
+      rating: 3.0,
+      safetyIndex: 'Medium',
+      bonus: 'Welcome Bonus Up To 100% + Weekly Royalty Up To $558',
+      features: ['Live Service', 'Local Payments', 'Mobile App'],
+      description: 'Double Your First Deposit + Weekly Royalty Up to $558.',
+      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Bonus Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://iclub365.com/RF29555299A',
+    },
+    {
+      id: 14,
+      name: 'SGD2U',
+      logo: '/casino-logos/sgd2u-logos.png',
+      rating: 4.5,
+      safetyIndex: 'High',
+      bonus: 'Welcome Bonus Up To 240% + Free 365 Days',
+      features: ['Live Service', 'Local Payments', 'Mobile App'],
+      description: 'Double Your First Deposit + Weekly Royalty Up to $558.',
+      badges: ['Slot Games', 'Live Games', 'Sport Games', '4D Lottery', 'Other Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://sgd2u.com/RF29A86A062',
+    },
+    {
+      id: 15,
+      name: 'OnePlay',
+      logo: '/casino-logos/1play-logos.png',
+      rating: 4.8,
+      safetyIndex: 'Very High',
+      bonus: '168% Welcome Bonus + Lucky Spin',
+      features: ['Live Service', 'Local Payments', 'Mobile App'],
+      description: 'Start with 168% and Let the Wheel Decide Your Fortune.',
+      badges: ['Top 5', 'Slot Games', 'Live Games', 'Sport Games', '4D Lottery', 'Fishing Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://1playsg.vip/RF29551A809',
+    },
+    {
+      id: 16,
+      name: 'Panda8',
+      logo: '/casino-logos/panda8sg-logos.png',
+      rating: 4.5,
+      safetyIndex: 'High',
+      bonus: '168% Welcome Bonus + Lucky Bonus',
+      features: ['Live Service', 'Local Payments', 'Mobile App'],
+      description: 'Unlock 168% Welcome Bonus + Surprise Lucky Bonus Inside.',
+      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://panda8.net/RF295189210',
+    },
+    {
+      id: 17,
+      name: 'WE88',
+      logo: '/casino-logos/we8-logos.png',
+      rating: 4.5,
+      safetyIndex: 'High',
+      bonus: 'Welcome Bonus Up To 340% + Rescue Bonus 10%',
+      features: ['Live Service', 'Local & Crypto Payments', 'Mobile App'],
+      description: 'Get Boosted: 340% Welcome Bonus + 10% Rescue for Every Spin.',
+      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://we88sg.live/RF12A75692',
+    },
+    {
+      id: 18,
+      name: 'UFC9',
+      logo: '/casino-logos/ufc9-logos.png',
+      rating: 4.0,
+      safetyIndex: 'Medium',
+      bonus: 'Welcome Bonus Up To 340% + Rescue Bonus 10%',
+      features: ['Live Service', 'Local & Crypto Payments', 'Mobile App'],
+      description: 'Get Boosted: 340% Welcome Bonus + 10% Rescue for Every Spin.',
+      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://ufcsg.com/RF295190680',
+    },
+    {
+      id: 19,
+      name: 'DG6',
+      logo: '/casino-logos/dg6-logos.png',
+      rating: 4.0,
+      safetyIndex: 'Medium',
+      bonus: 'Welcome Bonus Up To 150% + Mystery Box',
+      features: ['Live Service', 'Local & Crypto Payments'],
+      description: 'Double the Thrill: 150% Welcome Bonus + Surprise Mystery Box.',
+      badges: ['Slot Games', 'Bonus Games', 'Other Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://dg6sg.com/RF295191531',
+    },
+    {
+      id: 20,
+      name: 'Jewel 996',
+      logo: '/casino-logos/jewel996-logos.png',
+      rating: 4.0,
+      safetyIndex: 'Medium',
+      bonus: 'Welcome Bonus Up To 200% + Limited Bonus',
+      features: ['Live Service', 'Local & Crypto Payments'],
+      description: 'Welcome to Big Wins 200% Bonus & Limited-Time Treats.',
+      badges: ['Megah5 Promo', 'Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
+      isNew: true,
+      links: {
+        bonus: '/bonuses/mobile-plus',
+        review: '/reviews/mobile-plus',
+        complaint: '/complaints/mobile-plus'
+      },
+      playUrl: 'https://jewel996sg.com/RF12A757AA',
       }
 ];
 
@@ -263,6 +447,15 @@ const CasinoListings = () => {
 
     return sorted;
   }, [searchTerm, activeTab, sortBy, casinos]);
+
+  // chunk casinos into groups of 10 for mobile slider
+  const chunkedCasinos = useMemo(() => {
+    const arr: Casino[][] = [];
+    for (let i = 0; i < filteredAndSortedCasinos.length; i += 10) {
+      arr.push(filteredAndSortedCasinos.slice(i, i + 10));
+    }
+    return arr;
+  }, [filteredAndSortedCasinos]);
 
   return (
     <section className="py-16">
@@ -331,8 +524,38 @@ const CasinoListings = () => {
           </p>
         </div>
 
-        {/* Casino Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* Mobile Slider */}
+        <div className="sm:hidden mb-12">
+          {filteredAndSortedCasinos.length > 10 ? (
+            <Swiper
+              modules={[Pagination, Autoplay]}
+              pagination={{ clickable: true }}
+              spaceBetween={16}
+              slidesPerView={1}
+              autoplay={{ delay: 5000, disableOnInteraction: false }}
+              className="pb-8"
+            >
+              {chunkedCasinos.map((group, idx) => (
+                <SwiperSlide key={idx} className="pb-4">
+                  <div className="flex flex-col gap-4">
+                    {group.map((casino) => (
+                      <CasinoCard key={casino.id} casino={casino} />
+                    ))}
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {filteredAndSortedCasinos.map((casino) => (
+                <CasinoCard key={casino.id} casino={casino} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Grid */}
+        <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredAndSortedCasinos.map((casino) => (
             <CasinoCard key={casino.id} casino={casino} />
           ))}
