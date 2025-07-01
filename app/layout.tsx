@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -46,6 +47,9 @@ export const metadata: Metadata = {
   },
 };
 
+import dynamic from 'next/dynamic';
+const BackToTop = dynamic(() => import('@/components/BackToTop'));
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -57,6 +61,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <BackToTop />
       </body>
     </html>
   );
