@@ -12,7 +12,7 @@ const PrivacyPolicy = () => (
       </Head>
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-16 space-y-6">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6">Privacy Policy</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 gradient-text">Privacy Policy</h1>
         <p className="text-gray-300 text-sm md:text-base">Last updated: July 1, 2025</p>
         <p className="text-gray-400">
           We value your privacy. This Privacy Policy explains how CasinoGuru Singapore collects, uses, and safeguards your personal information when you visit our site.

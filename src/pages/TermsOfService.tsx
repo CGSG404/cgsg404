@@ -6,13 +6,14 @@ import Head from 'next/head';
 
 const TermsOfService = () => (
 
-    <div className="min-h-screen flex flex-col bg-casino-dark text-white">
+    <div className="relative min-h-screen flex flex-col bg-casino-dark text-white">
+      <div className="absolute inset-0 bg-neon-gradient opacity-10 -z-10 pointer-events-none" />
       <Head>
         <title>Terms of Service | CGSG</title>
       </Head>
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-16 space-y-6">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6">Terms of Service</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 gradient-text">Terms of Service</h1>
         <p className="text-gray-300 text-sm md:text-base">Last updated: July 1, 2025</p>
         <p className="text-gray-400">
           By accessing or using CasinoGuru Singapore, you agree to be bound by these Terms of Service. Please read them carefully.
