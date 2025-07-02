@@ -231,7 +231,7 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
   };
 
   return (
-    <Card className={`bg-casino-card-bg border-casino-border-subtle overflow-hidden transition-all duration-300 hover:scale-105 hover:${getSafetyGlow(casino.safetyIndex)} group cursor-pointer`}>
+    <Card className={`bg-casino-card-bg border-casino-border-subtle overflow-hidden transition-colors duration-200 hover:border-casino-neon-green focus:border-casino-neon-green active:border-casino-neon-green hover:${getSafetyGlow(casino.safetyIndex)} group cursor-pointer`}>
       <div className="p-6">
         {/* Header with Logo and Basic Info */}
         <div className="flex flex-wrap items-start justify-between gap-y-2 mb-4">
