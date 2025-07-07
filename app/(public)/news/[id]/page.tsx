@@ -3,9 +3,7 @@ import NewsDetailPage from "@/components/NewsDetailPage";
 
 export const revalidate = 600;
 
-export function generateMetadata(
-  { params }: { params: { id: string } }
-): Metadata {
+export function generateMetadata({ params }: any): Metadata {
   return {
     title: `News ${params.id} | CGSG`,
   };
