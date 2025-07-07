@@ -1,4 +1,10 @@
-import { Suspense, lazy, useEffect } from 'react';
+// Legacy App.tsx disabled after migration to Next.js routing.
+// Keeping empty file to satisfy old references.
+export default function LegacyPlaceholder() {
+  return null;
+}
+
+/*
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
@@ -31,6 +37,7 @@ const NotFound = lazy(() => import('@/pages/NotFound'));
 const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
 const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('@/pages/TermsOfService'));
+const AboutUs = lazy(() => import('@/pages/AboutUs'));
 
 // Initialize React Query
 const queryClient = new QueryClient({
@@ -116,6 +123,7 @@ const App = () => {
                     <Route path="/error" element={<SimpleErrorPage />} />
                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/terms-of-service" element={<TermsOfService />} />
+                    <Route path="/about-us" element={<AboutUs />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>
@@ -131,3 +139,4 @@ const App = () => {
 };
 
 export default App;
+*/

@@ -1,9 +1,11 @@
+'use client';
+
 import { useState, useMemo } from 'react';
 import Head from 'next/head';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Calendar, User, Tag } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -111,7 +113,7 @@ const NewsPage = () => {
                         <Tag className="w-4 h-4" /> {article.category}
                       </span>
                     </div>
-                    <Link to={`/news/${article.id}`} className="mt-2 inline-block text-casino-neon-green hover:underline text-sm font-medium">
+                    <Link href={`/news/${article.id}`} className="mt-2 inline-block text-casino-neon-green hover:underline text-sm font-medium">
                       Read More →
                     </Link>
                   </div>
@@ -151,7 +153,7 @@ const NewsPage = () => {
                 </div>
 
                 <Link
-                  to={`/news/${article.id}`}
+                  href={`/news/${article.id}`}
                   className="mt-2 inline-block text-casino-neon-green hover:underline text-sm font-medium"
                 >
                   Read More →

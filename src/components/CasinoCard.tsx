@@ -97,12 +97,7 @@ const BonusModal = () => {
             </ul>
           </div>
           
-          <Button 
-            className="w-full bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-bold"
-            onClick={handleClaimBonus}
-          >
-            Claim Bonus Now
-          </Button>
+          
         </div>
       </div>
     </div>
@@ -168,12 +163,7 @@ const BonusCard = ({ bonus, onClose, onClaim }: { bonus: string; onClose: () => 
           </ul>
         </div>
         
-        <Button 
-          className="w-full bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-bold"
-          onClick={onClaim}
-        >
-          Claim Bonus Now
-        </Button>
+        
       </div>
     </div>
   </div>
@@ -231,7 +221,7 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
   };
 
   return (
-    <Card className={`bg-casino-card-bg border-casino-border-subtle overflow-hidden transition-colors duration-200 hover:border-casino-neon-green focus:border-casino-neon-green active:border-casino-neon-green hover:${getSafetyGlow(casino.safetyIndex)} group cursor-pointer`}>
+    <Card className={`bg-casino-card-bg border-casino-border-subtle overflow-hidden transition-colors duration-200 hover:border-casino-neon-green focus:border-casino-neon-green active:border-casino-neon-green hover:${getSafetyGlow(casino.safetyIndex)} group cursor-pointer w-full h-full flex flex-col`}>
       <div className="p-6">
         {/* Header with Logo and Basic Info */}
         <div className="flex flex-wrap items-start justify-between gap-y-2 mb-4">
@@ -385,15 +375,7 @@ const CasinoCard = ({ casino }: CasinoCardProps) => {
             <div className="mt-4 p-4 bg-casino-dark-lighter/30 rounded-lg border border-casino-neon-green/30 animate-fadeIn">
               <h4 className="text-casino-neon-green font-semibold mb-2">Bonus Details</h4>
               <p className="text-gray-300 text-sm mb-3">{casino.bonus}</p>
-              <Button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(casino.links.bonus, '_blank');
-                }}
-                className="w-full bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold"
-              >
-                Claim Bonus Now
-              </Button>
+              
             </div>
           )}
         </div>

@@ -1,21 +1,20 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 
 const NotFound = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     console.error(
       "404 Error: User attempted to access non-existent route:",
-      location.pathname
+      router.asPath
     );
-  }, [location.pathname]);
+  }, [router.asPath]);
 
   const handleGoHome = () => {
-    navigate("/");
+    router.push("/");
   };
 
   return (

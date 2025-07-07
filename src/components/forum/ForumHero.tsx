@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const ForumHero = () => {
   return (
@@ -14,7 +14,7 @@ const ForumHero = () => {
             Join thousands of players discussing strategies, sharing experiences, and helping each other win big!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/auth" className="inline-flex">
+            <Link href="/auth" className="inline-flex">
               <Button
                 className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
               >

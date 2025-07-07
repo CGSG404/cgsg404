@@ -1,9 +1,12 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Menu, Star, User, LogOut, UserCircle, Settings, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -11,8 +14,10 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const { user, signOut, signInWithGoogle } = useAuth();
-  const navigate = useNavigate();
+  const { user, signOut, signInWithGoogle, loading } = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
+  if (loading) return null;
 
   const navLinks = [
     { name: 'Casinos', href: '/casinos' },
@@ -33,7 +38,7 @@ const Navbar = () => {
       localStorage.removeItem('sb-refresh-token');
       
       toast.success('Signed out successfully');
-      navigate('/');
+      router.push('/');
       
       // Force page reload to clear all states
       window.location.reload();
@@ -46,7 +51,7 @@ const Navbar = () => {
   const handleProfileClick = async () => {
     if (!user) {
       toast.error('Please sign in to view your profile');
-      navigate('/signin', { state: { from: window.location.pathname } });
+      router.push(`/signin?from=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
     setShowProfile(false);
@@ -62,7 +67,7 @@ const Navbar = () => {
       );
       
       if (data && data.username) {
-        navigate(`/profile/${data.username}`);
+        router.push(`/profile/${data.username}`);
       } else {
         toast.error('Profile data not found');
       }
@@ -79,7 +84,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <div className="w-10 h-10 bg-neon-gradient rounded-xl flex items-center justify-center">
               <Star className="w-6 h-6 text-casino-dark" />
             </div>
@@ -91,7 +96,7 @@ const Navbar = () => {
             {navLinks.map((link) => (
               <Link
                 key={link.name}
-                to={link.href}
+                href={link.href}
                 className="text-gray-300 hover:text-casino-neon-green transition-colors duration-200 font-medium"
               >
                 {link.name}
@@ -153,7 +158,7 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-3">
-                <Link to="/auth">
+                <Link href="/auth">
                   <Button
                     variant="outline"
                     size="sm"
@@ -191,7 +196,7 @@ const Navbar = () => {
                 {navLinks.map((link) => (
                   <Link
                     key={link.name}
-                    to={link.href}
+                    href={link.href}
                     className="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 rounded-md transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >

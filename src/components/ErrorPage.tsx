@@ -1,71 +1,14 @@
 
 import { Button } from './ui/button';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
-import { useRouteError, isRouteErrorResponse, Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface ErrorPageProps {
   error?: Error;
   resetError?: () => void;
 }
 
-export function ErrorPage() {
-  const error = useRouteError();
-
-  let errorMessage = 'An unexpected error occurred';
-  let statusCode = 500;
-
-  if (isRouteErrorResponse(error)) {
-    statusCode = error.status;
-    errorMessage = error.statusText || (error.data as any)?.message || errorMessage;
-  } else if (error instanceof Error) {
-    errorMessage = error.message;
-  }
-
-  const handleRefresh = () => {
-    window.location.reload();
-  };
-
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-center">
-      <div className="w-full max-w-md space-y-4">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-          <AlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
-        </div>
-        
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          {statusCode}
-        </h1>
-        
-        <h2 className="text-2xl font-semibold text-foreground">
-          {statusCode === 404 ? 'Page not found' : 'Something went wrong'}
-        </h2>
-        
-        <p className="text-muted-foreground">
-          {statusCode === 404
-            ? 'The page you are looking for might have been removed or is temporarily unavailable.'
-            : errorMessage}
-        </p>
-        
-        <div className="flex flex-col space-y-2 pt-6 sm:flex-row sm:justify-center sm:space-x-3 sm:space-y-0">
-          <Button asChild>
-            <Link to="/">
-              <Home className="mr-2 h-4 w-4" />
-              Return Home
-            </Link>
-          </Button>
-          
-          <Button variant="outline" onClick={handleRefresh}>
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Refresh Page
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Simple error page component that doesn't use router hooks
-export function SimpleErrorPage({ error, resetError }: ErrorPageProps) {
+export const ErrorPage = ({ error, resetError }: ErrorPageProps) => {
   const errorMessage = error?.message || 'An unexpected error occurred';
 
   const handleRefresh = () => {
@@ -112,3 +55,6 @@ export function SimpleErrorPage({ error, resetError }: ErrorPageProps) {
     </div>
   );
 }
+
+// Alias for legacy imports
+export const SimpleErrorPage = ErrorPage;

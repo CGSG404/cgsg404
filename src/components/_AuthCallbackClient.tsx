@@ -1,18 +1,19 @@
 // src/components/_AuthCallbackClient.tsx
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 
 const AuthCallback = () => {
-  const Navigate = useNavigate ();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        Navigate('/');
+        router.push('/');
       }
     });
-  }, [Navigate]);
+  }, [router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-casino-dark">

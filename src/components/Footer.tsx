@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import { Star, Shield, Users, Gift } from 'lucide-react';
 import CountUp from 'react-countup';
 import { useState } from 'react';
@@ -35,7 +37,7 @@ const Footer = () => {
       links: [
         { name: 'Gambling Guide', href: '/guide' },
         { name: 'News', href: '/news' },
-        { name: 'About Us', href: undefined, onClick: () => setOpenModal('about') },
+        { name: 'About Us', href: '/about-us' },
       ]
     }
   ];
@@ -47,7 +49,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <Link to="/" className="flex items-center space-x-2 mb-4">
+            <Link href="/" className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-neon-gradient rounded-xl flex items-center justify-center">
                 <Star className="w-6 h-6 text-casino-dark" />
               </div>
@@ -80,7 +82,7 @@ const Footer = () => {
                       </button>
                     ) : (
                       <Link
-                        to={link.href!}
+                        href={link.href!}
                         className="text-gray-400 hover:text-casino-neon-green transition-colors duration-200 text-sm"
                       >
                         {link.name}
@@ -98,28 +100,28 @@ const Footer = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div className="flex flex-col items-center">
               <Shield className="w-8 h-8 text-casino-neon-green mb-2" />
-              <div className="text-lg font-bold text-white">
+              <div className="text-lg font-bold text-white" suppressHydrationWarning>
                 <CountUp end={26}duration={1.5} separator="," />+
               </div>
               <div className="text-gray-400 text-sm">Verified Casinos</div>
             </div>
             <div className="flex flex-col items-center">
               <Users className="w-8 h-8 text-blue-400 mb-2" />
-              <div className="text-lg font-bold text-white">
+              <div className="text-lg font-bold text-white" suppressHydrationWarning>
                 <CountUp end={1081} duration={1.5} separator="," />+
               </div>
               <div className="text-gray-400 text-sm">Forum Members Activies</div>
             </div>
             <div className="flex flex-col items-center">
               <Gift className="w-8 h-8 text-casino-neon-purple mb-2" />
-              <div className="text-lg font-bold text-white">
+              <div className="text-lg font-bold text-white" suppressHydrationWarning>
                 <CountUp end={800} duration={1.5} separator="," />+
               </div>
               <div className="text-gray-400 text-sm">Active Bonuses</div>
             </div>
             <div className="flex flex-col items-center">
               <Star className="w-8 h-8 text-yellow-400 mb-2" />
-              <div className="text-lg font-bold text-white">
+              <div className="text-lg font-bold text-white" suppressHydrationWarning>
                 <CountUp end={99} duration={1.5} />%
               </div>
               <div className="text-gray-400 text-sm">Trust Score</div>
@@ -130,17 +132,17 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-casino-border-subtle pt-6 flex flex-col md:flex-row justify-between items-center">
           <div className="text-gray-400 text-sm mb-4 md:mb-0">
-            2025 CGSG. All rights reserved. | CasinoGuru Singapore. | Play Responsibly.
+          © 2025 CGSG. All rights reserved. | CasinoGuru Singapore.
           </div>
           <div className="flex space-x-6 text-sm">
             <Link
-              to="/privacy-policy"
+              href="/privacy-policy"
               className="text-gray-400 hover:text-casino-neon-green transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
-              to="/terms-of-service"
+              href="/terms-of-service"
               className="text-gray-400 hover:text-casino-neon-green transition-colors"
             >
               Terms of Service
@@ -171,17 +173,6 @@ const Footer = () => {
               <>
                 <h2 className="text-xl font-bold mb-4 text-white">Success Stories</h2>
                 <p className="text-gray-300 text-sm">Discover how players maximized their winnings and enjoyed safe gaming experiences through our recommendations.</p>
-              </>
-            )}
-            {openModal === 'about' && (
-              <>
-                <h2 className="text-xl font-bold mb-4 text-white">About Us</h2>
-                <p className="text-gray-300 text-sm">CGSG is dedicated to providing transparent casino reviews and responsible gambling guidance for players worldwide.</p>
-              </>
-            )}
-            {openModal === 'contact' && (
-              <>
-                <h2 className="text-xl font-bold mb-4 text-white">Contact</h2>
               </>
             )}
           </div>

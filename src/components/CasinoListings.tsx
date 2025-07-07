@@ -1,15 +1,12 @@
-
-import { useState, useMemo } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CasinoCard from './CasinoCard';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
+import { fetchAllCasinos } from '@/lib/api';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
 
 interface Casino {
@@ -32,7 +29,7 @@ interface Casino {
 }
 
 // Static data moved outside the component to prevent re-creation on every render.
-const casinos: Casino[] = [
+const initialCasinos: Casino[] = [
   {
     id: 1,
     name: 'Ducky Luck',
@@ -395,18 +392,28 @@ const casinos: Casino[] = [
       }
 ];
 
-const tabs = [
-    { id: 'all', label: 'All Casinos', count: casinos.length },
-    { id: 'best', label: 'Best Casinos', count: casinos.filter(c => c.safetyIndex === 'Very High').length },
-    { id: 'new', label: 'New Casinos', count: casinos.filter(c => c.isNew).length },
-    { id: 'bonuses', label: 'Best Bonuses', count: casinos.filter(c => c.bonus.includes('200%') || c.bonus.includes('300%') || c.bonus.includes('400%')).length },
-];
-
 const CasinoListings = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('safety');
   const [activeTab, setActiveTab] = useState('all');
-  const isDesktop = useIsDesktop();
+  const rawIsDesktop = useIsDesktop();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDesktop = mounted ? rawIsDesktop : false;
+
+  const { data = initialCasinos } = useQuery({
+    queryKey: ['casinos'],
+    queryFn: fetchAllCasinos,
+    initialData: initialCasinos,
+  });
+  const casinos = data as Casino[];
+
+  const tabs = useMemo(() => [
+    { id: 'all', label: 'All Casinos', count: casinos.length },
+    { id: 'best', label: 'Best Casinos', count: casinos.filter(c => c.safetyIndex === 'Very High').length },
+    { id: 'new', label: 'New Casinos', count: casinos.filter(c => c.isNew).length },
+    { id: 'bonuses', label: 'Best Bonuses', count: casinos.filter(c => c.bonus?.match(/(200|300|400)%/)).length },
+  ], [casinos]);
 
   const filteredAndSortedCasinos = useMemo(() => {
     const filtered = casinos.filter(casino => {
@@ -448,14 +455,24 @@ const CasinoListings = () => {
     return sorted;
   }, [searchTerm, activeTab, sortBy, casinos]);
 
-  // chunk casinos into groups of 10 for mobile slider
-  const chunkedCasinos = useMemo(() => {
-    const arr: Casino[][] = [];
-    for (let i = 0; i < filteredAndSortedCasinos.length; i += 10) {
-      arr.push(filteredAndSortedCasinos.slice(i, i + 10));
-    }
-    return arr;
-  }, [filteredAndSortedCasinos]);
+  // Number of casinos currently shown
+  const [visibleCount, setVisibleCount] = useState(10);
+
+  // Reset visible count when filters or search change
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [searchTerm, activeTab, sortBy]);
+
+  const visibleCasinos = filteredAndSortedCasinos.slice(0, visibleCount);
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 24 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.06, duration: 0.4 }
+    })
+  };
 
   return (
     <section className="py-16">
@@ -524,47 +541,62 @@ const CasinoListings = () => {
           </p>
         </div>
 
-        {/* Mobile Slider */}
+        {/* Mobile List */}
         <div className="sm:hidden mb-12">
-          {filteredAndSortedCasinos.length > 10 ? (
-            <Swiper
-              modules={[Pagination, Autoplay]}
-              pagination={{ clickable: true }}
-              spaceBetween={16}
-              slidesPerView={1}
-              autoplay={{ delay: 5000, disableOnInteraction: false }}
-              className="pb-8"
-            >
-              {chunkedCasinos.map((group, idx) => (
-                <SwiperSlide key={idx} className="pb-4">
-                  <div className="flex flex-col gap-4">
-                    {group.map((casino) => (
-                      <CasinoCard key={casino.id} casino={casino} />
-                    ))}
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {filteredAndSortedCasinos.map((casino) => (
+          <div className="flex flex-col gap-4">
+            {visibleCasinos.map((casino, idx) => (
+              isDesktop ? (
+                <motion.div
+                  key={casino.id}
+                  custom={idx}
+                  initial="hidden"
+                  animate="visible"
+                  variants={cardVariants}
+                >
+                  <CasinoCard casino={casino} />
+                </motion.div>
+              ) : (
                 <CasinoCard key={casino.id} casino={casino} />
-              ))}
-            </div>
-          )}
+              )
+            ))}
+          </div>
         </div>
 
         {/* Desktop Grid */}
         <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredAndSortedCasinos.map((casino) => (
-            <CasinoCard key={casino.id} casino={casino} />
+          {visibleCasinos.map((casino, idx) => (
+            isDesktop ? (
+              <motion.div
+                key={casino.id}
+                custom={idx}
+                initial="hidden"
+                animate="visible"
+                variants={cardVariants}
+              >
+                <CasinoCard casino={casino} />
+              </motion.div>
+            ) : (
+              <CasinoCard key={casino.id} casino={casino} />
+            )
           ))}
         </div>
 
-        {filteredAndSortedCasinos.length === 0 && (
+        {visibleCasinos.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 text-lg mb-4">No casinos found</div>
             <p className="text-gray-500">Try adjusting your search terms or filters</p>
+          </div>
+        )}
+
+        {/* Show More Button */}
+        {visibleCount < filteredAndSortedCasinos.length && (
+          <div className="text-center mt-8">
+            <Button
+              onClick={() => setVisibleCount((prev) => prev + 10)}
+              className="bg-gradient-to-r from-casino-neon-green to-green-500 hover:to-green-400 text-casino-dark font-semibold transition-colors px-6 py-3"
+            >
+              Show More Casinos ({filteredAndSortedCasinos.length - visibleCount}+)
+            </Button>
           </div>
         )}
       </div>

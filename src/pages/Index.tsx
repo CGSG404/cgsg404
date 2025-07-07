@@ -1,7 +1,5 @@
 import Head from "next/head";
-import dynamic from "next/dynamic";
-
-const IndexPage = dynamic(() => import("@/components/IndexPage"), { ssr: false });
+import IndexPage from "@/components/IndexPage";
 
 export default function Home() {
   return (

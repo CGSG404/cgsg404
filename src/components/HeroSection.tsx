@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
@@ -57,7 +57,7 @@ const HeroSection: React.FC = () => {
           >
             Find Best Casinos
           </Button>
-          <Link to="/reviews">
+          <Link href="/reviews">
             <Button
               size="lg"
               variant="outline"

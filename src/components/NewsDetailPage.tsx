@@ -1,5 +1,8 @@
+'use client';
+
 import { useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Head from 'next/head';
@@ -15,7 +18,7 @@ const newsArticles = [
     author: 'Moderator CGSG',
     date: 'July 2, 2025',
     category: 'CGSG',
-    image: '/news-banner/domain1.png',
+    image: `/news-banner/domain1.png`,
     readTime: 'CGSG News',
   },
   {
@@ -26,13 +29,20 @@ const newsArticles = [
     author: 'Moderator CGSG',
     date: 'July 2, 2025',
     category: 'Gaming',
-    image: '/news-banner/coming-soon.png',
+    image: `/news-banner/coming-soon.png`,
     readTime: 'CGSG News',
   },
 ];
 
 const NewsDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = useParams<{ id?: string }>();
+  const id = params?.id || searchParams?.get('id');
+  if (!id) {
+    router.push('/404');
+    return null;
+  }
 
   const article = useMemo(() => newsArticles.find((a) => a.id === id), [id]);
 
@@ -41,7 +51,7 @@ const NewsDetailPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-casino-dark text-white p-8 text-center">
         <div>
           <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
-          <Link to="/news" className="text-casino-neon-green hover:underline">
+          <Link href="/news" className="text-casino-neon-green hover:underline">
             Return to News List
           </Link>
         </div>
@@ -57,7 +67,7 @@ const NewsDetailPage = () => {
       <Navbar />
 
       <main className="container mx-auto px-4 py-16 max-w-3xl">
-        <Link to="/news" className="flex items-center gap-2 text-sm text-casino-neon-green mb-6 hover:underline">
+        <Link href="/news" className="flex items-center gap-2 text-sm text-casino-neon-green mb-6 hover:underline">
           <ChevronLeft className="w-4 h-4" /> Back to News
         </Link>
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,13 +10,14 @@ const Auth = () => {
 // Semua logic dan UI utama Auth sudah di sini.
 
   const { user, signInWithGoogle, loading } = useAuth();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      router.push('/');
     }
-  }, [user, navigate]);
+  }, [user, router]);
 
   const handleGoogleSignIn = async () => {
     try {

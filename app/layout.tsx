@@ -47,6 +47,7 @@ export const metadata: Metadata = {
   },
 };
 
+import Providers from './providers';
 import dynamic from 'next/dynamic';
 const BackToTop = dynamic(() => import('@/components/BackToTop'));
 
@@ -60,7 +61,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <BackToTop />
       </body>
     </html>
