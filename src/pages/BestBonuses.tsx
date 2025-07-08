@@ -13,7 +13,7 @@ const casinos = [
     profile: 'https://example.com/star-luck-logo.png',
     playUrl: 'https://star-luck.com/play'
   }
-  // ...tambahkan casino lain sesuai kebutuhan
+  // ...Add Casinos
 ];
 
 export default function BestBonuses() {
