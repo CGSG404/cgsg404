@@ -14,3 +14,9 @@ export async function fetchAllCasinos() {
   if (!res.ok) throw new Error("Failed to fetch casinos list");
   return res.json();
 }
+
+// Fetch top casinos (first 10 by default)
+export async function fetchTopCasinos(limit: number = 10) {
+  const casinos = await fetchAllCasinos();
+  return Array.isArray(casinos) ? casinos.slice(0, limit) : [];
+}

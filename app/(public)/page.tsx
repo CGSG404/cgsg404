@@ -1,6 +1,6 @@
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import IndexHydrated from "@/components/IndexHydrated";
-import { fetchFeaturedCasinos } from "@/lib/api";
+import { fetchFeaturedCasinos, fetchTopCasinos } from "@/lib/api";
 import { Metadata } from "next";
 
 export const dynamic = "force-static";
@@ -27,6 +27,11 @@ export default async function Home() {
   await queryClient.prefetchQuery({
     queryKey: ["featuredCasinos"],
     queryFn: fetchFeaturedCasinos,
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["topCasinos"],
+    queryFn: () => fetchTopCasinos(10),
   });
 
   const dehydrated = dehydrate(queryClient);

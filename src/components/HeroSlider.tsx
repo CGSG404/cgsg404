@@ -7,10 +7,13 @@
  * - Mendukung gestur swipe di perangkat mobile dan auto-slide setiap 3 detik.
  * - Dibuat responsif menggunakan Tailwind CSS.
  */
+'use client';
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { Star, Shield, Gift, ExternalLink } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTopCasinos } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 
 // Import Swiper styles
@@ -102,6 +105,11 @@ const casinoData = [
 ];
 
 const HeroSlider: React.FC = () => {
+  const { data: casinos = casinoData } = useQuery({
+    queryKey: ['topCasinos'],
+    queryFn: () => fetchTopCasinos(10),
+    initialData: casinoData,
+  });
   return (
     <div id="top-casinos" className="relative w-full container mx-auto py-8 md:py-12">
       <div className="absolute inset-0 bg-neon-gradient opacity-10 -z-10"></div>
@@ -140,7 +148,7 @@ const HeroSlider: React.FC = () => {
           }}
           className="mySwiper"
         >
-          {casinoData.map((casino) => (
+          {casinos.map((casino) => (
             <SwiperSlide key={casino.id} className="py-4">
               <div className="bg-casino-card-bg border border-gray-700/50 rounded-xl overflow-hidden transform transition-[transform,border-color] duration-300 hover:scale-105 hover:border-casino-neon-green/50 active:scale-100 active:border-casino-neon-green h-full flex flex-col justify-between cursor-pointer">
                 <div className="p-6">
