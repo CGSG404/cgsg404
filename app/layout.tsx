@@ -16,15 +16,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com'),
   title: {
-    default: 'CGSG - CasinoGuru Singapore',
-    template: '%s | CGSG',
+    default: 'GuruSingapore',
+    template: '%s | GuruSingapore',
   },
   description: 'GuruSingapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
   openGraph: {
-    title: 'CGSG - CasinoGuru Singapore.',
+    title: 'GuruSingapore',
     description: 'GuruSingapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com',
-    siteName: 'CGSG',
+    siteName: 'GuruSingapore',
     images: [
       {
         url: '/favicon.ico',
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CGSG - GuruSingapore',
+    title: 'GuruSingapore',
     description: 'GuruSingapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
-    images: ['/og-image.png'],
+    images: ['/favicon.ico'],
   },
   icons: {
     icon: '/favicon.ico',
