@@ -1,16 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 // Define the logos
 const logos = [
-  { name: 'Game Curacao' },
-  { name: 'PAGCOR' },
-  { name: 'bmm' },
-  { name: 'iTechLabs' },
-  { name: 'GODADDY' },
-  { name: 'iovation' },
-  { name: 'ThreatMetrix' },
-  { name: 'TST VERIFIED' },
+  { name: 'Game Curacao', src: '/logos/gaming_curacao.png' },
+  { name: 'PAGCOR', src: '/logos/PAGCOR.png' },
+  { name: 'bmm', src: '/logos/bmm-logo.png' },
+  { name: 'iTechLabs', src: '/logos/itechlabs.png' },
+  { name: 'GODADDY', src: '/logos/godaddy.png' },
+  { name: 'iovation', src: '/logos/iovation.png' },
+  { name: 'ThreatMetrix', src: '/logos/TM.jpg' },
+  { name: 'TST VERIFIED', src: '/logos/TST.jpg' },
 ];
 
 const PIXELS_PER_SECOND = 30;
@@ -53,10 +54,10 @@ const LogoSlider: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-          Thanks For Supports
+          Check Gaming License & Certification
           </h3>
           <p className="text-gray-400 text-sm md:text-base">
-          Join thousands of satisfied users worldwide
+          Real Domain Provide Safety License & Certification for you.
           </p>
         </motion.div>
 
@@ -87,13 +88,17 @@ const LogoSlider: React.FC = () => {
                 className="flex-shrink-0 px-4"
               >
                 <div
-                  className="w-40 h-20 bg-gray-800/50 rounded-lg flex items-center justify-center 
+                  className="w-40 h-20 bg-gray-800/50 rounded-lg flex items-center justify-center relative 
                             border border-gray-700/50 hover:border-casino-neon-green/30 transition-[transform,border-color] duration-300
                             transform hover:scale-110"
                 >
-                  <span className="text-gray-400 hover:text-casino-neon-green text-sm font-medium transition-colors duration-300">
-                    {logo.name}
-                  </span>
+                  <Image
+                    src={logo.src}
+                    alt={logo.name}
+                    fill
+                    sizes="160px"
+                    className="object-contain p-2 transition-colors duration-300"
+                  />
                 </div>
               </div>
             ))}
