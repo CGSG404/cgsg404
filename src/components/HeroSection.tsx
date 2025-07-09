@@ -5,6 +5,10 @@ import { motion } from 'framer-motion';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
 import { Shield, Users, Gift, Award } from 'lucide-react';
 import CountUp from 'react-countup';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+const FaqSection = dynamic(() => import('@/components/FaqSection'), { ssr: false });
 
 const stats = [
   { icon: <Shield className="w-8 h-8 mx-auto text-casino-neon-green mb-2" />, value: '87+', label: 'Casinos Reviewed' },
@@ -16,7 +20,8 @@ const stats = [
 const HeroSection: React.FC = () => {
   const isDesktop = useIsDesktop();
   return (
-    <section className="relative text-center pt-20 pb-10 md:pt-32 md:pb-16">
+    <>
+      <section className="relative text-center pt-20 pb-10 md:pt-32 md:pb-16">
       <div className="absolute inset-0 bg-casino-dark z-0" />
 
       {/* Background Glow */}
@@ -107,8 +112,41 @@ const HeroSection: React.FC = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* CGSG Logo + Caption */}
+        <motion.div
+          initial={isDesktop ? { opacity: 0, y: 20 } : false}
+          animate={isDesktop ? { opacity: 1, y: 0 } : false}
+          transition={isDesktop ? { duration: 0.8, delay: 0.5, ease: 'easeOut' } : {}}
+          className="mt-12 flex flex-col items-center justify-center gap-3"
+        >
+          <div className="relative w-40 h-40 md:w-56 md:h-56">
+            <Image src="/favicon.ico" alt="CGSG Logo" fill priority className="object-contain" />
+          </div>
+          <p className="text-base md:text-lg text-gray-300 max-w-xl text-center px-2">
+            As an independent platform, CGSG delivers transparent, data-driven reviews and analytics to help you play smarter and safer.
+          </p>
+        </motion.div>
+
+         {/* CGSG Logo + Caption */}
+         <motion.div
+          initial={isDesktop ? { opacity: 0, y: 20 } : false}
+          animate={isDesktop ? { opacity: 1, y: 0 } : false}
+          transition={isDesktop ? { duration: 0.8, delay: 0.5, ease: 'easeOut' } : {}}
+          className="mt-12 flex flex-col items-center justify-center gap-3"
+        >
+          <div className="relative w-40 h-40 md:w-56 md:h-56">
+            <Image src="/fair-logos.png" alt="CGSG Logo" fill priority className="object-contain" />
+          </div>
+          <p className="text-base md:text-lg text-gray-300 max-w-xl text-center px-2">
+           CGSG license, We issue to every trusted company ensures the integrity and legacy of their transaction records.
+          </p>
+        </motion.div>
+
       </div>
     </section>
+            <FaqSection />
+    </>
   );
 };
 
