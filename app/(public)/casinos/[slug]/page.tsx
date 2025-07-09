@@ -13,12 +13,15 @@ export async function generateStaticParams() {
   return data.map(({ slug }) => ({ slug }));
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+
 type Props = {
   params: { slug: string };
   searchParams?: Record<string, string | string[]>;
 };
 
 export async function generateMetadata({ params }: Props) {
+  const url = `${SITE_URL}/casinos/${params.slug}`;
   const { data } = await supabaseServer
     .from("casinos")
     .select("name, description")
@@ -31,10 +34,40 @@ export async function generateMetadata({ params }: Props) {
     };
 
   return {
-    title: `${data.name} – Casino Guide`,
+    title: `${data.name} – Guru Singapore`,
     description: data.description ?? undefined,
+    keywords: `${data.name}, online casino singapore, guru singapore, casino singapore`,
+    openGraph: {
+      title: `${data.name} – Online Casino Guide`,
+      description: data.description ?? undefined,
+      url,
+      siteName: "CGSG | CasinoGuru Singapore",
+      images: data.logo_url
+        ? [
+            {
+              url: data.logo_url,
+              width: 800,
+              height: 400,
+              alt: `${data.name} logo`,
+            },
+          ]
+        : [],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${data.name} – Online Casino Singapore`,
+      description: data.description ?? undefined,
+      images: data.logo_url ? [data.logo_url] : [],
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
+
+import Script from "next/script";
 
 export default async function CasinoPage({ params }: Props) {
   const { data, error } = await supabaseServer
@@ -46,6 +79,16 @@ export default async function CasinoPage({ params }: Props) {
   if (error || !data) {
     return notFound();
   }
+
+  const pageUrl = `${SITE_URL}/casinos/${params.slug}`;
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Casino",
+    name: data.name,
+    url: pageUrl,
+    description: data.description,
+    image: data.logo_url,
+  };
 
   return (
     <main className="container mx-auto px-4 py-8 text-white">
@@ -69,6 +112,11 @@ export default async function CasinoPage({ params }: Props) {
           {/* Render games list/grid if you have relation */}
         </section>
       )}
+          <Script
+        id="casino-ld-json"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
     </main>
   );
 }
