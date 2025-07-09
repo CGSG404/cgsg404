@@ -19,18 +19,18 @@ export const metadata: Metadata = {
     default: 'CGSG - CasinoGuru Singapore',
     template: '%s | CGSG',
   },
-  description: 'Casino Guru Singapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
+  description: 'GuruSingapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
   openGraph: {
     title: 'CGSG - CasinoGuru Singapore.',
-    description: 'Casino Guru Singapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
+    description: 'GuruSingapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com',
     siteName: 'CGSG',
     images: [
       {
-        url: '/og-image.png',
+        url: '/favicon.ico',
         width: 1200,
         height: 630,
-        alt: 'CGSG Logo',
+        alt: 'GuruSingapore',
       },
     ],
     locale: 'en_US',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'CGSG - GuruSingapore',
-    description: 'Casino Guru Singapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
+    description: 'GuruSingapore (CGSG) is your trusted guide to the world of online casinos in Singapore. Explore expert reviews, exclusive bonuses, and in-depth guides to help you play smart and safe. Whether you are new or a seasoned player, CGSG brings you the best in online gaming.',
     images: ['/og-image.png'],
   },
   icons: {
