@@ -1,7 +1,4 @@
-
-
 // @ts-nocheck
-
 import { supabaseServer } from "@/lib/supabaseServer";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -16,7 +13,12 @@ export async function generateStaticParams() {
   return data.map(({ slug }) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+type Props = {
+  params: { slug: string };
+  searchParams?: Record<string, string | string[]>;
+};
+
+export async function generateMetadata({ params }: Props) {
   const { data } = await supabaseServer
     .from("casinos")
     .select("name, description")
@@ -34,7 +36,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function CasinoPage({ params }: { params: { slug: string } }) {
+export default async function CasinoPage({ params }: Props) {
   const { data, error } = await supabaseServer
     .from("casinos")
     .select("*, games(count)")
