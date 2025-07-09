@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -86,7 +87,7 @@ const NewsDetailPage = () => {
           <span>{article.readTime}</span>
         </div>
 
-        <img src={article.image} alt={article.title} className="w-full h-60 object-cover rounded-lg mb-8" />
+        <Image src={article.image} alt={article.title} width={800} height={240} className="w-full h-60 object-cover rounded-lg mb-8" unoptimized />
 
         <article className="prose prose-invert max-w-none md:prose-lg">
           <p>{article.content}</p>

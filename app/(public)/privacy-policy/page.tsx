@@ -1,15 +1,10 @@
-"use client";
-import dynamic from 'next/dynamic';
+'use client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Head from 'next/head';
 
-const PrivacyPolicy = () => (
-
+export default function PrivacyPolicy() {
+  return (
     <div className="min-h-screen flex flex-col bg-casino-dark text-white">
-      <Head>
-        <title>Privacy Policy | CGSG</title>
-      </Head>
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-16 space-y-6">
         <h1 className="text-3xl md:text-4xl font-bold mb-6 gradient-text">Privacy Policy</h1>
@@ -30,5 +25,4 @@ const PrivacyPolicy = () => (
       <Footer />
     </div>
   );
-
-export default dynamic(() => Promise.resolve(PrivacyPolicy), { ssr: false });
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -59,10 +60,13 @@ const ReportCasinoCard = ({ casino }: CasinoCardProps) => {
           {/* Header with Logo and Badges */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center space-x-3">
-              <img 
-                src={casino.logo} 
+              <Image
+                src={casino.logo}
                 alt={casino.name}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-lg object-cover"
+                unoptimized
               />
               <div>
                 <h3 className="text-xl font-bold text-white">{casino.name}</h3>

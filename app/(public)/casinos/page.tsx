@@ -18,5 +18,37 @@ export default async function Casinos() {
   });
 
   const dehydrated = dehydrate(queryClient);
-  return <CasinosHydrated dehydratedState={dehydrated} />;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Online Casinos",
+    "description": "Complete list of online casinos reviewed by GuruSingapore",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "url": "https://gurusingapore.com/casinos/example-casino-1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "url": "https://gurusingapore.com/casinos/example-casino-2"
+        }
+      ]
+    }
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <CasinosHydrated dehydratedState={dehydrated} />
+    </>
+  );
 }

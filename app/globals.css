@@ -22,6 +22,22 @@ body {
   @apply bg-casino-dark text-white font-sans;
 }
 
+/* Disable most Tailwind animations on mobile (<768px) */
+@media (max-width: 767px) {
+  .animate-spin,
+  .animate-pulse,
+  .animate-ping,
+  .animate-bounce,
+  .animate-fade-in,
+  .animate-fadeIn,
+  .animate-fade-in-down,
+  .animate-fade-in-up,
+  .animate-accordion-up,
+  .animate-accordion-down {
+    animation: none !important;
+  }
+}
+
 /* Utility: text gradient */
 .gradient-text {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));

@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Calendar, User, Tag } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -94,7 +95,7 @@ const NewsPage = () => {
             {filteredArticles.map((article) => (
               <SwiperSlide key={article.id} className="pb-4 h-auto">
                 <article className="bg-casino-card-bg/60 border border-casino-border-subtle rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
-                  <img src={article.image} alt={article.title} className="w-full h-40 object-cover" />
+                  <Image src={article.image} alt={article.title} width={400} height={160} className="w-full h-40 object-cover" unoptimized />
                   <div className="p-6 flex flex-col gap-4">
                     <h2 className="text-xl font-semibold line-clamp-2 min-h-[56px]">
                       {article.title}
@@ -130,7 +131,7 @@ const NewsPage = () => {
               key={article.id}
               className="bg-casino-card-bg/60 border border-casino-border-subtle rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200"
             >
-              <img src={article.image} alt={article.title} className="w-full h-40 object-cover" />
+              <Image src={article.image} alt={article.title} width={400} height={160} className="w-full h-40 object-cover" unoptimized />
               <div className="p-6 flex flex-col gap-4">
                 <h2 className="text-xl font-semibold line-clamp-2 min-h-[56px]">
                   {article.title}
