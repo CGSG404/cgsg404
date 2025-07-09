@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: 'GuruSingapore',
     images: [
       {
-        url: '/favicon.ico',
+        url: '/og-default.jpg',
         width: 1200,
         height: 630,
         alt: 'GuruSingapore',
@@ -44,6 +44,8 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
   },
 };
 
