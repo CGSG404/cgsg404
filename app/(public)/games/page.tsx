@@ -5,7 +5,7 @@ import GamesHydrated from "@/components/GamesHydrated";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Games | CGSG",
+  title: "Top Casinos | CGSG",
   description: "Browse popular casino game titles and guides.",
 };
 

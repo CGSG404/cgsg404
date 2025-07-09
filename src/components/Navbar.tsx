@@ -158,7 +158,7 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-3">
-                <Link href="/auth">
+                <Link href="/signin">
                   <Button
                     variant="outline"
                     size="sm"
@@ -216,13 +216,9 @@ const Navbar = () => {
                   </button>
                 ) : (
                   <button
-                    onClick={async () => {
-                      try {
-                        await signInWithGoogle();
-                        setIsMenuOpen(false);
-                      } catch (error) {
-                        console.error('Error signing in with Google:', error);
-                      }
+                    onClick={() => {
+                      router.push('/signin');
+                      setIsMenuOpen(false);
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/5 rounded-md flex items-center gap-2 transition-colors"
                   >
