@@ -17,7 +17,7 @@ const defaultReviews = [
   {
     id: 2,
     name: 'Top1 Casino',
-    logo: '/casino-logos/top1-withoutbg.png',
+    logo: '/casino-logos/Top1-withoutbg.png',
     reviewUrl: '/reviews/rabona'
   }
 ] as const;
