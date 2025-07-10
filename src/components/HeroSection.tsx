@@ -143,6 +143,28 @@ const HeroSection: React.FC = () => {
           </p>
         </motion.div>
 
+          {/* About Us teaser */}
+          <motion.div
+            initial={isDesktop ? { opacity: 0, y: 20 } : false}
+            animate={isDesktop ? { opacity: 1, y: 0 } : false}
+            transition={isDesktop ? { duration: 0.8, delay: 0.6, ease: 'easeOut' } : {}}
+            className="mt-14 max-w-4xl mx-auto"
+          >
+            <Link href="/about-us" className="block group" prefetch>
+              <div className="rounded-xl border border-gray-700/60 bg-gray-800/60 hover:border-casino-neon-green/60 transition-colors p-6 md:p-8">
+                <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 group-hover:text-casino-neon-green transition-colors">
+                  Learn more about CGSG
+                </h3>
+                <p className="text-gray-300 text-sm md:text-base">
+                  Discover our mission, team, and how we ensure a transparent & safe gambling environment for players worldwide.
+                </p>
+                <span className="inline-block mt-4 text-casino-neon-green font-medium group-hover:underline">
+                  Read About Us &rarr;
+                </span>
+              </div>
+            </Link>
+          </motion.div>
+
       </div>
     </section>
             <FaqSection />
