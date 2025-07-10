@@ -3,37 +3,26 @@ import ReviewCard from './ReviewCard';
 
 interface ReviewsGridProps {
   searchQuery: string;
+  reviews?: typeof defaultReviews;
 }
 
-const ReviewsGrid = ({ searchQuery }: ReviewsGridProps) => {
-  const reviews = [
-    {
-      id: 1,
-      name: 'Lucky Dreams Casino',
-      logo: '/placeholder.svg',
-      rating: 4.2,
-      userScore: 8.4,
-      security: 'Official license, SSL encryption',
-      bonus: 'Welcome Package up to $1000',
-      quickReview: 'This site offers an exciting game selection and fast payouts. Their customer support is also very responsive.',
-      pros: ['Crypto payments', 'VIP program', '24/7 support'],
-      cons: ['Some games not available in certain regions'],
-      reviewUrl: '/reviews/lucky-dreams'
-    },
-    {
-      id: 2,
-      name: 'Rabona Casino',
-      logo: '/placeholder.svg',
-      rating: 4.0,
-      userScore: 7.9,
-      security: 'Certified and independently audited',
-      bonus: 'Weekly cashback + 200 free spins',
-      quickReview: 'User experience is smooth, supports various payment methods, and the design is modern and mobile-friendly.',
-      pros: ['Mobile-optimized', 'Wide selection of slot games'],
-      cons: ['Not all bonuses are available for new users'],
-      reviewUrl: '/reviews/rabona'
-    }
-  ];
+// default hard-coded list – can extend easily
+const defaultReviews = [
+  {
+    id: 1,
+    name: 'OnePlay Casino',
+    logo: '/casino-logos/1play-withoutbg.png',
+    reviewUrl: '/reviews/lucky-dreams'
+  },
+  {
+    id: 2,
+    name: 'Rabona Casino',
+    logo: '/placeholder.svg',
+    reviewUrl: '/reviews/rabona'
+  }
+] as const;
+
+const ReviewsGrid = ({ searchQuery, reviews = defaultReviews }: ReviewsGridProps) => {
 
   const filteredReviews = reviews.filter(casino =>
     casino.name.toLowerCase().includes(searchQuery.toLowerCase())
