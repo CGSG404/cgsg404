@@ -32,9 +32,10 @@ export default function FaqSection() {
       <Accordion type="single" collapsible className="space-y-2">
         {faqItems.map((item, i) => (
           <AccordionItem key={i} value={`item-${i}`} className="bg-gray-800/40 border border-gray-700/50 rounded-md">
-            <AccordionTrigger className="flex w-full items-center justify-between px-4 py-3 text-left text-white cursor-pointer hover:no-underline">
+            <AccordionTrigger className="w-full px-4 py-3 text-left text-white hover:no-underline">
               {item.question}
             </AccordionTrigger>
+              
             <AccordionContent className="px-4 pb-4 text-gray-300">
               {item.answer}
             </AccordionContent>

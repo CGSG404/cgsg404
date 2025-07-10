@@ -3,11 +3,49 @@ import Link from "next/link";
 
 export const revalidate = 86400; // revalidate daily
 
+import Image from "next/image";
+
 export default function AboutUsPage() {
+  const team = [
+    {
+      name: "Founder of Website",
+      image: "/founder.png",
+      alt: "Founder photo",
+    },
+    {
+      name: "Guru Singapore",
+      image: "/favicon.ico",
+      alt: "CGSG Logo",
+    },
+    {
+      name: "Co-Founder of Group",
+      image: "/co-founder.png",
+      alt: "Co-Founder photo",
+    },
+  ];
   return (
-    <section className="py-16">
+    <section className="py-16 relative overflow-hidden">
+      {/* Blurred decorative background */}
+      <div className="pointer-events-none absolute -inset-10 -z-10 select-none">
+        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-casino-neon-green via-purple-600 to-indigo-600 opacity-30 blur-3xl" />
+      </div>
       <div className="container mx-auto px-4 max-w-3xl">
-        <h1 className="text-3xl font-bold mb-6 text-white">About Us</h1>
+        {/* Team avatars */}
+        <div className="mb-10 grid grid-cols-1 sm:grid-cols-3 gap-8 place-items-center">
+          {team.map((member) => (
+            <div key={member.name} className="flex flex-col items-center text-center">
+              <Image
+                src={member.image}
+                alt={member.alt}
+                width={160}
+                height={160}
+                className={`h-40 w-40 object-cover shadow-lg ${member.name !== 'CGSG Logo' ? 'rounded-full ring-4 ring-casino-neon-green/60' : ''}` }
+              />
+              <span className="mt-3 text-gray-200 font-medium">{member.name}</span>
+            </div>
+          ))}
+        </div>
+        <h1 className="text-3xl font-bold mb-6 text-white text-center">About Us</h1>
         <p className="text-gray-300 leading-relaxed mb-4">
           CasinoGuruSG (CGSG) was founded with a single mission: to empower players with transparent,
           accurate, and up-to-date information about online casinos. We review platforms, test their fairness,
