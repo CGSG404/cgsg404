@@ -30,8 +30,23 @@ export default function AboutUsPage() {
         <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-casino-neon-green via-purple-600 to-indigo-600 opacity-30 blur-3xl" />
       </div>
       <div className="container mx-auto px-4 max-w-3xl">
+        {/* Main title */}
+        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-6 uppercase bg-gradient-to-r from-casino-neon-green via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+          About Us
+        </h1>
+        {/* Banner image */}
+        <div className="mb-12">
+          <Image
+            src="/about-us.png"
+            alt="CGSG banner"
+            width={1200}
+            height={400}
+            className="w-full rounded-lg object-cover shadow-xl"
+            priority
+          />
+        </div>
         {/* Team avatars */}
-        <div className="mb-10 grid grid-cols-1 sm:grid-cols-3 gap-8 place-items-center">
+        <div className="mb-10 grid grid-cols-3 gap-6 place-items-center">
           {team.map((member) => (
             <div key={member.name} className="flex flex-col items-center text-center">
               <Image
@@ -39,13 +54,13 @@ export default function AboutUsPage() {
                 alt={member.alt}
                 width={160}
                 height={160}
-                className={`h-40 w-40 object-cover shadow-lg ${member.name !== 'CGSG Logo' ? 'rounded-full ring-4 ring-casino-neon-green/60' : ''}` }
+                className={`h-24 w-24 md:h-40 md:w-40 object-cover shadow-lg ${member.name !== 'Guru Singapore' ? 'rounded-full ring-4 ring-casino-neon-green/60' : ''}` }
               />
               <span className="mt-3 text-gray-200 font-medium">{member.name}</span>
             </div>
           ))}
         </div>
-        <h1 className="text-3xl font-bold mb-6 text-white text-center">About Us</h1>
+        <h2 className="text-2xl font-bold mb-6 text-white text-center">Our Mission</h2>
         <p className="text-gray-300 leading-relaxed mb-4">
           CasinoGuruSG (CGSG) was founded with a single mission: to empower players with transparent,
           accurate, and up-to-date information about online casinos. We review platforms, test their fairness,
