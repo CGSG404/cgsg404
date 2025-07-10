@@ -1,14 +1,24 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { Star, Shield, Users, Gift } from 'lucide-react';
 import CountUp from 'react-countup';
 import { useState } from 'react';
 
-const Footer = () => {
-  const [openModal, setOpenModal] = useState<null | 'privacy' | 'terms' | 'contact' | 'stories' | 'about'>(null);
 
-  const footerSections = [
+// ----- Types -----
+export type FooterLink =
+  | { name: string; href: string; onClick?: never }
+  | { name: string; href?: never; onClick: () => void };
+export type FooterSection = { title: string; links: FooterLink[] };
+
+
+
+const Footer = () => {
+  const [openModal, setOpenModal] = useState<null | 'privacy' | 'terms' | 'contact' | 'about'>(null);
+
+  const footerSections: FooterSection[] = [
     {
       title: 'Casino Reviews',
       links: [
@@ -29,7 +39,7 @@ const Footer = () => {
       links: [
         { name: 'Forum', href: '/forum' },
         { name: 'User Reviews', href: '/reviews' },
-        { name: 'Success Stories', href: undefined, onClick: () => setOpenModal('stories') },
+        { name: 'Success Stories', href: '/success-stories' },
       ]
     },
     {
@@ -73,7 +83,7 @@ const Footer = () => {
               <ul className="space-y-2">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    {link.onClick ? (
+                    {'onClick' in link ? (
                       <button
                         onClick={link.onClick}
                         className="text-gray-400 hover:text-casino-neon-green transition-colors duration-200 text-sm"
@@ -101,7 +111,7 @@ const Footer = () => {
             <div className="flex flex-col items-center">
               <Shield className="w-8 h-8 text-casino-neon-green mb-2" />
               <div className="text-lg font-bold text-white" suppressHydrationWarning>
-                <CountUp end={26}duration={1.5} separator="," />+
+                <CountUp end={26} duration={1.5} separator="," />+
               </div>
               <div className="text-gray-400 text-sm">Verified Casinos</div>
             </div>
@@ -132,7 +142,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-casino-border-subtle pt-6 flex flex-col md:flex-row justify-between items-center">
           <div className="text-gray-400 text-sm mb-4 md:mb-0">
-          © 2025 CGSG. All rights reserved. | CasinoGuru Singapore.
+            2025 CGSG. All rights reserved. | CasinoGuru Singapore.
           </div>
           <div className="flex space-x-6 text-sm">
             <Link
@@ -169,12 +179,6 @@ const Footer = () => {
             >
               
             </button>
-            {openModal === 'stories' && (
-              <>
-                <h2 className="text-xl font-bold mb-4 text-white">Success Stories</h2>
-                <p className="text-gray-300 text-sm">Discover how players maximized their winnings and enjoyed safe gaming experiences through our recommendations.</p>
-              </>
-            )}
           </div>
         </div>
       )}
