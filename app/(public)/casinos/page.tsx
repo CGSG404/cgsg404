@@ -64,7 +64,7 @@ export default async function Casinos() {
             </nav>
 
             <h1 className="text-3xl font-extrabold leading-tight text-white md:text-4xl lg:text-5xl">
-              Best Online Casinos for July 2025 – Expert Picks You Can Trust
+              Listing Of Online Casinos for July 2025 – Expert Picks You Can Trust
             </h1>
 
             <div className="mt-4 flex items-center gap-3 text-sm text-gray-400">
