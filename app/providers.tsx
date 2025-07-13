@@ -1,6 +1,7 @@
 'use client';
 
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -19,7 +20,8 @@ const queryClient = new QueryClient({
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <SessionProvider>
+      <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
           {children}
@@ -27,6 +29,7 @@ export default function Providers({ children }: { children: ReactNode }) {
           <LiveChat />
         </TooltipProvider>
       </AuthProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }

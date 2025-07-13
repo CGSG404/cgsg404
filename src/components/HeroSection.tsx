@@ -42,7 +42,7 @@ const HeroSection: React.FC = () => {
             <span className="text-casino-neon-green">Casino Guide</span>
           </h1>
           <p className="mt-4 text-lg md:text-xl text-white max-w-3xl mx-auto">
-            The first class and best online casinos, List Reports, read honest reviews, and discover safe gambling platforms recommended by experts CGSG.
+          Discover first-class online casinos. Read expert reviews, explore trusted reports, and find safe gambling platforms recommended by CGSG.
           </p>
         </motion.div>
 
