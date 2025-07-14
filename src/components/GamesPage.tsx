@@ -18,7 +18,7 @@ const GamesPage: React.FC = () => {
           <div className="absolute right-0 top-0 h-96 w-96 translate-x-1/2 rounded-full bg-purple-700/40 opacity-40 blur-3xl" />
         </div>
 
-        <div className="container mx-auto flex max-w-6xl flex-col items-start gap-10 px-4 md:flex-row md:items-center">
+        <div className="mx-auto max-w-screen-xl flex flex-col items-start gap-10 px-4 sm:px-6 lg:px-8 md:flex-row md:items-center">
           {/* LEFT TEXT */}
           <div className="max-w-xl flex-1">
             <nav className="mb-3 text-sm text-gray-400">
@@ -44,7 +44,7 @@ const GamesPage: React.FC = () => {
           </div>
 
           {/* RIGHT IMAGE */}
-          <div className="relative mx-auto h-48 w-48 sm:h-60 sm:w-60 md:h-72 md:w-72 lg:h-80 lg:w-80 flex-shrink-0">
+          <div className="relative mx-auto h-36 w-36 sm:h-48 sm:w-48 md:h-60 md:w-60 lg:h-72 lg:w-72 flex-shrink-0">
             <img src="/cgsg-logos.png" alt="Fair game badge" className="object-contain" />
           </div>
         </div>
