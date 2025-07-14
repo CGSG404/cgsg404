@@ -87,14 +87,14 @@ export default function CasinoTabs({ review }: Props) {
   return (
     <div className="mx-auto max-w-2xl p-6 space-y-6 text-gray-900 dark:text-gray-100">
       {/* Header Card */}
-      <div className="flex flex-col items-center gap-4 text-center bg-slate-50 dark:bg-slate-800 rounded-lg shadow-sm p-6">
+      <div className="flex flex-col items-center gap-4 text-center bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm p-8">
         <div className="relative h-28 w-28">
           <Image src={review.logo} alt={review.name} fill className="object-contain" priority />
         </div>
-        <h1 className="text-3xl font-bold text-emerald-900">{review.name}</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight text-emerald-900">{review.name}</h1>
         <div className="flex items-center gap-2 mt-2">
           <Star className="h-5 w-5 text-emerald-600" />
-          <span className="text-emerald-600 font-bold text-xl">
+          <span className="text-emerald-600 font-bold text-2xl">
             {review.rating}
             <span className="text-gray-400">/10</span>
           </span>
@@ -102,12 +102,12 @@ export default function CasinoTabs({ review }: Props) {
       </div>
 
       {/* Tabs */}
-      <nav className="flex flex-nowrap whitespace-nowrap justify-start gap-2 overflow-x-auto bg-white rounded-lg p-2">
+      <nav className="flex flex-nowrap whitespace-nowrap justify-start gap-2 overflow-x-auto bg-white dark:bg-slate-800 rounded-lg p-2 shadow-sm">
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setActive(item.id)}
-            className={`rounded px-4 py-2 text-sm font-medium transition border
+            className={`rounded px-4 py-2 text-sm font-medium transition-colors duration-200 border
               ${active === item.id ? "bg-emerald-600 text-white border-emerald-600" : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
           >
             {item.label}
