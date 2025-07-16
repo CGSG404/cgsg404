@@ -52,6 +52,7 @@ export const metadata: Metadata = {
 import Providers from './providers';
 import dynamic from 'next/dynamic';
 const BackToTop = dynamic(() => import('@/components/BackToTop'));
+import AnimatedBlurBG from '@/components/AnimatedBlurBG';
 
 export default function RootLayout({
   children,
@@ -63,6 +64,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <AnimatedBlurBG />
         <Providers>
           {children}
         </Providers>

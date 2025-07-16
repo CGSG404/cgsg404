@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 import NewsPage from "@/components/NewsPage";
 
 export const revalidate = 600;
@@ -9,5 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default function News() {
-  return <NewsPage />;
+  return (
+    <main className="relative overflow-hidden">
+      <AnimatedBlurBG />
+      <NewsPage />
+    </main>
+  );
 }

@@ -1,28 +1,14 @@
 
 import ReviewCard from './ReviewCard';
+import { casinos } from '@/data/casinos'; // Mengimpor data kasino yang sebenarnya
 
 interface ReviewsGridProps {
   searchQuery: string;
-  reviews?: typeof defaultReviews;
 }
 
-// default hard-coded list – can extend easily
-const defaultReviews = [
-  {
-    id: 1,
-    name: 'OnePlay Casino',
-    logo: '/casino-logos/1play-withoutbg.png',
-    reviewUrl: '/reviews/lucky-dreams'
-  },
-  {
-    id: 2,
-    name: 'Top1 Casino',
-    logo: '/casino-logos/Top1-withoutbg.png',
-    reviewUrl: '/reviews/rabona'
-  }
-] as const;
-
-const ReviewsGrid = ({ searchQuery, reviews = defaultReviews }: ReviewsGridProps) => {
+const ReviewsGrid = ({ searchQuery }: ReviewsGridProps) => {
+  // Menggunakan data dari casinos.tsx
+  const reviews = casinos;
 
   const filteredReviews = reviews.filter(casino =>
     casino.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -41,7 +27,15 @@ const ReviewsGrid = ({ searchQuery, reviews = defaultReviews }: ReviewsGridProps
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {filteredReviews.map((casino) => (
-          <ReviewCard key={casino.id} casino={casino} />
+          <ReviewCard 
+              key={casino.slug} // Menggunakan slug sebagai key unik
+              casino={{
+                id: casino.slug, // Menggunakan slug untuk id
+                name: casino.name,
+                logo: casino.logo,
+                reviewUrl: `/reviews/${casino.slug}` // Membuat URL dinamis
+              }}
+            />
         ))}
       </div>
     </div>

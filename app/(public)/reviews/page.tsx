@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import ReviewsHydrated from "@/components/ReviewsHydrated";
 

@@ -1,3 +1,5 @@
+'use client';
+
 import { lazy, Suspense } from 'react';
 import Head from 'next/head';
 import Navbar from '@/components/Navbar';

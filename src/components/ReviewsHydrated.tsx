@@ -1,6 +1,7 @@
 "use client";
 
-import { HydrationBoundary } from "@tanstack/react-query";
+import { useState } from "react";
+import { QueryClient, QueryClientProvider, HydrationBoundary } from "@tanstack/react-query";
 import ReviewsPage from "@/components/ReviewsPage";
 
 interface Props {
@@ -8,9 +9,12 @@ interface Props {
 }
 
 export default function ReviewsHydrated({ dehydratedState }: Props) {
+  const [queryClient] = useState(() => new QueryClient());
   return (
-    <HydrationBoundary state={dehydratedState as any}>
-      <ReviewsPage />
-    </HydrationBoundary>
+    <QueryClientProvider client={queryClient}>
+      <HydrationBoundary state={dehydratedState as any}>
+        <ReviewsPage />
+      </HydrationBoundary>
+    </QueryClientProvider>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 
 export const revalidate = 86400; // revalidate daily
 
@@ -25,10 +26,7 @@ export default function AboutUsPage() {
   ];
   return (
     <section className="py-16 relative overflow-hidden">
-      {/* Blurred decorative background */}
-      <div className="pointer-events-none absolute -inset-10 -z-10 select-none">
-        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-casino-neon-green via-purple-600 to-indigo-600 opacity-30 blur-3xl" />
-      </div>
+      <AnimatedBlurBG />
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Main title */}
         <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-6 uppercase bg-gradient-to-r from-casino-neon-green via-purple-400 to-indigo-400 bg-clip-text text-transparent">

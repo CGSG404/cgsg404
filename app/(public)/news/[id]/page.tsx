@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 import NewsDetailPage from "@/components/NewsDetailPage";
 
 export const revalidate = 600;

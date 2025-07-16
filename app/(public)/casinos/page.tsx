@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { fetchAllCasinos } from "@/lib/api";
@@ -49,11 +50,7 @@ export default async function Casinos() {
     <>
       <Navbar />
       <section className="relative overflow-hidden pt-16 pb-12 sm:pb-20">
-        <div className="pointer-events-none absolute -inset-10 -z-10 select-none">
-          <div className="absolute left-0 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-casino-neon-green via-purple-600 to-indigo-600 opacity-30 blur-3xl" />
-          <div className="absolute right-0 top-0 h-96 w-96 translate-x-1/2 rounded-full bg-purple-700/40 opacity-40 blur-3xl" />
-        </div>
-
+        <AnimatedBlurBG />
         <div className="container mx-auto flex max-w-6xl flex-col items-start gap-10 px-4 md:flex-row md:items-center">
           {/* LEFT TEXT */}
           <div className="max-w-xl flex-1">

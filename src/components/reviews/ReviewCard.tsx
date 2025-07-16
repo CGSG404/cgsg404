@@ -1,11 +1,12 @@
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
 
 interface ReviewCardProps {
   casino: {
-    id: number;
+    id: string; // Mengubah tipe id menjadi string agar cocok dengan slug
     name: string;
     logo: string;
     reviewUrl: string;
@@ -40,9 +41,9 @@ const ReviewCard = ({ casino }: ReviewCardProps) => {
           variant="outline"
           className="w-full border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green/10"
         >
-          <a href={casino.reviewUrl} className="flex items-center justify-center gap-2">
+          <Link href={casino.reviewUrl} className="flex items-center justify-center gap-2">
             <Star className="w-4 h-4" /> Expert review
-          </a>
+          </Link>
         </Button>
       </div>
     </Card>

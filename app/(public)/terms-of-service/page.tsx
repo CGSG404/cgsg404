@@ -1,13 +1,13 @@
-'use client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 
 export default function TermsOfService() {
   return (
-    <div className="relative min-h-screen flex flex-col bg-casino-dark text-white">
-      <div className="absolute inset-0 bg-neon-gradient opacity-10 -z-10 pointer-events-none" />
+    <div className="relative min-h-screen flex flex-col text-white">
       <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-16 space-y-6">
+      <main className="relative overflow-hidden flex-1 container mx-auto px-4 py-16 space-y-6">
+        <AnimatedBlurBG />
         <h1 className="text-3xl md:text-4xl font-bold mb-6 gradient-text">Terms of Service</h1>
         <p className="text-gray-300 text-sm md:text-base">Last updated: July 1, 2025</p>
         <p className="text-gray-400">

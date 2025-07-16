@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from "next/link";
+import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 
 export const metadata = {
   title: 'Success Stories | CasinoGuruSG',
@@ -8,21 +9,23 @@ export const metadata = {
 
 export default function SuccessStoriesPage() {
   return (
-    <section className="relative overflow-hidden py-16">
-      {/* blurred gradient background */}
-      <div className="pointer-events-none absolute -inset-10 -z-10 select-none">
-        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-casino-neon-green via-purple-600 to-indigo-600 opacity-30 blur-3xl" />
-      </div>
+    <main className="relative overflow-hidden">
+      <AnimatedBlurBG />
+      <section className="relative overflow-hidden py-16">
+        {/* blurred gradient background */}
+        <div className="pointer-events-none absolute -inset-10 -z-10 select-none">
+          <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-casino-neon-green via-purple-600 to-indigo-600 opacity-30 blur-3xl" />
+        </div>
 
-      <div className="container mx-auto max-w-4xl px-4">
-        <Image
-          src="/success-stories-cgsg.png"
-          alt="CasinoGuruSG milestones banner"
-          width={1200}
-          height={400}
-          className="mb-10 w-full rounded-lg object-cover shadow-xl"
-          priority
-        />
+        <div className="container mx-auto max-w-4xl px-4">
+          <Image
+            src="/success-stories-cgsg.png"
+            alt="CasinoGuruSG milestones banner"
+            width={1200}
+            height={400}
+            className="mb-10 w-full rounded-lg object-cover shadow-xl"
+            priority
+          />
 
         <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-6 uppercase bg-gradient-to-r from-casino-neon-green via-purple-400 to-indigo-400 bg-clip-text text-transparent">
           Success Stories
@@ -49,5 +52,6 @@ export default function SuccessStoriesPage() {
         </Link>
       </div>
     </section>
+    </main>
   );
 }
