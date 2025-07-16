@@ -94,19 +94,19 @@ const ReviewDetail: React.FC<ReviewDetailProps> = ({ review }) => {
 
       {/* Section Artikel Dinamis */}
       <section className="max-w-3xl mx-auto mt-12 flex flex-col gap-6">
-        <h2 className="text-2xl font-bold text-orange-400 mb-2">Ulasan Mendalam & Panduan</h2>
+        <h2 className="text-2xl font-bold text-orange-400 mb-2">In-depth Reviews & Guides</h2>
         {review.articles && review.articles.length > 0 ? (
           review.articles.map((article: Article) => (
             <ArticleCard key={article.slug} reviewSlug={review.slug} article={article} />
           ))
         ) : (
           <div className="bg-[#181a20]/90 rounded-2xl p-8 text-center text-gray-400">
-            <p>Belum ada artikel ulasan mendalam untuk kasino ini.</p>
+            <p>No in-depth review articles for this casino yet.</p>
           </div>
         )}
       </section>
 
-      {/* Komentar Pengunjung */}
+      {/* Visitor Comments */}
       <ReviewComments reviewSlug={review.slug} />
     </>
   );

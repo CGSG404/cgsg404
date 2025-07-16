@@ -10,10 +10,10 @@ export const casinos: Review[] = [
     description: "Modern online casino with a wide selection of games and excellent bonuses",
     articles: [
       {
-        slug: "review-lengkap",
-        title: "Tentang Lucky Dreams Casino - Review Lengkap",
-        summary: "Ulasan mendalam tentang fitur, bonus, dan pengalaman bermain di Lucky Dreams Casino.",
-        content: "<strong>Lucky Dreams Casino</strong> adalah salah satu casino online populer yang menawarkan berbagai fitur menarik untuk pemain Indonesia. Dengan bonus sambutan yang kompetitif dan pilihan game yang beragam, casino ini layak dipertimbangkan untuk para pecinta judi online. Selain itu, Lucky Dreams Casino juga dikenal dengan keamanan dan kecepatan transaksi yang baik. Tim support yang responsif dan platform mobile-friendly membuat pengalaman bermain semakin nyaman.",
+        slug: "full-review",
+        title: "About Lucky Dreams Casino - Full Review",
+        summary: "In-depth review of the features, bonuses, and playing experience at Lucky Dreams Casino.",
+        content: "<strong>Lucky Dreams Casino</strong> is one of the popular online casinos that offers various attractive features for Indonesian players. With competitive welcome bonuses and a diverse selection of games, this casino is worth considering for online gambling enthusiasts. In addition, Lucky Dreams Casino is also known for its good security and transaction speed. A responsive support team and a mobile-friendly platform make the playing experience even more comfortable.",
         imageUrl: "/casino-feature-banner-demo.jpg"
       }
     ],
@@ -30,15 +30,15 @@ export const casinos: Review[] = [
     slug: "malina",
     name: "Malina Casino",
     logo: "/casinos/malina.svg",
-    rating: 9.8,
-    bonus: "100% up to $500 + 200 free spins",
-    description: "Luxury online casino with premium games and exclusive bonuses",
+    rating: 8.9,
+    bonus: "120% up to $300 + 150 free spins",
+    description: "Bright and modern casino with a focus on slots and regular promotions",
     articles: [
       {
-        slug: "review-lengkap",
-        title: "Tentang Malina Casino - Review Lengkap",
-        summary: "Ulasan mendalam tentang fitur, bonus, dan pengalaman bermain di Malina Casino.",
-        content: "<strong>Malina Casino</strong> adalah casino online mewah dengan game premium dan bonus eksklusif. Menawarkan pengalaman bermain yang elegan dan layanan pelanggan terbaik.",
+        slug: "full-review",
+        title: "About Malina Casino - Full Review",
+        summary: "In-depth review of the features, bonuses, and playing experience at Malina Casino.",
+        content: "<strong>Malina Casino</strong> offers a bright and modern interface, very appealing to players who love slots. They have a great loyalty program and regular promotions that keep players engaged. Security at Malina Casino is also a priority, with SSL encryption to protect player data. Customer support is available 24/7 to help with any issues.",
         imageUrl: "/casino-feature-banner-demo.jpg"
       }
     ],
@@ -55,15 +55,15 @@ export const casinos: Review[] = [
     slug: "rabona",
     name: "Rabona Casino",
     logo: "/casinos/rabona.svg",
-    rating: 9.4,
-    bonus: "225% up to $750 + 100 spins",
-    description: "Sports-focused casino with excellent betting options",
+    rating: 9.5,
+    bonus: "150% up to $750 + 100 free spins",
+    description: "Sports-themed casino with a huge selection of games and betting options",
     articles: [
       {
-        slug: "review-lengkap",
-        title: "Tentang Rabona Casino - Review Lengkap",
-        summary: "Ulasan mendalam tentang fitur, bonus, dan pengalaman bermain di Rabona Casino.",
-        content: "<strong>Rabona Casino</strong> adalah kasino yang berfokus pada olahraga dengan opsi taruhan yang sangat baik. Cocok untuk pemain yang menyukai taruhan olahraga dan permainan kasino dalam satu platform.",
+        slug: "full-review",
+        title: "About Rabona Casino - Full Review",
+        summary: "In-depth review of the features, bonuses, and playing experience at Rabona Casino.",
+        content: "<strong>Rabona Casino</strong> is an excellent choice for players who also enjoy sports betting. They combine a comprehensive sportsbook with a feature-rich online casino. Their welcome bonus is very generous, and they offer ongoing promotions related to sporting events. The platform is well-designed and easy to navigate, making it a favorite among many players.",
         imageUrl: "/casino-feature-banner-demo.jpg"
       }
     ],
@@ -80,15 +80,15 @@ export const casinos: Review[] = [
     slug: "casino-x",
     name: "Casino X",
     logo: "/casinos/casino-x.svg",
-    rating: 8.9,
-    bonus: "150% up to $1000",
-    description: "Premium casino with exclusive game selection",
+    rating: 8.7,
+    bonus: "200% up to $2000 + 200 free spins",
+    description: "A classic choice with a massive welcome bonus and a time-tested reputation",
     articles: [
       {
-        slug: "review-lengkap",
-        title: "Tentang Casino X - Review Lengkap",
-        summary: "Ulasan mendalam tentang fitur, bonus, dan pengalaman bermain di Casino X.",
-        content: "<strong>Casino X</strong> adalah kasino premium dengan pilihan permainan eksklusif. Menawarkan pengalaman bermain yang unik dengan jackpot progresif dan turnamen reguler.",
+        slug: "full-review",
+        title: "About Casino X - Full Review",
+        summary: "In-depth review of the features, bonuses, and playing experience at Casino X.",
+        content: "<strong>Casino X</strong> has been around for a while and has built a solid reputation. They are known for their massive welcome bonus, which is one of the largest in the industry. Their game selection is extensive, covering everything from slots to table games and live casino. Reliability and trustworthiness are key strong points for Casino X.",
         imageUrl: "/casino-feature-banner-demo.jpg"
       }
     ],
@@ -102,18 +102,18 @@ export const casinos: Review[] = [
     playUrl: "#"
   },
   {
-    slug: "starlight",
+    slug: "starlight-casino",
     name: "Starlight Casino",
     logo: "/casinos/starlight.svg",
-    rating: 9.1,
-    bonus: "125% up to $600 + 150 spins",
-    description: "Stellar online casino experience with top-notch games",
+    rating: 9.0,
+    bonus: "100% up to $400 + 100 free spins",
+    description: "Elegant and user-friendly casino with a great mobile experience",
     articles: [
       {
-        slug: "review-lengkap",
-        title: "Tentang Starlight Casino - Review Lengkap",
-        summary: "Ulasan mendalam tentang fitur, bonus, dan pengalaman bermain di Starlight Casino.",
-        content: "<strong>Starlight Casino</strong> menawarkan pengalaman kasino online yang luar biasa dengan permainan terbaik. Nikmati suasana bermain yang futuristik dan bonus yang menguntungkan.",
+        slug: "full-review",
+        title: "About Starlight Casino - Full Review",
+        summary: "In-depth review of the features, bonuses, and playing experience at Starlight Casino.",
+        content: "<strong>Starlight Casino</strong> focuses on providing an elegant and user-friendly experience. Their design is clean and easy to navigate, especially on mobile devices. They offer a balanced bonus and a solid selection of games from top providers. Starlight Casino is a great choice for players who value aesthetics and smooth gameplay.",
         imageUrl: "/casino-feature-banner-demo.jpg"
       }
     ],

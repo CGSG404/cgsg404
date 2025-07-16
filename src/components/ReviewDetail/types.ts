@@ -1,4 +1,4 @@
-// Tipe baru untuk setiap artikel atau blok konten dalam sebuah ulasan
+// New type for each article or content block within a review
 export type Article = {
   slug: string;
   title: string;

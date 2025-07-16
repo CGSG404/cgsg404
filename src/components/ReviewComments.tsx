@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import { formatDistanceToNow } from 'date-fns';
 
-// Definisikan tipe data untuk komentar
+// Define the data type for a comment
 interface Comment {
   id: number;
   created_at: string;
@@ -30,7 +30,7 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Mengambil data pengguna dan komentar saat komponen dimuat
+  // Fetch user data and comments when the component mounts
   useEffect(() => {
     const fetchUserAndComments = async () => {
       setLoading(true);
@@ -55,23 +55,40 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
     fetchUserAndComments();
   }, [reviewSlug]);
 
-  // Fungsi untuk mengirim komentar baru
+  // Function to post a new comment
   const handlePostComment = async (e: FormEvent) => {
     e.preventDefault();
     if (!newComment.trim() || !user) return;
 
-    const { data, error } = await supabase
+    // Step 1: Insert the new comment
+    const { data: insertData, error: insertError } = await supabase
       .from('comments')
       .insert([{ content: newComment, review_slug: reviewSlug, user_id: user.id }])
-      .select('*, profiles(username, avatar_url)')
+      .select('id') // Select only the ID of the new comment
       .single();
 
-    if (data) {
-      setComments([data as Comment, ...comments]);
-      setNewComment('');
-    } else if (error) {
-      console.error('Error posting comment:', error.message);
+    if (insertError) {
+      console.error('Error posting comment:', insertError);
       alert('Failed to post comment. Please try again.');
+      return;
+    }
+
+    if (insertData) {
+      // Step 2: Fetch the new comment with the profile data joined
+      const { data: newCommentData, error: selectError } = await supabase
+        .from('comments')
+        .select('*, profiles(username, avatar_url)')
+        .eq('id', insertData.id)
+        .single();
+
+      if (selectError) {
+        console.error('Error fetching new comment:', selectError);
+        // Even if fetching fails, we can add the comment without profile info
+        // Or just alert the user. For now, we'll just log it.
+      } else if (newCommentData) {
+        setComments([newCommentData as Comment, ...comments]);
+        setNewComment('');
+      }
     }
   };
 
@@ -79,7 +96,7 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
     <div className="bg-casino-dark-secondary/50 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-lg border border-white/10 mt-12">
       <h3 className="text-2xl font-bold text-white mb-6 border-b-2 border-casino-neon-green/30 pb-3">Visitor Comments</h3>
       <div className="space-y-6">
-        {/* Form Komentar - hanya tampil jika user login */}
+        {/* Comment Form - only shows if user is logged in */}
         {user ? (
           <form onSubmit={handlePostComment} className="pt-6 border-t border-white/10">
             <h4 className="text-lg font-semibold text-white mb-4">Leave a Comment</h4>
@@ -105,7 +122,7 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
           </div>
         )}
 
-        {/* Daftar Komentar */}
+        {/* Comments List */}
         <div className="space-y-4">
           {loading ? (
             <p className='text-gray-400'>Loading comments...</p>
