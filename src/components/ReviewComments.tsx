@@ -13,7 +13,7 @@ interface Comment {
   content: string;
   review_slug: string;
   user_id: string;
-  profiles: {
+  profile: {
     username: string;
     avatar_url: string | null;
   } | null;
@@ -27,6 +27,7 @@ interface ReviewCommentsProps {
 const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
+  const MAX_CHARACTERS = 500;
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,14 +38,14 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
 
-      const { data: commentsData, error } = await supabase
+      const { data, error } = await supabase
         .from('comments')
-        .select('*, profiles(username, avatar_url)')
+        .select('*, profile:profiles(username, avatar_url)')
         .eq('review_slug', reviewSlug)
         .order('created_at', { ascending: false });
 
-      if (commentsData) {
-        setComments(commentsData as Comment[]);
+      if (data) {
+        setComments(data as Comment[]);
       }
       if (error) {
         console.error('Error fetching comments:', error);
@@ -75,9 +76,9 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
 
     if (insertData) {
       // Step 2: Fetch the new comment with the profile data joined
-      const { data: newCommentData, error: selectError } = await supabase
+            const { data: newCommentData, error: selectError } = await supabase
         .from('comments')
-        .select('*, profiles(username, avatar_url)')
+        .select('*, profile:profiles(username, avatar_url)')
         .eq('id', insertData.id)
         .single();
 
@@ -101,16 +102,19 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
           <form onSubmit={handlePostComment} className="pt-6 border-t border-white/10">
             <h4 className="text-lg font-semibold text-white mb-4">Leave a Comment</h4>
             <textarea
-              className="w-full bg-gray-800/60 border border-gray-600 rounded-lg p-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-casino-neon-green focus:border-transparent transition-all duration-300"
-              rows={4}
-              placeholder={`Commenting as ${user.email}...`}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
+              className="w-full bg-casino-dark p-3 rounded-lg border border-white/20 focus:ring-2 focus:ring-casino-neon-green focus:outline-none text-white transition-all duration-300 h-28 resize-none"
+              placeholder="Share your thoughts..."
+              maxLength={MAX_CHARACTERS}
             />
+            <div className="text-right text-sm text-gray-400 mt-2">
+              {MAX_CHARACTERS - newComment.length} characters remaining
+            </div>
             <button
               type="submit"
-              className="mt-4 px-6 py-2 bg-casino-neon-green text-casino-dark font-bold rounded-lg hover:bg-opacity-80 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={!newComment.trim()}
+              disabled={!newComment.trim() || newComment.length > MAX_CHARACTERS}
+              className="bg-casino-neon-green text-casino-dark font-bold py-2 px-6 rounded-lg hover:bg-opacity-80 transition-all duration-300 shadow-lg disabled:bg-gray-500 disabled:cursor-not-allowed"
             >
               Post Comment
             </button>
@@ -134,7 +138,7 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <p className="font-bold text-white">{comment.profiles?.username || 'User'}</p>
+                    <p className="font-bold text-white">{comment.profile?.username || 'User'}</p>
                     <p className="text-xs text-gray-400">
                       {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                     </p>
