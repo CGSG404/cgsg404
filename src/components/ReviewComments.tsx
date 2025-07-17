@@ -19,7 +19,7 @@ interface Comment {
   } | null;
 }
 
-// Definisikan props untuk komponen
+// Define props for the component
 interface ReviewCommentsProps {
   reviewSlug: string;
 }
@@ -31,6 +31,19 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Function to generate avatar URL with Google profile picture support
+  const getAvatarUrl = (username: string, avatarUrl: string | null) => {
+    if (avatarUrl) {
+      return avatarUrl; // Use Google avatar or custom avatar if available
+    }
+    
+    // Fallback to generated avatar
+    const cleanUsername = username.replace(/\s+/g, '+');
+    return `https://ui-avatars.com/api/?name=${cleanUsername}&size=200&background=1f2937&color=10b981&bold=true&font-size=0.6`;
+  };
+
+
+
   // Fetch user data and comments when the component mounts
   useEffect(() => {
     const fetchUserAndComments = async () => {
@@ -40,7 +53,10 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
 
       const { data, error } = await supabase
         .from('comments')
-        .select('*, profile:profiles(username, avatar_url)')
+        .select(`
+          *,
+          profile:profiles(username, avatar_url)
+        `)
         .eq('review_slug', reviewSlug)
         .order('created_at', { ascending: false });
 
@@ -76,7 +92,7 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
 
     if (insertData) {
       // Step 2: Fetch the new comment with the profile data joined
-            const { data: newCommentData, error: selectError } = await supabase
+      const { data: newCommentData, error: selectError } = await supabase
         .from('comments')
         .select('*, profile:profiles(username, avatar_url)')
         .eq('id', insertData.id)
@@ -84,8 +100,6 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
 
       if (selectError) {
         console.error('Error fetching new comment:', selectError);
-        // Even if fetching fails, we can add the comment without profile info
-        // Or just alert the user. For now, we'll just log it.
       } else if (newCommentData) {
         setComments([newCommentData as Comment, ...comments]);
         setNewComment('');
@@ -122,7 +136,7 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
         ) : (
           <div className="text-center py-4 border-t border-white/10">
             <p className="text-gray-300">You must be logged in to post a comment.</p>
-            {/* Anda bisa menambahkan tombol login di sini */}
+            {/* Login button can be added here */}
           </div>
         )}
 
@@ -133,8 +147,16 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
           ) : comments.length > 0 ? (
             comments.map((comment) => (
               <div key={comment.id} className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-gray-700 flex-shrink-0 border border-white/10">
-                  {/* Avatar bisa ditambahkan di sini: <img src={comment.profiles?.avatar_url} /> */}
+                <div className="w-12 h-12 rounded-full bg-gray-700 flex-shrink-0 border border-white/10 overflow-hidden">
+                  <img 
+                    src={getAvatarUrl(comment.profile?.username || 'User', comment.profile?.avatar_url)} 
+                    alt={`${comment.profile?.username}'s avatar`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback if image fails to load
+                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${comment.profile?.username || 'User'}&size=200&background=374151&color=fff&bold=true`;
+                    }}
+                  />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
