@@ -22,6 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
+  console.log("Rendering Home page...");
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -52,7 +53,6 @@ export default async function Home() {
     <>
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <IndexHydrated dehydratedState={dehydrated} />
