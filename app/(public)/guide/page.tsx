@@ -1,9 +1,6 @@
 'use client';
-import dynamic from 'next/dynamic';
 import Link from "next/link";
-
-// Load the existing GuidePage component only on the client to avoid the framer-motion export * error.
-const GuidePage = dynamic(() => import('@/components/GuidePage'), { ssr: false });
+import GuidePage from '@/components/GuidePage';
 
 export default function Guide() {
   return (

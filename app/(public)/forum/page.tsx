@@ -1,8 +1,6 @@
 'use client';
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const ForumPage = dynamic(() => import('@/components/ForumPage'), { ssr: false });
+import ForumPage from '@/components/ForumPage';
 
 export default function Forum() {
   return (
