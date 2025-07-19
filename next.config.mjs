@@ -6,20 +6,39 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Development and Production optimizations
+  // Vercel-optimized configuration
   reactStrictMode: false,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  // Disable experimental features that might cause Vercel issues
-  experimental: {
-    // optimizeCss: true,
-    // optimizePackageImports: [
-    //   '@radix-ui/react-icons',
-    //   '@radix-ui/react-components',
-    //   'lucide-react',
-    //   'date-fns',
-    // ],
+  // Disable experimental features for stability
+  experimental: {},
+  // Image optimization
+  images: {
+    domains: ['gurusingapore.com'],
+    formats: ['image/webp', 'image/avif'],
+  },
+  // Headers for security
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+    ];
   },
 };
 
