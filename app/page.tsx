@@ -1,11 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { JsonLd } from '../src/components/JsonLd';
-
-const IndexPage = dynamic(() => import('../src/components/IndexPage'), {
-  ssr: true
-});
+import IndexPage from '../src/components/IndexPage';
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com';

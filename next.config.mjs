@@ -11,14 +11,15 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  // Disable experimental features that might cause Vercel issues
   experimental: {
-    optimizeCss: true,
-    optimizePackageImports: [
-      '@radix-ui/react-icons',
-      '@radix-ui/react-components',
-      'lucide-react',
-      'date-fns',
-    ],
+    // optimizeCss: true,
+    // optimizePackageImports: [
+    //   '@radix-ui/react-icons',
+    //   '@radix-ui/react-components',
+    //   'lucide-react',
+    //   'date-fns',
+    // ],
   },
 };
 
