@@ -18,6 +18,15 @@ const nextConfig = {
     domains: ['gurusingapore.com'],
     formats: ['image/webp', 'image/avif'],
   },
+  // Rewrites for SEO
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+      },
+    ];
+  },
   // Headers for security
   async headers() {
     return [
