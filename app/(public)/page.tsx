@@ -3,7 +3,6 @@ import IndexHydrated from "@/components/IndexHydrated";
 import IndexPage from "@/components/IndexPage";
 import { fetchFeaturedCasinos, fetchTopCasinos } from "@/lib/api";
 import { Metadata } from "next";
-import fs from 'fs';
 
 export const dynamic = "force-static";
 export const revalidate = 600; // 10 minutes
@@ -49,10 +48,6 @@ export default async function Home() {
   });
 
   const dehydrated = dehydrate(queryClient);
-
-  if (!fs.existsSync('/vercel/path0/.next/server/app/(public)/page_client-reference-manifest.js')) {
-    console.error("File not found: page_client-reference-manifest.js");
-  }
 
   return (
     <>
