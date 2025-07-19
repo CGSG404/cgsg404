@@ -11,7 +11,8 @@ interface CasinoPageProps {
 export async function generateMetadata({
   params,
 }: CasinoPageProps): Promise<Metadata> {
-  const casino = casinos.find((c) => c.slug === params.slug);
+  const { slug } = await params;
+  const casino = casinos.find((c) => c.slug === slug);
 
   if (!casino) {
     return {
