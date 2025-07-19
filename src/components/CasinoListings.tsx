@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,391 +8,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CasinoCard from './CasinoCard';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { fetchAllCasinos } from '@/lib/api';
+import { databaseApi } from '@/lib/database-api';
 import { useIsDesktop } from '@/hooks/useIsDesktop';
+import type { CasinoForCard } from '@/types/database';
+import { Skeleton } from '@/components/ui/skeleton';
 
-interface Casino {
-  id: number;
-  name: string;
-  logo: string;
-  safetyIndex: 'Low' | 'Medium' | 'High' | 'Very High';
-  badges: string[];
-  bonus: string;
-  features: string[];
-  description: string;
-  rating: number;
-  isNew?: boolean;
-  links: {
-    bonus: string;
-    review: string;
-    complaint: string;
-  };
-  playUrl: string;
-}
-
-// Static data moved outside the component to prevent re-creation on every render.
-const initialCasinos: Casino[] = [
-  {
-    id: 1,
-    name: 'Ducky Luck',
-    logo: '/casino-logos/ducky luck.png',
-    rating: 4.0,
-    safetyIndex: 'Medium',
-    bonus: 'Welcome Bonus Up To 400% + Daily Bonus 20%',
-    features: ['Live Service', 'Local & CryptoPayments', 'Mobile App'],
-    description: 'Kickstart your gaming journey with a massive 400% Welcome Bonus and enjoy a 20% Daily Bonus to boost your winnings.',
-    badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Licensed By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/royal-spin',
-      review: '/reviews/royal-spin',
-      complaint: '/complaints/royal-spin'
-    },
-    playUrl: 'https://ducky7.com/RF12AA9985',
-  },
-  {
-    id: 2,
-    name: 'Speed Sgd',
-    logo: '/casino-logos/speedsgd-logos.png',
-    rating: 4.5,
-    safetyIndex: 'High',
-    bonus: 'Welcome Bonus Up To 400% + Grand Daily Bonus 100%',
-    features: ['Mini Games', 'Live Service', 'Local Payments'],
-    description: 'Huge Your Chance with more Experience Play Large Welcome Bonus',
-    badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Licensed By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/neon-palace',
-      review: '/reviews/neon-palace',
-      complaint: '/complaints/neon-palace'
-    },
-    playUrl: 'https://speedsgd.com/RF29A8580A9',
-  },
-  {
-    id: 3,
-    name: 'TOP1',
-    logo: '/casino-logos/top1-logos.png',
-    rating: 4.8,
-    safetyIndex: 'Very High',
-    bonus: '80% Welcome Bonus + Rescue Bonus',
-    features: ['Live Service', 'Lucky Draw','Local & Crypto Payments'],
-    description: 'Play with Rescue, make your game last much longer & safe.',
-    badges: ['Top 5', 'Hot Games', 'Slot Games', 'Live Games', 'Sport Games', 'Arcade Games', 'Not Licensed By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/lucky-stars',
-      review: '/reviews/lucky-stars',
-      complaint: '/complaints/lucky-stars'
-    },
-    playUrl: 'https://top1sg.com/RF295196839',
-  },
-  {
-    id: 4,
-    name: 'BK88',
-    logo: '/casino-logos/bk88-logos.png',
-    rating: 4.8,
-    safetyIndex: 'Very High',
-    bonus: '150% Welcome Bonus + Free Credit 365 Days',
-    features: ['Live Service', 'Lucky Draw', 'Local Payments'],
-    description: 'Enjoy a massive 150% Welcome Bonus plus Free Credit available 365 days a year.',
-    badges: ['Top 5', 'Event Games', 'Hot Games', 'Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Licensed By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/diamond-elite',
-      review: '/reviews/diamond-elite',
-      complaint: '/complaints/diamond-elite'
-    },
-    playUrl: 'https://bk888.co/BK88829A860350',
-  },
-  {
-    id: 5,
-    name: 'Tokyo99',
-    logo: '/casino-logos/tokyo99-logos.png',
-    rating: 4.3,
-    safetyIndex: 'Medium',
-    bonus: 'Welcome Bonus Up To 280% + Monthly Realbet',
-    features: ['Live Service', 'Local Payments'],
-    description: 'Unlock up to 280% Welcome Bonus + enjoy exclusive Realbet rewards every month.',
-    badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Licensed By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/crypto-pro',
-      review: '/reviews/crypto-pro',
-      complaint: '/complaints/crypto-pro'
-    },
-    playUrl: 'https://www.sgtk99.com/RF12A5032A',
-  },
-  {
-    id: 6,
-    name: 'GoRich',
-    logo: '/casino-logos/gorich-logos.png',
-    rating: 4.4,
-    safetyIndex: 'Medium',
-    bonus: '50% Welcome Bonus + Vpower Free Credit 365 Days',
-    features: ['Live Service', 'Free Movie', 'Deposit Lucky Draw'],
-    description: 'Get 50% Welcome Bonus + Vpower Free Credit available every day, 365 days a year.',
-    badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Licensed By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/classic-vegas',
-      review: '/reviews/classic-vegas',
-      complaint: '/complaints/classic-vegas'
-    },
-    playUrl: 'https://gorich.xyz/RF29A861665',
-  },
-  {
-    id: 7,
-    name: 'MBS88',
-    logo: '/casino-logos/mbs888-logos.png',
-    rating: 4.5,
-    safetyIndex: 'High',
-    bonus: '100% Welcome Bonus + Unlimited Booster 5% & 10%',
-    features: ['Live Service', 'Local Payment', 'Mobile App'],
-    description: 'Claim 100% Welcome Bonus + enjoy Unlimited 5% & 10% Boosters anytime you play.',
-    badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Licensed By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/spin-master',
-      review: '/reviews/spin-master',
-      complaint: '/complaints/spin-master'
-    },
-    playUrl: 'https://mbs888.online/RF295818622',
-  },
-  {
-    id: 8,
-    name: 'GE8',
-    logo: '/casino-logos/ge8-logos.png',
-    rating: 4.8,
-    safetyIndex: 'Very High',
-    bonus: 'Welcome Bonus Up To 120% + 365 Days Hot Bonus',
-    features: ['Live Service', 'Local & Crypto Payments', 'Lucky Wheel'],
-    description: 'Enjoy up to 120% Welcome Bonus + Hot Bonuses every day, 365 days non-stop.',
-    badges: ['Top 5', 'Slot Games', 'Live Games', 'Sport Games', 'App Games', 'Other Games', 'Not Licensed By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/live-hub',
-      review: '/reviews/live-hub',
-      complaint: '/complaints/live-hub'
-    },
-    playUrl: 'https://ge88sg.com/RF295830131',
-  },
-  {
-    id: 9,
-    name: 'Phoenix 168',
-    logo: '/casino-logos/ph168-logos.png',
-    rating: 4.8,
-    safetyIndex: 'Very High',
-    bonus: 'Welcome Bonus Up To 168% + VIP Loyalty',
-    features: ['Live Service', 'Mobile App', 'Local Payments'],
-    description: 'Unlock up to 168% Welcome Bonus + enjoy exclusive perks with our VIP Loyalty Program.',
-    badges: ['Top 5', 'Slot Games', 'Live Games', 'Sport Games', '4D Lottery', 'Other Games', 'Not Lisenced By CGSG'],
-    isNew: true,
-    links: {
-      bonus: '/bonuses/mobile-plus',
-      review: '/reviews/mobile-plus',
-      complaint: '/complaints/mobile-plus'
-    },
-    playUrl: 'https://ph168sg.com/RF12500610',
-    },
-    {
-      id: 10,
-      name: 'RR4win',
-      logo: '/casino-logos/rr4win-logos.png',
-      rating: 4.5,
-      safetyIndex: 'High',
-      bonus: '100% Welcome Bonus + Legendary Monthly Angpao',
-      features: ['Live Service', 'Lucky Number', 'Local & Crypto Payments'],
-      description: 'Get 100% Welcome Bonus + receive Legendary Monthly Angpao surprises just for you.',
-      badges: ['Hot Games', 'Slot Games', 'Live Games', 'Arcade Games', 'Bonus Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://rr4winsg.com/RF301019686',
-    },
-    {
-      id: 11,
-      name: 'KOI8',
-      logo: '/casino-logos/koi8-logos.png',
-      rating: 4.5,
-      safetyIndex: 'High',
-      bonus: 'Welcome Bonus Up To 120% + 100% High Rescue',
-      features: ['Live Service', 'Lucky Wheel', 'Local & Crypto Payments'],
-      description: '120% to Start 100% to Recover. No One Loses Alone.',
-      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://koi8.me/RF295196092',
-    },
-    {
-      id: 12,
-      name: 'EEBET 77',
-      logo: '/casino-logos/eebet77-logos.png',
-      rating: 4.5,
-      safetyIndex: 'High',
-      bonus: 'Welcome Bonus Up To 350% + Weekly Rescue',
-      features: ['Live Service', 'Lucky Wheel', 'Local & Crypto Payments'],
-      description: 'Start Big with 350% Welcome Bonus — Stay Safe with Weekly Rescue.',
-      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Fishing Games', 'Aviator', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://eebet77.net/RF29555120A',
-    },
-    {
-      id: 13,
-      name: 'Iclub 365',
-      logo: '/casino-logos/iclub365-logos.png',
-      rating: 3.0,
-      safetyIndex: 'Medium',
-      bonus: 'Welcome Bonus Up To 100% + Weekly Royalty Up To $558',
-      features: ['Live Service', 'Local Payments', 'Mobile App'],
-      description: 'Double Your First Deposit + Weekly Royalty Up to $558.',
-      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Bonus Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://iclub365.com/RF29555299A',
-    },
-    {
-      id: 14,
-      name: 'SGD2U',
-      logo: '/casino-logos/sgd2u-logos.png',
-      rating: 4.5,
-      safetyIndex: 'High',
-      bonus: 'Welcome Bonus Up To 240% + Free 365 Days',
-      features: ['Live Service', 'Local Payments', 'Mobile App'],
-      description: 'Double Your First Deposit + Weekly Royalty Up to $558.',
-      badges: ['Slot Games', 'Live Games', 'Sport Games', '4D Lottery', 'Other Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://sgd2u.com/RF29A86A062',
-    },
-    {
-      id: 15,
-      name: 'OnePlay',
-      logo: '/casino-logos/1play-logos.png',
-      rating: 4.8,
-      safetyIndex: 'Very High',
-      bonus: '168% Welcome Bonus + Lucky Spin',
-      features: ['Live Service', 'Local Payments', 'Mobile App'],
-      description: 'Start with 168% and Let the Wheel Decide Your Fortune.',
-      badges: ['Top 5', 'Slot Games', 'Live Games', 'Sport Games', '4D Lottery', 'Fishing Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://1playsg.vip/RF29551A809',
-    },
-    {
-      id: 16,
-      name: 'Panda8',
-      logo: '/casino-logos/panda8sg-logos.png',
-      rating: 4.5,
-      safetyIndex: 'High',
-      bonus: '168% Welcome Bonus + Lucky Bonus',
-      features: ['Live Service', 'Local Payments', 'Mobile App'],
-      description: 'Unlock 168% Welcome Bonus + Surprise Lucky Bonus Inside.',
-      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://panda8.net/RF295189210',
-    },
-    {
-      id: 17,
-      name: 'WE88',
-      logo: '/casino-logos/we8-logos.png',
-      rating: 4.5,
-      safetyIndex: 'High',
-      bonus: 'Welcome Bonus Up To 340% + Rescue Bonus 10%',
-      features: ['Live Service', 'Local & Crypto Payments', 'Mobile App'],
-      description: 'Get Boosted: 340% Welcome Bonus + 10% Rescue for Every Spin.',
-      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://we88sg.live/RF12A75692',
-    },
-    {
-      id: 18,
-      name: 'UFC9',
-      logo: '/casino-logos/ufc9-logos.png',
-      rating: 4.0,
-      safetyIndex: 'Medium',
-      bonus: 'Welcome Bonus Up To 340% + Rescue Bonus 10%',
-      features: ['Live Service', 'Local & Crypto Payments', 'Mobile App'],
-      description: 'Get Boosted: 340% Welcome Bonus + 10% Rescue for Every Spin.',
-      badges: ['Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://ufcsg.com/RF295190680',
-    },
-    {
-      id: 19,
-      name: 'DG6',
-      logo: '/casino-logos/dg6-logos.png',
-      rating: 4.0,
-      safetyIndex: 'Medium',
-      bonus: 'Welcome Bonus Up To 150% + Mystery Box',
-      features: ['Live Service', 'Local & Crypto Payments'],
-      description: 'Double the Thrill: 150% Welcome Bonus + Surprise Mystery Box.',
-      badges: ['Slot Games', 'Bonus Games', 'Other Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://dg6sg.com/RF295191531',
-    },
-    {
-      id: 20,
-      name: 'Jewel 996',
-      logo: '/casino-logos/jewel996-logos.png',
-      rating: 4.0,
-      safetyIndex: 'Medium',
-      bonus: 'Welcome Bonus Up To 200% + Limited Bonus',
-      features: ['Live Service', 'Local & Crypto Payments'],
-      description: 'Welcome to Big Wins 200% Bonus & Limited-Time Treats.',
-      badges: ['Megah5 Promo', 'Slot Games', 'Live Games', 'Sport Games', 'Other Games', 'Not Lisenced By CGSG'],
-      isNew: true,
-      links: {
-        bonus: '/bonuses/mobile-plus',
-        review: '/reviews/mobile-plus',
-        complaint: '/complaints/mobile-plus'
-      },
-      playUrl: 'https://jewel996sg.com/RF12A757AA',
-      }
-];
+// Use the database type instead of local interface
+type Casino = CasinoForCard;
 
 const CasinoListings = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -401,12 +25,12 @@ const CasinoListings = () => {
   useEffect(() => setMounted(true), []);
   const isDesktop = mounted ? rawIsDesktop : false;
 
-  const { data = initialCasinos } = useQuery({
+  const { data: casinos = [], isLoading, error } = useQuery({
     queryKey: ['casinos'],
-    queryFn: fetchAllCasinos,
-    initialData: initialCasinos,
+    queryFn: () => databaseApi.getCasinosForCards(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
   });
-  const casinos = data as Casino[];
 
   const tabs = useMemo(() => [
     { id: 'all', label: 'All Casinos', count: casinos.length },
@@ -463,144 +87,160 @@ const CasinoListings = () => {
     setVisibleCount(10);
   }, [searchTerm, activeTab, sortBy]);
 
-  const visibleCasinos = filteredAndSortedCasinos.slice(0, visibleCount);
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 24 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.06, duration: 0.4 }
-    })
+  const loadMore = () => {
+    setVisibleCount(prev => prev + 10);
   };
 
-  return (
-    <section className="py-16">
-      <div className="container mx-auto px-4">
-        {/* Search and Controls */}
-        <div className="bg-casino-card-bg border border-casino-border-subtle rounded-lg p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search casinos..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-casino-dark border border-casino-border-subtle rounded-md text-white placeholder-gray-400 focus:border-casino-neon-green focus:outline-none"
-              />
-            </div>
+  const visibleCasinos = filteredAndSortedCasinos.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredAndSortedCasinos.length;
 
-            {/* Sort Dropdown */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <ArrowUpDown className="w-4 h-4 text-gray-400" />
-                <span className="text-gray-400 text-sm">Sort by:</span>
-              </div>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-48 bg-casino-dark border-casino-border-subtle text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-casino-card-bg border-casino-border-subtle">
-                  <SelectItem value="safety" className="text-white hover:bg-casino-dark">Safety Index</SelectItem>
-                  <SelectItem value="rating" className="text-white hover:bg-casino-dark">User Rating</SelectItem>
-                  <SelectItem value="name" className="text-white hover:bg-casino-dark">Name (A-Z)</SelectItem>
-                  <SelectItem value="newest" className="text-white hover:bg-casino-dark">Newest First</SelectItem>
-                </SelectContent>
-              </Select>
+  // Loading skeleton
+  const LoadingSkeleton = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="bg-casino-card-bg rounded-lg p-6 border border-casino-border-subtle">
+          <div className="flex items-center gap-4 mb-4">
+            <Skeleton className="w-16 h-16 rounded-lg" />
+            <div className="flex-1">
+              <Skeleton className="h-6 w-32 mb-2" />
+              <Skeleton className="h-4 w-24" />
             </div>
+          </div>
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-3/4 mb-4" />
+          <div className="flex gap-2 mb-4">
+            <Skeleton className="h-6 w-16" />
+            <Skeleton className="h-6 w-20" />
+            <Skeleton className="h-6 w-14" />
+          </div>
+          <Skeleton className="h-10 w-full" />
+        </div>
+      ))}
+    </div>
+  );
+
+  // Error state
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-400 mb-4">Failed to load casinos</p>
+        <Button onClick={() => window.location.reload()}>Try Again</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-casino-dark text-white">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-4 gradient-text">
+            Singapore Casino Guide
+          </h1>
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            Discover the best online casinos with our comprehensive reviews, safety ratings, and exclusive bonuses.
+          </p>
+        </div>
+
+        {/* Enhanced Search */}
+        <div className="mb-8 space-y-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search casinos by name, features, or bonus..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-casino-neon-green focus:ring-1 focus:ring-casino-neon-green/50 transition-all duration-200"
+                />
+              </div>
+            </div>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full md:w-48 bg-casino-card-bg border-casino-border-subtle">
+                <ArrowUpDown className="w-4 h-4 mr-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="safety">Safety Index</SelectItem>
+                <SelectItem value="rating">Rating</SelectItem>
+                <SelectItem value="name">Name</SelectItem>
+                <SelectItem value="newest">Newest</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
-        {/* Filter Tabs */}
+        {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 bg-casino-card-bg border border-casino-border-subtle">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-casino-card-bg">
             {tabs.map((tab) => (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="data-[state=active]:bg-casino-neon-green data-[state=active]:text-casino-dark text-gray-300 hover:text-white"
+                className="data-[state=active]:bg-casino-neon-green data-[state=active]:text-casino-dark"
               >
-                {tab.label}
-                <span className="ml-2 text-xs bg-casino-dark-lighter px-2 py-1 rounded-full">
-                  {tab.count}
-                </span>
+                {tab.label} ({tab.count})
               </TabsTrigger>
             ))}
           </TabsList>
         </Tabs>
 
-        {/* Results Count */}
-        <div className="mb-6">
-          <p className="text-gray-400">
-            Showing <span className="text-casino-neon-green font-semibold">{filteredAndSortedCasinos.length}</span> casino{filteredAndSortedCasinos.length !== 1 ? 's' : ''}
-            {searchTerm && (
-              <span> matching "<span className="text-white">{searchTerm}</span>"</span>
-            )}
-          </p>
-        </div>
-
-        {/* Mobile List */}
-        <div className="sm:hidden mb-12">
-          <div className="flex flex-col gap-4">
-            {visibleCasinos.map((casino, idx) => (
-              isDesktop ? (
+        {/* Casino Grid */}
+        {isLoading ? (
+          <LoadingSkeleton />
+        ) : (
+          <>
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              {visibleCasinos.map((casino, index) => (
                 <motion.div
                   key={casino.id}
-                  custom={idx}
-                  initial="hidden"
-                  animate="visible"
-                  variants={cardVariants}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <CasinoCard casino={casino} />
                 </motion.div>
-              ) : (
-                <CasinoCard key={casino.id} casino={casino} />
-              )
-            ))}
-          </div>
-        </div>
+              ))}
+            </motion.div>
 
-        {/* Desktop Grid */}
-        <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {visibleCasinos.map((casino, idx) => (
-            isDesktop ? (
-              <motion.div
-                key={casino.id}
-                custom={idx}
-                initial="hidden"
-                animate="visible"
-                variants={cardVariants}
-              >
-                <CasinoCard casino={casino} />
-              </motion.div>
-            ) : (
-              <CasinoCard key={casino.id} casino={casino} />
-            )
-          ))}
-        </div>
+            {/* Load More Button */}
+            {hasMore && (
+              <div className="text-center">
+                <Button
+                  onClick={loadMore}
+                  className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90"
+                >
+                  Load More Casinos
+                </Button>
+              </div>
+            )}
 
-        {visibleCasinos.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-lg mb-4">No casinos found</div>
-            <p className="text-gray-500">Try adjusting your search terms or filters</p>
-          </div>
-        )}
-
-        {/* Show More Button */}
-        {visibleCount < filteredAndSortedCasinos.length && (
-          <div className="text-center mt-8">
-            <Button
-              onClick={() => setVisibleCount((prev) => prev + 10)}
-              className="bg-gradient-to-r from-casino-neon-green to-green-500 hover:to-green-400 text-casino-dark font-semibold transition-colors px-6 py-3"
-            >
-              Show More Casinos ({filteredAndSortedCasinos.length - visibleCount}+)
-            </Button>
-          </div>
+            {/* No Results */}
+            {filteredAndSortedCasinos.length === 0 && !isLoading && (
+              <div className="text-center py-12">
+                <p className="text-gray-400 text-lg">No casinos found matching your criteria.</p>
+                <Button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setActiveTab('all');
+                  }}
+                  className="mt-4 bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90"
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/tooltip"
 import Link from 'next/link';
 import { Star, Book, List, MessageCircle, Compass, Newspaper, Users, Gamepad2, Home } from 'lucide-react';
+import { SidebarUserInfo, SidebarQuickStats, SidebarFeaturedCasino } from './sidebar-user-info';
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -763,25 +764,94 @@ export {
   useSidebar,
 }
 
-// Tambahkan menu dan search bar di sidebar
+// Modern Casino-themed Sidebar with enhanced UX
 export function AppSidebar() {
+  React.useEffect(() => {
+    // Import CSS animations
+    import('@/styles/sidebar-animations.css');
+  }, []);
+
   return (
     <SidebarProvider>
-      <Sidebar className="flex h-[calc(100vh-64px)] w-64 flex-col bg-casino-dark text-casino-neon-green mt-[64px]">
-        <SidebarContent>
-          <SidebarGroup>
-            <Link href="/" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Home className="w-5 h-5" /> Home</Link>
-            <Link href="/casinos" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Gamepad2 className="w-5 h-5" /> Casinos</Link>
-            <Link href="/games" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Star className="w-5 h-5" /> Top Casinos</Link>
-            <Link href="/reviews" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Book className="w-5 h-5" /> Reviews</Link>
-            <Link href="/list-report" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><List className="w-5 h-5" /> List Report</Link>
-            <Link href="/forum" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><MessageCircle className="w-5 h-5" /> Forum</Link>
-            <Link href="/guide" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Compass className="w-5 h-5" /> Guide</Link>
-            <Link href="/news" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Newspaper className="w-5 h-5" /> News</Link>
-          </SidebarGroup>
+      <Sidebar className="sidebar-container flex h-[calc(100vh-64px)] w-64 flex-col bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark border-r border-casino-border-subtle/50 mt-[64px] overflow-hidden shadow-2xl sidebar-glow">
+        <SidebarContent className="sidebar-content flex flex-col h-full">
+          {/* User Info Section */}
+          <SidebarUserInfo />
+
+          {/* Quick Stats */}
+          <SidebarQuickStats />
+
+          {/* Main Navigation */}
+          <div className="flex-1 p-4">
+            <SidebarGroup>
+              <div className="space-y-1">
+                <div className="sidebar-nav-item"><SidebarNavItem href="/" icon={Home} label="Home" /></div>
+                <div className="sidebar-nav-item"><SidebarNavItem href="/casinos" icon={Gamepad2} label="Casinos" badge="Hot" /></div>
+                <div className="sidebar-nav-item"><SidebarNavItem href="/games" icon={Star} label="Top Casinos" /></div>
+                <div className="sidebar-nav-item"><SidebarNavItem href="/reviews" icon={Book} label="Reviews" /></div>
+                <div className="sidebar-nav-item"><SidebarNavItem href="/list-report" icon={List} label="List Report" /></div>
+                <div className="sidebar-nav-item"><SidebarNavItem href="/forum" icon={MessageCircle} label="Forum" badge="New" /></div>
+                <div className="sidebar-nav-item"><SidebarNavItem href="/guide" icon={Compass} label="Guide" /></div>
+                <div className="sidebar-nav-item"><SidebarNavItem href="/news" icon={Newspaper} label="News" /></div>
+              </div>
+            </SidebarGroup>
+          </div>
+
+          {/* Featured Casino Section */}
+          <SidebarFeaturedCasino />
         </SidebarContent>
       </Sidebar>
     </SidebarProvider>
+  );
+}
+
+// Individual Navigation Item Component
+interface SidebarNavItemProps {
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  badge?: string;
+}
+
+function SidebarNavItem({ href, icon: Icon, label, badge }: SidebarNavItemProps) {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  return (
+    <Link
+      href={href}
+      className="group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-casino-neon-green/10 hover:to-casino-neon-purple/10 hover:border-casino-neon-green/30 border border-transparent transition-all duration-300 font-medium overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Animated background glow */}
+      <div className={`absolute inset-0 bg-gradient-to-r from-casino-neon-green/5 to-casino-neon-purple/5 rounded-lg transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+
+      {/* Left border accent */}
+      <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-casino-neon-green rounded-r-full transition-all duration-300 ${isHovered ? 'h-8 opacity-100' : 'h-0 opacity-0'}`} />
+
+      <div className="relative flex items-center gap-3 z-10">
+        <div className="relative">
+          <Icon className="w-5 h-5 group-hover:text-casino-neon-green transition-all duration-300 group-hover:scale-110" />
+          {/* Icon glow effect */}
+          <Icon className={`absolute inset-0 w-5 h-5 text-casino-neon-green transition-opacity duration-300 blur-sm ${isHovered ? 'opacity-50' : 'opacity-0'}`} />
+        </div>
+        <span className="group-hover:text-white transition-colors duration-300 group-hover:translate-x-1 transform">{label}</span>
+      </div>
+
+      {badge && (
+        <div className="relative z-10">
+          <span className={`text-xs px-2 py-0.5 rounded-full border transition-all duration-300 ${
+            badge === 'Hot'
+              ? 'bg-red-500/20 text-red-400 border-red-500/30 group-hover:bg-red-500/30 group-hover:shadow-[0_0_10px_rgba(239,68,68,0.3)]'
+              : badge === 'New'
+              ? 'bg-blue-500/20 text-blue-400 border-blue-500/30 group-hover:bg-blue-500/30 group-hover:shadow-[0_0_10px_rgba(59,130,246,0.3)]'
+              : 'bg-casino-neon-green/20 text-casino-neon-green border-casino-neon-green/30 group-hover:bg-casino-neon-green/30 group-hover:shadow-[0_0_10px_rgba(0,255,153,0.3)]'
+          }`}>
+            {badge}
+          </span>
+        </div>
+      )}
+    </Link>
   );
 }
 

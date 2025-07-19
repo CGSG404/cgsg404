@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import SearchBar from '@/components/SearchBar';
+import EnhancedSearchBar from '@/components/EnhancedSearchBar';
 
 const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
@@ -99,8 +99,8 @@ const Navbar = () => {
         </Link>
 
         {/* Search Bar (desktop only) */}
-        <div className="flex-1 flex justify-center px-4 hidden md:flex">
-          <SearchBar 
+        <div className="flex-1 justify-center px-4 hidden md:flex">
+          <EnhancedSearchBar
             className="w-full max-w-md"
             placeholder="Search casinos, games, reviews..."
           />
@@ -208,8 +208,8 @@ const Navbar = () => {
             </div>
             
             {/* Mobile Search Bar */}
-            <div className="p-6 border-b border-slate-700 bg-slate-800 flex-shrink-0">
-              <SearchBar 
+            <div className="p-6 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0">
+              <EnhancedSearchBar
                 className="w-full"
                 placeholder="Search casinos, games..."
               />

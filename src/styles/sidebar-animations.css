@@ -1,0 +1,195 @@
+/* Enhanced Sidebar Animations for CGSG Casino Guide */
+
+@keyframes sidebar-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 255, 153, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 255, 153, 0.2), 0 0 40px rgba(139, 92, 246, 0.1);
+  }
+}
+
+@keyframes pulse-neon {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes neon-border-flow {
+  0% {
+    border-color: rgba(0, 255, 153, 0.3);
+    box-shadow: 0 0 5px rgba(0, 255, 153, 0.2);
+  }
+  50% {
+    border-color: rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+  }
+  100% {
+    border-color: rgba(0, 255, 153, 0.3);
+    box-shadow: 0 0 5px rgba(0, 255, 153, 0.2);
+  }
+}
+
+/* Sidebar specific animations */
+.sidebar-container {
+  animation: slide-in-left 0.5s ease-out;
+}
+
+.sidebar-nav-item {
+  animation: float-up 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.sidebar-nav-item:nth-child(1) { animation-delay: 0.1s; }
+.sidebar-nav-item:nth-child(2) { animation-delay: 0.15s; }
+.sidebar-nav-item:nth-child(3) { animation-delay: 0.2s; }
+.sidebar-nav-item:nth-child(4) { animation-delay: 0.25s; }
+.sidebar-nav-item:nth-child(5) { animation-delay: 0.3s; }
+.sidebar-nav-item:nth-child(6) { animation-delay: 0.35s; }
+.sidebar-nav-item:nth-child(7) { animation-delay: 0.4s; }
+.sidebar-nav-item:nth-child(8) { animation-delay: 0.45s; }
+
+.sidebar-glow {
+  animation: sidebar-glow 4s ease-in-out infinite;
+}
+
+.pulse-neon {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+.neon-border-flow {
+  animation: neon-border-flow 3s ease-in-out infinite;
+}
+
+/* Hover effects */
+.sidebar-nav-item:hover {
+  transform: translateX(4px);
+  transition: transform 0.2s ease-out;
+}
+
+.sidebar-nav-item:hover .nav-icon {
+  filter: drop-shadow(0 0 8px rgba(0, 255, 153, 0.6));
+}
+
+/* Featured casino animation */
+.featured-casino {
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-casino::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(0, 255, 153, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* Stats cards animation */
+.stats-card {
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 255, 153, 0.15);
+}
+
+/* User avatar glow */
+.user-avatar {
+  position: relative;
+}
+
+.user-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #00ff99, #8b5cf6);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.user-avatar:hover::after {
+  opacity: 0.7;
+}
+
+/* Responsive animations - disable on mobile for performance */
+@media (max-width: 768px) {
+  .sidebar-container,
+  .sidebar-nav-item,
+  .sidebar-glow,
+  .pulse-neon,
+  .neon-border-flow,
+  .featured-casino::before {
+    animation: none !important;
+  }
+  
+  .sidebar-nav-item:hover,
+  .stats-card:hover,
+  .user-avatar:hover::after {
+    transform: none !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Smooth scrollbar for sidebar */
+.sidebar-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  background: rgba(42, 52, 65, 0.3);
+  border-radius: 2px;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 153, 0.3);
+  border-radius: 2px;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 153, 0.5);
+}

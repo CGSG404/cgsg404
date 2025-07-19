@@ -1,15 +1,16 @@
-# Global Chat Application
+# CGSG404 - Casino Guide Singapore
 
-A real-time global chat application built with Next.js, TypeScript and Supabase. The application allows users to communicate instantly with other connected users.
+A comprehensive casino guide platform built with Next.js, TypeScript and Supabase. The application provides trusted casino reviews, bonuses, and community features for Singapore casino enthusiasts.
 
-## Key Features
+## 🎯 Key Features
 
-- Live Chat** - Get the latest information instantly!
-- Automatic login** - Sign in via Google OAuth
-- **Tampilan Responsif** - available on desktop and mobile devices
-- Dark/Light Mode** - show and change themes
-- **Indikator Online** - access to tons of information online
-- **Riwayat Pesan** - delete content anywhere, anytime
+- **🎰 Casino Reviews** - Comprehensive reviews with safety ratings
+- **🎁 Bonus Tracking** - Latest casino bonuses and promotions
+- **💬 Live Forum** - Real-time community discussions
+- **🔐 User Authentication** - Secure Google OAuth integration
+- **📱 Responsive Design** - Optimized for desktop and mobile
+- **🌙 Modern UI** - Professional casino-themed interface
+- **📊 User Rankings** - Gamified user experience with levels
 
 ## 🛠 Technology Used
 
@@ -17,6 +18,24 @@ A real-time global chat application built with Next.js, TypeScript and Supabase.
 - **Backend**: Supabase (Auth, Database, Realtime)
 - **State Management**: React Hooks
 - **Icons**: Lucide Icons
+
+## 🔐 Admin System
+
+CGSG404 dilengkapi dengan sistem admin yang komprehensif dengan Row Level Security (RLS) dan permission management yang granular.
+
+### **📚 Admin Documentation:**
+- **[Admin Setup Guide](ADMIN_SETUP_GUIDE.md)** - Setup dan konfigurasi sistem admin
+- **[Developer Guide](docs/ADMIN_DEVELOPER_GUIDE.md)** - Panduan untuk developer
+- **[Permission Reference](docs/PERMISSION_REFERENCE.md)** - Daftar lengkap permissions
+- **[Troubleshooting](docs/ADMIN_TROUBLESHOOTING.md)** - Panduan troubleshooting
+- **[Quick Reference](docs/ADMIN_QUICK_REFERENCE.md)** - Referensi cepat
+
+### **🔑 Key Features:**
+- ✅ **Role-based Access Control** (Super Admin, Admin, Moderator)
+- ✅ **Granular Permissions** (25+ permission types)
+- ✅ **Database-level Security** (RLS policies)
+- ✅ **Activity Logging** (Audit trail)
+- ✅ **React Context Integration** (Easy frontend usage)
 
 ## 🚀 How to Run
 
