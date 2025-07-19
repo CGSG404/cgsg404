@@ -66,13 +66,12 @@ const Navbar = () => {
     setIsNavigating(true);
     
     try {
-      const { data, error } = await import('@/integrations/supabase/client').then(module => 
-        module.supabase
-          .from('profiles')
-          .select('username')
-          .eq('id', user.id)
-          .single()
-      );
+      const { supabase } = await import('@/lib/supabaseClient');
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', user.id)
+        .single();
       
       if (data && data.username) {
         router.push(`/profile/${data.username}`);
