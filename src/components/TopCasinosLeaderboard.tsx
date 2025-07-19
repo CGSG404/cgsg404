@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, Trophy, Medal, Award, Crown, ExternalLink } from 'lucide-react';
+import { Star, StarHalf, Shield, Gift, ExternalLink, Trophy, Medal, Award, Crown, Newspaper, Compass, MessageCircle, List, Book, Gamepad2, Home } from 'lucide-react';
 
 const TopCasinosLeaderboard = () => {
   const topCasinos = [
@@ -117,7 +117,7 @@ const TopCasinosLeaderboard = () => {
           <div
             key={casino.rank}
             onClick={() => handleCardClick(casino.playUrl)}
-            className={`relative p-4 rounded-lg border transition-all duration-300 hover:scale-105 cursor-pointer ${
+            className={`relative p-4 rounded-lg border cursor-pointer ${
               casino.rank === 1
                 ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border-yellow-400/30 shadow-lg shadow-yellow-400/20'
                 : 'bg-casino-dark-lighter border-casino-border-subtle hover:border-casino-neon-green/30'
@@ -163,14 +163,18 @@ const TopCasinosLeaderboard = () => {
                   
                   <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2">
                     <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.round(casino.rating) ? 'text-yellow-400 fill-current' : 'text-gray-600'
-                          }`}
-                        />
-                      ))}
+                      {[...Array(5)].map((_, i) => {
+                        const diff = casino.rating - i;
+                        if (diff >= 1) {
+                          // Full star
+                          return <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />;
+                        } else if (diff >= 0.5) {
+                          // Half star
+                          return <StarHalf key={i} className="w-4 h-4 text-yellow-400 fill-current" />;
+                        }
+                        // Empty star
+                        return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                      })}
                     </div>
                     <span className="text-gray-400 text-sm">({casino.rating}/5)</span>
                   </div>
@@ -198,7 +202,7 @@ const TopCasinosLeaderboard = () => {
                     casino.rank === 1
                       ? 'bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90'
                       : 'bg-casino-neon-purple text-white hover:bg-casino-neon-purple/90'
-                  } font-bold transition-all duration-200`}
+                  } font-bold`}
                   onClick={(e) => {
                     e.stopPropagation(); // Mencegah event bubbling ke parent
                     window.open(casino.playUrl, '_blank');

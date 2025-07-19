@@ -52,8 +52,6 @@ const NewsPage = () => {
       <Head>
         <title>Casino News</title>
       </Head>
-      <Navbar />
-
       <section className="container mx-auto max-w-7xl px-4 py-16">
         {/* Page Heading */}
         <div className="text-center mb-12">

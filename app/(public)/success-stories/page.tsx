@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from "next/link";
-import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 
 export const metadata = {
   title: 'Success Stories | CasinoGuruSG',
@@ -10,7 +9,6 @@ export const metadata = {
 export default function SuccessStoriesPage() {
   return (
     <main className="relative overflow-hidden">
-      <AnimatedBlurBG />
       <section className="relative overflow-hidden py-16">
         {/* blurred gradient background */}
         <div className="pointer-events-none absolute -inset-10 -z-10 select-none">

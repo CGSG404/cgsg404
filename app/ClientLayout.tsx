@@ -1,0 +1,22 @@
+import dynamic from 'next/dynamic';
+import { type ReactNode } from 'react';
+import Providers from './providers';
+import { AppSidebar } from '@/components/ui/sidebar';
+
+const BackToTop = dynamic(() => import('@/components/BackToTop'));
+
+export default function ClientLayout({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex min-h-screen">
+      {/* Sidebar kiri, fixed di desktop, drawer di mobile */}
+      <div className="hidden md:block w-64 flex-shrink-0 h-full">
+        <AppSidebar />
+      </div>
+      {/* Konten utama */}
+      <div className="flex-1 min-w-0">
+        <Providers>{children}</Providers>
+        <BackToTop />
+      </div>
+    </div>
+  );
+} 

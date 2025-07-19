@@ -47,7 +47,35 @@ const ListReportPage = () => {
 
   return (
     <div className="min-h-screen bg-casino-dark font-sans">
-      <Navbar />
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden pt-16 pb-12 sm:pb-20">
+        <div className="container mx-auto flex flex-col md:flex-row items-center gap-8 px-4">
+          {/* LEFT TEXT */}
+          <div className="max-w-xl flex-1">
+            <nav className="mb-3 text-sm text-gray-400">
+              <a href="/" className="hover:text-casino-neon-green">Home</a>
+              <span className="mx-2">›</span>
+              <span className="text-gray-300">List Report</span>
+            </nav>
+            <h1 className="text-3xl font-extrabold leading-tight text-white md:text-4xl lg:text-5xl">
+              Casino List Report – Community Warnings & Trusted Insights
+            </h1>
+            <div className="mt-4 flex items-center gap-3 text-sm text-gray-400">
+              <img src="/founder.png" alt="Author avatar" width={32} height={32} className="rounded-full" />
+              <span className="font-medium text-gray-200">GuruSG.</span>
+              <span>·</span>
+              <time dateTime="2025-07-10">10 Jul 2025</time>
+            </div>
+            <p className="mt-6 text-gray-300">
+              List of online casinos reported by the community. Check their reputation before you play. Stay safe with our up-to-date warnings and trusted user insights.
+            </p>
+          </div>
+          {/* RIGHT IMAGE */}
+          <div className="relative mx-auto h-36 w-36 sm:h-48 sm:w-48 md:h-60 md:w-60 lg:h-72 lg:w-72 flex-shrink-0">
+            <img src="/cgsg-logos.png" alt="CGSG Trophy" className="object-contain" />
+          </div>
+        </div>
+      </section>
       <div className="container mx-auto max-w-7xl px-4 py-16">
         <div className="text-center mb-12 text-white">
           <h1 className="text-4xl font-bold mb-4">

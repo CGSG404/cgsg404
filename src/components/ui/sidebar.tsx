@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
@@ -16,6 +18,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import Link from 'next/link';
+import { Star, Book, List, MessageCircle, Compass, Newspaper, Users, Gamepad2, Home } from 'lucide-react';
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -196,15 +200,15 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            className="w-[--sidebar-width] bg-slate-900 border-r border-slate-700 p-0 text-white [&>button]:hidden"
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
               } as React.CSSProperties
             }
-            side={side}
+            side="left"
           >
-            <div className="flex h-full w-full flex-col">{children}</div>
+            <div className="flex h-full w-full flex-col bg-slate-900">{children}</div>
           </SheetContent>
         </Sheet>
       )
@@ -756,6 +760,29 @@ export {
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
-  SidebarTrigger,
   useSidebar,
 }
+
+// Tambahkan menu dan search bar di sidebar
+export function AppSidebar() {
+  return (
+    <SidebarProvider>
+      <Sidebar className="flex h-[calc(100vh-64px)] w-64 flex-col bg-casino-dark text-casino-neon-green mt-[64px]">
+        <SidebarContent>
+          <SidebarGroup>
+            <Link href="/" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Home className="w-5 h-5" /> Home</Link>
+            <Link href="/casinos" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Gamepad2 className="w-5 h-5" /> Casinos</Link>
+            <Link href="/games" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Star className="w-5 h-5" /> Top Casinos</Link>
+            <Link href="/reviews" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Book className="w-5 h-5" /> Reviews</Link>
+            <Link href="/list-report" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><List className="w-5 h-5" /> List Report</Link>
+            <Link href="/forum" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><MessageCircle className="w-5 h-5" /> Forum</Link>
+            <Link href="/guide" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Compass className="w-5 h-5" /> Guide</Link>
+            <Link href="/news" className="flex items-center gap-3 px-4 py-2 rounded text-casino-neon-green hover:bg-sidebar-border transition-colors font-semibold"><Newspaper className="w-5 h-5" /> News</Link>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+    </SidebarProvider>
+  );
+}
+
+

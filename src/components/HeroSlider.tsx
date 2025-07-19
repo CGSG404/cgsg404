@@ -125,7 +125,7 @@ const HeroSlider: React.FC = () => {
           loop={true}
           centeredSlides={true}
           autoplay={{
-            delay: 3000,
+            delay: 6000,
             disableOnInteraction: false,
           }}
           spaceBetween={30}

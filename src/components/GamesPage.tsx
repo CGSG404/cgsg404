@@ -9,8 +9,6 @@ import TopCasinosLeaderboard from '@/components/TopCasinosLeaderboard';
 const GamesPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-casino-dark">
-      <Navbar />
-
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-16 pb-12 sm:pb-20">
         <div className="pointer-events-none absolute -inset-10 -z-10 select-none">

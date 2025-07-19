@@ -1,10 +1,16 @@
 import React from "react";
 import Link from "next/link";
-import AnimatedBlurBG from "@/components/AnimatedBlurBG";
+import Image from "next/image";
+import { Metadata } from "next";
 
 export const revalidate = 86400; // revalidate daily
 
-import Image from "next/image";
+
+
+export const metadata: Metadata = {
+  title: "About Us | CGSG",
+  description: "Learn about CasinoGuruSG (CGSG), our mission, and our commitment to providing transparent and accurate casino reviews.",
+};
 
 export default function AboutUsPage() {
   const team = [
@@ -26,7 +32,6 @@ export default function AboutUsPage() {
   ];
   return (
     <section className="py-16 relative overflow-hidden">
-      <AnimatedBlurBG />
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Main title */}
         <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-6 uppercase bg-gradient-to-r from-casino-neon-green via-purple-400 to-indigo-400 bg-clip-text text-transparent">

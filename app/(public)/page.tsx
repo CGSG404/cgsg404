@@ -1,6 +1,5 @@
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import IndexHydrated from "@/components/IndexHydrated";
-import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 import IndexPage from "@/components/IndexPage";
 import { fetchFeaturedCasinos, fetchTopCasinos } from "@/lib/api";
 import { Metadata } from "next";
@@ -51,7 +50,6 @@ export default async function Home() {
 
   return (
     <>
-      <AnimatedBlurBG />
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger

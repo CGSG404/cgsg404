@@ -6,14 +6,11 @@ import { Star, Shield, Users, Gift } from 'lucide-react';
 import CountUp from 'react-countup';
 import { useState } from 'react';
 
-
 // ----- Types -----
 export type FooterLink =
   | { name: string; href: string; onClick?: never }
   | { name: string; href?: never; onClick: () => void };
 export type FooterSection = { title: string; links: FooterLink[] };
-
-
 
 const Footer = () => {
   const [openModal, setOpenModal] = useState<null | 'privacy' | 'terms' | 'contact' | 'about'>(null);
@@ -53,13 +50,17 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-casino-dark-lighter border-t border-casino-border-subtle">
+    <footer className="bg-casino-dark-lighter border-t border-casino-border-subtle relative z-10">
       <div className="container mx-auto px-4 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center space-x-2 mb-4">
+            <Link 
+              href="/" 
+              className="inline-flex items-center space-x-2 mb-4 hover:opacity-80 transition-opacity"
+              aria-label="Go to homepage"
+            >
               <div className="w-10 h-10 bg-neon-gradient rounded-xl flex items-center justify-center">
                 <Star className="w-6 h-6 text-casino-dark" />
               </div>
@@ -78,7 +79,7 @@ const Footer = () => {
 
           {/* Navigation Sections */}
           {footerSections.map((section, index) => (
-            <div key={index}>
+            <div key={index} className="relative">
               <h3 className="text-white font-normal mb-4">{section.title}</h3>
               <ul className="space-y-2">
                 {section.links.map((link, linkIndex) => (
@@ -86,16 +87,18 @@ const Footer = () => {
                     {'onClick' in link ? (
                       <button
                         onClick={link.onClick}
-                        className="text-gray-400 hover:text-casino-neon-green transition-colors duration-200 text-sm"
+                        className="relative text-gray-400 hover:text-casino-neon-green transition-colors duration-200 text-sm py-1 focus:outline-none focus:text-casino-neon-green group"
                       >
-                        {link.name}
+                        <span className="relative z-10">{link.name}</span>
+                        <span className="absolute inset-0 bg-casino-neon-green/5 opacity-0 group-hover:opacity-100 transition-opacity rounded" />
                       </button>
                     ) : (
                       <Link
                         href={link.href!}
-                        className="text-gray-400 hover:text-casino-neon-green transition-colors duration-200 text-sm"
+                        className="relative inline-block text-gray-400 hover:text-casino-neon-green transition-colors duration-200 text-sm py-1 focus:outline-none focus:text-casino-neon-green group"
                       >
-                        {link.name}
+                        <span className="relative z-10">{link.name}</span>
+                        <span className="absolute inset-0 bg-casino-neon-green/5 opacity-0 group-hover:opacity-100 transition-opacity rounded" />
                       </Link>
                     )}
                   </li>
@@ -147,23 +150,26 @@ const Footer = () => {
           <div className="flex space-x-6 text-sm">
             <Link
               href="/privacy-policy"
-              className="text-gray-400 hover:text-casino-neon-green transition-colors"
+              className="relative inline-block text-gray-400 hover:text-casino-neon-green transition-colors duration-200 py-1 focus:outline-none focus:text-casino-neon-green group"
             >
-              Privacy Policy
+              <span className="relative z-10">Privacy Policy</span>
+              <span className="absolute inset-0 bg-casino-neon-green/5 opacity-0 group-hover:opacity-100 transition-opacity rounded" />
             </Link>
             <Link
               href="/terms-of-service"
-              className="text-gray-400 hover:text-casino-neon-green transition-colors"
+              className="relative inline-block text-gray-400 hover:text-casino-neon-green transition-colors duration-200 py-1 focus:outline-none focus:text-casino-neon-green group"
             >
-              Terms of Service
+              <span className="relative z-10">Terms of Service</span>
+              <span className="absolute inset-0 bg-casino-neon-green/5 opacity-0 group-hover:opacity-100 transition-opacity rounded" />
             </Link>
             <a
-              href="https://t.me/ysfcreatorr" // ganti dengan link kontak Anda
+              href="https://t.me/ysfcreatorr"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-casino-neon-green transition-colors"
+              className="relative inline-block text-gray-400 hover:text-casino-neon-green transition-colors duration-200 py-1 focus:outline-none focus:text-casino-neon-green group"
             >
-              Contact
+              <span className="relative z-10">Contact</span>
+              <span className="absolute inset-0 bg-casino-neon-green/5 opacity-0 group-hover:opacity-100 transition-opacity rounded" />
             </a>
           </div>
         </div>

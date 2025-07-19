@@ -8,7 +8,6 @@ import FeaturedTopics from '@/components/forum/FeaturedTopics';
 const ForumPage = () => {
   return (
     <div className="min-h-screen bg-casino-dark">
-      <Navbar />
       <ForumHero />
       <ForumStats />
       <div className="py-12 md:py-16">

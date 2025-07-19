@@ -8,7 +8,6 @@ import ReviewsHero from '@/components/reviews/ReviewsHero';
 import ReviewsGrid from '@/components/reviews/ReviewsGrid';
 import ReviewsCTA from '@/components/reviews/ReviewsCTA';
 import { Search } from 'lucide-react';
-import AnimatedBlurBG from '@/components/AnimatedBlurBG';
 
 const ReviewsPage = () => {
 // Semua logic dan UI utama Reviews sudah di sini.
@@ -21,9 +20,7 @@ const ReviewsPage = () => {
         <title>Online Casino Reviews - Expert Ratings & Reports | CGSG</title>
         <meta name="description" content="Read our in-depth online casino reviews. We provide expert ratings on games, bonuses, security, and customer support to help you choose the best casino." />
       </Head>
-      <Navbar />
       <main className="relative overflow-hidden">
-        <AnimatedBlurBG />
         <ReviewsHero />
         <div className="py-16">
         <div className="container mx-auto px-4">

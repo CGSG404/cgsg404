@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "dsznajder.es7-react-js-snippets",
+    "bradlc.vscode-tailwindcss",
+    "csstools.postcss",
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-rename-tag",
+    "streetsidesoftware.code-spell-checker",
+    "prisma.prisma",
+    "mikestead.dotenv",
+    "pkief.material-icon-theme",
+    "wayou.vscode-todo-highlight",
+    "gruntfuggly.todo-tree",
+    "wix.vscode-import-cost"
+  ]
+} 

@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import HeroSlider from '@/components/HeroSlider';
 import InfoCard from '@/components/InfoCard';
+import HeroBannerSlider from '@/components/HeroBannerSlider';
 import { Gift, PartyPopper, Ticket } from 'lucide-react';
 
 const LogoSlider = lazy(() => import('@/components/LogoSlider'));
@@ -22,7 +23,7 @@ const IndexPage = () => {
         <meta name="description" content="Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
+      <HeroBannerSlider />
       <HeroSection />
       <HeroSlider />
       {/* Bonus Info Section */}

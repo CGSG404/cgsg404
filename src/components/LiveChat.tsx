@@ -229,211 +229,195 @@ const LiveChat = () => {
   if (!isOpen) {
     return (
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-1/2 -translate-y-1/2 right-6 bg-casino-neon-green text-casino-dark p-4 rounded-full shadow-lg hover:bg-casino-neon-green/90 transition-colors z-50"
-        aria-label="Toggle Live Chat"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </button>
-    );
-  }
-
-  if (!isOpen) {
-    return (
-      <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-casino-neon-green text-casino-dark p-4 rounded-full shadow-lg hover:bg-casino-neon-green/90 transition-all duration-300 hover:scale-110 z-50"
+        className="fixed top-1/2 right-0 -translate-y-1/2 bg-casino-neon-green text-casino-dark px-5 py-3 rounded-l-xl rounded-r-none shadow-lg hover:bg-casino-neon-green/90 transition-all duration-300 hover:scale-105 z-50 flex items-center gap-2"
         aria-label="Open global chat"
       >
         <MessageCircle className="h-6 w-6" />
+        <span className="font-semibold hidden md:inline">Chat</span>
       </button>
     );
   }
 
-  if (!isOpen) {
-    return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 p-4 bg-casino-neon-green hover:bg-casino-neon-green/90 text-casino-dark font-semibold rounded-full shadow-lg z-50 flex items-center gap-2 transition-all hover:scale-105"
-      >
-        <MessageCircle className="w-6 h-6" />
-        <span>Chat</span>
-      </button>
-    );
-  }
-
+  // Side drawer chat
   return (
-    <div
-      className="fixed bottom-2 right-2 w-full max-w-[95vw] h-[70vh] sm:bottom-6 sm:right-6 sm:w-96 sm:h-[600px] bg-gradient-to-br from-casino-dark-800 to-casino-darker rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] flex flex-col z-50 overflow-hidden border border-casino-neon-green/20 backdrop-blur-sm"
-    >
-      {/* Header */}
-      <div className="bg-gradient-to-r from-casino-neon-green/10 to-casino-neon-green/5 border-b border-casino-neon-green/20 text-white p-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <div className="p-1.5 bg-casino-neon-green/20 rounded-lg">
-            <MessageCircle className="w-5 h-5 text-casino-neon-green" />
-          </div>
-          <h3 className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            {user ? 'Global Chat' : 'Please Sign In'}
-          </h3>
-          {user && (
-            <div className="flex items-center gap-1.5 text-sm text-casino-neon-green bg-casino-neon-green/10 px-3 py-1.5 rounded-full border border-casino-neon-green/30">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-casino-neon-green opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-casino-neon-green"></span>
-              </span>
-              <span className="text-sm font-medium text-white">{onlineCount} online</span>
+    <div className="fixed inset-0 z-[100] flex justify-end items-stretch">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/40 transition-opacity duration-300"
+        onClick={() => setIsOpen(false)}
+        aria-label="Close chat backdrop"
+      />
+      {/* Side panel */}
+      <div className="relative h-full w-full max-w-md bg-gradient-to-br from-casino-dark-800 to-casino-darker shadow-2xl flex flex-col border-l border-casino-neon-green/20 sm:mt-[64px] sm:h-[calc(100vh-64px)] animate-slide-in-right">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-casino-neon-green/10 to-casino-neon-green/5 border-b border-casino-neon-green/20 text-white p-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 bg-casino-neon-green/20 rounded-lg">
+              <MessageCircle className="w-5 h-5 text-casino-neon-green" />
             </div>
-          )}
-        </div>
-        <div className="flex items-center space-x-2">
-          <button 
-            className="p-1 rounded-full hover:bg-white/10 transition-colors"
-            aria-label="Online users"
-          >
-            <Users className="h-5 w-5" />
-          </button>
-          <button 
-            onClick={() => setIsOpen(false)}
-            className="p-1 rounded-full hover:bg-white/10 transition-colors"
-            aria-label="Close chat"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-casino-dark-900/80 to-casino-darker/90">
-        {!user ? (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6">
-            <MessageCircle className="w-12 h-12 text-casino-neon-green/50 mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">Sign In to Chat</h3>
-            <p className="text-gray-400 mb-6">Please sign in to join the conversation</p>
-            <Button 
-              onClick={async () => {
-                try {
-                  const { error } = await supabase.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                      redirectTo: `${window.location.origin}/auth/callback`
-                    }
-                  });
-                  
-                  if (error) throw error;
-                } catch (error) {
-                  console.error('Error signing in with Google:', error);
-                  toast({
-                    title: 'Sign In Error',
-                    description: 'Failed to sign in with Google. Please try again.',
-                    variant: 'destructive',
-                  });
-                }
-              }}
-              className="bg-casino-neon-green hover:bg-casino-neon-green/90 text-casino-dark font-medium"
-            >
-              <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-              </svg>
-              Sign in with Google
-            </Button>
-          </div>
-        ) : messages.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-center p-4">
-            <div>
-              <MessageCircle className="h-12 w-12 mx-auto mb-2 opacity-30" />
-              <p className="font-medium">No messages yet</p>
-              <p className="text-sm">Be the first to send a message!</p>
-            </div>
-          </div>
-        ) : (
-          messages.map((message) => (
-            <div 
-              key={message.id} 
-              className={`flex ${message.user_id === user?.id ? 'justify-end' : 'justify-start'}`}
-            >
-              {message.user_id !== user?.id && (
-                <Avatar className="h-8 w-8 mt-1 mr-2">
-                  <AvatarImage src={message.avatar_url} alt={message.username} />
-                  <AvatarFallback>
-                    {message.username ? message.username.charAt(0).toUpperCase() : 'U'}
-                  </AvatarFallback>
-                </Avatar>
-              )}
-              <div 
-                className={`max-w-[75%] p-3 rounded-2xl ${
-                  message.user_id === user?.id 
-                    ? 'bg-casino-neon-green text-casino-dark rounded-br-none' 
-                    : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-bl-none shadow-sm'
-                }`}
-              >
-                {message.user_id !== user?.id && (
-                  <div className="text-xs font-semibold mb-1 text-casino-neon-green">
-                    {message.username}
-                  </div>
-                )}
-                <p className="text-sm break-words">{message.content}</p>
-                <div className={`text-xs mt-1 opacity-70 ${message.user_id === user?.id ? 'text-right' : 'text-left'}`}>
-                  {formatDistanceToNow(new Date(message.created_at), { addSuffix: true, locale: enUS })}
-                </div>
+            <h3 className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              {user ? 'Global Chat' : 'Please Sign In'}
+            </h3>
+            {user && (
+              <div className="flex items-center gap-1.5 text-sm text-casino-neon-green bg-casino-neon-green/10 px-3 py-1.5 rounded-full border border-casino-neon-green/30">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-casino-neon-green opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-casino-neon-green"></span>
+                </span>
+                <span className="text-sm font-medium text-white">{onlineCount} online</span>
               </div>
-            </div>
-          ))
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Message Input */}
-      {user && (
-        <div className="p-4 border-t border-casino-neon-green/10 bg-casino-dark-800/80 backdrop-blur-sm">
-          <form onSubmit={sendMessage} className="space-y-2">
-            <div className="flex items-end gap-2">
-              <div className="flex-1 relative">
-                <Input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => {
-                    setNewMessage(e.target.value);
-                    setIsTyping(true);
-                  }}
-                  onFocus={() => setIsTyping(true)}
-                  onBlur={() => setIsTyping(false)}
-                  placeholder="Type your message..."
-                  className={`pr-12 rounded-xl border-casino-neon-green/30 bg-casino-dark-700/50 placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-casino-neon-green/50 focus-visible:ring-offset-0 focus-visible:border-casino-neon-green/50 ${
-                    isTyping ? 'text-black' : 'text-casino-neon-green'
-                  }`}
-                  disabled={isLoading}
-                />
-                <div className="absolute right-2 bottom-2 flex space-x-1">
-                  <button 
-                    type="button"
-                    className="p-1 rounded-full text-gray-400 hover:text-casino-neon-green transition-colors"
-                    aria-label="Add emoji"
-                  >
-                    <Smile className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-              <Button
-                type="submit"
-                disabled={!newMessage.trim() || isLoading}
-                className="h-10 w-10 p-0 rounded-full bg-gradient-to-br from-casino-neon-green to-emerald-500 hover:from-casino-neon-green/90 hover:to-emerald-500/90 text-casino-dark font-medium shadow-lg shadow-casino-neon-green/20 hover:shadow-casino-neon-green/30 transition-all duration-300 hover:scale-105 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+            )}
+          </div>
+          <div className="flex items-center space-x-2">
+            <button 
+              className="p-1 rounded-full hover:bg-white/10 transition-colors"
+              aria-label="Online users"
+            >
+              <Users className="h-5 w-5" />
+            </button>
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="p-1 rounded-full hover:bg-white/10 transition-colors"
+              aria-label="Close chat"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        {/* Messages & Input tetap sama seperti sebelumnya */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-casino-dark-900/80 to-casino-darker/90">
+          {!user ? (
+            <div className="h-full flex flex-col items-center justify-center text-center p-6">
+              <MessageCircle className="w-12 h-12 text-casino-neon-green/50 mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">Sign In to Chat</h3>
+              <p className="text-gray-400 mb-6">Please sign in to join the conversation</p>
+              <Button 
+                onClick={async () => {
+                  try {
+                    const { error } = await supabase.auth.signInWithOAuth({
+                      provider: 'google',
+                      options: {
+                        redirectTo: `${window.location.origin}/auth/callback`
+                      }
+                    });
+                    
+                    if (error) throw error;
+                  } catch (error) {
+                    console.error('Error signing in with Google:', error);
+                    toast({
+                      title: 'Sign In Error',
+                      description: 'Failed to sign in with Google. Please try again.',
+                      variant: 'destructive',
+                    });
+                  }
+                }}
+                className="bg-casino-neon-green hover:bg-casino-neon-green/90 text-casino-dark font-medium"
               >
-                {isLoading ? (
-                  <div className="h-4 w-4 border-2 border-casino-dark border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <Send className="h-4 w-4" />
-                )}
+                <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Sign in with Google
               </Button>
             </div>
-            <p className="text-xs text-gray-400 text-center">
-              <span className="bg-gradient-to-r from-casino-neon-green to-emerald-400 bg-clip-text text-transparent font-medium">Global chat</span> is visible to all users. Be kind and respectful.
-            </p>
-          </form>
+          ) : messages.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-gray-500 dark:text-gray-400 text-center p-4">
+              <div>
+                <MessageCircle className="h-12 w-12 mx-auto mb-2 opacity-30" />
+                <p className="font-medium">No messages yet</p>
+                <p className="text-sm">Be the first to send a message!</p>
+              </div>
+            </div>
+          ) : (
+            messages.map((message) => (
+              <div 
+                key={message.id} 
+                className={`flex ${message.user_id === user?.id ? 'justify-end' : 'justify-start'}`}
+              >
+                {message.user_id !== user?.id && (
+                  <Avatar className="h-8 w-8 mt-1 mr-2">
+                    <AvatarImage src={message.avatar_url} alt={message.username} />
+                    <AvatarFallback>
+                      {message.username ? message.username.charAt(0).toUpperCase() : 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <div 
+                  className={`max-w-[75%] p-3 rounded-2xl ${
+                    message.user_id === user?.id 
+                      ? 'bg-casino-neon-green text-casino-dark rounded-br-none' 
+                      : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-bl-none shadow-sm'
+                  }`}
+                >
+                  {message.user_id !== user?.id && (
+                    <div className="text-xs font-semibold mb-1 text-casino-neon-green">
+                      {message.username}
+                    </div>
+                  )}
+                  <p className="text-sm break-words">{message.content}</p>
+                  <div className={`text-xs mt-1 opacity-70 ${message.user_id === user?.id ? 'text-right' : 'text-left'}`}>
+                    {formatDistanceToNow(new Date(message.created_at), { addSuffix: true, locale: enUS })}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+          <div ref={messagesEndRef} />
         </div>
-      )}
+
+        {/* Message Input */}
+        {user && (
+          <div className="p-4 border-t border-casino-neon-green/10 bg-casino-dark-800/80 backdrop-blur-sm">
+            <form onSubmit={sendMessage} className="space-y-2">
+              <div className="flex items-end gap-2">
+                <div className="flex-1 relative">
+                  <Input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => {
+                      setNewMessage(e.target.value);
+                      setIsTyping(true);
+                    }}
+                    onFocus={() => setIsTyping(true)}
+                    onBlur={() => setIsTyping(false)}
+                    placeholder="Type your message..."
+                    className={`pr-12 rounded-xl border-casino-neon-green/30 bg-casino-dark-700/50 placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-casino-neon-green/50 focus-visible:ring-offset-0 focus-visible:border-casino-neon-green/50 ${
+                      isTyping ? 'text-black' : 'text-casino-neon-green'
+                    }`}
+                    disabled={isLoading}
+                  />
+                  <div className="absolute right-2 bottom-2 flex space-x-1">
+                    <button 
+                      type="button"
+                      className="p-1 rounded-full text-gray-400 hover:text-casino-neon-green transition-colors"
+                      aria-label="Add emoji"
+                    >
+                      <Smile className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+                <Button
+                  type="submit"
+                  disabled={!newMessage.trim() || isLoading}
+                  className="h-10 w-10 p-0 rounded-full bg-gradient-to-br from-casino-neon-green to-emerald-500 hover:from-casino-neon-green/90 hover:to-emerald-500/90 text-casino-dark font-medium shadow-lg shadow-casino-neon-green/20 hover:shadow-casino-neon-green/30 transition-all duration-300 hover:scale-105 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <div className="h-4 w-4 border-2 border-casino-dark border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+              <p className="text-xs text-gray-400 text-center">
+                <span className="bg-gradient-to-r from-casino-neon-green to-emerald-400 bg-clip-text text-transparent font-medium">Global chat</span> is visible to all users. Be kind and respectful.
+              </p>
+            </form>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

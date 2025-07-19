@@ -1,14 +1,13 @@
-'use client';
-import Navbar from '@/components/Navbar';
+export const metadata = {
+  title: "Privacy Policy | CGSG",
+  description: "Read the privacy policy for GuruSingapore. Learn how we collect, use, and protect your personal information.",
+};
 import Footer from '@/components/Footer';
-import AnimatedBlurBG from "@/components/AnimatedBlurBG";
 
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen flex flex-col text-white">
-      <Navbar />
       <main className="relative overflow-hidden flex-1 container mx-auto px-4 py-16 space-y-6">
-        <AnimatedBlurBG />
         <h1 className="text-3xl md:text-4xl font-bold mb-6 gradient-text">Privacy Policy</h1>
         <p className="text-gray-300 text-sm md:text-base">Last updated: July 1, 2025</p>
         <p className="text-gray-400">
@@ -22,7 +21,12 @@ export default function PrivacyPolicy() {
         <h2 className="text-2xl font-semibold mt-8 mb-4">Cookies</h2>
         <p className="text-gray-400">We use cookies to enhance user experience. You can choose to disable cookies through your browser settings.</p>
         <h2 className="text-2xl font-semibold mt-8 mb-4">Contact Us</h2>
-        <p className="text-gray-400">If you have any questions about this Privacy Policy, please contact us at support@gurusingapore.com.</p>
+        <p className="text-gray-400">If you have any questions about this Privacy Policy, please contact us:</p>
+        <a href="mailto:support@gurusingapore.com" className="inline-block mt-2">
+          <button className="bg-casino-neon-green text-casino-dark font-bold px-6 py-2 rounded hover:bg-casino-neon-green/90 transition">
+            Email Support
+          </button>
+        </a>
       </main>
       <Footer />
     </div>

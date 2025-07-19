@@ -65,8 +65,6 @@ const NewsDetailPage = () => {
       <Head>
         <title>{article.title} | Casino News</title>
       </Head>
-      <Navbar />
-
       <main className="container mx-auto px-4 py-16 max-w-3xl">
         <Link href="/news" className="flex items-center gap-2 text-sm text-casino-neon-green mb-6 hover:underline">
           <ChevronLeft className="w-4 h-4" /> Back to News

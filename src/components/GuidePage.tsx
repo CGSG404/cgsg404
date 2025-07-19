@@ -8,7 +8,6 @@ import GuideCTA from '@/components/guide/GuideCTA';
 const GuidePage = () => {
   return (
     <div className="min-h-screen bg-casino-dark">
-      <Navbar />
       <GuideHero />
       <div className="py-16">
         <div className="container mx-auto px-4">

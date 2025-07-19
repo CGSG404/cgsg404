@@ -1,0 +1,29 @@
+.hero-banner-slider .swiper-button-next, .hero-banner-slider .swiper-button-prev {
+  width: 44px;
+  height: 44px;
+  border: 2px solid #00ff9a;
+  border-radius: 10px;
+  background: transparent;
+  color: #00ff9a;
+  transition: background 0.2s, border-color 0.2s;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 50% !important;
+  transform: translateY(-50%);
+  z-index: 40;
+}
+.hero-banner-slider .swiper-button-next:after, .hero-banner-slider .swiper-button-prev:after {
+  font-size: 20px;
+  color: #00ff9a;
+}
+.hero-banner-slider .swiper-button-next:hover, .hero-banner-slider .swiper-button-prev:hover {
+  background: rgba(0, 255, 154, 0.08);
+  border-color: #00ff9a;
+}
+@media (max-width: 768px) {
+  .hero-banner-slider .swiper-button-next, .hero-banner-slider .swiper-button-prev {
+    display: none !important;
+  }
+} 
