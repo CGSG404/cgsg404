@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import NewsPage from "@/components/NewsPage";
 
-export const revalidate = 600;
+// export const revalidate = 600;
 
 export const metadata: Metadata = {
   title: "Casino News | CGSG",

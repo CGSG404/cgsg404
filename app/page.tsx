@@ -1,50 +1,60 @@
-import React from 'react';
-import { Metadata } from 'next';
-import { JsonLd } from '../src/components/JsonLd';
-import IndexPage from '../src/components/IndexPage';
+import { dehydrate, QueryClient } from "@tanstack/react-query";
+import IndexHydrated from "@/components/IndexHydrated";
+import IndexPage from "@/components/IndexPage";
+import { fetchFeaturedCasinos, fetchTopCasinos } from "@/lib/api";
+import { Metadata } from "next";
+
+export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com';
-  
   return {
-    title: 'GuruSingapore - Your Trusted Singapore Online Casino Guide',
-    description: 'Find the best online casinos in Singapore with GuruSingapore. Expert reviews, exclusive bonuses, and trusted recommendations for safe online gaming.',
-    alternates: {
-      canonical: siteUrl,
-    },
+    title: "Casino Singapore | GuruSingapore",
+    description:
+      "Find Your Trusted Casino Singapore, Best Event, Information Active, and Forum Report",
     openGraph: {
-      title: 'GuruSingapore - Your Trusted Singapore Online Casino Guide',
-      description: 'Find the best online casinos in Singapore with GuruSingapore. Expert reviews, exclusive bonuses, and trusted recommendations for safe online gaming.',
-      url: siteUrl,
-      siteName: 'GuruSingapore',
-      locale: 'en_US',
-      type: 'website',
+      title: "Your Trusted Casino Guide",
+      description: "Find Your Trusted Casino Singapore.",
+      url: "https://gurusingapore.com",
+      type: "website",
     },
   };
 }
 
-export default function HomePage() {
+export default async function Home() {
+  console.log("Rendering Home page...");
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "GuruSingapore Casino Guide",
+    "url": "https://gurusingapore.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://gurusingapore.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+  const queryClient = new QueryClient();
+
+  // Prefetch data your IndexPage needs
+  await queryClient.prefetchQuery({
+    queryKey: ["featuredCasinos"],
+    queryFn: fetchFeaturedCasinos,
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["topCasinos"],
+    queryFn: () => fetchTopCasinos(10),
+  });
+
+  const dehydrated = dehydrate(queryClient);
+
   return (
     <>
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          "name": "GuruSingapore",
-          "alternateName": "CGSG",
-          "url": process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com',
-          "description": "Your trusted guide to online casinos in Singapore. Expert reviews, exclusive bonuses, and in-depth guides.",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": `${process.env.NEXT_PUBLIC_SITE_URL}/search?q={search_term_string}`
-            },
-            "query-input": "required name=search_term_string"
-          }
-        }}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <IndexPage />
+      <IndexHydrated dehydratedState={dehydrated} />
     </>
   );
-} 
+}

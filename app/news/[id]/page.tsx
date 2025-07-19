@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import NewsDetailPage from "@/components/NewsDetailPage";
 
-export const revalidate = 600;
+// export const revalidate = 600;
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;

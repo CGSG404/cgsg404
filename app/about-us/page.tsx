@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 
-export const revalidate = 86400; // revalidate daily
+// export const revalidate = 86400; // revalidate daily
 
 
 

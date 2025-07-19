@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import GamesClient from './GamesClient';
 
-export const revalidate = 3600;
+// export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Top Casinos | CGSG',

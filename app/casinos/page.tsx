@@ -3,7 +3,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { Metadata } from 'next';
 import CasinosClient from './CasinosClient';
 
-export const revalidate = 3600;
+// export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'All Casinos | CGSG',

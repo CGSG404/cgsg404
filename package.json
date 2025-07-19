@@ -6,12 +6,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "vercel-build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "type-check": "tsc --noEmit",
-    "prepare": "husky install",
     "clean": "rm -rf .next out dist"
   },
   "dependencies": {

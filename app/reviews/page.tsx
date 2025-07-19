@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import ReviewsClient from './ReviewsClient';
 
-export const revalidate = 3600;
+// export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Reviews | CGSG',
