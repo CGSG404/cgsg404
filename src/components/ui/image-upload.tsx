@@ -90,17 +90,23 @@ export function ImageUpload({
         console.error('❌ Upload failed:', {
           status: response.status,
           statusText: response.statusText,
-          errorText
+          errorText,
+          url: response.url,
+          headers: Object.fromEntries(response.headers.entries())
         });
 
         let errorData;
         try {
           errorData = JSON.parse(errorText);
-        } catch {
+          console.error('❌ Parsed error data:', errorData);
+        } catch (parseError) {
+          console.error('❌ Failed to parse error response:', parseError);
           errorData = { error: errorText || 'Upload failed' };
         }
 
-        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+        const errorMessage = errorData.error || errorData.details || `Upload failed with status ${response.status}: ${response.statusText}`;
+        console.error('❌ Final error message:', errorMessage);
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
