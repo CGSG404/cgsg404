@@ -3,6 +3,7 @@
 import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/src/lib/supabaseClient';
+import AuthErrorBoundary from '@/src/components/AuthErrorBoundary';
 
 function AuthCallbackContent() {
   const router = useRouter();
@@ -11,6 +12,12 @@ function AuthCallbackContent() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        // Add safety check for window object
+        if (typeof window === 'undefined') {
+          console.log('⚠️ Window object not available, skipping callback');
+          return;
+        }
+
         const code = searchParams.get('code');
         const error = searchParams.get('error');
         const errorDescription = searchParams.get('error_description');
@@ -108,13 +115,15 @@ function AuthCallbackContent() {
 
 export default function AuthCallback() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex flex-col items-center justify-center bg-casino-dark text-white gap-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casino-neon-green" />
-        <p className="text-lg">Loading...</p>
-      </div>
-    }>
-      <AuthCallbackContent />
-    </Suspense>
+    <AuthErrorBoundary>
+      <Suspense fallback={
+        <div className="min-h-screen flex flex-col items-center justify-center bg-casino-dark text-white gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casino-neon-green" />
+          <p className="text-lg">Loading...</p>
+        </div>
+      }>
+        <AuthCallbackContent />
+      </Suspense>
+    </AuthErrorBoundary>
   );
 }

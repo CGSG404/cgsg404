@@ -21,10 +21,27 @@ const Auth = () => {
 
   const handleGoogleSignIn = async () => {
     try {
+      // Add safety check for window object
+      if (typeof window === 'undefined') {
+        console.error('Window object not available');
+        toast.error('Browser environment not ready');
+        return;
+      }
+
       await signInWithGoogle();
     } catch (error) {
       console.error('Google sign in error:', error);
-      toast.error('Failed to sign in with Google');
+
+      // More specific error handling
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+      if (errorMessage.includes('popup') || errorMessage.includes('blocked')) {
+        toast.error('Popup blocked. Please allow popups and try again.');
+      } else if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+        toast.error('Network error. Please check your connection.');
+      } else {
+        toast.error('Failed to sign in with Google. Please try again.');
+      }
     }
   };
 

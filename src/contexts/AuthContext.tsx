@@ -83,6 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Handle auth state changes
   useEffect(() => {
     let mounted = true;
+    let subscription: any = null;
 
     // Check initial session
     const getInitialSession = async () => {
@@ -92,6 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (error) {
           console.error('❌ Error getting initial session:', error);
+          // Don't throw, just log and continue
         } else {
           console.log('✅ Initial session:', session?.user ? 'User found' : 'No user');
         }
@@ -103,39 +105,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (error) {
         console.error('❌ Exception getting initial session:', error);
         if (mounted) {
+          setUser(null);
           setLoading(false);
         }
       }
     };
 
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('🔄 Auth state changed:', event, session?.user ? 'User present' : 'No user');
+    // Setup auth state listener
+    const setupAuthListener = () => {
+      try {
+        const { data } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            console.log('🔄 Auth state changed:', event, session?.user ? 'User present' : 'No user');
 
-        if (mounted) {
-          setUser(session?.user || null);
-          setLoading(false);
+            if (!mounted) return;
 
-          // Additional logging for debugging
-          if (event === 'SIGNED_IN') {
-            console.log('✅ User signed in successfully:', session?.user?.email);
-          } else if (event === 'SIGNED_OUT') {
-            console.log('👋 User signed out');
-          } else if (event === 'TOKEN_REFRESHED') {
-            console.log('🔄 Token refreshed');
+            try {
+              setUser(session?.user || null);
+
+              // Only set loading to false after we've processed the auth change
+              if (event !== 'INITIAL_SESSION') {
+                setLoading(false);
+              }
+
+              // Additional logging for debugging
+              if (event === 'SIGNED_IN') {
+                console.log('✅ User signed in successfully:', session?.user?.email);
+              } else if (event === 'SIGNED_OUT') {
+                console.log('👋 User signed out');
+              } else if (event === 'TOKEN_REFRESHED') {
+                console.log('🔄 Token refreshed');
+              }
+            } catch (error) {
+              console.error('❌ Error in auth state change handler:', error);
+              if (mounted) {
+                setLoading(false);
+              }
+            }
           }
+        );
+
+        subscription = data.subscription;
+      } catch (error) {
+        console.error('❌ Error setting up auth listener:', error);
+        if (mounted) {
+          setLoading(false);
         }
       }
-    );
+    };
 
-    // Initial session check
+    // Initialize
     getInitialSession();
+    setupAuthListener();
 
     // Cleanup
     return () => {
       mounted = false;
-      subscription?.unsubscribe();
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     };
   }, []);
 

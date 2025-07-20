@@ -42,34 +42,44 @@ const createCustomStorage = () => {
       }
     },
     setItem: (key: string, value: string) => {
-      // Check if cookies are allowed
-      const cookieConsent = localStorage.getItem('cookie-consent');
-      if (!cookieConsent) {
-        console.log('🍪 No cookie consent found, using sessionStorage for:', key);
-        sessionStorage.setItem(key, value);
-        return;
-      }
-
       try {
-        const consent = JSON.parse(cookieConsent);
-        if (consent.necessary) {
-          localStorage.setItem(key, value);
-          // Also set as HTTP cookie for better persistence
-          const expires = new Date();
-          expires.setDate(expires.getDate() + 7); // 7 days
-          document.cookie = `${key}=${encodeURIComponent(value)}; path=/; secure; samesite=lax; expires=${expires.toUTCString()}`;
-        } else {
+        // Check if cookies are allowed
+        const cookieConsent = localStorage.getItem('cookie-consent');
+        if (!cookieConsent) {
+          console.log('🍪 No cookie consent found, using sessionStorage for:', key);
+          sessionStorage.setItem(key, value);
+          return;
+        }
+
+        try {
+          const consent = JSON.parse(cookieConsent);
+          if (consent.necessary) {
+            localStorage.setItem(key, value);
+            // Also set as HTTP cookie for better persistence
+            const expires = new Date();
+            expires.setDate(expires.getDate() + 7); // 7 days
+            document.cookie = `${key}=${encodeURIComponent(value)}; path=/; secure; samesite=lax; expires=${expires.toUTCString()}`;
+          } else {
+            sessionStorage.setItem(key, value);
+          }
+        } catch {
           sessionStorage.setItem(key, value);
         }
-      } catch {
-        sessionStorage.setItem(key, value);
+      } catch (error) {
+        console.warn('⚠️ Storage setItem error:', error);
+        // Don't throw, just fail silently
       }
     },
     removeItem: (key: string) => {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-      // Remove HTTP cookie
-      document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      try {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+        // Remove HTTP cookie
+        document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      } catch (error) {
+        console.warn('⚠️ Storage removeItem error:', error);
+        // Don't throw, just fail silently
+      }
     }
   };
 };
