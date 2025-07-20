@@ -787,6 +787,19 @@ export const databaseApi = {
     return data;
   },
 
+  // Update casino
+  async updateCasino(casinoId: string | number, updates: any) {
+    const { data, error } = await supabase
+      .from('casinos')
+      .update(updates)
+      .eq('id', casinoId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
   // Delete casino
   async deleteCasino(casinoId: number) {
     const { error } = await supabase

@@ -10,15 +10,15 @@ import { Button } from '@/src/components/ui/button';
 import { Badge } from '@/src/components/ui/badge';
 import { Input } from '@/src/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from '@/src/components/ui/table';
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -29,7 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/src/components/ui/alert-dialog';
-import { Search, Plus, Edit, Trash2, Eye, Star, Shield } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Eye, Star, Shield, Building2 } from 'lucide-react';
 
 interface Casino {
   id: number;
@@ -179,9 +179,12 @@ export default function CasinoManagementPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
-                🏢 Casino Management
-              </h1>
+              <div className="flex items-center gap-3 mb-2">
+                <Building2 className="h-8 w-8 text-casino-neon-green" />
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
+                  Casino Management
+                </h1>
+              </div>
               <p className="text-gray-300 mt-2">
                 Manage casino listings, bonuses, and content
               </p>

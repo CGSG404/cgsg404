@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdmin } from '@/src/contexts/AdminContext';
 import { databaseApi } from '@/src/lib/database-api';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
@@ -13,7 +13,7 @@ import { Label } from '@/src/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { Checkbox } from '@/src/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/src/components/ui/alert';
-import { ArrowLeft, Save, AlertCircle, Plus, Building2 } from 'lucide-react';
+import { ArrowLeft, Save, AlertCircle, Loader2, Edit, Building2 } from 'lucide-react';
 
 interface CasinoFormData {
   name: string;
@@ -29,11 +29,16 @@ interface CasinoFormData {
   is_featured: boolean;
 }
 
-export default function AddCasinoPage() {
+export default function EditCasinoPage() {
   const { isAdmin, hasPermission, logActivity } = useAdmin();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const params = useParams();
+  const casinoId = params.id as string;
+  
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [casino, setCasino] = useState<any>(null);
   
   const [formData, setFormData] = useState<CasinoFormData>({
     name: '',
@@ -48,6 +53,42 @@ export default function AddCasinoPage() {
     is_hot: false,
     is_featured: false,
   });
+
+  useEffect(() => {
+    const fetchCasino = async () => {
+      try {
+        setLoading(true);
+        const casinoData = await databaseApi.getCasino(casinoId);
+        if (casinoData) {
+          setCasino(casinoData);
+          setFormData({
+            name: casinoData.name,
+            slug: casinoData.slug,
+            logo: casinoData.logo,
+            rating: casinoData.rating,
+            safety_index: casinoData.safety_index,
+            bonus: casinoData.bonus,
+            description: casinoData.description,
+            play_url: casinoData.play_url,
+            is_new: casinoData.is_new,
+            is_hot: casinoData.is_hot,
+            is_featured: casinoData.is_featured,
+          });
+        } else {
+          setErrors({ fetch: 'Casino not found' });
+        }
+      } catch (error) {
+        console.error('Failed to fetch casino:', error);
+        setErrors({ fetch: 'Failed to load casino data' });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (casinoId && isAdmin) {
+      fetchCasino();
+    }
+  }, [casinoId, isAdmin]);
 
   const generateSlug = (name: string) => {
     return name
@@ -142,28 +183,39 @@ export default function AddCasinoPage() {
       return;
     }
 
-    setLoading(true);
+    setSaving(true);
     try {
-      const newCasino = await databaseApi.createCasino(formData);
+      await databaseApi.updateCasino(casinoId, formData);
       
       await logActivity(
-        'casino_created',
+        'casino_updated',
         'casino',
-        newCasino.id.toString(),
+        casinoId,
         { name: formData.name, slug: formData.slug },
         'info'
       );
 
       router.push('/admin/casinos');
     } catch (error) {
-      console.error('Failed to create casino:', error);
-      setErrors({ submit: 'Failed to create casino. Please try again.' });
+      console.error('Failed to update casino:', error);
+      setErrors({ submit: 'Failed to update casino. Please try again.' });
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
-  if (!isAdmin || !hasPermission('16')) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-casino-dark via-casino-dark-lighter to-casino-dark flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-16 w-16 text-casino-neon-green animate-spin" />
+          <p className="text-casino-neon-green font-medium">Loading Casino Data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin || !hasPermission('18')) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-casino-dark via-casino-dark-lighter to-casino-dark flex items-center justify-center">
         <Card className="bg-casino-card-bg border-red-500/20 max-w-md">
@@ -171,8 +223,27 @@ export default function AddCasinoPage() {
             <div className="text-6xl mb-6">🚫</div>
             <h2 className="text-2xl font-bold text-red-400 mb-4">Access Denied</h2>
             <p className="text-gray-300 mb-6">
-              You need permission to create casinos.
+              You need permission to edit casinos.
             </p>
+            <Button asChild className="bg-red-600 hover:bg-red-700">
+              <Link href="/admin/casinos">
+                Back to Casino List
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (errors.fetch) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-casino-dark via-casino-dark-lighter to-casino-dark flex items-center justify-center">
+        <Card className="bg-casino-card-bg border-red-500/20 max-w-md">
+          <CardContent className="p-8 text-center">
+            <AlertCircle className="h-16 w-16 text-red-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-red-400 mb-4">Error</h2>
+            <p className="text-gray-300 mb-6">{errors.fetch}</p>
             <Button asChild className="bg-red-600 hover:bg-red-700">
               <Link href="/admin/casinos">
                 Back to Casino List
@@ -192,13 +263,13 @@ export default function AddCasinoPage() {
           <div className="flex justify-between items-center py-6">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <Plus className="h-8 w-8 text-casino-neon-green" />
+                <Edit className="h-8 w-8 text-casino-neon-green" />
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
-                  Add New Casino
+                  Edit Casino
                 </h1>
               </div>
               <p className="text-gray-300 mt-2">
-                Create a new casino listing with all details
+                Update casino information: {casino?.name}
               </p>
             </div>
             <Button asChild variant="outline" className="border-casino-border-subtle text-gray-300 hover:text-white">
@@ -403,18 +474,18 @@ export default function AddCasinoPage() {
                 </Button>
                 <Button
                   type="submit"
-                  disabled={loading}
+                  disabled={saving}
                   className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/80"
                 >
-                  {loading ? (
+                  {saving ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-casino-dark border-t-transparent mr-2"></div>
-                      Creating...
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Updating...
                     </>
                   ) : (
                     <>
                       <Save className="h-4 w-4 mr-2" />
-                      Create Casino
+                      Update Casino
                     </>
                   )}
                 </Button>

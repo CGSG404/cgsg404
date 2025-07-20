@@ -1,11 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useAdmin } from '@/contexts/AdminContext';
-import { databaseApi } from '@/lib/database-api';
+import { useAdmin } from '@/src/contexts/AdminContext';
+import { databaseApi } from '@/src/lib/database-api';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { Button } from '@/src/components/ui/button';
+import { Badge } from '@/src/components/ui/badge';
+import {
+  ArrowLeft,
+  Edit,
+  Trash2,
+  ExternalLink,
+  Star,
+  Shield,
+  Calendar,
+  Clock,
+  Loader2,
+  AlertCircle
+} from 'lucide-react';
 
 interface CasinoDetails {
   id: number;

@@ -6,6 +6,22 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
 import { Badge } from '@/src/components/ui/badge';
+import {
+  Home,
+  BarChart3,
+  Building2,
+  Newspaper,
+  Users,
+  Settings,
+  TrendingUp,
+  User,
+  Key,
+  Clock,
+  Wifi,
+  Rocket,
+  TestTube,
+  Cog
+} from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const { isAdmin, isLoading, adminInfo, logActivity } = useAdmin();
@@ -68,7 +84,7 @@ export default function AdminDashboardPage() {
       gradient: 'from-blue-500/20 to-cyan-500/20',
       borderColor: 'border-blue-500/30',
       hoverGradient: 'hover:from-blue-500/30 hover:to-cyan-500/30',
-      icon: '📊',
+      icon: BarChart3,
       status: 'Active'
     },
     {
@@ -78,7 +94,7 @@ export default function AdminDashboardPage() {
       gradient: 'from-casino-neon-green/20 to-emerald-500/20',
       borderColor: 'border-casino-neon-green/30',
       hoverGradient: 'hover:from-casino-neon-green/30 hover:to-emerald-500/30',
-      icon: '🏢',
+      icon: Building2,
       status: 'Ready'
     },
     {
@@ -88,7 +104,7 @@ export default function AdminDashboardPage() {
       gradient: 'from-purple-500/20 to-pink-500/20',
       borderColor: 'border-purple-500/30',
       hoverGradient: 'hover:from-purple-500/30 hover:to-pink-500/30',
-      icon: '📰',
+      icon: Newspaper,
       status: 'Coming Soon'
     },
     {
@@ -98,7 +114,7 @@ export default function AdminDashboardPage() {
       gradient: 'from-orange-500/20 to-red-500/20',
       borderColor: 'border-orange-500/30',
       hoverGradient: 'hover:from-orange-500/30 hover:to-red-500/30',
-      icon: '👥',
+      icon: Users,
       status: 'Coming Soon'
     },
     {
@@ -108,7 +124,7 @@ export default function AdminDashboardPage() {
       gradient: 'from-gray-500/20 to-slate-500/20',
       borderColor: 'border-gray-500/30',
       hoverGradient: 'hover:from-gray-500/30 hover:to-slate-500/30',
-      icon: '🔧',
+      icon: Settings,
       status: 'Coming Soon'
     },
     {
@@ -118,7 +134,7 @@ export default function AdminDashboardPage() {
       gradient: 'from-indigo-500/20 to-violet-500/20',
       borderColor: 'border-indigo-500/30',
       hoverGradient: 'hover:from-indigo-500/30 hover:to-violet-500/30',
-      icon: '📈',
+      icon: TrendingUp,
       status: 'Coming Soon'
     }
   ];
@@ -130,9 +146,12 @@ export default function AdminDashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
-                🏠 Admin Dashboard
-              </h1>
+              <div className="flex items-center gap-3 mb-2">
+                <Home className="h-8 w-8 text-casino-neon-green" />
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
+                  Admin Dashboard
+                </h1>
+              </div>
               <p className="text-gray-300 mt-2 flex items-center gap-2">
                 Welcome back, <span className="text-casino-neon-green font-medium">{adminInfo?.email}</span>
                 <span className="text-gray-500">•</span>
@@ -164,7 +183,9 @@ export default function AdminDashboardPage() {
                   Manage your casino platform with powerful admin tools and real-time monitoring.
                 </p>
               </div>
-              <div className="hidden md:block text-6xl opacity-20">🎰</div>
+              <div className="hidden md:block opacity-20">
+                <Building2 className="h-16 w-16 text-casino-neon-green" />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -174,7 +195,9 @@ export default function AdminDashboardPage() {
           <Card className="bg-casino-card-bg border-casino-border-subtle hover:border-casino-neon-green/30 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="text-3xl mr-4 p-2 bg-casino-neon-green/10 rounded-lg">👤</div>
+                <div className="mr-4 p-2 bg-casino-neon-green/10 rounded-lg">
+                  <User className="h-6 w-6 text-casino-neon-green" />
+                </div>
                 <div>
                   <p className="text-sm font-medium text-gray-400">Admin Role</p>
                   <p className="text-xl font-bold text-casino-neon-green">
@@ -188,7 +211,9 @@ export default function AdminDashboardPage() {
           <Card className="bg-casino-card-bg border-casino-border-subtle hover:border-casino-neon-purple/30 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="text-3xl mr-4 p-2 bg-casino-neon-purple/10 rounded-lg">🔑</div>
+                <div className="mr-4 p-2 bg-casino-neon-purple/10 rounded-lg">
+                  <Key className="h-6 w-6 text-casino-neon-purple" />
+                </div>
                 <div>
                   <p className="text-sm font-medium text-gray-400">Permissions</p>
                   <p className="text-xl font-bold text-casino-neon-purple">
@@ -202,7 +227,9 @@ export default function AdminDashboardPage() {
           <Card className="bg-casino-card-bg border-casino-border-subtle hover:border-blue-400/30 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="text-3xl mr-4 p-2 bg-blue-500/10 rounded-lg">🕒</div>
+                <div className="mr-4 p-2 bg-blue-500/10 rounded-lg">
+                  <Clock className="h-6 w-6 text-blue-400" />
+                </div>
                 <div>
                   <p className="text-sm font-medium text-gray-400">Last Login</p>
                   <p className="text-xl font-bold text-blue-400">
@@ -216,7 +243,9 @@ export default function AdminDashboardPage() {
           <Card className="bg-casino-card-bg border-casino-border-subtle hover:border-green-400/30 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <div className="text-3xl mr-4 p-2 bg-green-500/10 rounded-lg">🟢</div>
+                <div className="mr-4 p-2 bg-green-500/10 rounded-lg">
+                  <Wifi className="h-6 w-6 text-green-400" />
+                </div>
                 <div>
                   <p className="text-sm font-medium text-gray-400">Status</p>
                   <p className="text-xl font-bold text-green-400">Online</p>
@@ -236,8 +265,8 @@ export default function AdminDashboardPage() {
               <Link href={feature.href} className="block">
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
-                    <div className="text-4xl p-3 bg-white/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                      {feature.icon}
+                    <div className="p-3 bg-white/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                      <feature.icon className="h-8 w-8 text-white" />
                     </div>
                     <Badge
                       variant={feature.status === 'Active' ? 'default' : feature.status === 'Ready' ? 'secondary' : 'outline'}
@@ -270,25 +299,29 @@ export default function AdminDashboardPage() {
         <Card className="mt-8 bg-casino-card-bg border-casino-border-subtle">
           <CardHeader>
             <CardTitle className="text-casino-neon-green flex items-center gap-2">
-              🚀 Quick Actions
+              <Rocket className="h-5 w-5" />
+              Quick Actions
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white h-12">
                 <Link href="/admin/monitoring" className="flex items-center gap-2">
-                  📊 View Monitoring
+                  <BarChart3 className="h-4 w-4" />
+                  View Monitoring
                 </Link>
               </Button>
               <Button
                 onClick={() => logActivity('quick_action_test', 'dashboard', 'test', { action: 'test_button' }, 'info')}
                 className="bg-gradient-to-r from-casino-neon-green to-emerald-600 hover:from-casino-neon-green/80 hover:to-emerald-700 text-casino-dark h-12"
               >
-                🧪 Test Logging
+                <TestTube className="h-4 w-4 mr-2" />
+                Test Logging
               </Button>
               <Button asChild className="bg-gradient-to-r from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700 text-white h-12">
                 <Link href="/admin/settings" className="flex items-center gap-2">
-                  ⚙️ Settings
+                  <Cog className="h-4 w-4" />
+                  Settings
                 </Link>
               </Button>
             </div>
