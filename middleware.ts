@@ -1,9 +1,47 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Handle CORS for all requests
   const response = NextResponse.next()
+
+  // Check admin routes first
+  if (request.nextUrl.pathname.startsWith('/debug-admin')) {
+    const supabase = createMiddlewareClient({ req: request, res: response });
+
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      // If no session, redirect to sign in
+      if (!session) {
+        console.log('🚫 Admin route access denied: No session');
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = '/signin';
+        redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      // Check if user is admin
+      const { data: isAdmin, error } = await supabase.rpc('is_admin');
+
+      if (error || !isAdmin) {
+        console.log('🚫 Admin route access denied: Not admin', { error, isAdmin });
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = '/';
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      console.log('✅ Admin route access granted');
+    } catch (error) {
+      console.error('❌ Error in admin middleware:', error);
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = '/';
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
 
   // Set CORS headers
   response.headers.set('Access-Control-Allow-Origin', '*')

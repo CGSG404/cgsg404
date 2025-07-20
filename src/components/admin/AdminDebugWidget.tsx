@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { useAdmin } from '@/src/contexts/AdminContext';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent } from '@/src/components/ui/card';
 
 export const AdminDebugWidget: React.FC = () => {
+  const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, isLoading: adminLoading } = useAdmin();
 
@@ -47,7 +49,10 @@ export const AdminDebugWidget: React.FC = () => {
               🔧 Admin
             </span>
             <Button
-              onClick={() => window.location.href = '/debug-admin'}
+              onClick={() => {
+                console.log('🔧 AdminDebugWidget: Navigating to /debug-admin');
+                router.push('/debug-admin');
+              }}
               size="sm"
               className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/80"
             >
