@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
-    const fileExtension = file.name.split('.').pop();
+    const fileExtension = file.name.split('.').pop() || 'jpg';
     const fileName = `casino-logo-${timestamp}-${randomString}.${fileExtension}`;
 
     // Convert file to buffer
@@ -54,10 +54,12 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Supabase upload error:', error);
       return NextResponse.json(
-        { error: 'Failed to upload file to storage' },
+        { error: 'Failed to upload file to storage', details: error.message },
         { status: 500 }
       );
     }
+
+    console.log('Upload successful:', { fileName, path: data?.path });
 
     // Get public URL
     const { data: urlData } = supabaseServer.storage
@@ -71,8 +73,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Clean up URL to remove double slashes
+    const cleanUrl = urlData.publicUrl.replace(/\/+/g, '/').replace(':/', '://');
+
+    console.log('URL generation:', {
+      original: urlData.publicUrl,
+      cleaned: cleanUrl,
+      fileName
+    });
+
     return NextResponse.json({
-      url: urlData.publicUrl,
+      url: cleanUrl,
       fileName: fileName,
       size: file.size,
       type: file.type
