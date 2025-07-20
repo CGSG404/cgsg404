@@ -729,6 +729,75 @@ export const databaseApi = {
     return data;
   },
 
+  // Get casinos with pagination for admin
+  async getCasinosWithPagination(params: {
+    search?: string;
+    sortBy?: 'name' | 'rating' | 'created_at';
+    sortOrder?: 'asc' | 'desc';
+    limit?: number;
+    offset?: number;
+  } = {}) {
+    const { search, sortBy = 'name', sortOrder = 'asc', limit = 10, offset = 0 } = params;
+
+    let query = supabase
+      .from('casinos')
+      .select('*', { count: 'exact' });
+
+    // Apply search filter
+    if (search) {
+      query = query.ilike('name', `%${search}%`);
+    }
+
+    // Apply sorting
+    query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+
+    // Apply pagination
+    query = query.range(offset, offset + limit - 1);
+
+    const { data, error, count } = await query;
+
+    if (error) throw error;
+
+    const totalPages = Math.ceil((count || 0) / limit);
+    const currentPage = Math.floor(offset / limit) + 1;
+
+    return {
+      casinos: data || [],
+      total: count || 0,
+      page: currentPage,
+      limit,
+      totalPages
+    };
+  },
+
+  // Update casino status
+  async updateCasinoStatus(casinoId: number, updates: {
+    is_featured?: boolean;
+    is_hot?: boolean;
+    is_new?: boolean;
+  }) {
+    const { data, error } = await supabase
+      .from('casinos')
+      .update(updates)
+      .eq('id', casinoId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  // Delete casino
+  async deleteCasino(casinoId: number) {
+    const { error } = await supabase
+      .from('casinos')
+      .delete()
+      .eq('id', casinoId);
+
+    if (error) throw error;
+    return true;
+  },
+
   // Update casino
   async updateCasino(id: number, casinoData: any) {
     const { data, error } = await supabase
