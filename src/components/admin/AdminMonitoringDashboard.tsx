@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useAdmin } from '@/contexts/AdminContext';
-import { databaseApi } from '@/lib/database-api';
+import { useAdmin } from '@/src/contexts/AdminContext';
+import { databaseApi } from '@/src/lib/database-api';
 
 interface AdminMetrics {
   active_admins_today: number;
