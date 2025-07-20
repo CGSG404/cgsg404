@@ -1,11 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer } from '@/src/lib/supabaseServer';
+import { createClient } from '@supabase/supabase-js';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
 export async function POST(request: NextRequest) {
   try {
+    // Create service role client (bypasses RLS)
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!, // Service role key
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    );
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
@@ -42,8 +54,8 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Upload to Supabase Storage
-    const { data, error } = await supabaseServer.storage
+    // Upload to Supabase Storage using service role
+    const { data, error } = await supabase.storage
       .from('casino-logos')
       .upload(fileName, buffer, {
         contentType: file.type,
@@ -62,7 +74,7 @@ export async function POST(request: NextRequest) {
     console.log('Upload successful:', { fileName, path: data?.path });
 
     // Get public URL
-    const { data: urlData } = supabaseServer.storage
+    const { data: urlData } = supabase.storage
       .from('casino-logos')
       .getPublicUrl(fileName);
 
