@@ -7,9 +7,10 @@ import BackToTop from '@/src/components/BackToTop';
 import { setupGlobalErrorHandler } from '@/src/lib/errorHandler';
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
-  // Setup global error handlers
+  // Setup global error handlers - TEMPORARILY DISABLED
   useEffect(() => {
-    setupGlobalErrorHandler();
+    // setupGlobalErrorHandler(); // Disabled to prevent infinite loops
+    console.log('🔧 Global error handler disabled for debugging');
   }, []);
 
   return (

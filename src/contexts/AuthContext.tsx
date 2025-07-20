@@ -27,47 +27,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fungsi untuk login dengan Google
+  // Fungsi untuk login dengan Google - SIMPLIFIED
   const signInWithGoogle = async () => {
-    // Prevent multiple simultaneous sign-in attempts
     if (loading) {
-      console.log('⚠️ Sign in already in progress, skipping...');
+      console.log('⚠️ Sign in already in progress');
       return;
     }
 
     try {
       setLoading(true);
-
-      // Ensure we're using the correct domain for production
-      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.gurusingapore.com';
-      const redirectUrl = `${baseUrl}/auth/callback`;
-
-      console.log('🚀 Starting Google OAuth with redirect:', redirectUrl);
+      console.log('🚀 Starting Google OAuth...');
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
-          skipBrowserRedirect: false,
-          // Add scopes for better OAuth flow
-          scopes: 'openid email profile',
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
       if (error) {
-        console.error('❌ OAuth initiation error:', error);
+        console.error('❌ OAuth error:', error);
+        setLoading(false);
         throw error;
       }
 
-      console.log('✅ OAuth initiated successfully:', data);
-      // Don't set loading to false here - let the redirect handle it
+      console.log('✅ OAuth initiated');
+      // Loading will be handled by redirect
     } catch (error) {
-      console.error('❌ Error signing in with Google:', error);
-      setLoading(false); // Only set loading false on error
+      console.error('❌ Sign in error:', error);
+      setLoading(false);
       throw error;
     }
   };
@@ -86,113 +74,84 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Handle auth state changes
+  // Handle auth state changes - SIMPLIFIED VERSION
   useEffect(() => {
     let mounted = true;
     let subscription: any = null;
-    let isInitialized = false;
+    let hasInitialized = false;
 
-    // Check initial session
-    const getInitialSession = async () => {
-      if (isInitialized) return; // Prevent multiple initializations
+    console.log('🚀 AuthContext: Starting initialization...');
+
+    // Single initialization function
+    const initializeAuth = async () => {
+      if (hasInitialized) {
+        console.log('⚠️ Auth already initialized, skipping...');
+        return;
+      }
 
       try {
-        console.log('🔍 Checking initial session...');
+        hasInitialized = true;
+        console.log('🔍 Getting initial session...');
+
         const { data: { session }, error } = await supabase.auth.getSession();
 
-        if (error) {
-          console.error('❌ Error getting initial session:', error);
-          // Don't throw, just log and continue
-        } else {
-          console.log('✅ Initial session:', session?.user ? 'User found' : 'No user');
+        if (mounted) {
+          if (error) {
+            console.error('❌ Initial session error:', error);
+            setUser(null);
+          } else {
+            console.log('✅ Initial session result:', session?.user ? 'User found' : 'No user');
+            setUser(session?.user || null);
+          }
+          setLoading(false);
         }
 
+        // Setup listener AFTER initial session is handled
         if (mounted) {
-          setUser(session?.user || null);
-          setLoading(false);
-          isInitialized = true;
+          console.log('🎧 Setting up auth listener...');
+          const { data } = supabase.auth.onAuthStateChange((event, session) => {
+            console.log(`🔄 Auth event: ${event}`, session?.user ? 'User present' : 'No user');
+
+            // Only handle specific events to prevent loops
+            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+              if (mounted) {
+                setUser(session?.user || null);
+                console.log(`✅ Auth state updated for event: ${event}`);
+              }
+            }
+          });
+
+          subscription = data.subscription;
+          console.log('✅ Auth listener setup complete');
         }
+
       } catch (error) {
-        console.error('❌ Exception getting initial session:', error);
+        console.error('❌ Auth initialization error:', error);
         if (mounted) {
           setUser(null);
           setLoading(false);
-          isInitialized = true;
         }
       }
     };
 
-    // Setup auth state listener
-    const setupAuthListener = () => {
-      try {
-        const { data } = supabase.auth.onAuthStateChange(
-          async (event, session) => {
-            console.log('🔄 Auth state changed:', event, session?.user ? 'User present' : 'No user');
+    // Start initialization
+    initializeAuth();
 
-            // Skip INITIAL_SESSION event to prevent double initialization
-            if (event === 'INITIAL_SESSION') {
-              console.log('⏭️ Skipping INITIAL_SESSION event');
-              return;
-            }
-
-            if (!mounted) {
-              console.log('⚠️ Component unmounted, skipping auth state change');
-              return;
-            }
-
-            try {
-              // Batch state updates to prevent multiple re-renders
-              setUser(session?.user || null);
-              setLoading(false);
-
-              // Additional logging for debugging
-              if (event === 'SIGNED_IN') {
-                console.log('✅ User signed in successfully:', session?.user?.email);
-              } else if (event === 'SIGNED_OUT') {
-                console.log('👋 User signed out');
-                // Clear any cached data
-                setUser(null);
-              } else if (event === 'TOKEN_REFRESHED') {
-                console.log('🔄 Token refreshed');
-              }
-            } catch (error) {
-              console.error('❌ Error in auth state change handler:', error);
-              if (mounted) {
-                setLoading(false);
-              }
-            }
-          }
-        );
-
-        subscription = data.subscription;
-        console.log('🎧 Auth listener setup complete');
-      } catch (error) {
-        console.error('❌ Error setting up auth listener:', error);
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    // Initialize in sequence
-    const initialize = async () => {
-      await getInitialSession();
-      setupAuthListener();
-    };
-
-    initialize();
-
-    // Cleanup
+    // Cleanup function
     return () => {
-      console.log('🧹 Cleaning up AuthContext');
+      console.log('🧹 AuthContext cleanup');
       mounted = false;
-      isInitialized = false;
+      hasInitialized = false;
       if (subscription) {
-        subscription.unsubscribe();
+        try {
+          subscription.unsubscribe();
+        } catch (error) {
+          console.warn('⚠️ Error unsubscribing:', error);
+        }
         subscription = null;
       }
     };
-  }, []);
+  }, []); // Empty dependency array - only run once
 
   return (
     <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
