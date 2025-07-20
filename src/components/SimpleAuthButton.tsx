@@ -17,6 +17,11 @@ export default function SimpleAuthButton() {
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent select_account', // 🔧 Force consent screen & account selection
+          },
+          scopes: 'openid email profile', // 🔧 Explicit scopes
         },
       });
 

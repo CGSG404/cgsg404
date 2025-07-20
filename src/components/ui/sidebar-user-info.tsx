@@ -4,26 +4,23 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
-// import { useAuth } from '@/src/contexts/AuthContext'; // TEMPORARILY DISABLED
+import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
 import { User, LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';
 
 export function SidebarUserInfo() {
-  // const { user, signOut, signInWithGoogle } = useAuth(); // TEMPORARILY DISABLED
-  const user = null; // Temporarily set to null
+  const { user, signOut } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
 
   if (!user) {
     return (
       <div className="p-4 border-b border-casino-border-subtle/30">
         <div className="bg-gradient-to-r from-casino-neon-green/5 to-casino-neon-purple/5 rounded-lg p-3 border border-casino-neon-green/20">
           <div className="text-center">
-            <p className="text-sm text-gray-300 mb-3">Join CGSG Community</p>
-            <Button
-              onClick={() => window.location.href = '/signin'}
-              className="w-full bg-neon-gradient text-casino-dark text-sm font-bold hover:opacity-90 transition-opacity"
-            >
-              Sign In with Google
-            </Button>
+            <p className="text-sm text-gray-300 mb-3">Welcome to CGSG</p>
+            <p className="text-xs text-gray-400">
+              Sign in from the navbar to access personalized features
+            </p>
+            {/* 🚨 REMOVED: Login button to prevent conflicts with navbar */}
           </div>
         </div>
       </div>

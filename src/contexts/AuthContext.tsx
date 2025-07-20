@@ -93,7 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [user]);
 
-  // Simplified Google sign in
+  // Simplified Google sign in with forced consent
   const signInWithGoogle = async () => {
     if (loading) {
       console.log('⚠️ Auth: Sign in already in progress');
@@ -103,12 +103,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       setError(null);
-      console.log('🚀 Auth: Starting Google OAuth...');
+      console.log('🚀 Auth: Starting Google OAuth with forced consent...');
+
+      // 🔧 Clear any existing sessions first
+      await supabase.auth.signOut();
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent select_account', // 🔧 Force consent screen & account selection
+            include_granted_scopes: 'false', // 🔧 Don't use previously granted permissions
+          },
+          scopes: 'openid email profile', // 🔧 Explicit scopes
         },
       });
 
