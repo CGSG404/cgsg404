@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+// import { useAuth } from '@/contexts/AuthContext'; // TEMPORARILY DISABLED
 import { supabase } from '@/lib/supabaseClient';
 import { Loader2 } from 'lucide-react';
 import Footer from '@/components/Footer';
@@ -25,7 +25,9 @@ const Profile = () => {
     router.push('/404');
     return null;
   }
-  const { user, loading: authLoading } = useAuth();
+  // const { user, loading: authLoading } = useAuth(); // TEMPORARILY DISABLED
+  const user = null;
+  const authLoading = false;
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

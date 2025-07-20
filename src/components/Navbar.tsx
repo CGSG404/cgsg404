@@ -3,7 +3,8 @@
 import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Star, User, LogOut, Menu, X, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper } from 'lucide-react';
-import { useAuth } from '@/src/contexts/AuthContext';
+// import { useAuth } from '@/src/contexts/AuthContext'; // TEMPORARILY DISABLED
+import SimpleAuthButton from '@/src/components/SimpleAuthButton';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,7 +15,9 @@ const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, signOut, signInWithGoogle, loading } = useAuth();
+  // const { user, signOut, signInWithGoogle, loading } = useAuth(); // TEMPORARILY DISABLED
+  const user = null; // Temporarily set to null
+  const loading = false;
   const router = useRouter();
 
   useEffect(() => {
@@ -176,16 +179,7 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex items-center space-x-3">
-              <Link href="/signin">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-casino-border-subtle hover:bg-casino-dark text-white"
-                >
-                  <User className="w-4 h-4 mr-2" />
-                  Sign In
-                </Button>
-              </Link>
+              <SimpleAuthButton />
             </div>
           )}
         </div>

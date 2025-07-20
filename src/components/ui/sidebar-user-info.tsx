@@ -4,12 +4,13 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Badge } from '@/src/components/ui/badge';
 import { Button } from '@/src/components/ui/button';
-import { useAuth } from '@/src/contexts/AuthContext';
+// import { useAuth } from '@/src/contexts/AuthContext'; // TEMPORARILY DISABLED
 import { User, LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';
 
 export function SidebarUserInfo() {
-  const { user, signOut, signInWithGoogle } = useAuth();
+  // const { user, signOut, signInWithGoogle } = useAuth(); // TEMPORARILY DISABLED
+  const user = null; // Temporarily set to null
 
   if (!user) {
     return (
@@ -17,8 +18,8 @@ export function SidebarUserInfo() {
         <div className="bg-gradient-to-r from-casino-neon-green/5 to-casino-neon-purple/5 rounded-lg p-3 border border-casino-neon-green/20">
           <div className="text-center">
             <p className="text-sm text-gray-300 mb-3">Join CGSG Community</p>
-            <Button 
-              onClick={signInWithGoogle}
+            <Button
+              onClick={() => window.location.href = '/signin'}
               className="w-full bg-neon-gradient text-casino-dark text-sm font-bold hover:opacity-90 transition-opacity"
             >
               Sign In with Google
