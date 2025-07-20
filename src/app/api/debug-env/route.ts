@@ -1,10 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+export async function GET(request: NextRequest) {
   try {
     const envCheck = {
       supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Present' : 'Missing',
@@ -21,12 +17,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     console.log('🔍 Environment check:', envCheck);
 
-    res.status(200).json(envCheck);
+    return NextResponse.json(envCheck);
   } catch (error) {
     console.error('❌ Debug env error:', error);
-    res.status(500).json({ 
-      error: 'Failed to check environment',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    });
+    return NextResponse.json(
+      { 
+        error: 'Failed to check environment',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 }
