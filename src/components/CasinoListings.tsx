@@ -2,16 +2,16 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, ArrowUpDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/src/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs';
 import CasinoCard from './CasinoCard';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { databaseApi } from '@/lib/database-api';
-import { useIsDesktop } from '@/hooks/useIsDesktop';
+import { databaseApi } from '@/src/lib/database-api';
+import { useIsDesktop } from '@/src/hooks/useIsDesktop';
 import type { CasinoForCard } from '@/types/database';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/src/components/ui/skeleton';
 
 // Use the database type instead of local interface
 type Casino = CasinoForCard;

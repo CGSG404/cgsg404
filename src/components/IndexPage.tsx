@@ -2,16 +2,16 @@
 
 import { lazy, Suspense } from 'react';
 import Head from 'next/head';
-import Navbar from '@/components/Navbar';
-import HeroSection from '@/components/HeroSection';
-import HeroSlider from '@/components/HeroSlider';
-import InfoCard from '@/components/InfoCard';
-import HeroBannerSlider from '@/components/HeroBannerSlider';
+import Navbar from '@/src/components/Navbar';
+import HeroSection from '@/src/components/HeroSection';
+import HeroSlider from '@/src/components/HeroSlider';
+import InfoCard from '@/src/components/InfoCard';
+import HeroBannerSlider from '@/src/components/HeroBannerSlider';
 import { Gift, PartyPopper, Ticket } from 'lucide-react';
 
-const LogoSlider = lazy(() => import('@/components/LogoSlider'));
-const Chart = lazy(() => import('@/components/Chart'));
-const Footer = lazy(() => import('@/components/Footer'));
+const LogoSlider = lazy(() => import('@/src/components/LogoSlider'));
+const Chart = lazy(() => import('@/src/components/Chart'));
+const Footer = lazy(() => import('@/src/components/Footer'));
 
 const IndexPage = () => {
 // Semua logic dan UI utama Index sudah di sini.

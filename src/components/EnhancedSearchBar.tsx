@@ -5,7 +5,7 @@ import { Search, TrendingUp, Clock, Star, X, Filter, Loader2 } from 'lucide-reac
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { databaseApi } from '@/lib/database-api';
+import { databaseApi } from '@/src/lib/database-api';
 
 interface SearchBarProps {
   className?: string;

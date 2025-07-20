@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
-import { databaseApi } from '@/lib/database-api';
+import { databaseApi } from '@/src/lib/database-api';
 import type { CurrentUserAdminInfo } from '@/types/database';
 
 interface AdminContextType {

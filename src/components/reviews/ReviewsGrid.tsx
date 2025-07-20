@@ -1,6 +1,6 @@
 
 import ReviewCard from './ReviewCard';
-import { casinos } from '@/data/casinos'; // Mengimpor data kasino yang sebenarnya
+import { casinos } from '@/src/data/casinos'; // Mengimpor data kasino yang sebenarnya
 
 interface ReviewsGridProps {
   searchQuery: string;

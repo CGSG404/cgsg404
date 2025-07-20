@@ -1,19 +1,19 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { AlertTriangle, Search } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import ReportCard from '@/components/ReportCard';
+import Navbar from '@/src/components/Navbar';
+import Footer from '@/src/components/Footer';
+import ReportCard from '@/src/components/ReportCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Card } from '@/components/ui/card';
-import ReportDialog from '@/components/ReportDialog';
-import { Button } from '@/components/ui/button';
-import BackToTop from '@/components/BackToTop';
+import { Card } from '@/src/components/ui/card';
+import ReportDialog from '@/src/components/ReportDialog';
+import { Button } from '@/src/components/ui/button';
+import BackToTop from '@/src/components/BackToTop';
 
 // Jika Anda punya data asli, import di sini. Jika tidak, gunakan dummy:
-import { reports as reportData, ReportData } from '@/data/reportData';
+import { reports as reportData, ReportData } from '@/src/data/reportData';
 
 const ListReportPage = () => {
   const [reportOpen, setReportOpen] = useState(false);

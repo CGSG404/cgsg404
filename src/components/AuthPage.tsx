@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/src/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { useAuth } from '@/src/contexts/AuthContext';
 import { toast } from 'sonner';
 import { FcGoogle } from 'react-icons/fc';
 

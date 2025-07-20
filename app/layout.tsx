@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { type ReactNode } from 'react';
 import ClientLayout from './ClientLayout';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/src/components/Navbar';
 import Providers from './providers';
-import CookieConsent from '@/components/CookieConsent';
+import CookieConsent from '@/src/components/CookieConsent';
 
 import './globals.css';
 

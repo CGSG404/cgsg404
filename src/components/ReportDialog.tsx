@@ -1,19 +1,19 @@
 
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
-import { EMAILJS_CONFIG } from '@/config/emailConfig';
+import { EMAILJS_CONFIG } from '@/src/config/emailConfig';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/src/components/ui/button';
+import { Input } from '@/src/components/ui/input';
+import { Textarea } from '@/src/components/ui/textarea';
+import { Label } from '@/src/components/ui/label';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/src/components/ui/dialog';
 import { Calendar, AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface ReportDialogProps {

@@ -1,8 +1,9 @@
 import { dehydrate, QueryClient } from "@tanstack/react-query";
-import IndexHydrated from "@/components/IndexHydrated";
-import IndexPage from "@/components/IndexPage";
-import AuthErrorHandler from "@/components/AuthErrorHandler";
-import { fetchFeaturedCasinos, fetchTopCasinos } from "@/lib/api";
+import IndexHydrated from "@/src/components/IndexHydrated";
+import IndexPage from "@/src/components/IndexPage";
+import AuthErrorHandler from "@/src/components/AuthErrorHandler";
+import SimpleErrorBoundary from "@/src/components/SimpleErrorBoundary";
+import { fetchFeaturedCasinos, fetchTopCasinos } from "@/src/lib/api";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -51,15 +52,17 @@ export default async function Home() {
   const dehydrated = dehydrate(queryClient);
 
   return (
-    <>
+    <SimpleErrorBoundary>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Suspense fallback={null}>
+      <Suspense fallback={<div className="text-white p-4">Loading auth handler...</div>}>
         <AuthErrorHandler />
       </Suspense>
-      <IndexHydrated dehydratedState={dehydrated} />
-    </>
+      <Suspense fallback={<div className="text-white p-4">Loading page...</div>}>
+        <IndexHydrated dehydratedState={dehydrated} />
+      </Suspense>
+    </SimpleErrorBoundary>
   );
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/src/components/ui/button';
 import { motion } from 'framer-motion';
-import { useIsDesktop } from '@/hooks/useIsDesktop';
+import { useIsDesktop } from '@/src/hooks/useIsDesktop';
 import { Shield, Users, Gift, Award } from 'lucide-react';
 import CountUp from 'react-countup';
 import dynamic from 'next/dynamic';

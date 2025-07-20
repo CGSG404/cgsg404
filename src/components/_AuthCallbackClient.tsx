@@ -1,7 +1,7 @@
 // src/components/_AuthCallbackClient.tsx
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/src/lib/supabaseClient';
 
 const AuthCallback = () => {
   const pathname = usePathname();

@@ -1,9 +1,9 @@
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import GuideHero from '@/components/guide/GuideHero';
-import GuideComingSoon from '@/components/guide/GuideComingSoon';
-import GuideTopics from '@/components/guide/GuideTopics';
-import GuideCTA from '@/components/guide/GuideCTA';
+import Navbar from '@/src/components/Navbar';
+import Footer from '@/src/components/Footer';
+import GuideHero from '@/src/components/guide/GuideHero';
+import GuideComingSoon from '@/src/components/guide/GuideComingSoon';
+import GuideTopics from '@/src/components/guide/GuideTopics';
+import GuideCTA from '@/src/components/guide/GuideCTA';
 
 const GuidePage = () => {
   return (

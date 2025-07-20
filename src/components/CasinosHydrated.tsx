@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { QueryClient, QueryClientProvider, HydrationBoundary } from "@tanstack/react-query";
-import CasinosPage from "@/components/CasinosPage";
+import CasinosPage from "@/src/components/CasinosPage";
 import { DehydratedState } from "@tanstack/react-query";
 
 interface Props {

@@ -4,8 +4,8 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/src/components/Navbar';
+import Footer from '@/src/components/Footer';
 import Head from 'next/head';
 import { Calendar, User, Tag, ChevronLeft } from 'lucide-react';
 

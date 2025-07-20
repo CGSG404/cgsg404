@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { QueryClient, QueryClientProvider, HydrationBoundary } from "@tanstack/react-query";
-import GamesPage from "@/components/GamesPage";
+import GamesPage from "@/src/components/GamesPage";
 
 interface Props {
   dehydratedState: unknown;

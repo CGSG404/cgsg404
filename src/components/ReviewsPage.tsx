@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import Head from 'next/head';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import ReviewsHero from '@/components/reviews/ReviewsHero';
-import ReviewsGrid from '@/components/reviews/ReviewsGrid';
-import ReviewsCTA from '@/components/reviews/ReviewsCTA';
+import Navbar from '@/src/components/Navbar';
+import Footer from '@/src/components/Footer';
+import ReviewsHero from '@/src/components/reviews/ReviewsHero';
+import ReviewsGrid from '@/src/components/reviews/ReviewsGrid';
+import ReviewsCTA from '@/src/components/reviews/ReviewsCTA';
 import { Search } from 'lucide-react';
 
 const ReviewsPage = () => {

@@ -1,5 +1,5 @@
-import Footer from '@/components/Footer';
-import { casinos } from '@/data/casinos';
+import Footer from '@/src/components/Footer';
+import { casinos } from '@/src/data/casinos';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';

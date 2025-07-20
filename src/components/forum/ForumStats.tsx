@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/src/components/ui/card';
 import { Users, MessageCircle, TrendingUp, Clock } from 'lucide-react';
 
 const AnimatedNumber = ({ value }: { value: string }) => {

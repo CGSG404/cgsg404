@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, X, TrendingUp, MapPin, FileText, Users, Star, Gamepad2, Newspaper, BookOpen, AlertTriangle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/src/components/ui/button';
+import { Input } from '@/src/components/ui/input';
 
 // Data kata kunci dari seluruh halaman project
 const searchKeywords = [

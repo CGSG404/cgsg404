@@ -1,6 +1,6 @@
-import { casinos } from "@/data/casinos";
+import { casinos } from "@/src/data/casinos";
 import { notFound } from "next/navigation";
-import ReviewDetail from "@/components/ReviewDetail";
+import ReviewDetail from "@/src/components/ReviewDetail";
 import { Metadata } from "next";
 
 interface CasinoPageProps {

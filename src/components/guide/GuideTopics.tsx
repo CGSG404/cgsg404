@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/src/components/ui/card';
 import { Shield, Gift, Gamepad2, Heart, Award, TrendingUp, Users, Clock } from 'lucide-react';
 
 const GuideTopics = () => {

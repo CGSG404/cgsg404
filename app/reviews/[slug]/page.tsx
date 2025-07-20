@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import ReviewDetail from "@/components/ReviewDetail";
-import Footer from "@/components/Footer";
-import { type Review } from "@/components/ReviewDetail/types";
-import { casinos } from "@/data/casinos";
+import ReviewDetail from "@/src/components/ReviewDetail";
+import Footer from "@/src/components/Footer";
+import { type Review } from "@/src/components/ReviewDetail/types";
+import { casinos } from "@/src/data/casinos";
 
 // -------- METADATA ---------
 export async function generateMetadata(props: { params: { slug: string } }) {
