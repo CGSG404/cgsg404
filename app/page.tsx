@@ -1,8 +1,10 @@
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import IndexHydrated from "@/components/IndexHydrated";
 import IndexPage from "@/components/IndexPage";
+import AuthErrorHandler from "@/components/AuthErrorHandler";
 import { fetchFeaturedCasinos, fetchTopCasinos } from "@/lib/api";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const dynamic = "force-static";
 
@@ -54,6 +56,9 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <Suspense fallback={null}>
+        <AuthErrorHandler />
+      </Suspense>
       <IndexHydrated dehydratedState={dehydrated} />
     </>
   );

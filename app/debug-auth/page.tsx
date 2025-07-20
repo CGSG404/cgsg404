@@ -81,6 +81,25 @@ export default function DebugAuthPage() {
     }
   };
 
+  const handleTestSupabaseConnection = async () => {
+    try {
+      addLog('Testing Supabase connection...');
+      const { data, error } = await supabase.from('admin_users').select('count').limit(1);
+      if (error) {
+        addLog(`Supabase connection error: ${error.message}`);
+      } else {
+        addLog('Supabase connection successful');
+      }
+    } catch (error) {
+      addLog(`Supabase connection exception: ${error}`);
+    }
+  };
+
+  const handleClearLogs = () => {
+    setAuthLogs([]);
+    addLog('Logs cleared');
+  };
+
   return (
     <div className="min-h-screen bg-casino-dark p-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -123,6 +142,12 @@ export default function DebugAuthPage() {
               </Button>
               <Button onClick={handleRefreshSession} variant="outline" className="border-casino-border-subtle text-white">
                 Refresh Session
+              </Button>
+              <Button onClick={handleTestSupabaseConnection} variant="outline" className="border-casino-border-subtle text-white">
+                Test Supabase Connection
+              </Button>
+              <Button onClick={handleClearLogs} variant="outline" className="border-red-500 text-red-400">
+                Clear Logs
               </Button>
             </div>
 
