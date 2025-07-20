@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { AuthProvider } from '@/src/contexts/AuthContext'; // ✅ STABLE: Working perfectly
-import { AdminProvider } from '@/src/contexts/AdminContext'; // ✅ ENABLED: Auth system is now stable
+// import { AdminProvider } from '@/src/contexts/AdminContext'; // 🚨 TEMPORARILY DISABLED - Debugging infinite loop
 import { TooltipProvider } from '@/src/components/ui/tooltip';
 import { Toaster } from '@/src/components/ui/sonner';
 import LiveChat from '@/src/components/LiveChat';
@@ -23,13 +23,13 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider> {/* ✅ STABLE: Working perfectly */}
-        <AdminProvider> {/* ✅ ENABLED: Auth system is now stable */}
+        {/* <AdminProvider> 🚨 TEMPORARILY DISABLED - Debugging infinite loop */}
           <TooltipProvider>
             {children}
             <Toaster position="top-right" />
             <LiveChat />
           </TooltipProvider>
-        </AdminProvider>
+        {/* </AdminProvider> 🚨 TEMPORARILY DISABLED - Debugging infinite loop */}
       </AuthProvider>
     </QueryClientProvider>
   );

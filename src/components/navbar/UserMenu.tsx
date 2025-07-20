@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
+// import { useAuth } from "@/contexts/AuthContext"; // 🚨 TEMPORARILY DISABLED
 import { toast } from "sonner";
 
 const UserMenu = () => {
   const [showProfile, setShowProfile] = useState(false);
-  const { user, signOut } = useAuth();
+  // const { user, signOut } = useAuth(); // 🚨 TEMPORARILY DISABLED
+  const user = null; // Temporarily set to null
+  const signOut = async () => {}; // Temporarily disabled
   const router = useRouter();
 
   const handleSignOut = async () => {
