@@ -2,6 +2,8 @@
 
 A comprehensive casino guide platform built with Next.js, TypeScript and Supabase. The application provides trusted casino reviews, bonuses, and community features for Singapore casino enthusiasts.
 
+**Latest Update:** Fixed API routing conflicts and environment variable access - using GitHub deployments only.
+
 ## 🎯 Key Features
 
 - **🎰 Casino Reviews** - Comprehensive reviews with safety ratings
