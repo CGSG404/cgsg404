@@ -35,6 +35,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   // Fetch admin info when user changes
   const fetchAdminInfo = async () => {
     if (!user) {
+      console.log('🔍 AdminContext: No user, setting admin to false');
       setAdminInfo(null);
       setIsLoading(false);
       return;
@@ -42,7 +43,9 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
     try {
       setIsLoading(true);
+      console.log('🔍 AdminContext: Fetching admin info for user:', user.id);
       const info = await databaseApi.getCurrentUserAdminInfo();
+      console.log('🔍 AdminContext: Admin info received:', info);
       setAdminInfo(info);
     } catch (error) {
       console.error('Failed to fetch admin info:', error);
@@ -173,6 +176,15 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, authLoading]);
 
+  // Debug logging for isAdmin computation
+  const computedIsAdmin = adminInfo?.is_admin || false;
+  console.log('🔍 AdminContext: Computing isAdmin:', {
+    adminInfo,
+    is_admin: adminInfo?.is_admin,
+    computedIsAdmin,
+    user: user?.id
+  });
+
   const value: AdminContextType = {
     // Auth state
     user,
@@ -180,7 +192,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
     // Admin state
     adminInfo,
-    isAdmin: adminInfo?.is_admin || false,
+    isAdmin: computedIsAdmin,
     isLoading: isLoading || authLoading,
     hasPermission,
     checkPermissionAsync,

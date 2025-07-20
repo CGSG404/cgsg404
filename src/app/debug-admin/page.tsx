@@ -8,10 +8,12 @@ import { Button } from '@/src/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 
 export default function DebugAdminPage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { isAdmin, adminInfo, isLoading } = useAdmin();
   const [debugInfo, setDebugInfo] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+
+  console.log('🔍 DebugAdminPage: Auth state:', { user: user?.id, authLoading, isLoading });
 
   const checkAdminStatus = async () => {
     if (!user) return;
@@ -48,6 +50,24 @@ export default function DebugAdminPage() {
       checkAdminStatus();
     }
   }, [user, isLoading]);
+
+  // Show loading while auth is loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-casino-dark flex items-center justify-center">
+        <Card className="w-full max-w-md bg-casino-card-bg border-casino-border-subtle">
+          <CardHeader>
+            <CardTitle className="text-casino-neon-green">🔐 Admin Debug</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <p className="text-gray-400">⏳ Loading authentication...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (!user) {
     return (

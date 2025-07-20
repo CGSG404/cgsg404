@@ -183,11 +183,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(null);
         } else {
           console.log('✅ Auth: Initial session:', session?.user ? 'User found' : 'No user');
+          if (session?.user) {
+            console.log('🔍 Auth: User details:', { id: session.user.id, email: session.user.email });
+          }
           setUser(session?.user || null);
           lastEventRef.current = 'initial_session';
           lastUpdateRef.current = new Date();
         }
 
+        console.log('🔍 Auth: Setting loading to false');
         setLoading(false);
 
         // Setup auth state listener
