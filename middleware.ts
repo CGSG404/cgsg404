@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
   // Check admin routes first
-  if (request.nextUrl.pathname.startsWith('/debug-admin')) {
+  if (request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/debug-admin')) {
     const supabase = createMiddlewareClient({ req: request, res: response });
 
     try {
@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
 
       // If no session, redirect to sign in
       if (!session) {
-        console.log('🚫 Admin route access denied: No session');
+        console.log('🚫 Admin route access denied: No session', request.nextUrl.pathname);
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.pathname = '/signin';
         redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
@@ -28,13 +28,17 @@ export async function middleware(request: NextRequest) {
       const { data: isAdmin, error } = await supabase.rpc('is_admin');
 
       if (error || !isAdmin) {
-        console.log('🚫 Admin route access denied: Not admin', { error, isAdmin });
+        console.log('🚫 Admin route access denied: Not admin', {
+          path: request.nextUrl.pathname,
+          error,
+          isAdmin
+        });
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.pathname = '/';
         return NextResponse.redirect(redirectUrl);
       }
 
-      console.log('✅ Admin route access granted');
+      console.log('✅ Admin route access granted:', request.nextUrl.pathname);
     } catch (error) {
       console.error('❌ Error in admin middleware:', error);
       const redirectUrl = request.nextUrl.clone();

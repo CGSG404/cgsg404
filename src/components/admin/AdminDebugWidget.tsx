@@ -50,11 +50,21 @@ export const AdminDebugWidget: React.FC = () => {
             </span>
             <Button
               onClick={() => {
+                console.log('🔧 AdminDebugWidget: Navigating to /admin');
+                router.push('/admin');
+              }}
+              size="sm"
+              className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/80"
+            >
+              Dashboard
+            </Button>
+            <Button
+              onClick={() => {
                 console.log('🔧 AdminDebugWidget: Navigating to /debug-admin');
                 router.push('/debug-admin');
               }}
               size="sm"
-              className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/80"
+              className="bg-casino-neon-blue text-white hover:bg-casino-neon-blue/80"
             >
               Debug
             </Button>
