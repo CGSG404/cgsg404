@@ -1,0 +1,100 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/src/lib/supabaseClient';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+
+export async function POST(request: NextRequest) {
+  try {
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+
+    if (!file) {
+      return NextResponse.json(
+        { error: 'No file provided' },
+        { status: 400 }
+      );
+    }
+
+    // Validate file type
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return NextResponse.json(
+        { error: 'Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.' },
+        { status: 400 }
+      );
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: 'File too large. Maximum size is 5MB.' },
+        { status: 400 }
+      );
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 15);
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `casino-logo-${timestamp}-${randomString}.${fileExtension}`;
+
+    // Convert file to buffer
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Upload to Supabase Storage
+    const { data, error } = await supabase.storage
+      .from('casino-logos')
+      .upload(fileName, buffer, {
+        contentType: file.type,
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      console.error('Supabase upload error:', error);
+      return NextResponse.json(
+        { error: 'Failed to upload file to storage' },
+        { status: 500 }
+      );
+    }
+
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from('casino-logos')
+      .getPublicUrl(fileName);
+
+    if (!urlData?.publicUrl) {
+      return NextResponse.json(
+        { error: 'Failed to get public URL' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      url: urlData.publicUrl,
+      fileName: fileName,
+      size: file.size,
+      type: file.type
+    });
+
+  } catch (error) {
+    console.error('Upload API error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// Handle OPTIONS request for CORS
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}

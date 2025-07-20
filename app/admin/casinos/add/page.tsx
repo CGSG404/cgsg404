@@ -13,6 +13,7 @@ import { Label } from '@/src/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { Checkbox } from '@/src/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/src/components/ui/alert';
+import { ImageUpload } from '@/src/components/ui/image-upload';
 import { ArrowLeft, Save, AlertCircle, Plus, Building2 } from 'lucide-react';
 
 interface CasinoFormData {
@@ -261,16 +262,14 @@ export default function AddCasinoPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="logo" className="text-gray-300">Logo URL *</Label>
-                  <Input
-                    id="logo"
-                    name="logo"
+                  <ImageUpload
+                    label="Casino Logo"
                     value={formData.logo}
-                    onChange={handleInputChange}
-                    className={`bg-casino-dark border-casino-border-subtle text-white ${
-                      errors.logo ? 'border-red-500' : ''
-                    }`}
-                    placeholder="https://example.com/logo.png"
+                    onChange={(url) => setFormData(prev => ({ ...prev, logo: url }))}
+                    onError={(error) => setErrors(prev => ({ ...prev, logo: error }))}
+                    required
+                    maxSize={5}
+                    placeholder="Upload casino logo or enter URL"
                   />
                   {errors.logo && <p className="text-sm text-red-400">{errors.logo}</p>}
                 </div>
