@@ -8,6 +8,7 @@ import { AdminProvider } from '@/src/contexts/AdminContext'; // ✅ RE-ENABLED: 
 import { TooltipProvider } from '@/src/components/ui/tooltip';
 import { Toaster } from '@/src/components/ui/sonner';
 import LiveChat from '@/src/components/LiveChat';
+import AdminDebugWidget from '@/src/components/AdminDebugWidget'; // 🔧 ADD: Debug widget
 
 // Create a client
 const queryClient = new QueryClient({
@@ -28,6 +29,7 @@ export default function Providers({ children }: { children: ReactNode }) {
             {children}
             <Toaster position="top-right" />
             <LiveChat />
+            <AdminDebugWidget /> {/* 🔧 ADD: Debug widget for development */}
           </TooltipProvider>
         </AdminProvider>
       </AuthProvider>

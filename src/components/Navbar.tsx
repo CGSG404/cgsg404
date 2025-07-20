@@ -4,6 +4,7 @@ import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Star, User, LogOut, Menu, X, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
+import { useAdmin } from '@/src/contexts/AdminContext'; // 🔧 ADD: Admin context for admin button
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -16,6 +17,7 @@ const Navbar = () => {
   const [isNavigating, setIsNavigating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut, signInWithGoogle, loading } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
+  const { isAdmin } = useAdmin(); // 🔧 ADD: Get admin status
   const router = useRouter();
 
   useEffect(() => {
@@ -128,6 +130,19 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-4">
           {user ? (
             <div className="flex items-center space-x-3">
+              {/* 🔧 ADD: Admin Button */}
+              {isAdmin && (
+                <Link href="/admin">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-casino-neon-purple hover:bg-casino-neon-purple/10 text-casino-neon-purple hover:text-casino-neon-purple"
+                  >
+                    <Star className="w-4 h-4 mr-2" />
+                    Admin
+                  </Button>
+                </Link>
+              )}
               <button
                 onClick={() => setShowProfile(!showProfile)}
                 className="flex items-center gap-2 relative"
