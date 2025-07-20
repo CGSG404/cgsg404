@@ -4,6 +4,7 @@ import { type ReactNode } from 'react';
 import ClientLayout from './ClientLayout';
 import Navbar from '@/components/Navbar';
 import Providers from './providers';
+import CookieConsent from '@/components/CookieConsent';
 
 import './globals.css';
 
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers>
           <Navbar />
           <ClientLayout>{children}</ClientLayout>
+          <CookieConsent />
         </Providers>
       </body>
     </html>

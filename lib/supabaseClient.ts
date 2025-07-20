@@ -20,7 +20,7 @@ console.log('🔧 Supabase Config:', {
 // Custom storage implementation that respects cookie consent
 const createCustomStorage = () => {
   if (typeof window === 'undefined') return undefined;
-
+  
   return {
     getItem: (key: string) => {
       // Check if cookies are allowed
@@ -29,7 +29,7 @@ const createCustomStorage = () => {
         console.log('🍪 No cookie consent found, using sessionStorage for:', key);
         return sessionStorage.getItem(key);
       }
-
+      
       try {
         const consent = JSON.parse(cookieConsent);
         if (consent.necessary) {
@@ -49,7 +49,7 @@ const createCustomStorage = () => {
         sessionStorage.setItem(key, value);
         return;
       }
-
+      
       try {
         const consent = JSON.parse(cookieConsent);
         if (consent.necessary) {

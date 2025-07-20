@@ -100,6 +100,58 @@ export default function DebugAuthPage() {
     addLog('Logs cleared');
   };
 
+  const handleTestCookies = () => {
+    addLog('🍪 Testing cookie functionality...');
+
+    // Check if cookies are enabled
+    const testCookie = 'test-cookie-' + Date.now();
+    document.cookie = `${testCookie}=test-value; path=/; secure; samesite=lax`;
+
+    // Try to read it back
+    const cookieExists = document.cookie.includes(testCookie);
+
+    if (cookieExists) {
+      addLog('✅ Cookies are working properly');
+
+      // Check cookie consent
+      const consent = localStorage.getItem('cookie-consent');
+      if (consent) {
+        try {
+          const parsed = JSON.parse(consent);
+          addLog(`🍪 Cookie consent found: ${JSON.stringify(parsed)}`);
+        } catch {
+          addLog('⚠️ Cookie consent found but invalid JSON');
+        }
+      } else {
+        addLog('⚠️ No cookie consent found - banner should appear');
+      }
+
+      // Clean up test cookie
+      document.cookie = `${testCookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    } else {
+      addLog('❌ Cookies are not working - this may cause auth issues');
+    }
+
+    // Check localStorage and sessionStorage
+    try {
+      localStorage.setItem('test-storage', 'test');
+      const localTest = localStorage.getItem('test-storage');
+      localStorage.removeItem('test-storage');
+      addLog(localTest ? '✅ localStorage working' : '❌ localStorage not working');
+    } catch {
+      addLog('❌ localStorage blocked or not available');
+    }
+
+    try {
+      sessionStorage.setItem('test-session', 'test');
+      const sessionTest = sessionStorage.getItem('test-session');
+      sessionStorage.removeItem('test-session');
+      addLog(sessionTest ? '✅ sessionStorage working' : '❌ sessionStorage not working');
+    } catch {
+      addLog('❌ sessionStorage blocked or not available');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-casino-dark p-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -145,6 +197,9 @@ export default function DebugAuthPage() {
               </Button>
               <Button onClick={handleTestSupabaseConnection} variant="outline" className="border-casino-border-subtle text-white">
                 Test Supabase Connection
+              </Button>
+              <Button onClick={handleTestCookies} variant="outline" className="border-casino-border-subtle text-white">
+                Test Cookies
               </Button>
               <Button onClick={handleClearLogs} variant="outline" className="border-red-500 text-red-400">
                 Clear Logs
