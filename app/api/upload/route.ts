@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/src/lib/supabaseClient';
+import { supabaseServer } from '@/src/lib/supabaseServer';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes);
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
+    const { data, error } = await supabaseServer.storage
       .from('casino-logos')
       .upload(fileName, buffer, {
         contentType: file.type,
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get public URL
-    const { data: urlData } = supabase.storage
+    const { data: urlData } = supabaseServer.storage
       .from('casino-logos')
       .getPublicUrl(fileName);
 

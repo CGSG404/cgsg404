@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Upload API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            background: #333;
+            border: 1px solid #555;
+            color: white;
+            border-radius: 5px;
+        }
+        button {
+            background: #00ff99;
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #00cc77;
+        }
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+        .success {
+            background: #004d00;
+            border: 1px solid #00ff99;
+        }
+        .error {
+            background: #4d0000;
+            border: 1px solid #ff4444;
+        }
+        .loading {
+            background: #333;
+            border: 1px solid #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Upload API</h1>
+        <p>Test file upload to <code>/api/upload</code> endpoint</p>
+        
+        <div>
+            <input type="file" id="fileInput" accept="image/*">
+            <br>
+            <button onclick="testUpload()" id="uploadBtn">Upload Test</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const result = document.getElementById('result');
+            
+            const file = fileInput.files[0];
+            if (!file) {
+                showResult('Please select a file first', 'error');
+                return;
+            }
+            
+            // Show loading
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+            showResult('Uploading file...', 'loading');
+            
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                console.log('Sending request to /api/upload...');
+                
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (response.ok) {
+                    showResult(`✅ Upload successful!<br>
+                        <strong>URL:</strong> ${data.url}<br>
+                        <strong>File:</strong> ${data.fileName}<br>
+                        <strong>Size:</strong> ${data.size} bytes<br>
+                        <strong>Type:</strong> ${data.type}`, 'success');
+                } else {
+                    showResult(`❌ Upload failed: ${data.error}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showResult(`❌ Network error: ${error.message}`, 'error');
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Upload Test';
+            }
+        }
+        
+        function showResult(message, type) {
+            const result = document.getElementById('result');
+            result.innerHTML = message;
+            result.className = `result ${type}`;
+        }
+        
+        // Test API availability on page load
+        window.onload = async function() {
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'OPTIONS'
+                });
+                console.log('OPTIONS response:', response.status);
+                if (response.status === 200) {
+                    showResult('✅ API endpoint is available', 'success');
+                } else {
+                    showResult(`⚠️ API endpoint returned status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ API endpoint not reachable: ${error.message}`, 'error');
+            }
+        };
+    </script>
+</body>
+</html>
