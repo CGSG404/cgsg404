@@ -138,13 +138,16 @@
         
         // Test API availability on page load
         window.onload = async function() {
+            showResult('🔧 Testing production API endpoint...', 'loading');
             try {
                 const response = await fetch('/api/upload', {
                     method: 'OPTIONS'
                 });
                 console.log('OPTIONS response:', response.status);
                 if (response.status === 200) {
-                    showResult('✅ API endpoint is available', 'success');
+                    showResult('✅ Production API endpoint is available and ready!', 'success');
+                } else if (response.status === 405) {
+                    showResult('⚠️ API endpoint exists but OPTIONS not allowed (this is normal)', 'success');
                 } else {
                     showResult(`⚠️ API endpoint returned status: ${response.status}`, 'error');
                 }
