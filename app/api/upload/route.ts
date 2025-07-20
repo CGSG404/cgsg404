@@ -13,9 +13,9 @@ export async function POST(request: NextRequest) {
       serviceRoleKeyLength: process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0
     });
 
-    // Fallback values for testing
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://plhpubcmugqosexcgdhj.supabase.co';
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsaHB1YmNtdWdxb3NleGNnZGhqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDY5MzUyNCwiZXhwIjoyMDY2MjY5NTI0fQ.wnCPfmL0i9irgXGIcXdnwM57ij2lehDNOhHRZQoDLPQ';
+    // Get environment variables
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl) {
       throw new Error('NEXT_PUBLIC_SUPABASE_URL is missing');
@@ -33,6 +33,14 @@ export async function POST(request: NextRequest) {
         auth: {
           autoRefreshToken: false,
           persistSession: false
+        },
+        db: {
+          schema: 'public'
+        },
+        global: {
+          headers: {
+            'Authorization': `Bearer ${serviceRoleKey}`
+          }
         }
       }
     );
@@ -74,6 +82,13 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes);
 
     // Upload to Supabase Storage using service role
+    console.log('🔄 Attempting upload to Supabase:', {
+      bucket: 'casino-logos',
+      fileName,
+      fileSize: buffer.length,
+      contentType: file.type
+    });
+
     const { data, error } = await supabase.storage
       .from('casino-logos')
       .upload(fileName, buffer, {
@@ -83,9 +98,20 @@ export async function POST(request: NextRequest) {
       });
 
     if (error) {
-      console.error('Supabase upload error:', error);
+      console.error('❌ Supabase upload error:', {
+        error,
+        message: error.message,
+        statusCode: error.statusCode,
+        details: error
+      });
+
       return NextResponse.json(
-        { error: 'Failed to upload file to storage', details: error.message },
+        {
+          error: 'Failed to upload file to storage',
+          details: error.message,
+          statusCode: error.statusCode || 500,
+          supabaseError: error
+        },
         { status: 500 }
       );
     }

@@ -64,21 +64,52 @@ export function ImageUpload({
   };
 
   const uploadToSupabase = async (file: File): Promise<string> => {
+    console.log('🔄 Starting upload:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type
+    });
+
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Upload failed');
+      console.log('📡 Upload response:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Upload failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText
+        });
+
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: errorText || 'Upload failed' };
+        }
+
+        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ Upload successful:', data);
+      return data.url;
+    } catch (error) {
+      console.error('🚨 Upload error:', error);
+      throw error;
     }
-
-    const data = await response.json();
-    return data.url;
   };
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
