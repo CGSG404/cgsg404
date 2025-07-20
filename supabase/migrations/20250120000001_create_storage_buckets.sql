@@ -20,33 +20,21 @@ DROP POLICY IF EXISTS "Admin can upload casino-logos" ON storage.objects;
 CREATE POLICY "Admin can upload casino-logos" ON storage.objects
 FOR INSERT WITH CHECK (
   bucket_id = 'casino-logos'
-  AND auth.uid() IN (
-    SELECT au.id
-    FROM admin_users au
-    WHERE au.id = auth.uid()
-  )
+  AND auth.role() = 'authenticated'
 );
 
 DROP POLICY IF EXISTS "Admin can update casino-logos" ON storage.objects;
 CREATE POLICY "Admin can update casino-logos" ON storage.objects
 FOR UPDATE USING (
   bucket_id = 'casino-logos'
-  AND auth.uid() IN (
-    SELECT au.id
-    FROM admin_users au
-    WHERE au.id = auth.uid()
-  )
+  AND auth.role() = 'authenticated'
 );
 
 DROP POLICY IF EXISTS "Admin can delete casino-logos" ON storage.objects;
 CREATE POLICY "Admin can delete casino-logos" ON storage.objects
 FOR DELETE USING (
   bucket_id = 'casino-logos'
-  AND auth.uid() IN (
-    SELECT au.id
-    FROM admin_users au
-    WHERE au.id = auth.uid()
-  )
+  AND auth.role() = 'authenticated'
 );
 
 -- Create avatars bucket for user profile pictures
