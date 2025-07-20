@@ -1,11 +1,17 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from './AuthContext';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import { supabase } from '@/src/lib/supabaseClient';
 import { databaseApi } from '@/src/lib/database-api';
 import type { CurrentUserAdminInfo } from '@/types/database';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface AdminContextType {
+  // Auth state (independent)
+  user: SupabaseUser | null;
+  authLoading: boolean;
+
+  // Admin state
   adminInfo: CurrentUserAdminInfo | null;
   isAdmin: boolean;
   isLoading: boolean;
@@ -18,9 +24,13 @@ interface AdminContextType {
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export function AdminProvider({ children }: { children: React.ReactNode }) {
-  const { user, loading: authLoading } = useAuth();
+  // INDEPENDENT AUTH STATE - No dependency on AuthContext
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [adminInfo, setAdminInfo] = useState<CurrentUserAdminInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const mountedRef = useRef(true);
+  const subscriptionRef = useRef<any>(null);
 
   // Fetch admin info when user changes
   const fetchAdminInfo = async () => {
@@ -93,6 +103,69 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // INDEPENDENT AUTH INITIALIZATION - No circular dependency
+  useEffect(() => {
+    let isMounted = true;
+
+    console.log('🚀 AdminContext: Starting independent auth initialization...');
+
+    const initializeAuth = async () => {
+      try {
+        // Get initial session independently
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (!isMounted) return;
+
+        if (error) {
+          console.error('❌ AdminContext: Auth error:', error);
+          setUser(null);
+        } else {
+          console.log('✅ AdminContext: Auth state:', session?.user ? 'User found' : 'No user');
+          setUser(session?.user || null);
+        }
+
+        setAuthLoading(false);
+
+        // Setup independent auth listener
+        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+          if (!isMounted) return;
+
+          console.log(`🔄 AdminContext: Auth event - ${event}`);
+
+          if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+            setUser(session?.user || null);
+          }
+        });
+
+        subscriptionRef.current = data.subscription;
+
+      } catch (error) {
+        console.error('❌ AdminContext: Auth initialization error:', error);
+        if (isMounted) {
+          setUser(null);
+          setAuthLoading(false);
+        }
+      }
+    };
+
+    initializeAuth();
+
+    return () => {
+      console.log('🧹 AdminContext: Auth cleanup');
+      isMounted = false;
+      mountedRef.current = false;
+
+      if (subscriptionRef.current) {
+        try {
+          subscriptionRef.current.unsubscribe();
+        } catch (error) {
+          console.warn('⚠️ AdminContext: Cleanup error:', error);
+        }
+        subscriptionRef.current = null;
+      }
+    };
+  }, []);
+
   // Fetch admin info when user changes
   useEffect(() => {
     if (!authLoading) {
@@ -101,6 +174,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   }, [user, authLoading]);
 
   const value: AdminContextType = {
+    // Auth state
+    user,
+    authLoading,
+
+    // Admin state
     adminInfo,
     isAdmin: adminInfo?.is_admin || false,
     isLoading: isLoading || authLoading,
@@ -131,8 +209,7 @@ export function withAdminAuth<P extends object>(
   requiredPermission?: string
 ) {
   return function AdminProtectedComponent(props: P) {
-    const { isAdmin, isLoading, hasPermission } = useAdmin();
-    const { user } = useAuth();
+    const { isAdmin, isLoading, hasPermission, user } = useAdmin(); // Use user from AdminContext
 
     if (isLoading) {
       return (

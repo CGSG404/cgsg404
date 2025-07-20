@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '@/src/lib/supabaseClient';
 import { Session, User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -9,8 +9,15 @@ type User = SupabaseUser;
 type AuthContextType = {
   user: User | null;
   loading: boolean;
+  error: string | null;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  // Debug info (optional)
+  debugInfo?: {
+    initCount: number;
+    lastEvent: string;
+    lastUpdate: Date;
+  };
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,20 +30,80 @@ export const useAuth = () => {
   return context;
 };
 
+// NEW: Auth Error Boundary Component
+export const AuthErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      if (event.error?.message?.includes('AuthContext') ||
+          event.error?.message?.includes('useAuth')) {
+        console.error('🚨 Auth Error Boundary caught:', event.error);
+        setHasError(true);
+        setError(event.error);
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  if (hasError) {
+    return (
+      <div className="min-h-screen bg-casino-dark flex items-center justify-center">
+        <div className="text-center text-white p-8">
+          <h2 className="text-2xl font-bold text-red-400 mb-4">Auth System Error</h2>
+          <p className="text-gray-400 mb-4">The authentication system encountered an error.</p>
+          <button
+            onClick={() => {
+              setHasError(false);
+              setError(null);
+              window.location.reload();
+            }}
+            className="bg-casino-primary hover:bg-casino-primary/80 px-4 py-2 rounded"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Core state
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fungsi untuk login dengan Google - SIMPLIFIED
+  // Debug tracking
+  const initCountRef = useRef(0);
+  const lastEventRef = useRef('none');
+  const lastUpdateRef = useRef(new Date());
+  const mountedRef = useRef(true);
+  const subscriptionRef = useRef<any>(null);
+
+  // Clear error when user changes
+  useEffect(() => {
+    if (user) {
+      setError(null);
+    }
+  }, [user]);
+
+  // Simplified Google sign in
   const signInWithGoogle = async () => {
     if (loading) {
-      console.log('⚠️ Sign in already in progress');
+      console.log('⚠️ Auth: Sign in already in progress');
       return;
     }
 
     try {
       setLoading(true);
-      console.log('🚀 Starting Google OAuth...');
+      setError(null);
+      console.log('🚀 Auth: Starting Google OAuth...');
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -46,116 +113,149 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
-        console.error('❌ OAuth error:', error);
+        console.error('❌ Auth: OAuth error:', error);
+        setError(error.message);
         setLoading(false);
         throw error;
       }
 
-      console.log('✅ OAuth initiated');
-      // Loading will be handled by redirect
+      console.log('✅ Auth: OAuth initiated successfully');
+      // Loading state will be handled by redirect
     } catch (error) {
-      console.error('❌ Sign in error:', error);
+      console.error('❌ Auth: Sign in error:', error);
+      setError(error instanceof Error ? error.message : 'Sign in failed');
       setLoading(false);
       throw error;
     }
   };
 
-  // Fungsi untuk logout
+  // Simplified sign out
   const signOut = async () => {
     try {
       setLoading(true);
+      setError(null);
+      console.log('🚀 Auth: Signing out...');
+
       await supabase.auth.signOut();
       setUser(null);
+
+      console.log('✅ Auth: Signed out successfully');
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error('❌ Auth: Sign out error:', error);
+      setError(error instanceof Error ? error.message : 'Sign out failed');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle auth state changes - SIMPLIFIED VERSION
+  // SIMPLIFIED: Single useEffect for auth initialization
   useEffect(() => {
-    let mounted = true;
-    let subscription: any = null;
-    let hasInitialized = false;
+    let isMounted = true;
+    initCountRef.current += 1;
+    const currentInit = initCountRef.current;
 
-    console.log('🚀 AuthContext: Starting initialization...');
+    console.log(`🚀 Auth: Initialization #${currentInit} starting...`);
 
-    // Single initialization function
     const initializeAuth = async () => {
-      if (hasInitialized) {
-        console.log('⚠️ Auth already initialized, skipping...');
-        return;
-      }
-
       try {
-        hasInitialized = true;
-        console.log('🔍 Getting initial session...');
-
+        // Get initial session
+        console.log('🔍 Auth: Getting initial session...');
         const { data: { session }, error } = await supabase.auth.getSession();
 
-        if (mounted) {
-          if (error) {
-            console.error('❌ Initial session error:', error);
-            setUser(null);
-          } else {
-            console.log('✅ Initial session result:', session?.user ? 'User found' : 'No user');
-            setUser(session?.user || null);
+        if (!isMounted) {
+          console.log('⚠️ Auth: Component unmounted during init, aborting...');
+          return;
+        }
+
+        if (error) {
+          console.error('❌ Auth: Initial session error:', error);
+          setError(error.message);
+          setUser(null);
+        } else {
+          console.log('✅ Auth: Initial session:', session?.user ? 'User found' : 'No user');
+          setUser(session?.user || null);
+          lastEventRef.current = 'initial_session';
+          lastUpdateRef.current = new Date();
+        }
+
+        setLoading(false);
+
+        // Setup auth state listener
+        console.log('🎧 Auth: Setting up state listener...');
+        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+          if (!isMounted) {
+            console.log('⚠️ Auth: Received event but component unmounted, ignoring...');
+            return;
           }
-          setLoading(false);
-        }
 
-        // Setup listener AFTER initial session is handled
-        if (mounted) {
-          console.log('🎧 Setting up auth listener...');
-          const { data } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log(`🔄 Auth event: ${event}`, session?.user ? 'User present' : 'No user');
+          console.log(`🔄 Auth: Event received - ${event}`, session?.user ? 'User present' : 'No user');
 
-            // Only handle specific events to prevent loops
-            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-              if (mounted) {
-                setUser(session?.user || null);
-                console.log(`✅ Auth state updated for event: ${event}`);
-              }
-            }
-          });
+          // Update state based on event
+          lastEventRef.current = event;
+          lastUpdateRef.current = new Date();
 
-          subscription = data.subscription;
-          console.log('✅ Auth listener setup complete');
-        }
+          if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+            setUser(session?.user || null);
+            setError(null);
+            console.log(`✅ Auth: State updated for ${event}`);
+          }
+        });
+
+        subscriptionRef.current = data.subscription;
+        console.log('✅ Auth: Listener setup complete');
 
       } catch (error) {
-        console.error('❌ Auth initialization error:', error);
-        if (mounted) {
+        console.error('❌ Auth: Initialization error:', error);
+        if (isMounted) {
+          setError(error instanceof Error ? error.message : 'Auth initialization failed');
           setUser(null);
           setLoading(false);
         }
       }
     };
 
-    // Start initialization
     initializeAuth();
 
     // Cleanup function
     return () => {
-      console.log('🧹 AuthContext cleanup');
-      mounted = false;
-      hasInitialized = false;
-      if (subscription) {
+      console.log(`🧹 Auth: Cleanup for init #${currentInit}`);
+      isMounted = false;
+      mountedRef.current = false;
+
+      if (subscriptionRef.current) {
         try {
-          subscription.unsubscribe();
+          subscriptionRef.current.unsubscribe();
+          console.log('✅ Auth: Subscription cleaned up');
         } catch (error) {
-          console.warn('⚠️ Error unsubscribing:', error);
+          console.warn('⚠️ Auth: Error during cleanup:', error);
         }
-        subscription = null;
+        subscriptionRef.current = null;
       }
     };
-  }, []); // Empty dependency array - only run once
+  }, []); // Empty dependency array - run only once
+
+  // Debug info for development
+  const debugInfo = process.env.NODE_ENV === 'development' ? {
+    initCount: initCountRef.current,
+    lastEvent: lastEventRef.current,
+    lastUpdate: lastUpdateRef.current,
+  } : undefined;
+
+  const value: AuthContextType = {
+    user,
+    loading,
+    error,
+    signInWithGoogle,
+    signOut,
+    debugInfo,
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthErrorBoundary>
+      <AuthContext.Provider value={value}>
+        {children}
+      </AuthContext.Provider>
+    </AuthErrorBoundary>
   );
 };
