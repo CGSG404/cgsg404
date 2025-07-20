@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/src/contexts/AuthContext';
 
 export interface AuthDebugInfo {
@@ -36,16 +36,16 @@ export interface AuthDebugInfo {
 
 export const useAuthDebug = (): AuthDebugInfo => {
   const auth = useAuth();
-  const [renderCount, setRenderCount] = useState(0);
-  const [lastRender, setLastRender] = useState(new Date());
   const [errorHistory, setErrorHistory] = useState<AuthDebugInfo['errorHistory']>([]);
   const [stateHistory, setStateHistory] = useState<AuthDebugInfo['stateHistory']>([]);
 
-  // Track renders
-  useEffect(() => {
-    setRenderCount(prev => prev + 1);
-    setLastRender(new Date());
-  });
+  // Track renders - FIXED: Use useRef to avoid infinite re-renders
+  const renderCountRef = useRef(0);
+  const lastRenderRef = useRef(new Date());
+
+  // Increment render count on each render (without causing re-render)
+  renderCountRef.current += 1;
+  lastRenderRef.current = new Date();
 
   // Track errors
   useEffect(() => {
@@ -86,8 +86,8 @@ export const useAuthDebug = (): AuthDebugInfo => {
     lastUpdate: auth.debugInfo?.lastUpdate || new Date(),
     
     // Performance tracking
-    renderCount,
-    lastRender,
+    renderCount: renderCountRef.current,
+    lastRender: lastRenderRef.current,
     
     // Error tracking
     errorHistory,

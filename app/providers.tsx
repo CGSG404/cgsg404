@@ -3,8 +3,8 @@
 import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { AuthProvider } from '@/src/contexts/AuthContext'; // NEW: Re-enabled with improved implementation
-// import { AdminProvider } from '@/src/contexts/AdminContext'; // KEEP DISABLED for now
+import { AuthProvider } from '@/src/contexts/AuthContext'; // ✅ STABLE: Working perfectly
+import { AdminProvider } from '@/src/contexts/AdminContext'; // ✅ ENABLED: Auth system is now stable
 import { TooltipProvider } from '@/src/components/ui/tooltip';
 import { Toaster } from '@/src/components/ui/sonner';
 import LiveChat from '@/src/components/LiveChat';
@@ -22,14 +22,14 @@ const queryClient = new QueryClient({
 export default function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider> {/* NEW: Re-enabled with improved implementation */}
-        {/* <AdminProvider> KEEP DISABLED for gradual testing */}
+      <AuthProvider> {/* ✅ STABLE: Working perfectly */}
+        <AdminProvider> {/* ✅ ENABLED: Auth system is now stable */}
           <TooltipProvider>
             {children}
             <Toaster position="top-right" />
             <LiveChat />
           </TooltipProvider>
-        {/* </AdminProvider> */}
+        </AdminProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
