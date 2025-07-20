@@ -13,7 +13,12 @@ export default function DebugAdminPage() {
   const [debugInfo, setDebugInfo] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  console.log('🔍 DebugAdminPage: Auth state:', { user: user?.id, authLoading, isLoading });
+  console.log('🔍 DebugAdminPage: Auth state:', {
+    user: user?.id,
+    authLoading,
+    adminLoading: isLoading,
+    isAdmin
+  });
 
   const checkAdminStatus = async () => {
     if (!user) return;

@@ -5,6 +5,7 @@ import ClientLayout from './ClientLayout';
 import Navbar from '@/src/components/Navbar';
 import Providers from './providers';
 import CookieConsent from '@/src/components/CookieConsent';
+import { AdminDebugWidget } from '@/src/components/admin/AdminDebugWidget';
 
 import './globals.css';
 
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Navbar />
           <ClientLayout>{children}</ClientLayout>
           <CookieConsent />
+          <AdminDebugWidget />
         </Providers>
       </body>
     </html>

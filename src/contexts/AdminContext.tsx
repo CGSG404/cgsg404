@@ -171,8 +171,12 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   // Fetch admin info when user changes
   useEffect(() => {
-    if (!authLoading) {
+    if (!authLoading && user) {
+      console.log('🔍 AdminContext: User changed, fetching admin info...');
       fetchAdminInfo();
+    } else if (!authLoading && !user) {
+      console.log('🔍 AdminContext: No user, clearing admin info');
+      setAdminInfo({ is_admin: false });
     }
   }, [user, authLoading]);
 

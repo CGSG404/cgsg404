@@ -489,19 +489,52 @@ export const databaseApi = {
 
   // Check if current user is admin
   async isCurrentUserAdmin(): Promise<boolean> {
-    const { data, error } = await supabase.rpc('is_admin');
-    if (error) throw error;
-    return data || false;
+    try {
+      console.log('🔍 DatabaseAPI: Checking if current user is admin...');
+      const { data, error } = await supabase.rpc('is_admin');
+      if (error) {
+        console.error('❌ DatabaseAPI: Error checking admin status:', error);
+        throw error;
+      }
+      console.log('✅ DatabaseAPI: Admin check result:', data);
+      return data || false;
+    } catch (error) {
+      console.error('❌ DatabaseAPI: isCurrentUserAdmin failed:', error);
+      return false;
+    }
   },
 
   // Get current user admin info
   async getCurrentUserAdminInfo(): Promise<CurrentUserAdminInfo> {
-    const { data, error } = await supabase.rpc('get_current_user_admin_info');
-    if (error) throw error;
+    try {
+      console.log('🔍 DatabaseAPI: Getting current user admin info...');
+      const { data, error } = await supabase.rpc('get_current_user_admin_info');
+      if (error) {
+        console.error('❌ DatabaseAPI: Error getting admin info:', error);
+        throw error;
+      }
 
-    // Function returns array, get first item
-    const adminInfo = data?.[0];
-    if (!adminInfo) {
+      // Function returns array, get first item
+      const adminInfo = data?.[0];
+      console.log('✅ DatabaseAPI: Admin info result:', adminInfo);
+
+      if (!adminInfo) {
+        return {
+          is_admin: false,
+          role: null,
+          email: null,
+          total_permissions: 0
+        };
+      }
+
+      return {
+        is_admin: true,
+        role: adminInfo.role,
+        email: adminInfo.email,
+        total_permissions: adminInfo.total_permissions
+      };
+    } catch (error) {
+      console.error('❌ DatabaseAPI: getCurrentUserAdminInfo failed:', error);
       return {
         is_admin: false,
         role: null,
@@ -509,13 +542,6 @@ export const databaseApi = {
         total_permissions: 0
       };
     }
-
-    return {
-      is_admin: true,
-      role: adminInfo.role,
-      email: adminInfo.email,
-      total_permissions: adminInfo.total_permissions
-    };
   },
 
   // Check if current user has specific permission
