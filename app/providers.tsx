@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { AuthProvider } from '@/src/contexts/AuthContext'; // ✅ STABLE: Working perfectly
-// import { AdminProvider } from '@/src/contexts/AdminContext'; // 🚨 TEMPORARILY DISABLED - Debugging infinite loop
+import { AdminProvider } from '@/src/contexts/AdminContext'; // ✅ RE-ENABLED: Fixed double providers issue
 import { TooltipProvider } from '@/src/components/ui/tooltip';
 import { Toaster } from '@/src/components/ui/sonner';
 import LiveChat from '@/src/components/LiveChat';
@@ -23,13 +23,13 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider> {/* ✅ STABLE: Working perfectly */}
-        {/* <AdminProvider> 🚨 TEMPORARILY DISABLED - Debugging infinite loop */}
+        <AdminProvider> {/* ✅ RE-ENABLED: Fixed double providers issue */}
           <TooltipProvider>
             {children}
             <Toaster position="top-right" />
             <LiveChat />
           </TooltipProvider>
-        {/* </AdminProvider> 🚨 TEMPORARILY DISABLED - Debugging infinite loop */}
+        </AdminProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

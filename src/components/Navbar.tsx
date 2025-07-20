@@ -3,7 +3,7 @@
 import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
 import { Star, User, LogOut, Menu, X, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper } from 'lucide-react';
-// import { useAuth } from '@/src/contexts/AuthContext'; // TEMPORARILY DISABLED
+import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -15,9 +15,7 @@ const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  // const { user, signOut, signInWithGoogle, loading } = useAuth(); // TEMPORARILY DISABLED
-  const user = null; // Temporarily set to null
-  const loading = false;
+  const { user, signOut, signInWithGoogle, loading } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
   const router = useRouter();
 
   useEffect(() => {
