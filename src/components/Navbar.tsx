@@ -25,7 +25,25 @@ const Navbar = () => {
     }
   }, [mobileMenuOpen]);
 
-  if (loading) return null;
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 Navbar - Auth state:', {
+      user: user ? `${user.email} (${user.id})` : 'null',
+      loading
+    });
+  }, [user, loading]);
+
+  if (loading) {
+    return (
+      <nav className="bg-casino-dark border-b border-casino-border-subtle">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="text-white">Loading...</div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   const navLinks = [
     { name: 'Casinos', href: '/casinos' },

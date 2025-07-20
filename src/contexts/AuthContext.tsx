@@ -71,13 +71,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check initial session
     const getInitialSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (mounted && session?.user) {
-          setUser(session.user);
+        console.log('🔍 Checking initial session...');
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error('❌ Error getting initial session:', error);
+        } else {
+          console.log('✅ Initial session:', session?.user ? 'User found' : 'No user');
+        }
+
+        if (mounted) {
+          setUser(session?.user || null);
+          setLoading(false);
         }
       } catch (error) {
-        console.error('Error getting initial session:', error);
-      } finally {
+        console.error('❌ Exception getting initial session:', error);
         if (mounted) {
           setLoading(false);
         }
@@ -87,11 +95,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event);
-        
+        console.log('🔄 Auth state changed:', event, session?.user ? 'User present' : 'No user');
+
         if (mounted) {
           setUser(session?.user || null);
           setLoading(false);
+
+          // Additional logging for debugging
+          if (event === 'SIGNED_IN') {
+            console.log('✅ User signed in successfully:', session?.user?.email);
+          } else if (event === 'SIGNED_OUT') {
+            console.log('👋 User signed out');
+          } else if (event === 'TOKEN_REFRESHED') {
+            console.log('🔄 Token refreshed');
+          }
         }
       }
     );
