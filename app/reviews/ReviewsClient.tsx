@@ -1,6 +1,6 @@
 'use client';
 
-import ReviewsHydrated from '@/components/ReviewsHydrated';
+import ReviewsHydrated from '@/src/components/ReviewsHydrated';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 export default function ReviewsClient() {

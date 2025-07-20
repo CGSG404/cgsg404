@@ -4,8 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Search, Star, Gamepad2, FileText, Users, TrendingUp, MapPin, BookOpen, AlertTriangle, Newspaper } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/src/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 
 // Data kata kunci yang sama dengan SearchBar
 const searchKeywords = [

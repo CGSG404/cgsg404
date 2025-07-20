@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import Providers from './providers';
-import { AppSidebar } from '@/components/ui/sidebar';
-import BackToTop from '@/components/BackToTop';
+import { AppSidebar } from '@/src/components/ui/sidebar';
+import BackToTop from '@/src/components/BackToTop';
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
   return (

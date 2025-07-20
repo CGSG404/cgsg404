@@ -1,6 +1,6 @@
 'use client';
 
-import CasinosHydrated from '@/components/CasinosHydrated';
+import CasinosHydrated from '@/src/components/CasinosHydrated';
 import Image from 'next/image';
 import Link from 'next/link';
 

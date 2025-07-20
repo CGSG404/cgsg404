@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import AuthPage from "@/components/AuthPage";
+import AuthPage from "@/src/components/AuthPage";
 
 export default function SignInPage() {
   return (
