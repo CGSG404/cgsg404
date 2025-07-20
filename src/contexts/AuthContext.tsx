@@ -29,6 +29,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Fungsi untuk login dengan Google
   const signInWithGoogle = async () => {
+    // Prevent multiple simultaneous sign-in attempts
+    if (loading) {
+      console.log('⚠️ Sign in already in progress, skipping...');
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -58,11 +64,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       console.log('✅ OAuth initiated successfully:', data);
+      // Don't set loading to false here - let the redirect handle it
     } catch (error) {
       console.error('❌ Error signing in with Google:', error);
+      setLoading(false); // Only set loading false on error
       throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -84,9 +90,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let mounted = true;
     let subscription: any = null;
+    let isInitialized = false;
 
     // Check initial session
     const getInitialSession = async () => {
+      if (isInitialized) return; // Prevent multiple initializations
+
       try {
         console.log('🔍 Checking initial session...');
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -101,12 +110,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (mounted) {
           setUser(session?.user || null);
           setLoading(false);
+          isInitialized = true;
         }
       } catch (error) {
         console.error('❌ Exception getting initial session:', error);
         if (mounted) {
           setUser(null);
           setLoading(false);
+          isInitialized = true;
         }
       }
     };
@@ -118,21 +129,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           async (event, session) => {
             console.log('🔄 Auth state changed:', event, session?.user ? 'User present' : 'No user');
 
-            if (!mounted) return;
+            // Skip INITIAL_SESSION event to prevent double initialization
+            if (event === 'INITIAL_SESSION') {
+              console.log('⏭️ Skipping INITIAL_SESSION event');
+              return;
+            }
+
+            if (!mounted) {
+              console.log('⚠️ Component unmounted, skipping auth state change');
+              return;
+            }
 
             try {
+              // Batch state updates to prevent multiple re-renders
               setUser(session?.user || null);
-
-              // Only set loading to false after we've processed the auth change
-              if (event !== 'INITIAL_SESSION') {
-                setLoading(false);
-              }
+              setLoading(false);
 
               // Additional logging for debugging
               if (event === 'SIGNED_IN') {
                 console.log('✅ User signed in successfully:', session?.user?.email);
               } else if (event === 'SIGNED_OUT') {
                 console.log('👋 User signed out');
+                // Clear any cached data
+                setUser(null);
               } else if (event === 'TOKEN_REFRESHED') {
                 console.log('🔄 Token refreshed');
               }
@@ -146,6 +165,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         );
 
         subscription = data.subscription;
+        console.log('🎧 Auth listener setup complete');
       } catch (error) {
         console.error('❌ Error setting up auth listener:', error);
         if (mounted) {
@@ -154,15 +174,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    // Initialize
-    getInitialSession();
-    setupAuthListener();
+    // Initialize in sequence
+    const initialize = async () => {
+      await getInitialSession();
+      setupAuthListener();
+    };
+
+    initialize();
 
     // Cleanup
     return () => {
+      console.log('🧹 Cleaning up AuthContext');
       mounted = false;
+      isInitialized = false;
       if (subscription) {
         subscription.unsubscribe();
+        subscription = null;
       }
     };
   }, []);

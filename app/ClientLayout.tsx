@@ -1,9 +1,17 @@
-import { type ReactNode } from 'react';
+'use client';
+
+import { type ReactNode, useEffect } from 'react';
 import Providers from './providers';
 import { AppSidebar } from '@/src/components/ui/sidebar';
 import BackToTop from '@/src/components/BackToTop';
+import { setupGlobalErrorHandler } from '@/src/lib/errorHandler';
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
+  // Setup global error handlers
+  useEffect(() => {
+    setupGlobalErrorHandler();
+  }, []);
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar kiri, fixed di desktop, drawer di mobile */}
@@ -17,4 +25,4 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
       </div>
     </div>
   );
-} 
+}

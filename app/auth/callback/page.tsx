@@ -10,7 +10,16 @@ function AuthCallbackContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    let isProcessing = false; // Prevent multiple simultaneous processing
+
     const handleAuthCallback = async () => {
+      if (isProcessing) {
+        console.log('⚠️ Auth callback already processing, skipping...');
+        return;
+      }
+
+      isProcessing = true;
+
       try {
         // Add safety check for window object
         if (typeof window === 'undefined') {
@@ -82,14 +91,21 @@ function AuthCallbackContent() {
               expiresAt: data.session.expires_at
             });
 
-            // Wait for auth state to propagate
+            // Wait for auth state to propagate before redirecting
+            console.log('⏳ Waiting for auth state to propagate...');
             setTimeout(() => {
+              if (!isProcessing) return; // Check if still processing
               router.replace('/?success=login');
-            }, 1000);
+            }, 1500);
 
           } catch (err) {
             console.error('❌ Exchange exception:', err);
             router.replace(`/?error=callback_failed&details=${encodeURIComponent(err.message || 'Unknown error')}`);
+          } finally {
+            // Reset processing flag after a delay
+            setTimeout(() => {
+              isProcessing = false;
+            }, 2000);
           }
         } else {
           console.log('⚠️ No code parameter, redirecting to home');
@@ -98,6 +114,7 @@ function AuthCallbackContent() {
       } catch (error) {
         console.error('❌ Auth callback error:', error);
         router.replace(`/?error=callback_failed&details=${encodeURIComponent(error.message || 'Unknown error')}`);
+        isProcessing = false;
       }
     };
 
