@@ -82,6 +82,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     flowType: 'pkce',
     storage: createCustomStorage(),
     debug: process.env.NODE_ENV === 'development',
+    // Add storageKey to ensure consistency
+    storageKey: 'sb-auth-token',
   },
   global: {
     headers: {

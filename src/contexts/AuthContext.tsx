@@ -32,7 +32,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
 
-      const redirectUrl = `${window.location.origin}/auth/callback`;
+      // Ensure we're using the correct domain for production
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.gurusingapore.com';
+      const redirectUrl = `${baseUrl}/auth/callback`;
+
       console.log('🚀 Starting Google OAuth with redirect:', redirectUrl);
 
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -44,6 +47,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             prompt: 'consent',
           },
           skipBrowserRedirect: false,
+          // Add scopes for better OAuth flow
+          scopes: 'openid email profile',
         },
       });
 

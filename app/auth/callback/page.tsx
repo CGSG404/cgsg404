@@ -2,7 +2,7 @@
 
 import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/src/lib/supabaseClient';
 
 function AuthCallbackContent() {
   const router = useRouter();
@@ -33,57 +33,57 @@ function AuthCallbackContent() {
         if (code) {
           console.log('🔄 Exchanging code for session...');
 
-          // Try multiple approaches for session exchange
-          let sessionData = null;
-          let exchangeError = null;
-
-          // Method 1: Direct exchange
           try {
-            const result = await supabase.auth.exchangeCodeForSession(code);
-            sessionData = result.data;
-            exchangeError = result.error;
-            console.log('📊 Exchange result:', {
-              success: !!sessionData?.session,
-              error: exchangeError?.message
+            // Use the built-in session handling from Supabase
+            // This automatically handles PKCE flow
+            const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+            if (error) {
+              console.error('❌ Exchange error:', error);
+
+              // Handle specific PKCE errors
+              if (error.message.includes('code_verifier') || error.message.includes('PKCE')) {
+                console.log('🔄 PKCE error detected, trying session refresh...');
+
+                // Try to refresh the session
+                const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+
+                if (refreshError || !refreshData?.session) {
+                  console.error('❌ Session refresh failed:', refreshError);
+                  router.replace(`/?error=session_failed&details=${encodeURIComponent('PKCE verification failed. Please try logging in again.')}`);
+                  return;
+                }
+
+                console.log('✅ Session refreshed successfully');
+                router.replace('/?success=login');
+                return;
+              }
+
+              router.replace(`/?error=session_failed&details=${encodeURIComponent(error.message)}`);
+              return;
+            }
+
+            if (!data?.session) {
+              console.error('❌ No session data received');
+              router.replace(`/?error=session_failed&details=${encodeURIComponent('No session data received')}`);
+              return;
+            }
+
+            console.log('✅ Session exchange successful:', {
+              userId: data.session.user?.id,
+              email: data.session.user?.email,
+              expiresAt: data.session.expires_at
             });
+
+            // Wait for auth state to propagate
+            setTimeout(() => {
+              router.replace('/?success=login');
+            }, 1000);
+
           } catch (err) {
             console.error('❌ Exchange exception:', err);
-            exchangeError = err;
+            router.replace(`/?error=callback_failed&details=${encodeURIComponent(err.message || 'Unknown error')}`);
           }
-
-          // Method 2: If direct exchange fails, try getting session
-          if (!sessionData?.session && !exchangeError) {
-            console.log('🔄 Trying to get existing session...');
-            try {
-              const { data: sessionResult, error: sessionError } = await supabase.auth.getSession();
-              if (sessionResult?.session) {
-                sessionData = sessionResult;
-                console.log('✅ Found existing session');
-              } else {
-                exchangeError = sessionError || new Error('No session found');
-              }
-            } catch (err) {
-              console.error('❌ Session check exception:', err);
-              exchangeError = err;
-            }
-          }
-
-          if (exchangeError || !sessionData?.session) {
-            console.error('❌ Failed to get session:', exchangeError);
-            router.replace(`/?error=session_failed&details=${encodeURIComponent(exchangeError?.message || 'Unknown error')}`);
-            return;
-          }
-
-          console.log('✅ Session exchange successful:', {
-            userId: sessionData.session.user?.id,
-            email: sessionData.session.user?.email,
-            expiresAt: sessionData.session.expires_at
-          });
-
-          // Wait for auth state to propagate
-          setTimeout(() => {
-            router.replace('/?success=login');
-          }, 1500);
         } else {
           console.log('⚠️ No code parameter, redirecting to home');
           router.replace('/?error=no_code');
