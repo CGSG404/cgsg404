@@ -57,10 +57,26 @@ export default function DebugAdminPage() {
             <CardTitle className="text-casino-neon-green">🔐 Admin Debug</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-400 mb-4">Please sign in to check admin status</p>
-            <Button onClick={() => window.location.href = '/signin'}>
-              Sign In
-            </Button>
+            <div className="space-y-4">
+              <p className="text-gray-400">Please sign in to check admin status</p>
+
+              <div className="bg-casino-dark p-4 rounded-lg">
+                <h4 className="text-white font-semibold mb-2">📋 Steps to become admin:</h4>
+                <ol className="text-gray-300 text-sm space-y-1 list-decimal list-inside">
+                  <li>Sign in with Google</li>
+                  <li>Copy your User ID from this debug page</li>
+                  <li>Ask developer to add you to admin_users table</li>
+                  <li>Or run SQL command in Supabase</li>
+                </ol>
+              </div>
+
+              <Button
+                onClick={() => window.location.href = '/signin'}
+                className="w-full bg-casino-neon-green text-casino-dark"
+              >
+                🚀 Sign In with Google
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
