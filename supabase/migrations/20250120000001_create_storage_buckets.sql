@@ -11,36 +11,40 @@ VALUES (
   ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
 ) ON CONFLICT (id) DO NOTHING;
 
--- Create RLS policies for casino-logos bucket
+-- Drop existing policies if they exist, then create new ones for casino-logos bucket
+DROP POLICY IF EXISTS "Public Access for casino-logos" ON storage.objects;
 CREATE POLICY "Public Access for casino-logos" ON storage.objects
 FOR SELECT USING (bucket_id = 'casino-logos');
 
+DROP POLICY IF EXISTS "Admin can upload casino-logos" ON storage.objects;
 CREATE POLICY "Admin can upload casino-logos" ON storage.objects
 FOR INSERT WITH CHECK (
-  bucket_id = 'casino-logos' 
+  bucket_id = 'casino-logos'
   AND auth.uid() IN (
-    SELECT au.id 
-    FROM admin_users au 
+    SELECT au.id
+    FROM admin_users au
     WHERE au.id = auth.uid()
   )
 );
 
+DROP POLICY IF EXISTS "Admin can update casino-logos" ON storage.objects;
 CREATE POLICY "Admin can update casino-logos" ON storage.objects
 FOR UPDATE USING (
-  bucket_id = 'casino-logos' 
+  bucket_id = 'casino-logos'
   AND auth.uid() IN (
-    SELECT au.id 
-    FROM admin_users au 
+    SELECT au.id
+    FROM admin_users au
     WHERE au.id = auth.uid()
   )
 );
 
+DROP POLICY IF EXISTS "Admin can delete casino-logos" ON storage.objects;
 CREATE POLICY "Admin can delete casino-logos" ON storage.objects
 FOR DELETE USING (
-  bucket_id = 'casino-logos' 
+  bucket_id = 'casino-logos'
   AND auth.uid() IN (
-    SELECT au.id 
-    FROM admin_users au 
+    SELECT au.id
+    FROM admin_users au
     WHERE au.id = auth.uid()
   )
 );
@@ -55,25 +59,29 @@ VALUES (
   ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
 ) ON CONFLICT (id) DO NOTHING;
 
--- Create RLS policies for avatars bucket
+-- Drop existing policies if they exist, then create new ones for avatars bucket
+DROP POLICY IF EXISTS "Public Access for avatars" ON storage.objects;
 CREATE POLICY "Public Access for avatars" ON storage.objects
 FOR SELECT USING (bucket_id = 'avatars');
 
+DROP POLICY IF EXISTS "Users can upload their own avatar" ON storage.objects;
 CREATE POLICY "Users can upload their own avatar" ON storage.objects
 FOR INSERT WITH CHECK (
-  bucket_id = 'avatars' 
+  bucket_id = 'avatars'
   AND auth.uid()::text = (storage.foldername(name))[1]
 );
 
+DROP POLICY IF EXISTS "Users can update their own avatar" ON storage.objects;
 CREATE POLICY "Users can update their own avatar" ON storage.objects
 FOR UPDATE USING (
-  bucket_id = 'avatars' 
+  bucket_id = 'avatars'
   AND auth.uid()::text = (storage.foldername(name))[1]
 );
 
+DROP POLICY IF EXISTS "Users can delete their own avatar" ON storage.objects;
 CREATE POLICY "Users can delete their own avatar" ON storage.objects
 FOR DELETE USING (
-  bucket_id = 'avatars' 
+  bucket_id = 'avatars'
   AND auth.uid()::text = (storage.foldername(name))[1]
 );
 
