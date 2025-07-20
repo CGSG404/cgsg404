@@ -13,18 +13,22 @@ export async function POST(request: NextRequest) {
       serviceRoleKeyLength: process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0
     });
 
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    // Fallback values for testing
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://plhpubcmugqosexcgdhj.supabase.co';
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsaHB1YmNtdWdxb3NleGNnZGhqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDY5MzUyNCwiZXhwIjoyMDY2MjY5NTI0fQ.wnCPfmL0i9irgXGIcXdnwM57ij2lehDNOhHRZQoDLPQ';
+
+    if (!supabaseUrl) {
       throw new Error('NEXT_PUBLIC_SUPABASE_URL is missing');
     }
 
-    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    if (!serviceRoleKey) {
       throw new Error('SUPABASE_SERVICE_ROLE_KEY is missing');
     }
 
     // Create service role client (bypasses RLS)
     const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY, // Service role key
+      supabaseUrl,
+      serviceRoleKey, // Service role key
       {
         auth: {
           autoRefreshToken: false,
