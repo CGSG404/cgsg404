@@ -3,7 +3,8 @@
  * Ensures all API calls use the correct domain and headers
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gurusingapore.com';
+// Use relative URLs for same-origin requests to avoid CORS issues
+const API_BASE_URL = typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gurusingapore.com');
 
 interface ApiOptions extends RequestInit {
   timeout?: number;

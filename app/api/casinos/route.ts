@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { supabaseServer } from '@/src/lib/supabaseServer';
 
 // CORS headers
 const corsHeaders = {
@@ -20,7 +20,7 @@ export async function OPTIONS() {
 // GET /api/casinos
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = supabaseServer;
     
     // Get casinos from database
     const { data: casinos, error } = await supabase
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
 // POST /api/casinos (for admin)
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = supabaseServer;
     
     // Check if user is admin (you might want to add proper auth check here)
     const body = await request.json();
