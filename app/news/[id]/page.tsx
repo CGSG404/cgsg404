@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import NewsDetailPage from "@/components/NewsDetailPage";
 
 // export const revalidate = 600;

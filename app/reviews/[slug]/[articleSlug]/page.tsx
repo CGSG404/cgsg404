@@ -14,7 +14,7 @@ interface ArticlePageProps {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const { slug, articleSlug } = await params;
+  const { slug, articleSlug } = params;
   const review = casinos.find((c) => c.slug === slug);
   const article = review?.articles?.find((a) => a.slug === articleSlug);
 

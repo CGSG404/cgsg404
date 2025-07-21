@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
-import Head from 'next/head';
 import { Calendar, User, Tag, ChevronLeft } from 'lucide-react';
 
 // NOTE: in production replace this with API fetching; for demo reuse static list
