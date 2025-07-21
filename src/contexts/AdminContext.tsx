@@ -31,6 +31,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const mountedRef = useRef(true);
   const subscriptionRef = useRef<any>(null);
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch admin info when user changes
   const fetchAdminInfo = async () => {
@@ -43,12 +44,21 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
     try {
       setIsLoading(true);
-      console.log('🔍 AdminContext: Fetching admin info for user:', user.id);
+      console.log('🔍 AdminContext: Fetching admin info for user:', {
+        id: user.id,
+        email: user.email,
+        timestamp: new Date().toISOString()
+      });
+
       const info = await databaseApi.getCurrentUserAdminInfo();
-      console.log('🔍 AdminContext: Admin info received:', info);
+      console.log('🔍 AdminContext: Admin info received:', {
+        ...info,
+        timestamp: new Date().toISOString()
+      });
+
       setAdminInfo(info);
     } catch (error) {
-      console.error('Failed to fetch admin info:', error);
+      console.error('❌ AdminContext: Failed to fetch admin info:', error);
       setAdminInfo({ is_admin: false });
     } finally {
       setIsLoading(false);

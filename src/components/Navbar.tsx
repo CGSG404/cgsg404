@@ -131,18 +131,20 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-4">
           {user ? (
             <div className="flex items-center space-x-3">
-              {/* 🔧 ADD: Admin Button */}
+              {/* 🔧 FIXED: Admin Button with proper navigation */}
               {isAdmin && (
-                <Link href="/admin">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-casino-neon-purple hover:bg-casino-neon-purple/10 text-casino-neon-purple hover:text-casino-neon-purple"
-                  >
-                    <Star className="w-4 h-4 mr-2" />
-                    Admin
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    console.log('🔧 Admin button clicked, navigating to /admin');
+                    router.push('/admin');
+                  }}
+                  className="border-casino-neon-purple hover:bg-casino-neon-purple/10 text-casino-neon-purple hover:text-casino-neon-purple"
+                >
+                  <Star className="w-4 h-4 mr-2" />
+                  Admin
+                </Button>
               )}
 
               {/* 🚀 PRODUCTION FIX: Session Fix Button (only show if there are auth issues) */}
@@ -202,7 +204,16 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex items-center space-x-3">
-              <SimpleAuthButton />
+              {/* 🔧 FIXED: Single Sign In button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push('/signin')}
+                className="border-casino-border-subtle hover:bg-casino-dark text-white"
+              >
+                <User className="w-4 h-4 mr-2" />
+                Sign In
+              </Button>
             </div>
           )}
         </div>

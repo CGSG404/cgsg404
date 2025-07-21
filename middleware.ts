@@ -65,9 +65,16 @@ export async function middleware(request: NextRequest) {
           console.log('🚫 Admin route access denied: No session', {
             path: request.nextUrl.pathname,
             sessionError: sessionError?.message,
-            hasSession: !!session
+            hasSession: !!session,
+            userAgent: request.headers.get('user-agent')?.substring(0, 100)
           });
         }
+
+        // 🔧 FIXED: Prevent redirect loop by checking if already on signin
+        if (request.nextUrl.pathname === '/signin') {
+          return response;
+        }
+
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.pathname = '/signin';
         redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);

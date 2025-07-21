@@ -2,12 +2,12 @@
   "name": "cgsg404-casino-guide",
   "private": true,
   "version": "1.0.1",
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "build:unsafe": "next build",
     "start": "next start",
+    "prod": "next build && next start",
     "fix-admin": "tsx scripts/fix-admin-access.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx}\"",

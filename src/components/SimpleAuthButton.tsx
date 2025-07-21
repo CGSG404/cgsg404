@@ -63,9 +63,9 @@ export default function SimpleAuthButton() {
     <button
       onClick={handleGoogleLogin}
       disabled={loading}
-      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+      className="bg-casino-neon-green hover:bg-casino-neon-green/80 text-casino-dark px-6 py-2 rounded-lg disabled:opacity-50 font-semibold transition-all duration-200"
     >
-      {loading ? 'Loading...' : 'Simple Google Login'}
+      {loading ? 'Signing in...' : 'Simple Google Login'}
     </button>
   );
 }
