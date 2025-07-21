@@ -23,8 +23,9 @@ body {
   @apply bg-casino-dark text-white font-sans;
 }
 
-/* Disable most Tailwind animations on mobile (<768px) */
+/* Performance optimizations for mobile devices */
 @media (max-width: 767px) {
+  /* Disable animations on low-end devices */
   .animate-spin,
   .animate-pulse,
   .animate-ping,
@@ -34,9 +35,30 @@ body {
   .animate-fade-in-down,
   .animate-fade-in-up,
   .animate-accordion-up,
-  .animate-accordion-down {
+  .animate-accordion-down,
+  .animate-neon-glow,
+  .animate-gradient-shift {
     animation: none !important;
   }
+
+  /* Reduce motion for better performance */
+  .transition-all,
+  .transition-transform,
+  .transition-opacity {
+    transition-duration: 0.15s !important;
+  }
+
+  /* Optimize transforms for mobile */
+  .transform {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Reduce blur effects on mobile */
+  .backdrop-blur-sm { backdrop-filter: blur(2px) !important; }
+  .backdrop-blur-md { backdrop-filter: blur(4px) !important; }
+  .backdrop-blur-lg { backdrop-filter: blur(6px) !important; }
 }
 
 /* Mobile drawer slide animation */
@@ -185,6 +207,65 @@ body {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Mobile-optimized components */
+  .mobile-card {
+    @apply bg-casino-card-bg border border-casino-border-subtle rounded-lg p-4 mobile:p-3;
+    @apply mobile:shadow-sm desktop:shadow-lg;
+    @apply mobile:backdrop-blur-sm desktop:backdrop-blur-md;
+  }
+
+  .mobile-button {
+    @apply px-4 py-2 mobile:px-3 mobile:py-2 mobile:text-sm;
+    @apply min-h-[44px] mobile:min-h-[40px]; /* Touch target size */
+    @apply transition-colors duration-200 mobile:duration-150;
+  }
+
+  .mobile-grid {
+    @apply grid gap-6 mobile:gap-4;
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  .mobile-container {
+    @apply container mx-auto px-4 mobile:px-3;
+    @apply max-w-7xl mobile:max-w-full;
+  }
+
+  .mobile-text {
+    @apply text-base mobile:text-sm;
+    @apply leading-relaxed mobile:leading-normal;
+  }
+
+  .mobile-heading {
+    @apply text-2xl mobile:text-xl font-bold;
+    @apply mb-4 mobile:mb-3;
+  }
+
+  /* Touch-friendly utilities */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px]; /* WCAG AA touch target size */
+  }
+
+  .touch-scroll {
+    @apply overflow-auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Performance utilities */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-auto {
+    will-change: auto;
   }
 }
 

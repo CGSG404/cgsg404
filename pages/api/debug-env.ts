@@ -24,11 +24,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       VERCEL_ENV: process.env.VERCEL_ENV || 'Not set',
       
       // Private variables (only show if they exist, not the actual values)
-      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ? 
-        `Present (${process.env.SUPABASE_SERVICE_ROLE_KEY.length} chars)` : 
+      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ?
+        `Present (${process.env.SUPABASE_SERVICE_ROLE_KEY.length} chars)` :
         'Not set',
-      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY ? 
-        `Present (${process.env.SUPABASE_ANON_KEY.length} chars)` : 
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY ?
+        `Present (${process.env.SUPABASE_ANON_KEY.length} chars)` :
+        'Not set',
+      ENCRYPTION_KEY: process.env.ENCRYPTION_KEY ?
+        `Present (${process.env.ENCRYPTION_KEY.length} chars)` :
         'Not set',
       
       // Additional debug info

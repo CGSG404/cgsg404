@@ -20,7 +20,9 @@ import {
   Wifi,
   Rocket,
   TestTube,
-  Cog
+  Cog,
+  Database,
+  Upload
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -106,6 +108,26 @@ export default function AdminDashboardPage() {
       hoverGradient: 'hover:from-purple-500/30 hover:to-pink-500/30',
       icon: Newspaper,
       status: 'Coming Soon'
+    },
+    {
+      title: 'Database Operations',
+      description: 'Monitor database performance, test operations, and view analytics',
+      href: '/admin/database',
+      gradient: 'from-orange-500/20 to-red-500/20',
+      borderColor: 'border-orange-500/30',
+      hoverGradient: 'hover:from-orange-500/30 hover:to-red-500/30',
+      icon: Database,
+      status: 'Enhanced'
+    },
+    {
+      title: 'File Upload Security',
+      description: 'Secure file upload with encryption, virus scanning, and validation',
+      href: '/admin/file-upload',
+      gradient: 'from-cyan-500/20 to-blue-500/20',
+      borderColor: 'border-cyan-500/30',
+      hoverGradient: 'hover:from-cyan-500/30 hover:to-blue-500/30',
+      icon: Upload,
+      status: 'Secure'
     },
     {
       title: 'User Management',

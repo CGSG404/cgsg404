@@ -12,10 +12,37 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      padding: {
+        DEFAULT: '1rem',
+        sm: '1.5rem',
+        md: '2rem',
+        lg: '2.5rem',
+        xl: '3rem',
+        '2xl': '4rem',
+      },
       screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
         '2xl': '1400px',
       },
+    },
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+      '3xl': '1920px',
+      // Mobile-first breakpoints
+      'mobile': {'max': '767px'},
+      'tablet': {'min': '768px', 'max': '1023px'},
+      'desktop': {'min': '1024px'},
+      // Performance-based breakpoints
+      'low-end': {'max': '767px'},
+      'high-end': {'min': '1024px'},
     },
     extend: {
       colors: {
@@ -122,6 +149,33 @@ export default {
       backgroundImage: {
         'neon-gradient': 'linear-gradient(45deg, #00ff99, #8b5cf6)',
         'card-gradient': 'linear-gradient(135deg, #1a1f2e 0%, #2a3441 100%)',
+        'mobile-gradient': 'linear-gradient(180deg, #1a1f2e 0%, #2a3441 100%)',
+        'performance-gradient': 'linear-gradient(135deg, rgba(26, 31, 46, 0.8) 0%, rgba(42, 52, 65, 0.8) 100%)',
+      },
+      spacing: {
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+      },
+      minHeight: {
+        'screen-safe': 'calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))',
+        'mobile': '100dvh',
+      },
+      maxWidth: {
+        'mobile': '100vw',
+        'tablet': '768px',
+        'desktop': '1024px',
+        'wide': '1400px',
+      },
+      fontSize: {
+        'xs-mobile': ['0.75rem', { lineHeight: '1rem' }],
+        'sm-mobile': ['0.875rem', { lineHeight: '1.25rem' }],
+        'base-mobile': ['1rem', { lineHeight: '1.5rem' }],
+        'lg-mobile': ['1.125rem', { lineHeight: '1.75rem' }],
+        'xl-mobile': ['1.25rem', { lineHeight: '1.75rem' }],
+        '2xl-mobile': ['1.5rem', { lineHeight: '2rem' }],
+        '3xl-mobile': ['1.875rem', { lineHeight: '2.25rem' }],
       },
     },
   },

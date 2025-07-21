@@ -247,7 +247,7 @@ export const databaseApi = {
 
   // ===== ENHANCED SEARCH OPERATIONS =====
 
-  // Advanced search with multiple filters
+  // Enhanced advanced search with performance optimization
   async advancedSearch(params: {
     query?: string;
     safetyIndex?: string[];
@@ -258,10 +258,14 @@ export const databaseApi = {
     isNew?: boolean;
     isHot?: boolean;
     isFeatured?: boolean;
-    sortBy?: 'relevance' | 'rating' | 'name' | 'created_at';
+    sortBy?: 'relevance' | 'rating' | 'name' | 'created_at' | 'popularity';
+    sortOrder?: 'asc' | 'desc';
     limit?: number;
     offset?: number;
+    includeInactive?: boolean;
   }) {
+    const startTime = Date.now();
+
     let query = supabase
       .from('casinos')
       .select(`
@@ -272,7 +276,7 @@ export const databaseApi = {
         casino_category_assignments(
           casino_categories(name)
         )
-      `);
+      `, { count: 'exact' });
 
     // Text search across multiple fields
     if (params.query) {
