@@ -6,8 +6,17 @@ export async function middleware(request: NextRequest) {
   // Handle CORS for all requests
   const response = NextResponse.next()
 
+  // Skip middleware for auth callback routes to prevent redirect loops
+  if (request.nextUrl.pathname.startsWith('/auth/callback') ||
+      request.nextUrl.pathname.startsWith('/signin')) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔄 Skipping middleware for auth route:', request.nextUrl.pathname);
+    }
+    return response;
+  }
+
   // Check admin routes first
-  if (request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/debug-admin')) {
+  if (request.nextUrl.pathname.startsWith('/admin')) {
     const supabase = createMiddlewareClient({ req: request, res: response });
 
     try {
@@ -17,7 +26,9 @@ export async function middleware(request: NextRequest) {
 
       // If no session, redirect to sign in
       if (!session) {
-        console.log('🚫 Admin route access denied: No session', request.nextUrl.pathname);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🚫 Admin route access denied: No session', request.nextUrl.pathname);
+        }
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.pathname = '/signin';
         redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
@@ -28,21 +39,30 @@ export async function middleware(request: NextRequest) {
       const { data: isAdmin, error } = await supabase.rpc('is_admin');
 
       if (error || !isAdmin) {
-        console.log('🚫 Admin route access denied: Not admin', {
-          path: request.nextUrl.pathname,
-          error,
-          isAdmin
-        });
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🚫 Admin route access denied: Not admin', {
+            path: request.nextUrl.pathname,
+            error,
+            isAdmin,
+            userId: session?.user?.id
+          });
+        }
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.pathname = '/';
+        redirectUrl.searchParams.set('error', 'admin_access_denied');
         return NextResponse.redirect(redirectUrl);
       }
 
-      console.log('✅ Admin route access granted:', request.nextUrl.pathname);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Admin route access granted:', request.nextUrl.pathname);
+      }
     } catch (error) {
-      console.error('❌ Error in admin middleware:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Error in admin middleware:', error);
+      }
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/';
+      redirectUrl.searchParams.set('error', 'middleware_error');
       return NextResponse.redirect(redirectUrl);
     }
   }

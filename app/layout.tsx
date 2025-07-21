@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Navbar />
           <ClientLayout>{children}</ClientLayout>
           <CookieConsent />
-          <AdminDebugWidget />
+          {process.env.NODE_ENV === 'development' && <AdminDebugWidget />}
         </Providers>
       </body>
     </html>

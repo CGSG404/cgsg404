@@ -8,15 +8,27 @@ export default function SimpleAuthButton() {
 
   const handleGoogleLogin = async () => {
     if (loading) return;
-    
+
     try {
       setLoading(true);
-      console.log('🚀 Simple Google login...');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🚀 Simple Google login...');
+      }
+
+      // Get redirect parameter from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectTo = urlParams.get('redirectTo');
+
+      // Build callback URL with redirect parameter
+      let callbackUrl = `${window.location.origin}/auth/callback`;
+      if (redirectTo) {
+        callbackUrl += `?redirectTo=${encodeURIComponent(redirectTo)}`;
+      }
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: callbackUrl,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent select_account', // 🔧 Force consent screen & account selection
@@ -26,16 +38,22 @@ export default function SimpleAuthButton() {
       });
 
       if (error) {
-        console.error('❌ OAuth error:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('❌ OAuth error:', error);
+        }
         alert(`Login error: ${error.message}`);
         setLoading(false);
         return;
       }
 
-      console.log('✅ OAuth initiated');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ OAuth initiated');
+      }
       // Loading will be handled by redirect
     } catch (err) {
-      console.error('❌ Login error:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Login error:', err);
+      }
       alert(`Login error: ${String(err)}`);
       setLoading(false);
     }

@@ -15,25 +15,33 @@ function AuthCallbackContent() {
       if (processed) return;
       processed = true;
 
-      console.log('🚀 Simple auth callback processing...');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🚀 Simple auth callback processing...');
+      }
 
       try {
         const code = searchParams.get('code');
         const error = searchParams.get('error');
 
         if (error) {
-          console.error('❌ OAuth error:', error);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('❌ OAuth error:', error);
+          }
           router.replace(`/?error=auth_failed&details=${encodeURIComponent(error)}`);
           return;
         }
 
         if (!code) {
-          console.error('❌ No authorization code');
+          if (process.env.NODE_ENV === 'development') {
+            console.error('❌ No authorization code');
+          }
           router.replace('/?error=no_code');
           return;
         }
 
-        console.log('🔄 Exchanging code for session...');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔄 Exchanging code for session...');
+        }
         const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
         if (exchangeError) {
@@ -49,11 +57,37 @@ function AuthCallbackContent() {
         }
 
         console.log('✅ Session created successfully');
-        
-        // Simple redirect with minimal delay
-        setTimeout(() => {
-          router.replace('/?success=login');
-        }, 500);
+
+        // Check if user is admin and redirect accordingly
+        try {
+          const { data: isAdmin, error: adminError } = await supabase.rpc('is_admin');
+
+          if (adminError) {
+            console.warn('⚠️ Admin check failed:', adminError);
+          }
+
+          // Get redirect URL from query params
+          const redirectTo = searchParams.get('redirectTo');
+
+          let redirectUrl = '/';
+          if (redirectTo && redirectTo.startsWith('/admin') && isAdmin) {
+            redirectUrl = redirectTo;
+          } else if (isAdmin && !redirectTo) {
+            redirectUrl = '/admin';
+          }
+
+          console.log('🔄 Redirecting to:', redirectUrl);
+
+          setTimeout(() => {
+            router.replace(`${redirectUrl}?success=login`);
+          }, 500);
+
+        } catch (adminCheckError) {
+          console.warn('⚠️ Admin check error:', adminCheckError);
+          setTimeout(() => {
+            router.replace('/?success=login');
+          }, 500);
+        }
 
       } catch (err) {
         console.error('❌ Callback error:', err);
