@@ -75,13 +75,16 @@ export default function DebugAdminPage() {
     if (!user?.email) return;
 
     try {
-      const result = await databaseApi.setupAdminUser(user.email, 'super_admin');
-      setSetupResult(result);
-      // Refresh admin status after setup
-      setTimeout(() => {
-        checkAdminStatus();
-        window.location.reload(); // Force refresh to update context
-      }, 1000);
+      const result = await databaseApi.setupSuperAdmin();
+      setSetupResult(result.success ? result.message : `Error: ${result.message}`);
+
+      if (result.success) {
+        // Refresh admin status after setup
+        setTimeout(() => {
+          checkAdminStatus();
+          window.location.reload(); // Force refresh to update context
+        }, 1000);
+      }
     } catch (error) {
       setSetupResult(`Error: ${error.message}`);
     }
