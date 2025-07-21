@@ -8,10 +8,6 @@ const nextConfig = {
   },
   // Ultra minimal configuration for maximum Vercel compatibility
   reactStrictMode: false,
-  swcMinify: true,
-  experimental: {
-    esmExternals: false,
-  },
   images: {
     domains: ['images.unsplash.com', 'via.placeholder.com'],
     unoptimized: true,

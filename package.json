@@ -6,13 +6,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:safe": "npm run production-check && next build",
     "build:unsafe": "next build",
     "start": "next start",
     "fix-admin": "tsx scripts/fix-admin-access.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-
     "vercel-build": "next build",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf .next out dist"

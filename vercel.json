@@ -2,14 +2,6 @@
   "version": 2,
   "buildCommand": "npm run build",
   "framework": "nextjs",
-  "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    },
-    "pages/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",

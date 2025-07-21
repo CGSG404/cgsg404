@@ -17,7 +17,7 @@ supabase/
 
 # Config files that might cause issues
 next-sitemap.config.*
-vercel.json
+# vercel.json - REMOVED: We need this for deployment configuration
 
 # Test files
 src/test/
