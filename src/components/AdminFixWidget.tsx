@@ -146,9 +146,9 @@ export default function AdminFixWidget() {
       <CardContent className="space-y-6">
         {/* User Info */}
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="font-bold mb-2">Current User</h3>
-          <p><strong>Email:</strong> {user?.email || 'Not logged in'}</p>
-          <p><strong>ID:</strong> {user?.id || 'None'}</p>
+          <h3 className="font-bold mb-2 text-gray-800">Current User</h3>
+          <p className="text-gray-700"><strong>Email:</strong> {user?.email || 'Not logged in'}</p>
+          <p className="text-gray-700"><strong>ID:</strong> {user?.id || 'None'}</p>
         </div>
 
         {/* Actions */}
@@ -180,15 +180,15 @@ export default function AdminFixWidget() {
         {/* Diagnosis Results */}
         {diagnosis && (
           <div className="space-y-4">
-            <h3 className="text-xl font-bold">Diagnosis Results</h3>
+            <h3 className="text-xl font-bold text-gray-800">Diagnosis Results</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Session Check */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-bold mb-2">
+              <div className="bg-gray-50 p-4 rounded-lg border">
+                <h4 className="font-bold mb-2 text-gray-800">
                   {getStatusIcon(diagnosis.session.exists)} Session
                 </h4>
-                <p className={getStatusColor(diagnosis.session.exists)}>
+                <p className={`font-medium ${getStatusColor(diagnosis.session.exists)}`}>
                   {diagnosis.session.exists ? 'Active' : 'No session'}
                 </p>
                 {diagnosis.session.error && (
@@ -197,11 +197,11 @@ export default function AdminFixWidget() {
               </div>
 
               {/* Admin Record Check */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-bold mb-2">
+              <div className="bg-gray-50 p-4 rounded-lg border">
+                <h4 className="font-bold mb-2 text-gray-800">
                   {getStatusIcon(diagnosis.adminRecord.exists)} Admin Record
                 </h4>
-                <p className={getStatusColor(diagnosis.adminRecord.exists)}>
+                <p className={`font-medium ${getStatusColor(diagnosis.adminRecord.exists)}`}>
                   {diagnosis.adminRecord.exists ? 'Found' : 'Not found'}
                 </p>
                 {diagnosis.adminRecord.error && (
@@ -210,11 +210,11 @@ export default function AdminFixWidget() {
               </div>
 
               {/* RPC Function Check */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-bold mb-2">
+              <div className="bg-gray-50 p-4 rounded-lg border">
+                <h4 className="font-bold mb-2 text-gray-800">
                   {getStatusIcon(diagnosis.rpcTest.isAdmin)} is_admin() Function
                 </h4>
-                <p className={getStatusColor(diagnosis.rpcTest.isAdmin)}>
+                <p className={`font-medium ${getStatusColor(diagnosis.rpcTest.isAdmin)}`}>
                   {diagnosis.rpcTest.isAdmin ? 'Working' : 'Failed'}
                 </p>
                 {diagnosis.rpcTest.error && (
@@ -223,11 +223,11 @@ export default function AdminFixWidget() {
               </div>
 
               {/* Admin Info Check */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-bold mb-2">
+              <div className="bg-gray-50 p-4 rounded-lg border">
+                <h4 className="font-bold mb-2 text-gray-800">
                   {getStatusIcon(!!diagnosis.adminInfo.data)} Admin Info Function
                 </h4>
-                <p className={getStatusColor(!!diagnosis.adminInfo.data)}>
+                <p className={`font-medium ${getStatusColor(!!diagnosis.adminInfo.data)}`}>
                   {diagnosis.adminInfo.data ? 'Working' : 'Failed'}
                 </p>
                 {diagnosis.adminInfo.error && (
@@ -237,9 +237,9 @@ export default function AdminFixWidget() {
             </div>
 
             {/* Detailed Results */}
-            <div className="bg-gray-100 p-4 rounded-lg">
-              <h4 className="font-bold mb-2">Detailed Results</h4>
-              <pre className="text-sm overflow-auto max-h-64">
+            <div className="bg-gray-100 p-4 rounded-lg border">
+              <h4 className="font-bold mb-2 text-gray-800">Detailed Results</h4>
+              <pre className="text-sm text-gray-700 overflow-auto max-h-64 bg-white p-3 rounded border">
                 {JSON.stringify(diagnosis, null, 2)}
               </pre>
             </div>

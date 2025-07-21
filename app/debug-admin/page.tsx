@@ -216,17 +216,17 @@ export default function DebugAdminPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h4 className="font-semibold text-casino-neon-green">User Info:</h4>
-                <p>ID: {user?.id}</p>
-                <p>Email: {user?.email}</p>
+                <p className="text-gray-800 dark:text-gray-200">ID: {user?.id}</p>
+                <p className="text-gray-800 dark:text-gray-200">Email: {user?.email}</p>
               </div>
               <div>
                 <h4 className="font-semibold text-casino-neon-green">Admin Status:</h4>
-                <p>Is Admin: {isAdmin ? '✅ Yes' : '❌ No'}</p>
-                <p>Loading: {isLoading ? '⏳ Yes' : '✅ No'}</p>
+                <p className="text-gray-800 dark:text-gray-200">Is Admin: {isAdmin ? '✅ Yes' : '❌ No'}</p>
+                <p className="text-gray-800 dark:text-gray-200">Loading: {isLoading ? '⏳ Yes' : '✅ No'}</p>
                 {adminInfo && (
                   <>
-                    <p>Role: {adminInfo.role}</p>
-                    <p>Permissions: {adminInfo.total_permissions}</p>
+                    <p className="text-gray-800 dark:text-gray-200">Role: {adminInfo.role}</p>
+                    <p className="text-gray-800 dark:text-gray-200">Permissions: {adminInfo.total_permissions}</p>
                   </>
                 )}
               </div>
