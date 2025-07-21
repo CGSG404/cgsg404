@@ -61,14 +61,38 @@ function AuthCallbackContent() {
           expires: data.session.expires_at
         });
 
-        // 🚀 CRITICAL FIX: Force session persistence
-        await supabase.auth.setSession({
+        // 🚀 PRODUCTION FIX: Enhanced session persistence with validation
+        console.log('🔧 Setting session explicitly...');
+        const { error: setSessionError } = await supabase.auth.setSession({
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token
         });
 
-        // Wait a bit for session to be stored
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (setSessionError) {
+          console.error('❌ Failed to set session:', setSessionError);
+          router.replace(`/?error=session_set_failed&details=${encodeURIComponent(setSessionError.message)}`);
+          return;
+        }
+
+        // 🔧 Validate session was stored correctly
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const { data: { session: validationSession }, error: validationError } = await supabase.auth.getSession();
+
+        if (validationError || !validationSession) {
+          console.error('❌ Session validation failed:', validationError);
+          // Try one more time with longer delay
+          await new Promise(resolve => setTimeout(resolve, 1500));
+
+          const { data: { session: retrySession } } = await supabase.auth.getSession();
+          if (!retrySession) {
+            console.error('❌ Session still not available after retry');
+            router.replace('/?error=session_validation_failed&details=Session not persisted');
+            return;
+          }
+        }
+
+        console.log('✅ Session validated successfully');
 
         // Check if user is admin and redirect accordingly
         try {
@@ -90,10 +114,11 @@ function AuthCallbackContent() {
 
           console.log('🔄 Redirecting to:', redirectUrl);
 
-          // 🚀 CRITICAL FIX: Longer delay to ensure session is stored
+          // 🚀 PRODUCTION FIX: Optimized redirect with session confirmation
+          // Use shorter delay since we already validated session above
           setTimeout(() => {
-            router.replace(`${redirectUrl}?success=login`);
-          }, 1500);
+            router.replace(`${redirectUrl}?success=login&timestamp=${Date.now()}`);
+          }, 500);
 
         } catch (adminCheckError) {
           console.warn('⚠️ Admin check error:', adminCheckError);

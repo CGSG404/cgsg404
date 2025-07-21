@@ -105,19 +105,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setError(null);
       console.log('🚀 Auth: Starting Google OAuth with forced consent...');
 
-      // 🔧 Clear any existing sessions first
+      // 🚀 PRODUCTION FIX: Enhanced OAuth flow with better error handling
+      console.log('🧹 Clearing existing sessions...');
       await supabase.auth.signOut();
 
+      // Clear all possible storage locations
+      const keysToRemove = [
+        'sb-auth-token',
+        'sb-plhpubcmugqosexcgdhj-auth-token',
+        'supabase.auth.token'
+      ];
+
+      keysToRemove.forEach(key => {
+        try {
+          localStorage.removeItem(key);
+          sessionStorage.removeItem(key);
+        } catch (e) {
+          console.warn(`Failed to clear ${key}:`, e);
+        }
+      });
+
+      console.log('🚀 Starting OAuth flow...');
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             access_type: 'offline',
-            prompt: 'consent select_account', // 🔧 Force consent screen & account selection
-            include_granted_scopes: 'false', // 🔧 Don't use previously granted permissions
+            prompt: 'consent select_account',
+            include_granted_scopes: 'false',
           },
-          scopes: 'openid email profile', // 🔧 Explicit scopes
+          scopes: 'openid email profile',
         },
       });
 

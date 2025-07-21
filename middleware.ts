@@ -24,20 +24,39 @@ export async function middleware(request: NextRequest) {
     const supabase = createMiddlewareClient({ req: request, res: response });
 
     try {
-      // 🚀 CRITICAL FIX: Enhanced session checking with retry
+      // 🚀 PRODUCTION FIX: Enhanced session checking with multiple strategies
       let session = null;
       let sessionError = null;
 
-      // Try to get session with retry
-      for (let attempt = 0; attempt < 2; attempt++) {
-        const result = await supabase.auth.getSession();
-        session = result.data.session;
-        sessionError = result.error;
+      // Strategy 1: Try to get session with progressive retry
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const result = await supabase.auth.getSession();
+          session = result.data.session;
+          sessionError = result.error;
 
-        if (session || attempt === 1) break;
+          if (session && !sessionError) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`✅ Session found on attempt ${attempt + 1}`);
+            }
+            break;
+          }
 
-        // Wait a bit before retry
-        await new Promise(resolve => setTimeout(resolve, 100));
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`🔄 Session attempt ${attempt + 1}/3:`, {
+              hasSession: !!session,
+              error: sessionError?.message
+            });
+          }
+
+          // Progressive delay: 100ms, 300ms, 500ms
+          if (attempt < 2) {
+            await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 200));
+          }
+        } catch (error) {
+          console.error(`❌ Session check attempt ${attempt + 1} failed:`, error);
+          sessionError = error;
+        }
       }
 
       // If no session, redirect to sign in

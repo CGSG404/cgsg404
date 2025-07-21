@@ -24,27 +24,49 @@ const createCustomStorage = () => {
   return {
     getItem: (key: string) => {
       try {
-        // 🚀 CRITICAL FIX: Handle Supabase's actual storage keys
+        // 🚀 PRODUCTION FIX: Enhanced key detection and fallback strategy
         const isAuthKey = key.includes('auth') || key.includes('session') || key.includes('token') ||
                          key.startsWith('sb-') || key.includes('supabase');
 
         if (isAuthKey) {
-          // Always try localStorage first for auth tokens
-          const localValue = localStorage.getItem(key);
-          if (localValue) {
-            if (process.env.NODE_ENV === 'development') {
-              console.log('🔑 Retrieved from localStorage:', key);
+          // 🔍 Try multiple key variations for maximum compatibility
+          const keyVariations = [
+            key,
+            'sb-auth-token',
+            `sb-plhpubcmugqosexcgdhj-auth-token`,
+            'supabase.auth.token',
+            `supabase.auth.${key}`,
+            `sb-${key}`
+          ];
+
+          // Try localStorage first (primary storage)
+          for (const keyVariation of keyVariations) {
+            try {
+              const value = localStorage.getItem(keyVariation);
+              if (value && value !== 'null' && value !== 'undefined') {
+                if (process.env.NODE_ENV === 'development') {
+                  console.log('🔑 Retrieved from localStorage:', keyVariation);
+                }
+                return value;
+              }
+            } catch (e) {
+              console.warn(`⚠️ localStorage access failed for ${keyVariation}:`, e);
             }
-            return localValue;
           }
 
-          // Fallback to sessionStorage
-          const sessionValue = sessionStorage.getItem(key);
-          if (sessionValue) {
-            if (process.env.NODE_ENV === 'development') {
-              console.log('🔑 Retrieved from sessionStorage:', key);
+          // Try sessionStorage as fallback
+          for (const keyVariation of keyVariations) {
+            try {
+              const value = sessionStorage.getItem(keyVariation);
+              if (value && value !== 'null' && value !== 'undefined') {
+                if (process.env.NODE_ENV === 'development') {
+                  console.log('🔑 Retrieved from sessionStorage:', keyVariation);
+                }
+                return value;
+              }
+            } catch (e) {
+              console.warn(`⚠️ sessionStorage access failed for ${keyVariation}:`, e);
             }
-            return sessionValue;
           }
 
           return null;
@@ -67,23 +89,60 @@ const createCustomStorage = () => {
           return sessionStorage.getItem(key);
         }
       } catch (error) {
-        console.error('Storage getItem error:', error);
+        console.error('❌ Storage getItem error:', error);
         return null;
       }
     },
     setItem: (key: string, value: string) => {
+      if (!value || value === 'null' || value === 'undefined') {
+        console.warn('⚠️ Attempting to store invalid session value');
+        return;
+      }
+
       try {
-        // 🚀 CRITICAL FIX: Handle Supabase's actual storage keys
+        // 🚀 PRODUCTION FIX: Enhanced storage strategy for auth tokens
         const isAuthKey = key.includes('auth') || key.includes('session') || key.includes('token') ||
                          key.startsWith('sb-') || key.includes('supabase');
 
         if (isAuthKey) {
-          // Always use localStorage for auth tokens
-          localStorage.setItem(key, value);
+          // 🔧 Store in multiple locations for maximum compatibility
+          const storageKeys = [
+            key,
+            'sb-auth-token',
+            `sb-plhpubcmugqosexcgdhj-auth-token`
+          ];
 
-          if (process.env.NODE_ENV === 'development') {
-            console.log('🔑 Stored in localStorage:', key, value.substring(0, 50) + '...');
+          let successCount = 0;
+
+          // Store in localStorage (primary)
+          storageKeys.forEach(storageKey => {
+            try {
+              localStorage.setItem(storageKey, value);
+              successCount++;
+              if (process.env.NODE_ENV === 'development') {
+                console.log('🔑 Stored in localStorage:', storageKey);
+              }
+            } catch (e) {
+              console.warn(`⚠️ localStorage store failed for ${storageKey}:`, e);
+            }
+          });
+
+          // Store in sessionStorage (backup)
+          storageKeys.forEach(storageKey => {
+            try {
+              sessionStorage.setItem(storageKey, value);
+              if (process.env.NODE_ENV === 'development') {
+                console.log('🔑 Backup stored in sessionStorage:', storageKey);
+              }
+            } catch (e) {
+              console.warn(`⚠️ sessionStorage store failed for ${storageKey}:`, e);
+            }
+          });
+
+          if (successCount === 0) {
+            throw new Error('Failed to store session in any localStorage location');
           }
+
           return;
         }
 
@@ -105,25 +164,42 @@ const createCustomStorage = () => {
           sessionStorage.setItem(key, value);
         }
       } catch (error) {
-        console.warn('⚠️ Storage setItem error:', error);
+        console.error('❌ Storage setItem error:', error);
         // Fallback to sessionStorage
         try {
           sessionStorage.setItem(key, value);
         } catch (fallbackError) {
-          console.error('Fallback storage failed:', fallbackError);
+          console.error('❌ Fallback storage failed:', fallbackError);
+          throw fallbackError;
         }
       }
     },
     removeItem: (key: string) => {
       try {
-        localStorage.removeItem(key);
-        sessionStorage.removeItem(key);
+        // 🚀 PRODUCTION FIX: Remove from all possible storage locations
+        const keysToRemove = [
+          key,
+          'sb-auth-token',
+          `sb-plhpubcmugqosexcgdhj-auth-token`,
+          'supabase.auth.token',
+          `supabase.auth.${key}`,
+          `sb-${key}`
+        ];
+
+        keysToRemove.forEach(keyToRemove => {
+          try {
+            localStorage.removeItem(keyToRemove);
+            sessionStorage.removeItem(keyToRemove);
+          } catch (e) {
+            console.warn(`⚠️ Failed to remove ${keyToRemove}:`, e);
+          }
+        });
 
         if (process.env.NODE_ENV === 'development') {
-          console.log('🗑️ Removed from storage:', key);
+          console.log('🗑️ Cleaned up session storage for:', key);
         }
       } catch (error) {
-        console.warn('⚠️ Storage removeItem error:', error);
+        console.error('❌ Storage removeItem error:', error);
       }
     }
   };
