@@ -21,7 +21,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: '*',
+            value: 'https://www.gurusingapore.com',
           },
           {
             key: 'Access-Control-Allow-Methods',
@@ -42,7 +42,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: '*',
+            value: 'https://www.gurusingapore.com',
           },
           {
             key: 'Access-Control-Allow-Methods',

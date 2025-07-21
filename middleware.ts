@@ -3,6 +3,17 @@ import type { NextRequest } from 'next/server'
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 
 export async function middleware(request: NextRequest) {
+  // 🌐 DOMAIN REDIRECT: Force www.gurusingapore.com
+  const hostname = request.headers.get('host') || '';
+  const url = request.nextUrl.clone();
+
+  // Redirect from gurusingapore.com to www.gurusingapore.com
+  if (hostname === 'gurusingapore.com') {
+    url.host = 'www.gurusingapore.com';
+    url.protocol = 'https:';
+    return NextResponse.redirect(url, 301); // Permanent redirect
+  }
+
   // Handle CORS for all requests
   const response = NextResponse.next()
 
