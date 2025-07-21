@@ -36,10 +36,15 @@ export default function TestAdminContextPage() {
       const { data: rpcResult, error: rpcError } = await supabase.rpc('get_current_user_admin_info');
       results.directTests.rpcCall = rpcError ? { error: rpcError.message } : rpcResult;
 
-      // Test 2: Database API call
+      // Test 2: Database API call (FIXED)
       console.log('🧪 Test 2: Database API call...');
       const apiResult = await databaseApi.getCurrentUserAdminInfo();
       results.directTests.databaseApi = apiResult;
+
+      // Test 2b: Direct RPC call for comparison
+      console.log('🧪 Test 2b: Direct RPC call...');
+      const { data: directRpcData, error: directRpcError } = await supabase.rpc('get_current_user_admin_info');
+      results.directTests.directRpc = directRpcError ? { error: directRpcError.message } : directRpcData;
 
       // Test 3: Simple is_admin check
       console.log('🧪 Test 3: Simple is_admin check...');
@@ -54,6 +59,11 @@ export default function TestAdminContextPage() {
         userId: session?.user?.id,
         email: session?.user?.email
       };
+
+      // Test 5: Test auth context (NEW)
+      console.log('🧪 Test 5: Test auth context...');
+      const { data: authContext, error: authError } = await supabase.rpc('test_auth_context');
+      results.directTests.authContext = authError ? { error: authError.message } : authContext;
 
     } catch (error) {
       results.error = error instanceof Error ? error.message : 'Unknown error';
