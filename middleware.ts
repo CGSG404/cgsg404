@@ -9,6 +9,7 @@ export async function middleware(request: NextRequest) {
   // Skip middleware for auth callback routes and debug pages to prevent redirect loops
   if (request.nextUrl.pathname.startsWith('/auth/callback') ||
       request.nextUrl.pathname.startsWith('/signin') ||
+      request.nextUrl.pathname.startsWith('/session-fix') ||
       request.nextUrl.pathname.startsWith('/debug-admin') ||
       request.nextUrl.pathname.startsWith('/fix-admin')) {
     if (process.env.NODE_ENV === 'development') {
@@ -22,14 +23,20 @@ export async function middleware(request: NextRequest) {
     const supabase = createMiddlewareClient({ req: request, res: response });
 
     try {
+      // 🚀 PRODUCTION FIX: Enhanced session checking
       const {
         data: { session },
+        error: sessionError
       } = await supabase.auth.getSession();
 
       // If no session, redirect to sign in
-      if (!session) {
+      if (!session || sessionError) {
         if (process.env.NODE_ENV === 'development') {
-          console.log('🚫 Admin route access denied: No session', request.nextUrl.pathname);
+          console.log('🚫 Admin route access denied: No session', {
+            path: request.nextUrl.pathname,
+            sessionError: sessionError?.message,
+            hasSession: !!session
+          });
         }
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.pathname = '/signin';
@@ -37,14 +44,37 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(redirectUrl);
       }
 
-      // Check if user is admin
-      const { data: isAdmin, error } = await supabase.rpc('is_admin');
+      // 🔧 Enhanced admin check with better error handling
+      const { data: isAdmin, error: adminError } = await supabase.rpc('is_admin');
 
-      if (error || !isAdmin) {
+      if (adminError) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error('🚫 Admin RPC error:', {
+            path: request.nextUrl.pathname,
+            error: adminError.message,
+            userId: session?.user?.id,
+            userEmail: session?.user?.email
+          });
+        }
+
+        // 🚀 PRODUCTION FIX: On RPC error, redirect to session-fix page
+        const redirectUrl = request.nextUrl.clone();
+        if (process.env.NODE_ENV === 'production') {
+          redirectUrl.pathname = '/session-fix';
+          redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
+          redirectUrl.searchParams.set('error', 'session_refresh_needed');
+        } else {
+          redirectUrl.pathname = '/signin';
+          redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
+          redirectUrl.searchParams.set('error', 'session_refresh_needed');
+        }
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      if (!isAdmin) {
         if (process.env.NODE_ENV === 'development') {
           console.log('🚫 Admin route access denied: Not admin', {
             path: request.nextUrl.pathname,
-            error: error?.message,
             isAdmin,
             userId: session?.user?.id,
             userEmail: session?.user?.email
@@ -71,9 +101,18 @@ export async function middleware(request: NextRequest) {
       if (process.env.NODE_ENV === 'development') {
         console.error('❌ Error in admin middleware:', error);
       }
+
+      // 🚀 PRODUCTION FIX: On middleware error, redirect to session-fix
       const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/';
-      redirectUrl.searchParams.set('error', 'middleware_error');
+      if (process.env.NODE_ENV === 'production') {
+        redirectUrl.pathname = '/session-fix';
+        redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
+        redirectUrl.searchParams.set('error', 'middleware_error');
+      } else {
+        redirectUrl.pathname = '/signin';
+        redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname);
+        redirectUrl.searchParams.set('error', 'middleware_error');
+      }
       return NextResponse.redirect(redirectUrl);
     }
   }

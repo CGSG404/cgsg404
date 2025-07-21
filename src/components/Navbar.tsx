@@ -6,6 +6,7 @@ import { Star, User, LogOut, Menu, X, Home, Gamepad2, Book, List, MessageCircle,
 import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
 import { useAdmin } from '@/src/contexts/AdminContext'; // 🔧 ADD: Admin context for admin button
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
+import SessionFixButton from '@/src/components/SessionFixButton'; // 🚀 PRODUCTION FIX
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -142,6 +143,15 @@ const Navbar = () => {
                     Admin
                   </Button>
                 </Link>
+              )}
+
+              {/* 🚀 PRODUCTION FIX: Session Fix Button (only show if there are auth issues) */}
+              {user && !isAdmin && process.env.NODE_ENV === 'production' && (
+                <SessionFixButton
+                  variant="ghost"
+                  size="sm"
+                  className="text-yellow-400 hover:text-yellow-300"
+                />
               )}
               <button
                 onClick={() => setShowProfile(!showProfile)}

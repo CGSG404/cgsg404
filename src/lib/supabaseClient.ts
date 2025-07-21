@@ -23,30 +23,74 @@ const createCustomStorage = () => {
 
   return {
     getItem: (key: string) => {
-      // Check if cookies are allowed
-      const cookieConsent = localStorage.getItem('cookie-consent');
-      if (!cookieConsent) {
-        console.log('🍪 No cookie consent found, using sessionStorage for:', key);
-        return sessionStorage.getItem(key);
-      }
-
       try {
-        const consent = JSON.parse(cookieConsent);
-        if (consent.necessary) {
-          return localStorage.getItem(key);
-        } else {
+        // 🚀 PRODUCTION FIX: Always try localStorage first for auth tokens
+        if (key.includes('auth') || key.includes('session') || key.includes('token')) {
+          const localValue = localStorage.getItem(key);
+          if (localValue) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🔑 Retrieved auth token from localStorage:', key);
+            }
+            return localValue;
+          }
+        }
+
+        // For auth tokens, also check sessionStorage as fallback
+        if (key.includes('auth') || key.includes('session') || key.includes('token')) {
+          const sessionValue = sessionStorage.getItem(key);
+          if (sessionValue && process.env.NODE_ENV === 'development') {
+            console.log('🔑 Retrieved auth token from sessionStorage:', key);
+          }
+          return sessionValue;
+        }
+
+        // For non-auth data, respect cookie consent
+        const cookieConsent = localStorage.getItem('cookie-consent');
+        if (!cookieConsent) {
           return sessionStorage.getItem(key);
         }
-      } catch {
-        return sessionStorage.getItem(key);
+
+        try {
+          const consent = JSON.parse(cookieConsent);
+          if (consent.necessary) {
+            return localStorage.getItem(key);
+          } else {
+            return sessionStorage.getItem(key);
+          }
+        } catch {
+          return sessionStorage.getItem(key);
+        }
+      } catch (error) {
+        console.error('Storage getItem error:', error);
+        return null;
       }
     },
     setItem: (key: string, value: string) => {
       try {
-        // Check if cookies are allowed
+        // 🚀 PRODUCTION FIX: Always use localStorage for auth tokens
+        if (key.includes('auth') || key.includes('session') || key.includes('token')) {
+          localStorage.setItem(key, value);
+
+          // 🔧 Also set HTTP cookie for maximum persistence in production
+          if (process.env.NODE_ENV === 'production') {
+            try {
+              const expires = new Date();
+              expires.setDate(expires.getDate() + 7); // 7 days
+              document.cookie = `${key}=${encodeURIComponent(value)}; path=/; secure; samesite=lax; expires=${expires.toUTCString()}`;
+            } catch (cookieError) {
+              console.warn('Cookie setting failed:', cookieError);
+            }
+          }
+
+          if (process.env.NODE_ENV === 'development') {
+            console.log('🔑 Stored auth token in localStorage:', key);
+          }
+          return;
+        }
+
+        // For non-auth data, respect cookie consent
         const cookieConsent = localStorage.getItem('cookie-consent');
         if (!cookieConsent) {
-          console.log('🍪 No cookie consent found, using sessionStorage for:', key);
           sessionStorage.setItem(key, value);
           return;
         }
@@ -55,10 +99,6 @@ const createCustomStorage = () => {
           const consent = JSON.parse(cookieConsent);
           if (consent.necessary) {
             localStorage.setItem(key, value);
-            // Also set as HTTP cookie for better persistence
-            const expires = new Date();
-            expires.setDate(expires.getDate() + 7); // 7 days
-            document.cookie = `${key}=${encodeURIComponent(value)}; path=/; secure; samesite=lax; expires=${expires.toUTCString()}`;
           } else {
             sessionStorage.setItem(key, value);
           }
@@ -67,7 +107,12 @@ const createCustomStorage = () => {
         }
       } catch (error) {
         console.warn('⚠️ Storage setItem error:', error);
-        // Don't throw, just fail silently
+        // Fallback to sessionStorage
+        try {
+          sessionStorage.setItem(key, value);
+        } catch (fallbackError) {
+          console.error('Fallback storage failed:', fallbackError);
+        }
       }
     },
     removeItem: (key: string) => {
