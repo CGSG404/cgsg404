@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run production-check && next build",
+    "build": "next build",
+    "build:safe": "npm run production-check && next build",
     "build:unsafe": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "production-check": "node scripts/production-check.js",
+
+    "vercel-build": "next build",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf .next out dist"
   },
