@@ -6,11 +6,13 @@ export async function middleware(request: NextRequest) {
   // Handle CORS for all requests
   const response = NextResponse.next()
 
-  // Skip middleware for auth callback routes to prevent redirect loops
+  // Skip middleware for auth callback routes and debug pages to prevent redirect loops
   if (request.nextUrl.pathname.startsWith('/auth/callback') ||
-      request.nextUrl.pathname.startsWith('/signin')) {
+      request.nextUrl.pathname.startsWith('/signin') ||
+      request.nextUrl.pathname.startsWith('/debug-admin') ||
+      request.nextUrl.pathname.startsWith('/fix-admin')) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Skipping middleware for auth route:', request.nextUrl.pathname);
+      console.log('🔄 Skipping middleware for route:', request.nextUrl.pathname);
     }
     return response;
   }
@@ -42,14 +44,23 @@ export async function middleware(request: NextRequest) {
         if (process.env.NODE_ENV === 'development') {
           console.log('🚫 Admin route access denied: Not admin', {
             path: request.nextUrl.pathname,
-            error,
+            error: error?.message,
             isAdmin,
-            userId: session?.user?.id
+            userId: session?.user?.id,
+            userEmail: session?.user?.email
           });
         }
+
+        // In development, redirect to fix page instead of home
         const redirectUrl = request.nextUrl.clone();
-        redirectUrl.pathname = '/';
-        redirectUrl.searchParams.set('error', 'admin_access_denied');
+        if (process.env.NODE_ENV === 'development') {
+          redirectUrl.pathname = '/fix-admin';
+          redirectUrl.searchParams.set('error', 'admin_access_denied');
+          redirectUrl.searchParams.set('user_email', session?.user?.email || '');
+        } else {
+          redirectUrl.pathname = '/';
+          redirectUrl.searchParams.set('error', 'admin_access_denied');
+        }
         return NextResponse.redirect(redirectUrl);
       }
 

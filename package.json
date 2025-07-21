@@ -9,6 +9,7 @@
     "build:safe": "npm run production-check && next build",
     "build:unsafe": "next build",
     "start": "next start",
+    "fix-admin": "tsx scripts/fix-admin-access.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
 
