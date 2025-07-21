@@ -7,6 +7,7 @@ import Providers from './providers';
 import CookieConsent from '@/src/components/CookieConsent';
 import { AdminDebugWidget } from '@/src/components/admin/AdminDebugWidget';
 import SessionDebugWidget from '@/src/components/SessionDebugWidget';
+import AdminStatusIndicator from '@/src/components/AdminStatusIndicator';
 
 import './globals.css';
 
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <>
               <AdminDebugWidget />
               <SessionDebugWidget />
+              <AdminStatusIndicator />
             </>
           )}
         </Providers>

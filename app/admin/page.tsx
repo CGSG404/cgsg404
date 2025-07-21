@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
-  const { isAdmin, isLoading, adminInfo, logActivity } = useAdmin();
+  const { isAdmin, isLoading, adminInfo, logActivity, user } = useAdmin();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -46,6 +46,14 @@ export default function AdminDashboardPage() {
     return () => clearInterval(timer);
   }, []);
 
+  // 🔧 DEBUG: Log admin status
+  console.log('🔍 AdminDashboard: Status:', {
+    isAdmin,
+    isLoading,
+    adminInfo,
+    user: user?.email
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-casino-dark via-casino-dark-lighter to-casino-dark flex items-center justify-center">
@@ -60,18 +68,39 @@ export default function AdminDashboardPage() {
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-casino-dark via-casino-dark-lighter to-casino-dark flex items-center justify-center">
-        <Card className="bg-casino-card-bg border-red-500/20 max-w-md">
+        <Card className="bg-casino-card-bg border-red-500/20 max-w-lg">
           <CardContent className="p-8 text-center">
             <div className="text-6xl mb-6">🚫</div>
-            <h2 className="text-2xl font-bold text-red-400 mb-4">Access Denied</h2>
+            <h2 className="text-2xl font-bold text-red-400 mb-4">Admin Access Required</h2>
             <p className="text-gray-300 mb-6">
-              You need admin access to view this dashboard.
+              You need admin privileges to access this dashboard.
             </p>
-            <Button asChild className="bg-red-600 hover:bg-red-700">
-              <Link href="/">
-                Go Home
-              </Link>
-            </Button>
+
+            {user && (
+              <div className="mb-6 p-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
+                <p className="text-yellow-300 text-sm mb-2">
+                  Logged in as: <strong>{user.email}</strong>
+                </p>
+                <p className="text-yellow-400 text-xs">
+                  If you should have admin access, use the debug page to set it up.
+                </p>
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button asChild className="bg-red-600 hover:bg-red-700">
+                <Link href="/">
+                  Go Home
+                </Link>
+              </Button>
+              {user && (
+                <Button asChild variant="outline" className="border-yellow-500 text-yellow-400 hover:bg-yellow-500/10">
+                  <Link href="/debug-admin">
+                    Debug Admin Access
+                  </Link>
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

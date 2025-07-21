@@ -87,6 +87,38 @@ export default function DebugAdminPage() {
     }
   };
 
+  const manualAdminSetup = async () => {
+    if (!user?.email) return;
+
+    try {
+      // Manual insert into admin_users table
+      const { data, error } = await supabase
+        .from('admin_users')
+        .upsert({
+          user_id: user.id,
+          email: user.email,
+          role: 'super_admin',
+          is_active: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (error) throw error;
+
+      setSetupResult('Manual admin setup completed successfully');
+
+      // Refresh admin status after setup
+      setTimeout(() => {
+        checkAdminStatus();
+        window.location.reload(); // Force refresh to update context
+      }, 1000);
+    } catch (error) {
+      setSetupResult(`Manual setup error: ${error.message}`);
+    }
+  };
+
   useEffect(() => {
     if (user && !authLoading) {
       checkAdminStatus();
@@ -135,7 +167,7 @@ export default function DebugAdminPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-4">
                 <Button
                   onClick={checkAdminStatus}
                   disabled={loading}
@@ -147,7 +179,13 @@ export default function DebugAdminPage() {
                   onClick={setupAdmin}
                   className="bg-red-600 text-white hover:bg-red-700"
                 >
-                  Setup as Super Admin
+                  Setup as Super Admin (Function)
+                </Button>
+                <Button
+                  onClick={manualAdminSetup}
+                  className="bg-purple-600 text-white hover:bg-purple-700"
+                >
+                  Manual Admin Setup
                 </Button>
               </div>
 
@@ -191,6 +229,36 @@ export default function DebugAdminPage() {
                     <p>Permissions: {adminInfo.total_permissions}</p>
                   </>
                 )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-yellow-600">🚨 Troubleshooting Steps</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3 text-sm">
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                <h4 className="font-semibold text-yellow-800 mb-2">Step-by-Step Fix:</h4>
+                <ol className="list-decimal list-inside space-y-1 text-yellow-700">
+                  <li>First, click "Refresh Admin Status" to see current status</li>
+                  <li>If you're not an admin, try "Setup as Super Admin (Function)" first</li>
+                  <li>If that fails, try "Manual Admin Setup"</li>
+                  <li>After setup, refresh the page and check if admin button appears in navbar</li>
+                  <li>If still not working, check the debug information for errors</li>
+                </ol>
+              </div>
+              <div className="p-3 bg-blue-50 border border-blue-200 rounded">
+                <h4 className="font-semibold text-blue-800 mb-2">Expected Result:</h4>
+                <p className="text-blue-700">After successful setup, you should see:</p>
+                <ul className="list-disc list-inside mt-1 text-blue-600">
+                  <li>Admin Status shows "✅ Yes"</li>
+                  <li>Role shows "super_admin"</li>
+                  <li>Admin button appears in navbar</li>
+                  <li>You can access /admin dashboard</li>
+                </ul>
               </div>
             </div>
           </CardContent>

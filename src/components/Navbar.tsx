@@ -18,8 +18,17 @@ const Navbar = () => {
   const [isNavigating, setIsNavigating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut, signInWithGoogle, loading } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
-  const { isAdmin } = useAdmin(); // 🔧 ADD: Get admin status
+  const { isAdmin, adminInfo, isLoading: adminLoading } = useAdmin(); // 🔧 ADD: Get admin status
   const router = useRouter();
+
+  // 🔧 DEBUG: Log admin status for troubleshooting
+  console.log('🔍 Navbar: Admin status:', {
+    isAdmin,
+    adminInfo,
+    adminLoading,
+    user: user?.email,
+    userLoading: loading
+  });
 
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -131,8 +140,8 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-4">
           {user ? (
             <div className="flex items-center space-x-3">
-              {/* 🔧 FIXED: Admin Button with proper navigation */}
-              {isAdmin && (
+              {/* 🔧 FIXED: Admin Button with proper navigation and debug */}
+              {isAdmin && !adminLoading && (
                 <Button
                   variant="outline"
                   size="sm"
@@ -145,6 +154,13 @@ const Navbar = () => {
                   <Star className="w-4 h-4 mr-2" />
                   Admin
                 </Button>
+              )}
+
+              {/* 🔧 DEBUG: Show admin status for troubleshooting */}
+              {process.env.NODE_ENV === 'development' && user && (
+                <div className="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded">
+                  Admin: {isAdmin ? '✅' : '❌'} | Loading: {adminLoading ? '⏳' : '✅'}
+                </div>
               )}
 
               {/* 🚀 PRODUCTION FIX: Session Fix Button (only show if there are auth issues) */}
