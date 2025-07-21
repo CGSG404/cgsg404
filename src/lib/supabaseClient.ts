@@ -24,24 +24,30 @@ const createCustomStorage = () => {
   return {
     getItem: (key: string) => {
       try {
-        // 🚀 PRODUCTION FIX: Always try localStorage first for auth tokens
-        if (key.includes('auth') || key.includes('session') || key.includes('token')) {
+        // 🚀 CRITICAL FIX: Handle Supabase's actual storage keys
+        const isAuthKey = key.includes('auth') || key.includes('session') || key.includes('token') ||
+                         key.startsWith('sb-') || key.includes('supabase');
+
+        if (isAuthKey) {
+          // Always try localStorage first for auth tokens
           const localValue = localStorage.getItem(key);
           if (localValue) {
             if (process.env.NODE_ENV === 'development') {
-              console.log('🔑 Retrieved auth token from localStorage:', key);
+              console.log('🔑 Retrieved from localStorage:', key);
             }
             return localValue;
           }
-        }
 
-        // For auth tokens, also check sessionStorage as fallback
-        if (key.includes('auth') || key.includes('session') || key.includes('token')) {
+          // Fallback to sessionStorage
           const sessionValue = sessionStorage.getItem(key);
-          if (sessionValue && process.env.NODE_ENV === 'development') {
-            console.log('🔑 Retrieved auth token from sessionStorage:', key);
+          if (sessionValue) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🔑 Retrieved from sessionStorage:', key);
+            }
+            return sessionValue;
           }
-          return sessionValue;
+
+          return null;
         }
 
         // For non-auth data, respect cookie consent
@@ -67,23 +73,16 @@ const createCustomStorage = () => {
     },
     setItem: (key: string, value: string) => {
       try {
-        // 🚀 PRODUCTION FIX: Always use localStorage for auth tokens
-        if (key.includes('auth') || key.includes('session') || key.includes('token')) {
+        // 🚀 CRITICAL FIX: Handle Supabase's actual storage keys
+        const isAuthKey = key.includes('auth') || key.includes('session') || key.includes('token') ||
+                         key.startsWith('sb-') || key.includes('supabase');
+
+        if (isAuthKey) {
+          // Always use localStorage for auth tokens
           localStorage.setItem(key, value);
 
-          // 🔧 Also set HTTP cookie for maximum persistence in production
-          if (process.env.NODE_ENV === 'production') {
-            try {
-              const expires = new Date();
-              expires.setDate(expires.getDate() + 7); // 7 days
-              document.cookie = `${key}=${encodeURIComponent(value)}; path=/; secure; samesite=lax; expires=${expires.toUTCString()}`;
-            } catch (cookieError) {
-              console.warn('Cookie setting failed:', cookieError);
-            }
-          }
-
           if (process.env.NODE_ENV === 'development') {
-            console.log('🔑 Stored auth token in localStorage:', key);
+            console.log('🔑 Stored in localStorage:', key, value.substring(0, 50) + '...');
           }
           return;
         }
@@ -119,11 +118,12 @@ const createCustomStorage = () => {
       try {
         localStorage.removeItem(key);
         sessionStorage.removeItem(key);
-        // Remove HTTP cookie
-        document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🗑️ Removed from storage:', key);
+        }
       } catch (error) {
         console.warn('⚠️ Storage removeItem error:', error);
-        // Don't throw, just fail silently
       }
     }
   };
@@ -137,7 +137,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     flowType: 'pkce',
     storage: createCustomStorage(),
     debug: process.env.NODE_ENV === 'development',
-    // Add storageKey to ensure consistency
+    // 🚀 CRITICAL FIX: Use default storage key
     storageKey: 'sb-auth-token',
   },
   global: {
@@ -147,3 +147,15 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     },
   },
 });
+
+// 🚀 DEBUG: Add session state listener
+if (process.env.NODE_ENV === 'development') {
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.log('🔄 Auth state changed:', {
+      event,
+      hasSession: !!session,
+      user: session?.user?.email,
+      expires: session?.expires_at
+    });
+  });
+}

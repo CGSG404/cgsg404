@@ -56,7 +56,19 @@ function AuthCallbackContent() {
           return;
         }
 
-        console.log('✅ Session created successfully');
+        console.log('✅ Session created successfully:', {
+          user: data.session.user?.email,
+          expires: data.session.expires_at
+        });
+
+        // 🚀 CRITICAL FIX: Force session persistence
+        await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token
+        });
+
+        // Wait a bit for session to be stored
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Check if user is admin and redirect accordingly
         try {
@@ -78,15 +90,16 @@ function AuthCallbackContent() {
 
           console.log('🔄 Redirecting to:', redirectUrl);
 
+          // 🚀 CRITICAL FIX: Longer delay to ensure session is stored
           setTimeout(() => {
             router.replace(`${redirectUrl}?success=login`);
-          }, 500);
+          }, 1500);
 
         } catch (adminCheckError) {
           console.warn('⚠️ Admin check error:', adminCheckError);
           setTimeout(() => {
             router.replace('/?success=login');
-          }, 500);
+          }, 1500);
         }
 
       } catch (err) {

@@ -9,7 +9,8 @@ export const sessionFix = {
       const keysToRemove = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && (key.includes('auth') || key.includes('session') || key.includes('token') || key.includes('supabase'))) {
+        if (key && (key.includes('auth') || key.includes('session') || key.includes('token') ||
+                   key.includes('supabase') || key.startsWith('sb-'))) {
           keysToRemove.push(key);
         }
       }
@@ -19,20 +20,17 @@ export const sessionFix = {
       const sessionKeysToRemove = [];
       for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i);
-        if (key && (key.includes('auth') || key.includes('session') || key.includes('token') || key.includes('supabase'))) {
+        if (key && (key.includes('auth') || key.includes('session') || key.includes('token') ||
+                   key.includes('supabase') || key.startsWith('sb-'))) {
           sessionKeysToRemove.push(key);
         }
       }
       sessionKeysToRemove.forEach(key => sessionStorage.removeItem(key));
 
-      // Clear auth cookies
-      const authCookies = ['sb-auth-token', 'supabase-auth-token', 'sb-access-token', 'sb-refresh-token'];
-      authCookies.forEach(cookieName => {
-        document.cookie = `${cookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-        document.cookie = `${cookieName}=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      console.log('🧹 Auth storage cleared:', {
+        localStorage: keysToRemove,
+        sessionStorage: sessionKeysToRemove
       });
-
-      console.log('🧹 Auth storage cleared');
     } catch (error) {
       console.error('Error clearing auth storage:', error);
     }

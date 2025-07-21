@@ -11,6 +11,7 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith('/signin') ||
       request.nextUrl.pathname.startsWith('/session-fix') ||
       request.nextUrl.pathname.startsWith('/debug-admin') ||
+      request.nextUrl.pathname.startsWith('/debug-session') ||
       request.nextUrl.pathname.startsWith('/fix-admin')) {
     if (process.env.NODE_ENV === 'development') {
       console.log('🔄 Skipping middleware for route:', request.nextUrl.pathname);
@@ -23,11 +24,21 @@ export async function middleware(request: NextRequest) {
     const supabase = createMiddlewareClient({ req: request, res: response });
 
     try {
-      // 🚀 PRODUCTION FIX: Enhanced session checking
-      const {
-        data: { session },
-        error: sessionError
-      } = await supabase.auth.getSession();
+      // 🚀 CRITICAL FIX: Enhanced session checking with retry
+      let session = null;
+      let sessionError = null;
+
+      // Try to get session with retry
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const result = await supabase.auth.getSession();
+        session = result.data.session;
+        sessionError = result.error;
+
+        if (session || attempt === 1) break;
+
+        // Wait a bit before retry
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
 
       // If no session, redirect to sign in
       if (!session || sessionError) {
