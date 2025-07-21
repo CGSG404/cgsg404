@@ -522,7 +522,7 @@ export const databaseApi = {
       const adminInfo = data?.[0];
       console.log('✅ DatabaseAPI: Admin info result:', adminInfo);
 
-      if (!adminInfo) {
+      if (!adminInfo || !adminInfo.is_admin) {
         return {
           is_admin: false,
           role: null,
@@ -531,11 +531,15 @@ export const databaseApi = {
         };
       }
 
+      // Calculate total permissions from permissions array
+      const totalPermissions = adminInfo.permissions ?
+        adminInfo.permissions.filter(p => p !== null).length : 0;
+
       return {
-        is_admin: true,
+        is_admin: adminInfo.is_admin,
         role: adminInfo.role,
         email: adminInfo.email,
-        total_permissions: adminInfo.total_permissions
+        total_permissions: totalPermissions
       };
     } catch (error) {
       console.error('❌ DatabaseAPI: getCurrentUserAdminInfo failed:', error);

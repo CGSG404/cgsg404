@@ -36,11 +36,12 @@ export default function MakeAdminPage() {
         return;
       }
 
-      // Step 2: Create admin_users record
+      // Step 2: Create admin_users record (with email field)
       const { error: adminError } = await supabase
         .from('admin_users')
         .upsert({
           user_id: user.id,
+          email: user.email, // Add email field
           role: 'super_admin',
           is_active: true,
           created_by: user.id,
