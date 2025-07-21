@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import AdminFixWidget from '@/src/components/AdminFixWidget';
 
-export default function FixAdminPage() {
+function FixAdminContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
   const userEmail = searchParams.get('user_email');
@@ -43,5 +43,20 @@ export default function FixAdminPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function FixAdminPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Loading fix tool...</p>
+        </div>
+      </div>
+    }>
+      <FixAdminContent />
+    </Suspense>
   );
 }
