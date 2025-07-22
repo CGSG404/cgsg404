@@ -14,6 +14,28 @@ const nextConfig = {
   },
   // Vercel-specific optimizations
   output: 'standalone',
+  // Webpack configuration for better module resolution
+  webpack: (config, { isServer }) => {
+    // Improve module resolution
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+
+    // Add alias for better import resolution
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@/contexts': './src/contexts',
+      '@/components': './src/components',
+      '@/lib': './src/lib',
+      '@/hooks': './src/hooks',
+      '@/utils': './src/utils',
+    };
+
+    return config;
+  },
   async headers() {
     return [
       {

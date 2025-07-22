@@ -35,6 +35,9 @@
       ],
       "@/lib/*": [
         "./src/lib/*"
+      ],
+      "@/contexts/*": [
+        "./src/contexts/*"
       ]
     },
     "plugins": [

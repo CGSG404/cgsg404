@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAdmin } from '@/src/contexts/AdminContext';
 import { databaseApi } from '@/lib/database-api';
 
 interface PermissionTest {
