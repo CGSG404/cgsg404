@@ -10,12 +10,15 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     // setupGlobalErrorHandler(); // Disabled to prevent infinite loops
     console.log('🔧 Global error handler disabled for debugging');
+
+    // Import mobile sidebar CSS for panel consistency
+    import('@/src/styles/sidebar-mobile.css');
   }, []);
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar kiri, fixed di desktop, drawer di mobile */}
-      <div className="hidden md:block w-64 flex-shrink-0 h-full">
+      {/* Sidebar kiri, fixed di desktop, drawer di mobile - RESPONSIVE WIDTH */}
+      <div className="hidden md:block w-44 xs:w-48 sm:w-52 md:w-56 lg:w-[14rem] flex-shrink-0 h-full">
         <AppSidebar />
       </div>
       {/* Konten utama */}

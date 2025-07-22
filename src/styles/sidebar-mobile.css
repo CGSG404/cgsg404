@@ -1,10 +1,24 @@
-/* Mobile-First Sidebar Optimizations */
+/* Mobile-First Sidebar Panel & Content Optimizations */
 
 /* Ultra-compact mobile sidebar */
 @media (max-width: 640px) {
   /* Sidebar container - more compact */
   .sidebar-container {
     width: 192px !important; /* Force 192px (w-48) on mobile */
+    min-width: 192px !important;
+    max-width: 192px !important;
+  }
+
+  /* Sidebar panel wrapper - ensure consistent width */
+  [data-sidebar="sidebar"] {
+    width: 192px !important;
+    min-width: 192px !important;
+    max-width: 192px !important;
+  }
+
+  /* ClientLayout sidebar panel */
+  .flex.min-h-screen > div:first-child {
+    width: 192px !important;
     min-width: 192px !important;
     max-width: 192px !important;
   }
@@ -178,6 +192,20 @@
     min-width: 176px !important;
     max-width: 176px !important;
   }
+
+  /* Sidebar panel wrapper - ultra compact */
+  [data-sidebar="sidebar"] {
+    width: 176px !important;
+    min-width: 176px !important;
+    max-width: 176px !important;
+  }
+
+  /* ClientLayout sidebar panel - ultra compact */
+  .flex.min-h-screen > div:first-child {
+    width: 176px !important;
+    min-width: 176px !important;
+    max-width: 176px !important;
+  }
   
   /* Hide some less important elements */
   .stats-card:nth-child(3),
@@ -202,23 +230,46 @@
   }
 }
 
-/* Tablet adjustments */
+/* XS devices (475px+) */
+@media (min-width: 475px) and (max-width: 640px) {
+  .sidebar-container,
+  [data-sidebar="sidebar"],
+  .flex.min-h-screen > div:first-child {
+    width: 192px !important; /* w-48 */
+    min-width: 192px !important;
+    max-width: 192px !important;
+  }
+}
+
+/* Small devices (640px+) */
 @media (min-width: 641px) and (max-width: 768px) {
-  .sidebar-container {
+  .sidebar-container,
+  [data-sidebar="sidebar"],
+  .flex.min-h-screen > div:first-child {
     width: 208px !important; /* w-52 */
+    min-width: 208px !important;
+    max-width: 208px !important;
   }
 }
 
-/* Desktop adjustments */
-@media (min-width: 769px) {
-  .sidebar-container {
+/* Medium devices (768px+) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar-container,
+  [data-sidebar="sidebar"],
+  .flex.min-h-screen > div:first-child {
     width: 224px !important; /* w-56 */
+    min-width: 224px !important;
+    max-width: 224px !important;
   }
 }
 
-/* Large desktop */
+/* Large desktop (1024px+) */
 @media (min-width: 1024px) {
-  .sidebar-container {
-    width: 224px !important; /* Keep compact even on large screens */
+  .sidebar-container,
+  [data-sidebar="sidebar"],
+  .flex.min-h-screen > div:first-child {
+    width: 224px !important; /* w-56 - Keep compact even on large screens */
+    min-width: 224px !important;
+    max-width: 224px !important;
   }
 }
