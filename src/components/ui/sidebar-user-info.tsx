@@ -11,14 +11,42 @@ import Link from 'next/link';
 export function SidebarUserInfo() {
   const { user, signOut } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
 
+  // Helper function to get display name
+  const getDisplayName = () => {
+    if (user?.user_metadata?.full_name) return user.user_metadata.full_name;
+    if (user?.user_metadata?.name) return user.user_metadata.name;
+    if (user?.email) {
+      const emailPart = user.email.split('@')[0];
+      // Capitalize first letter and replace dots/underscores with spaces
+      return emailPart.charAt(0).toUpperCase() + emailPart.slice(1).replace(/[._]/g, ' ');
+    }
+    return 'User';
+  };
+
+
+
+  // Debug logging (development only)
+  if (process.env.NODE_ENV === 'development' && user) {
+    console.log('🔍 SidebarUserInfo - User data:', {
+      email: user.email,
+      full_name: user.user_metadata?.full_name,
+      name: user.user_metadata?.name,
+      user_metadata: user.user_metadata,
+      displayName: getDisplayName()
+    });
+  }
+
   if (!user) {
     return (
-      <div className="p-1 sm:p-1.5 border-b border-casino-border-subtle/30">
-        <div className="bg-gradient-to-r from-casino-neon-green/5 to-casino-neon-purple/5 rounded-sm p-1 sm:p-1.5 border border-casino-neon-green/20">
-          <div className="text-center">
-            <p className="text-xs text-gray-300 mb-0.5">Welcome to CGSG</p>
-            <p className="text-xs text-gray-400 leading-tight">
-              Sign in to access features
+      <div className="p-3 border-b border-casino-border-subtle/30">
+        <div className="bg-gradient-to-r from-casino-neon-green/10 to-casino-neon-purple/10 rounded-lg p-3 border border-casino-neon-green/20">
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 bg-casino-neon-green/20 rounded-full flex items-center justify-center mx-auto mb-3">
+              <User className="w-6 h-6 text-casino-neon-green" />
+            </div>
+            <p className="text-base font-semibold text-white">Welcome to CGSG</p>
+            <p className="text-sm text-gray-400">
+              Sign in to access exclusive features
             </p>
           </div>
         </div>
@@ -27,48 +55,54 @@ export function SidebarUserInfo() {
   }
 
   return (
-    <div className="p-1 sm:p-1.5 border-b border-casino-border-subtle/30">
-      <div className="bg-gradient-to-r from-casino-neon-green/5 to-casino-neon-purple/5 rounded-sm p-1 sm:p-1.5 border border-casino-neon-green/20">
-        <div className="flex items-center gap-1 sm:gap-1.5 mb-1">
-          <div className="relative user-avatar flex-shrink-0">
-            <Avatar className="w-6 h-6 sm:w-7 sm:h-7 border border-casino-neon-green/30">
-              <AvatarImage src={user.user_metadata?.avatar_url} />
-              <AvatarFallback className="bg-casino-card-bg text-casino-neon-green text-xs">
-                {user.user_metadata?.name?.charAt(0) || user.email?.charAt(0) || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-casino-neon-green rounded-full border border-casino-dark pulse-neon">
-            </div>
-          </div>
+    <div className="p-4 border-b border-casino-border-subtle/30">
+      <div className="bg-gradient-to-r from-casino-neon-green/10 to-casino-neon-purple/10 rounded-lg p-4 border border-casino-neon-green/20">
+        {/* User Avatar & Info */}
+        <div className="flex items-center space-x-3">
+          <Avatar className="w-12 h-12 border-2 border-casino-neon-green/30 shadow-lg">
+            <AvatarImage src={user.user_metadata?.avatar_url} />
+            <AvatarFallback className="bg-casino-neon-green/20 text-casino-neon-green font-semibold text-lg">
+              {user.email?.charAt(0).toUpperCase() || 'C'}
+            </AvatarFallback>
+          </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-white truncate leading-tight">
-              {user.user_metadata?.name || 'Player'}
-            </p>
-            <div className="flex items-center gap-1">
-              <div className="w-1 h-1 bg-casino-neon-green rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-400">Online</span>
-            </div>
+            <h3 className="text-base font-semibold text-white">
+              {getDisplayName()}
+            </h3>
           </div>
         </div>
 
-        <div className="flex gap-0.5">
+        {/* Level and Online Status */}
+        <div className="flex items-center justify-between mt-4 mb-4">
+          <Badge variant="outline" className="text-xs bg-casino-neon-green/20 text-casino-neon-green border-casino-neon-green/30 px-3 py-1 font-semibold">
+            Level 1
+          </Badge>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-casino-neon-green rounded-full animate-pulse shadow-sm shadow-casino-neon-green/50"></div>
+            <span className="text-xs text-gray-300 font-medium">Online</span>
+          </div>
+        </div>
+
+        {/* Action Buttons Row */}
+        <div className="flex gap-2">
           <Link href="/profile" className="flex-1">
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs h-5 sm:h-6 px-1 sm:px-1.5 border-casino-border-subtle hover:border-casino-neon-green/50 hover:bg-casino-neon-green/10"
+              className="w-full text-xs border-casino-border-subtle hover:border-casino-neon-green/50 hover:bg-casino-neon-green/10 h-8 font-medium transition-all duration-200"
             >
-              <User className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-              <span className="hidden sm:inline text-xs ml-1">Profile</span>
+              <User className="w-3.5 h-3.5 mr-1.5" />
+              Profile
             </Button>
           </Link>
           <Button
             variant="outline"
             size="sm"
             onClick={signOut}
-            className="text-xs h-5 sm:h-6 px-1 sm:px-1.5 border-casino-border-subtle hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400"
+            className="text-xs border-casino-border-subtle hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400 h-8 px-2.5 transition-all duration-200"
+            title="Sign Out"
           >
-            <LogOut className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+            <LogOut className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>
@@ -78,24 +112,28 @@ export function SidebarUserInfo() {
 
 export function SidebarQuickStats() {
   return (
-    <div className="p-1 sm:p-1.5 md:p-2 border-b border-casino-border-subtle/30">
-      <div className="grid grid-cols-2 gap-1">
-        <div className="stats-card bg-gradient-to-br from-casino-card-bg/80 to-casino-card-bg/40 rounded-sm p-1 sm:p-1.5 text-center border border-casino-border-subtle/30 hover:border-casino-neon-green/30 transition-colors group">
-          <div className="flex items-center justify-center mb-0.5">
-            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-casino-neon-green/20 rounded-full flex items-center justify-center">
-              <span className="text-xs font-bold text-casino-neon-green">50</span>
-            </div>
-          </div>
-          <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors leading-tight">Casinos</p>
+    <div className="p-4 border-b border-casino-border-subtle/30">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="stats-card bg-gradient-to-br from-casino-card-bg/80 to-casino-card-bg/40 rounded-lg p-3 text-center border border-casino-border-subtle/30 hover:border-casino-neon-green/40 transition-all duration-200 group cursor-pointer">
+          <div className="text-2xl font-bold text-casino-neon-green mb-1">50</div>
+          <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors font-medium">Casinos</p>
         </div>
 
-        <div className="stats-card bg-gradient-to-br from-casino-card-bg/80 to-casino-card-bg/40 rounded-sm p-1 sm:p-1.5 text-center border border-casino-border-subtle/30 hover:border-casino-neon-purple/30 transition-colors group">
-          <div className="flex items-center justify-center mb-0.5">
-            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-casino-neon-purple/20 rounded-full flex items-center justify-center">
-              <span className="text-xs font-bold text-casino-neon-purple">200</span>
-            </div>
-          </div>
-          <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors leading-tight">Reviews</p>
+        <div className="stats-card bg-gradient-to-br from-casino-card-bg/80 to-casino-card-bg/40 rounded-lg p-3 text-center border border-casino-border-subtle/30 hover:border-casino-neon-purple/40 transition-all duration-200 group cursor-pointer">
+          <div className="text-2xl font-bold text-casino-neon-purple mb-1">200</div>
+          <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors font-medium">Reviews</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        <div className="stats-card bg-gradient-to-br from-casino-card-bg/80 to-casino-card-bg/40 rounded-lg p-3 text-center border border-casino-border-subtle/30 hover:border-yellow-500/40 transition-all duration-200 group cursor-pointer">
+          <div className="text-2xl font-bold text-yellow-500 mb-1">15</div>
+          <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors font-medium">Active</p>
+        </div>
+
+        <div className="stats-card bg-gradient-to-br from-casino-card-bg/80 to-casino-card-bg/40 rounded-lg p-3 text-center border border-casino-border-subtle/30 hover:border-blue-500/40 transition-all duration-200 group cursor-pointer">
+          <div className="text-2xl font-bold text-blue-500 mb-1">8</div>
+          <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors font-medium">New</p>
         </div>
       </div>
     </div>

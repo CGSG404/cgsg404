@@ -3,11 +3,22 @@
 import { useState } from 'react';
 import { supabase } from '@/src/lib/supabaseClient';
 
-export default function SimpleAuthButton() {
+interface SimpleAuthButtonProps {
+  className?: string;
+  onClick?: () => void;
+  customText?: string;
+}
+
+export default function SimpleAuthButton({ className, onClick, customText }: SimpleAuthButtonProps) {
   const [loading, setLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
     if (loading) return;
+
+    // Call external onClick if provided
+    if (onClick) {
+      onClick();
+    }
 
     try {
       setLoading(true);
@@ -72,9 +83,9 @@ export default function SimpleAuthButton() {
     <button
       onClick={handleGoogleLogin}
       disabled={loading}
-      className="bg-casino-neon-green hover:bg-casino-neon-green/80 text-casino-dark px-6 py-2 rounded-lg disabled:opacity-50 font-semibold transition-all duration-200"
+      className={className || "bg-casino-neon-green hover:bg-casino-neon-green/80 text-casino-dark px-6 py-2 rounded-lg disabled:opacity-50 font-semibold transition-all duration-200"}
     >
-      {loading ? 'Signing in...' : 'Simple Google Login'}
+      {loading ? 'Signing in...' : (customText || 'Simple Google Login')}
     </button>
   );
 }

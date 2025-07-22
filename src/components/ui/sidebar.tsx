@@ -23,8 +23,8 @@ import { SidebarUserInfo, SidebarQuickStats, SidebarFeaturedCasino } from './sid
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = "14rem"        // Desktop: 224px
-const SIDEBAR_WIDTH_MOBILE = "10rem"   // Mobile: 160px (ultra compact)
+const SIDEBAR_WIDTH = "18rem"        // Desktop: 288px (lebih besar)
+const SIDEBAR_WIDTH_MOBILE = "20rem"   // Mobile: 320px
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
@@ -201,12 +201,7 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width-mobile] bg-casino-dark border-r border-casino-border-subtle/50 p-0 text-white [&>button]:hidden"
-            style={
-              {
-                "--sidebar-width-mobile": SIDEBAR_WIDTH_MOBILE,
-              } as React.CSSProperties
-            }
+            className="w-80 bg-casino-dark border-r border-casino-border-subtle/50 p-0 text-white [&>button]:hidden"
             side="left"
           >
             <div className="flex h-full w-full flex-col bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark">{children}</div>
@@ -759,7 +754,7 @@ export function AppSidebar() {
 
   return (
     <SidebarProvider>
-      <Sidebar className="sidebar-container flex h-[calc(100vh-64px)] w-40 xs:w-44 sm:w-48 md:w-52 lg:w-56 flex-col bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark border-r border-casino-border-subtle/50 mt-[64px] overflow-hidden shadow-2xl sidebar-glow">
+      <Sidebar className="sidebar-container flex h-[calc(100vh-64px)] w-72 flex-col bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark border-r border-casino-border-subtle/50 mt-[64px] overflow-hidden shadow-2xl sidebar-glow">
         <SidebarContent className="sidebar-content flex flex-col h-full">
           {/* User Info Section */}
           <SidebarUserInfo />
@@ -767,23 +762,20 @@ export function AppSidebar() {
           {/* Quick Stats */}
           <SidebarQuickStats />
 
-          {/* Search Bar - REMOVED: Moved to navbar */}
-
           {/* Main Navigation */}
-          <div className="flex-1 p-1 sm:p-1.5">
+          <div className="flex-1 p-4">
             <SidebarGroup>
-              <div className="space-y-0.5">
-                <div className="sidebar-nav-item"><SidebarNavItem href="/" icon={Home} label="Home" /></div>
-                <div className="sidebar-nav-item"><SidebarNavItem href="/casinos" icon={Gamepad2} label="Casinos" badge="Hot" /></div>
-                <div className="sidebar-nav-item"><SidebarNavItem href="/games" icon={Star} label="Top Casinos" /></div>
-                <div className="sidebar-nav-item"><SidebarNavItem href="/reviews" icon={Book} label="Reviews" /></div>
-                <div className="sidebar-nav-item"><SidebarNavItem href="/forum" icon={MessageCircle} label="Forum" badge="New" /></div>
-                <div className="sidebar-nav-item"><SidebarNavItem href="/list-report" icon={List} label="List Report" /></div>
+              <div className="space-y-2">
+                <SidebarNavItem href="/" icon={Home} label="Home" />
+                <SidebarNavItem href="/casinos" icon={Gamepad2} label="Casinos" badge="Hot" />
+                <SidebarNavItem href="/games" icon={Star} label="Top Casinos" />
+                <SidebarNavItem href="/reviews" icon={Book} label="Reviews" />
+                <SidebarNavItem href="/list-report" icon={List} label="List Report" />
+                <SidebarNavItem href="/forum" icon={MessageCircle} label="Forum" badge="New" />
+                <SidebarNavItem href="/news" icon={Newspaper} label="News" />
               </div>
             </SidebarGroup>
           </div>
-
-          {/* Featured Casino Section - REMOVED for mobile space optimization */}
         </SidebarContent>
       </Sidebar>
     </SidebarProvider>
@@ -799,42 +791,26 @@ interface SidebarNavItemProps {
 }
 
 function SidebarNavItem({ href, icon: Icon, label, badge }: SidebarNavItemProps) {
-  const [isHovered, setIsHovered] = React.useState(false);
-
   return (
     <Link
       href={href}
-      className="group relative flex items-center justify-between px-1 sm:px-1.5 py-0.5 sm:py-1 rounded-sm text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-casino-neon-green/10 hover:to-casino-neon-purple/10 hover:border-casino-neon-green/30 border border-transparent transition-all duration-300 font-medium overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="group flex items-center justify-between px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-casino-neon-green/10 transition-all duration-200 font-medium border border-transparent hover:border-casino-neon-green/20"
     >
-      {/* Animated background glow */}
-      <div className={`absolute inset-0 bg-gradient-to-r from-casino-neon-green/5 to-casino-neon-purple/5 rounded-lg transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
-
-      {/* Left border accent */}
-      <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-casino-neon-green rounded-r-full transition-all duration-300 ${isHovered ? 'h-8 opacity-100' : 'h-0 opacity-0'}`} />
-
-      <div className="relative flex items-center gap-1 sm:gap-1.5 z-10 flex-1 min-w-0">
-        <div className="relative flex-shrink-0">
-          <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:text-casino-neon-green transition-all duration-300 group-hover:scale-110" />
-          {/* Icon glow effect */}
-          <Icon className={`absolute inset-0 w-3 h-3 sm:w-3.5 sm:h-3.5 text-casino-neon-green transition-opacity duration-300 blur-sm ${isHovered ? 'opacity-50' : 'opacity-0'}`} />
-        </div>
-        <span className="text-xs group-hover:text-white transition-colors duration-300 group-hover:translate-x-1 transform truncate leading-tight">{label}</span>
+      <div className="flex items-center gap-3">
+        <Icon className="w-5 h-5 text-gray-400 group-hover:text-casino-neon-green transition-colors flex-shrink-0" />
+        <span className="text-sm group-hover:text-white transition-colors font-medium">{label}</span>
       </div>
 
       {badge && (
-        <div className="relative z-10 flex-shrink-0">
-          <span className={`text-xs px-0.5 py-0 rounded-sm border transition-all duration-300 leading-none ${
-            badge === 'Hot'
-              ? 'bg-red-500/20 text-red-400 border-red-500/30 group-hover:bg-red-500/30'
-              : badge === 'New'
-              ? 'bg-blue-500/20 text-blue-400 border-blue-500/30 group-hover:bg-blue-500/30'
-              : 'bg-casino-neon-green/20 text-casino-neon-green border-casino-neon-green/30 group-hover:bg-casino-neon-green/30'
-          }`}>
-            {badge}
-          </span>
-        </div>
+        <span className={`text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0 ${
+          badge === 'Hot'
+            ? 'bg-red-500 text-white shadow-lg shadow-red-500/25'
+            : badge === 'New'
+            ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+            : 'bg-casino-neon-green text-casino-dark shadow-lg shadow-casino-neon-green/25'
+        }`}>
+          {badge}
+        </span>
       )}
     </Link>
   );

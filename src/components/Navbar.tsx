@@ -71,6 +71,38 @@ const Navbar = () => {
     mobileMenuOpen ? closeMobileMenu() : setMobileMenuOpen(true);
   };
 
+  // Auto-close mobile menu when switching to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      // Immediate close when switching to desktop
+      if (window.innerWidth >= 768) { // md breakpoint
+        if (mobileMenuOpen) {
+          console.log('🔧 Navbar: Auto-closing mobile menu on desktop resize');
+          closeMobileMenu();
+        }
+        if (mobileSearchOpen) {
+          console.log('🔧 Navbar: Auto-closing mobile search on desktop resize');
+          setMobileSearchOpen(false);
+        }
+      }
+    };
+
+    const handleOrientationChange = () => {
+      // Small delay to allow orientation change to complete
+      setTimeout(handleResize, 100);
+    };
+
+    // Add event listeners
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleOrientationChange);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, [mobileMenuOpen, mobileSearchOpen]);
+
   // Debug logging (development only)
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -288,7 +320,7 @@ const Navbar = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed top-16 right-0 bottom-0 left-0 z-[200] flex justify-end">
+        <div className="fixed top-16 right-0 bottom-0 left-0 z-[100] flex justify-end md:hidden">
           {/* Backdrop - only covers area below top bar */}
           <div
             className={`absolute inset-0 bg-black/70 transition-opacity duration-300 ease-out ${
@@ -296,200 +328,215 @@ const Navbar = () => {
             }`}
             onClick={closeMobileMenu}
           />
-          {/* Drawer - positioned below top bar */}
-          <div className={`relative w-80 h-full bg-casino-card-bg text-white flex flex-col shadow-2xl border-l border-casino-neon-green/20 ${
+          {/* Drawer - compact width aligned with login button */}
+          <div className={`relative w-[70vw] max-w-[300px] min-w-[240px] h-full bg-casino-card-bg text-white flex flex-col shadow-2xl border-l border-casino-neon-green/20 md:hidden ${
             isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'
           }`}>
             {/* Header - REMOVED: Brand section moved to navbar */}
 
-            {/* User Profile Section - Moved to top */}
-            <div className="p-3 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0">
+            {/* User Profile Section - Compact margins */}
+            <div className="pl-1 pr-2 py-2 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0">
               {user ? (
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-casino-card-bg/30 border border-casino-neon-green/20">
-                  <Avatar className="w-10 h-10 border-2 border-casino-neon-green/30">
-                    <AvatarImage src={user.user_metadata?.avatar_url} />
-                    <AvatarFallback className="bg-casino-neon-green/20 text-casino-neon-green font-semibold">
-                      {user.email?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">
-                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
-                    </p>
-                    <p className="text-xs text-gray-400 truncate">
-                      {user.email}
+                <div className="space-y-2">
+                  {/* Profile Actions Row */}
+                  <div className="flex items-center justify-end gap-1 p-1 rounded-lg bg-casino-card-bg/30 border border-casino-neon-green/20">
+                    <div className="flex items-center gap-2 flex-1 justify-end pr-1">
+                      <div className="text-right min-w-0">
+                        <div className="flex items-center gap-1 justify-end">
+                          <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
+                          <p className="text-sm font-medium text-white">Online</p>
+                        </div>
+                      </div>
+                      <Avatar className="w-9 h-9 border-2 border-casino-neon-green/30 flex-shrink-0">
+                        <AvatarImage src={user.user_metadata?.avatar_url} />
+                        <AvatarFallback className="bg-casino-neon-green/20 text-casino-neon-green font-semibold text-xs">
+                          {user.email?.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <button
+                        onClick={closeMobileMenu}
+                        className="p-1.5 rounded-lg hover:bg-casino-neon-green/10 transition-colors border border-transparent hover:border-casino-neon-green/30"
+                        title="View Profile"
+                      >
+                        <User className="w-3.5 h-3.5 text-casino-neon-green" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          signOut();
+                          closeMobileMenu();
+                        }}
+                        className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors border border-transparent hover:border-red-500/30"
+                        title="Sign Out"
+                      >
+                        <LogOut className="w-3.5 h-3.5 text-red-400" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Greeting Text Row */}
+                  <div className="text-right pr-1">
+                    <p className="text-sm text-casino-neon-green/80 font-medium">
+                      Hi, <span className="text-white font-semibold">
+                        {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                      </span>
                     </p>
                   </div>
-                  <button
-                    onClick={() => {
-                      signOut();
-                      closeMobileMenu();
-                    }}
-                    className="p-2 rounded-lg hover:bg-red-500/20 transition-colors border border-transparent hover:border-red-500/30"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-4 h-4 text-red-400" />
-                  </button>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  <div className="text-center p-3 rounded-lg bg-casino-card-bg/30 border border-casino-neon-green/20">
-                    <User className="w-8 h-8 text-casino-neon-green mx-auto mb-2" />
-                    <p className="text-sm text-gray-300 mb-3">Sign in to access exclusive features</p>
-                    <SimpleAuthButton
-                      className="w-full bg-casino-neon-green hover:bg-casino-neon-green/80 text-black font-semibold py-2 px-4 rounded-lg transition-all duration-200 border border-casino-neon-green/30 hover:border-casino-neon-green"
-                      onClick={closeMobileMenu}
-                    />
-                  </div>
+                <div className="flex justify-end pr-1">
+                  <SimpleAuthButton
+                    className="bg-casino-neon-green hover:bg-casino-neon-green/80 text-black font-semibold py-2 px-6 rounded-lg transition-all duration-200 border border-casino-neon-green/30 hover:border-casino-neon-green text-sm"
+                    onClick={closeMobileMenu}
+                    customText="Sign In"
+                  />
                 </div>
               )}
             </div>
 
-            {/* Mobile Search Bar */}
-            <div className="p-4 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-md shadow-casino-border-subtle/20">
-              <EnhancedSearchBar
-                className="w-full"
-                placeholder="Search casinos, games..."
-              />
-            </div>
-            
-            {/* Navigation */}
-            <nav className="flex-1 p-4 space-y-1 bg-gradient-to-b from-slate-800/30 to-slate-900/50 overflow-y-auto">
-              <div className="mb-4">
-                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-3 px-3">
+
+
+            {/* Navigation - Compact margins */}
+            <nav className="flex-1 pl-1 pr-2 py-3 space-y-1 bg-gradient-to-b from-slate-800/30 to-slate-900/50 overflow-y-auto">
+              <div className="mb-3">
+                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-2 text-right pr-1">
                   Main Navigation
                 </h4>
                 <div className="space-y-1">
                   <Link
                     href="/"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                    <span className="group-hover:text-casino-neon-green transition-colors">Home</span>
+                    <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                       <Home className="w-4 h-4 text-casino-neon-green" />
                     </div>
-                    <span className="group-hover:text-casino-neon-green transition-colors">Home</span>
                   </Link>
                   <Link
                     href="/casinos"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                    <span className="text-xs bg-red-500 text-white px-2 py-1 rounded-full flex-shrink-0">Hot</span>
+                    <span className="group-hover:text-casino-neon-green transition-colors">Casinos</span>
+                    <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                       <Gamepad2 className="w-4 h-4 text-casino-neon-green" />
                     </div>
-                    <span className="group-hover:text-casino-neon-green transition-colors">Casinos</span>
-                    <span className="ml-auto text-xs bg-red-500 text-white px-2 py-1 rounded-full">Hot</span>
                   </Link>
                   <Link
                     href="/games"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                    <span className="group-hover:text-casino-neon-green transition-colors">Top Casinos</span>
+                    <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                       <Star className="w-4 h-4 text-casino-neon-green" />
                     </div>
-                    <span className="group-hover:text-casino-neon-green transition-colors">Top Casinos</span>
                   </Link>
                   <Link
                     href="/reviews"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                    <span className="group-hover:text-casino-neon-green transition-colors">Reviews</span>
+                    <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                       <Book className="w-4 h-4 text-casino-neon-green" />
                     </div>
-                    <span className="group-hover:text-casino-neon-green transition-colors">Reviews</span>
                   </Link>
                 </div>
               </div>
 
-              <div className="mb-4">
-                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-3 px-3">
+              <div className="mb-3">
+                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-2 text-right pr-1">
                   Community
                 </h4>
                 <div className="space-y-1">
                   <Link
                     href="/forum"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                    <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full flex-shrink-0">New</span>
+                    <span className="group-hover:text-casino-neon-green transition-colors">Forum</span>
+                    <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                       <MessageCircle className="w-4 h-4 text-casino-neon-green" />
                     </div>
-                    <span className="group-hover:text-casino-neon-green transition-colors">Forum</span>
-                    <span className="ml-auto text-xs bg-blue-500 text-white px-2 py-1 rounded-full">New</span>
                   </Link>
                   <Link
                     href="/list-report"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                    <span className="group-hover:text-casino-neon-green transition-colors">List Report</span>
+                    <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                       <List className="w-4 h-4 text-casino-neon-green" />
                     </div>
-                    <span className="group-hover:text-casino-neon-green transition-colors">List Report</span>
                   </Link>
                 </div>
               </div>
 
               <div>
-                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-3 px-3">
+                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-2 text-right pr-1">
                   Resources
                 </h4>
                 <div className="space-y-1">
                   <Link
                     href="/guide"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                    <span className="group-hover:text-casino-neon-green transition-colors">Guide</span>
+                    <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                       <Compass className="w-4 h-4 text-casino-neon-green" />
                     </div>
-                    <span className="group-hover:text-casino-neon-green transition-colors">Guide</span>
                   </Link>
                   <Link
                     href="/news"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                    <span className="group-hover:text-casino-neon-green transition-colors">News</span>
+                    <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                       <Newspaper className="w-4 h-4 text-casino-neon-green" />
                     </div>
-                    <span className="group-hover:text-casino-neon-green transition-colors">News</span>
                   </Link>
                 </div>
               </div>
             </nav>
 
-            {/* Footer - Legal Links */}
-            <div className="p-4 border-t border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-lg shadow-casino-border-subtle/30">
-              <div className="space-y-3">
-                <div className="grid grid-cols-1 gap-2">
+            {/* Footer - Compact margins with responsive copyright */}
+            <div className="pl-1 pr-2 py-2 border-t border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-lg shadow-casino-border-subtle/30">
+              <div className="space-y-2">
+                <div className="grid grid-cols-1 gap-1">
                   <Link
                     href="/privacy-policy"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
                   >
-                    <div className="w-6 h-6 rounded-lg bg-slate-600/50 flex items-center justify-center">
+                    <span>Privacy Policy</span>
+                    <div className="w-5 h-5 rounded-lg bg-slate-600/50 flex items-center justify-center flex-shrink-0">
                       <Shield className="w-3 h-3 text-gray-400" />
                     </div>
-                    <span>Privacy Policy</span>
                   </Link>
                   <Link
                     href="/terms-of-service"
                     onClick={closeMobileMenu}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                    className="flex items-center justify-end gap-2 pl-0 pr-1 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
                   >
-                    <div className="w-6 h-6 rounded-lg bg-slate-600/50 flex items-center justify-center">
+                    <span>Terms of Service</span>
+                    <div className="w-5 h-5 rounded-lg bg-slate-600/50 flex items-center justify-center flex-shrink-0">
                       <FileText className="w-3 h-3 text-gray-400" />
                     </div>
-                    <span>Terms of Service</span>
                   </Link>
                 </div>
-                <div className="text-center pt-2 border-t border-casino-border-subtle/50 shadow-sm shadow-casino-border-subtle/10">
+                <div className="text-right pt-2 border-t border-casino-border-subtle/50 pr-1 space-y-1">
                   <p className="text-xs text-gray-500">
-                    © 2024 CGSG Casino Guide. All rights reserved.
+                    © 2024 CGSG Casino Guide
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    All rights reserved
                   </p>
                 </div>
               </div>
