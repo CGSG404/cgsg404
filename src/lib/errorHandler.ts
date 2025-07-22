@@ -22,15 +22,41 @@ export const setupGlobalErrorHandler = () => {
     });
 
     // Check if it's an auth-related error
-    const errorMessage = event.reason?.message || String(event.reason);
+    let errorMessage = 'Unknown error';
+    try {
+      errorMessage = event.reason?.message || String(event.reason);
+    } catch (stringError) {
+      console.error('❌ Error converting reason to string:', stringError);
+      errorMessage = 'Error processing failed';
+    }
+
+    // Check for split function errors
+    if (errorMessage.includes('split is not a function')) {
+      console.log('🔧 Split function error detected, attempting recovery...');
+
+      // Try to recover by clearing problematic state
+      try {
+        localStorage.removeItem('supabase.auth.token');
+        sessionStorage.clear();
+
+        // Redirect to home with recovery message
+        setTimeout(() => {
+          window.location.href = '/?error=client_exception&details=' + encodeURIComponent('Application error recovered. Please try again.');
+        }, 1000);
+      } catch (recoveryError) {
+        console.error('❌ Recovery attempt failed:', recoveryError);
+      }
+      return;
+    }
+
     if (errorMessage.includes('auth') || errorMessage.includes('oauth') || errorMessage.includes('supabase')) {
       console.log('🔐 Auth-related error detected, attempting recovery...');
-      
+
       // Try to recover by clearing auth state
       try {
         localStorage.removeItem('supabase.auth.token');
         sessionStorage.clear();
-        
+
         // Redirect to home with error message
         setTimeout(() => {
           window.location.href = '/?error=auth_recovery&message=' + encodeURIComponent('Authentication error recovered. Please try logging in again.');
@@ -106,16 +132,28 @@ export const isInRecoveryMode = () => {
 // Function to clear recovery state
 export const clearRecoveryState = () => {
   if (typeof window === 'undefined') return;
-  
-  const url = new URL(window.location.href);
-  const params = url.searchParams;
-  
-  if (params.has('error')) {
-    params.delete('error');
-    params.delete('message');
-    params.delete('details');
-    
-    const newUrl = url.pathname + (params.toString() ? '?' + params.toString() : '');
-    window.history.replaceState({}, '', newUrl);
+
+  try {
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    if (params.has('error') || params.has('success') || params.has('details')) {
+      params.delete('error');
+      params.delete('message');
+      params.delete('details');
+      params.delete('success');
+      params.delete('timestamp');
+
+      const newUrl = url.pathname + (params.toString() ? '?' + params.toString() : '');
+      window.history.replaceState({}, '', newUrl);
+    }
+  } catch (error) {
+    console.error('❌ Failed to clear recovery state:', error);
+    // Fallback: just replace with clean URL
+    try {
+      window.history.replaceState({}, '', window.location.pathname);
+    } catch (fallbackError) {
+      console.error('❌ Fallback URL clear failed:', fallbackError);
+    }
   }
 };

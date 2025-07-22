@@ -19,10 +19,19 @@ export default function SimpleAuthButton() {
       const urlParams = new URLSearchParams(window.location.search);
       const redirectTo = urlParams.get('redirectTo');
 
+      // 🔧 DEVELOPMENT FIX: Force localhost redirect in development
+      const redirectOrigin = process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : window.location.origin;
+
       // Build callback URL with redirect parameter
-      let callbackUrl = `${window.location.origin}/auth/callback`;
+      let callbackUrl = `${redirectOrigin}/auth/callback`;
       if (redirectTo) {
         callbackUrl += `?redirectTo=${encodeURIComponent(redirectTo)}`;
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 OAuth callback URL:', callbackUrl);
       }
 
       const { data, error } = await supabase.auth.signInWithOAuth({

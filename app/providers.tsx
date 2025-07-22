@@ -7,8 +7,7 @@ import { AuthProvider } from '@/src/contexts/AuthContext'; // ✅ STABLE: Workin
 import { AdminProvider } from '@/src/contexts/AdminContext'; // ✅ RE-ENABLED: Fixed double providers issue
 import { TooltipProvider } from '@/src/components/ui/tooltip';
 import { Toaster } from '@/src/components/ui/sonner';
-import LiveChat from '@/src/components/LiveChat';
-import AdminDebugWidget from '@/src/components/AdminDebugWidget'; // 🔧 ADD: Debug widget
+import FloatingWidgetManager from '@/src/components/FloatingWidgetManager'; // 🚀 NEW: Unified widget manager
 
 // Create a client
 const queryClient = new QueryClient({
@@ -28,8 +27,7 @@ export default function Providers({ children }: { children: ReactNode }) {
           <TooltipProvider>
             {children}
             <Toaster position="top-right" />
-            <LiveChat />
-            <AdminDebugWidget /> {/* 🔧 ADD: Debug widget for development */}
+            <FloatingWidgetManager /> {/* 🚀 NEW: Unified widget manager */}
           </TooltipProvider>
         </AdminProvider>
       </AuthProvider>

@@ -1,29 +1,66 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { useAdmin } from '@/src/contexts/AdminContext';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function AdminDashboardPage() {
-  const { isAdmin, isLoading, adminInfo, logActivity } = useAdmin();
+  const { user, loading: authLoading } = useAuth();
+  const { isAdmin, isLoading: adminLoading, adminInfo, logActivity } = useAdmin();
+  const router = useRouter();
+
+  // Combined loading state
+  const isLoading = authLoading || adminLoading;
 
   useEffect(() => {
-    if (isAdmin) {
-      // Log admin dashboard access
+    // If not authenticated, redirect to signin
+    if (!authLoading && !user) {
+      console.log('🔄 Admin page: No user, redirecting to signin');
+      router.push('/signin?redirectTo=/admin');
+      return;
+    }
+
+    // If authenticated but not admin, show access denied
+    if (user && !adminLoading && !isAdmin) {
+      console.log('🚫 Admin page: User not admin', {
+        userId: user.id,
+        email: user.email,
+        isAdmin
+      });
+    }
+
+    // Log admin dashboard access
+    if (user && isAdmin) {
       logActivity('admin_dashboard_accessed', 'dashboard', 'main', {
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        userId: user.id,
+        email: user.email
       }, 'info');
     }
-  }, [isAdmin, logActivity]);
+  }, [user, authLoading, isAdmin, adminLoading, router, logActivity]);
 
+  // Show loading while checking authentication
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">
+            {authLoading ? 'Checking authentication...' : 'Loading admin data...'}
+          </p>
+        </div>
       </div>
     );
   }
 
+  // If no user, don't render anything (redirect will happen)
+  if (!user) {
+    return null;
+  }
+
+  // If user exists but not admin
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -34,12 +71,25 @@ export default function AdminDashboardPage() {
             <p className="text-red-600 mb-4">
               You need admin access to view this dashboard.
             </p>
-            <Link
-              href="/"
-              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors inline-block"
-            >
-              Go Home
-            </Link>
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">
+                Logged in as: {user.email}
+              </p>
+              <div className="flex space-x-2">
+                <Link
+                  href="/"
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors inline-block"
+                >
+                  Go Home
+                </Link>
+                <Link
+                  href="/debug-admin"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-block"
+                >
+                  Debug Admin
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

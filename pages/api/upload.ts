@@ -97,7 +97,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Generate unique filename
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
-    const fileExtension = file.originalFilename?.split('.').pop() || 'jpg';
+
+    let fileExtension = 'jpg';
+    try {
+      if (file.originalFilename && typeof file.originalFilename === 'string') {
+        const parts = file.originalFilename.split('.');
+        fileExtension = parts.length > 1 ? parts.pop() || 'jpg' : 'jpg';
+      }
+    } catch (error) {
+      console.error('❌ Error parsing filename:', error);
+      fileExtension = 'jpg';
+    }
+
     const fileName = `casino-logo-${timestamp}-${randomString}.${fileExtension}`;
 
     // Read file buffer

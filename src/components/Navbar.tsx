@@ -2,7 +2,7 @@
 
 import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
-import { Star, User, LogOut, Menu, X, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper } from 'lucide-react';
+import { Star, User, LogOut, Menu, X, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
 import { useAdmin } from '@/src/contexts/AdminContext'; // 🔧 ADD: Admin context for admin button
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
@@ -17,6 +17,7 @@ const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const { user, signOut, signInWithGoogle, loading } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
   const { isAdmin, adminInfo, isLoading: adminLoading } = useAdmin(); // 🔧 ADD: Get admin status
   const router = useRouter();
@@ -33,10 +34,23 @@ const Navbar = () => {
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
+      setIsClosing(false);
+      // Force reflow to ensure initial state is applied before animation
+      requestAnimationFrame(() => {
+        setIsClosing(false);
+      });
     } else {
       document.body.style.overflow = 'auto';
     }
   }, [mobileMenuOpen]);
+
+  const closeMobileMenu = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setMobileMenuOpen(false);
+      setIsClosing(false);
+    }, 300); // Match animation duration
+  };
 
   // Debug logging
   useEffect(() => {
@@ -118,7 +132,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-casino-card-bg/80 backdrop-blur-md border-b border-casino-border-subtle sticky top-0 z-50 w-full">
+    <nav className="bg-casino-card-bg border-b border-casino-border-subtle sticky top-0 z-50 w-full shadow-lg shadow-casino-border-subtle/20">
       <div className="w-full flex items-center justify-between h-16 px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
@@ -237,39 +251,89 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <button
           className="flex md:hidden items-center justify-center p-2 rounded hover:bg-casino-neon-green/10 transition-colors"
-          onClick={() => setMobileMenuOpen(true)}
+          onClick={() => mobileMenuOpen ? closeMobileMenu() : setMobileMenuOpen(true)}
         >
-          <Menu className="w-7 h-7 text-casino-neon-green" />
+          {mobileMenuOpen ? (
+            <X className="w-7 h-7 text-casino-neon-green" />
+          ) : (
+            <Menu className="w-7 h-7 text-casino-neon-green" />
+          )}
         </button>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[200] flex justify-end">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-all duration-300 ease-out" 
-            onClick={() => setMobileMenuOpen(false)} 
+        <div className="fixed top-16 right-0 bottom-0 left-0 z-[200] flex justify-end">
+          {/* Backdrop - only covers area below top bar */}
+          <div
+            className={`absolute inset-0 bg-black/70 transition-opacity duration-300 ease-out ${
+              isClosing ? 'opacity-0' : 'opacity-100'
+            }`}
+            onClick={closeMobileMenu}
           />
-          {/* Drawer */}
-          <div className="relative w-80 h-screen bg-slate-900 text-white flex flex-col shadow-2xl border-l border-slate-700 animate-slide-in-right">
-            {/* Header */}
-            <div className="bg-slate-800 border-b border-slate-700 p-6 flex-shrink-0">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-bold text-white">
-                  Menu
-                </h3>
-                <button 
-                  className="p-2 rounded-lg hover:bg-slate-700 transition-colors" 
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <X className="w-6 h-6 text-white" />
-                </button>
+          {/* Drawer - positioned below top bar */}
+          <div className={`relative w-80 h-full bg-casino-card-bg text-white flex flex-col shadow-2xl border-l border-casino-neon-green/20 ${
+            isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'
+          }`}>
+            {/* Header with Brand Section */}
+            <div className="bg-casino-card-bg border-b border-casino-border-subtle p-4 flex-shrink-0 shadow-lg shadow-casino-border-subtle/30">
+              <div className="flex items-center gap-3 mb-4">
+                {/* Brand Section */}
+                <div className="w-10 h-10 bg-gradient-to-br from-casino-neon-green/30 to-casino-neon-blue/30 rounded-xl flex items-center justify-center shadow-lg">
+                  <Star className="w-5 h-5 text-casino-neon-green" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-white">CGSG Casino Guide</h2>
+                  <p className="text-xs text-casino-neon-green/80">Your trusted casino companion</p>
+                </div>
               </div>
             </div>
-            
+
+            {/* User Profile Section */}
+            <div className="p-4 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-md shadow-casino-border-subtle/20">
+              {user ? (
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-casino-card-bg/30 border border-casino-neon-green/20">
+                  <Avatar className="w-10 h-10 border-2 border-casino-neon-green/30">
+                    <AvatarImage src={user.user_metadata?.avatar_url} />
+                    <AvatarFallback className="bg-casino-neon-green/20 text-casino-neon-green font-semibold">
+                      {user.email?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">
+                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                    </p>
+                    <p className="text-xs text-gray-400 truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      closeMobileMenu();
+                    }}
+                    className="p-2 rounded-lg hover:bg-red-500/20 transition-colors border border-transparent hover:border-red-500/30"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-4 h-4 text-red-400" />
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="text-center p-3 rounded-lg bg-casino-card-bg/30 border border-casino-neon-green/20">
+                    <User className="w-8 h-8 text-casino-neon-green mx-auto mb-2" />
+                    <p className="text-sm text-gray-300 mb-3">Sign in to access exclusive features</p>
+                    <SimpleAuthButton
+                      className="w-full bg-casino-neon-green hover:bg-casino-neon-green/80 text-black font-semibold py-2 px-4 rounded-lg transition-all duration-200 border border-casino-neon-green/30 hover:border-casino-neon-green"
+                      onClick={closeMobileMenu}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Mobile Search Bar */}
-            <div className="p-6 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0">
+            <div className="p-4 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-md shadow-casino-border-subtle/20">
               <EnhancedSearchBar
                 className="w-full"
                 placeholder="Search casinos, games..."
@@ -277,72 +341,146 @@ const Navbar = () => {
             </div>
             
             {/* Navigation */}
-            <nav className="flex-1 p-6 space-y-2 bg-slate-900 overflow-y-auto">
-              <Link 
-                href="/" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-slate-800 transition-all duration-200 font-medium"
-              >
-                <Home className="w-5 h-5" />
-                Home
-              </Link>
-              <Link 
-                href="/casinos" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-slate-800 transition-all duration-200 font-medium"
-              >
-                <Gamepad2 className="w-5 h-5" />
-                Casinos
-              </Link>
-              <Link 
-                href="/games" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-slate-800 transition-all duration-200 font-medium"
-              >
-                <Star className="w-5 h-5" />
-                Top Casinos
-              </Link>
-              <Link 
-                href="/reviews" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-slate-800 transition-all duration-200 font-medium"
-              >
-                <Book className="w-5 h-5" />
-                Reviews
-              </Link>
-              <Link 
-                href="/list-report" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-slate-800 transition-all duration-200 font-medium"
-              >
-                <List className="w-5 h-5" />
-                List Report
-              </Link>
-              <Link 
-                href="/forum" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-slate-800 transition-all duration-200 font-medium"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Forum
-              </Link>
-              <Link 
-                href="/guide" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-slate-800 transition-all duration-200 font-medium"
-              >
-                <Compass className="w-5 h-5" />
-                Guide
-              </Link>
-              <Link 
-                href="/news" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-slate-800 transition-all duration-200 font-medium"
-              >
-                <Newspaper className="w-5 h-5" />
-                News
-              </Link>
+            <nav className="flex-1 p-4 space-y-1 bg-gradient-to-b from-slate-800/30 to-slate-900/50 overflow-y-auto">
+              <div className="mb-4">
+                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-3 px-3">
+                  Main Navigation
+                </h4>
+                <div className="space-y-1">
+                  <Link
+                    href="/"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                      <Home className="w-4 h-4 text-casino-neon-green" />
+                    </div>
+                    <span className="group-hover:text-casino-neon-green transition-colors">Home</span>
+                  </Link>
+                  <Link
+                    href="/casinos"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                      <Gamepad2 className="w-4 h-4 text-casino-neon-green" />
+                    </div>
+                    <span className="group-hover:text-casino-neon-green transition-colors">Casinos</span>
+                    <span className="ml-auto text-xs bg-red-500 text-white px-2 py-1 rounded-full">Hot</span>
+                  </Link>
+                  <Link
+                    href="/games"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                      <Star className="w-4 h-4 text-casino-neon-green" />
+                    </div>
+                    <span className="group-hover:text-casino-neon-green transition-colors">Top Casinos</span>
+                  </Link>
+                  <Link
+                    href="/reviews"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                      <Book className="w-4 h-4 text-casino-neon-green" />
+                    </div>
+                    <span className="group-hover:text-casino-neon-green transition-colors">Reviews</span>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-3 px-3">
+                  Community
+                </h4>
+                <div className="space-y-1">
+                  <Link
+                    href="/forum"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                      <MessageCircle className="w-4 h-4 text-casino-neon-green" />
+                    </div>
+                    <span className="group-hover:text-casino-neon-green transition-colors">Forum</span>
+                    <span className="ml-auto text-xs bg-blue-500 text-white px-2 py-1 rounded-full">New</span>
+                  </Link>
+                  <Link
+                    href="/list-report"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                      <List className="w-4 h-4 text-casino-neon-green" />
+                    </div>
+                    <span className="group-hover:text-casino-neon-green transition-colors">List Report</span>
+                  </Link>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-3 px-3">
+                  Resources
+                </h4>
+                <div className="space-y-1">
+                  <Link
+                    href="/guide"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                      <Compass className="w-4 h-4 text-casino-neon-green" />
+                    </div>
+                    <span className="group-hover:text-casino-neon-green transition-colors">Guide</span>
+                  </Link>
+                  <Link
+                    href="/news"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors">
+                      <Newspaper className="w-4 h-4 text-casino-neon-green" />
+                    </div>
+                    <span className="group-hover:text-casino-neon-green transition-colors">News</span>
+                  </Link>
+                </div>
+              </div>
             </nav>
+
+            {/* Footer - Legal Links */}
+            <div className="p-4 border-t border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-lg shadow-casino-border-subtle/30">
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 gap-2">
+                  <Link
+                    href="/privacy-policy"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-slate-600/50 flex items-center justify-center">
+                      <Shield className="w-3 h-3 text-gray-400" />
+                    </div>
+                    <span>Privacy Policy</span>
+                  </Link>
+                  <Link
+                    href="/terms-of-service"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-slate-600/50 flex items-center justify-center">
+                      <FileText className="w-3 h-3 text-gray-400" />
+                    </div>
+                    <span>Terms of Service</span>
+                  </Link>
+                </div>
+                <div className="text-center pt-2 border-t border-casino-border-subtle/50 shadow-sm shadow-casino-border-subtle/10">
+                  <p className="text-xs text-gray-500">
+                    © 2024 CGSG Casino Guide. All rights reserved.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -94,42 +94,57 @@ function AuthCallbackContent() {
 
         console.log('✅ Session validated successfully');
 
-        // Check if user is admin and redirect accordingly
+        // For non-admin users, skip admin check and redirect to home
+        console.log('✅ Session validated, redirecting to home...');
+
+        // Get redirect URL from query params
+        let redirectTo: string | null = null;
         try {
-          const { data: isAdmin, error: adminError } = await supabase.rpc('is_admin');
-
-          if (adminError) {
-            console.warn('⚠️ Admin check failed:', adminError);
-          }
-
-          // Get redirect URL from query params
-          const redirectTo = searchParams.get('redirectTo');
-
-          let redirectUrl = '/';
-          if (redirectTo && redirectTo.startsWith('/admin') && isAdmin) {
-            redirectUrl = redirectTo;
-          } else if (isAdmin && !redirectTo) {
-            redirectUrl = '/admin';
-          }
-
-          console.log('🔄 Redirecting to:', redirectUrl);
-
-          // 🚀 PRODUCTION FIX: Optimized redirect with session confirmation
-          // Use shorter delay since we already validated session above
-          setTimeout(() => {
-            router.replace(`${redirectUrl}?success=login&timestamp=${Date.now()}`);
-          }, 500);
-
-        } catch (adminCheckError) {
-          console.warn('⚠️ Admin check error:', adminCheckError);
-          setTimeout(() => {
-            router.replace('/?success=login');
-          }, 1500);
+          redirectTo = searchParams.get('redirectTo');
+        } catch (paramError) {
+          console.warn('⚠️ Failed to get redirectTo param:', paramError);
         }
+
+        // For safety, always redirect non-admin users to home
+        // Admin check will be handled by the AdminContext after login
+        let redirectUrl = '/';
+
+        console.log('🔄 Redirecting to:', redirectUrl);
+
+        // 🚀 PRODUCTION FIX: Simple redirect for all users
+        // Admin status will be determined by AdminContext after successful login
+        setTimeout(() => {
+          try {
+            const successUrl = `${redirectUrl}?success=login&timestamp=${Date.now()}`;
+            console.log('🔄 Final redirect URL:', successUrl);
+            router.replace(successUrl);
+          } catch (redirectError) {
+            console.error('❌ Redirect error:', redirectError);
+            // Fallback: redirect without parameters
+            try {
+              router.replace(redirectUrl);
+            } catch (fallbackError) {
+              console.error('❌ Fallback redirect failed:', fallbackError);
+              // Last resort: force page reload
+              window.location.href = redirectUrl;
+            }
+          }
+        }, 500);
 
       } catch (err) {
         console.error('❌ Callback error:', err);
-        router.replace(`/?error=callback_failed&details=${encodeURIComponent(String(err))}`);
+
+        // Safe error message extraction
+        let errorMessage = 'Unknown authentication error';
+        if (err instanceof Error) {
+          errorMessage = err.message;
+        } else if (typeof err === 'string') {
+          errorMessage = err;
+        } else if (err && typeof err === 'object') {
+          errorMessage = JSON.stringify(err);
+        }
+
+        router.replace(`/?error=callback_failed&details=${encodeURIComponent(errorMessage)}`);
       }
     };
 

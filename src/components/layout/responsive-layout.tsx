@@ -178,63 +178,10 @@ export function ResponsiveContainer({
   );
 }
 
-// Performance indicator component
+// Performance indicator component - Now integrated into FloatingWidgetManager
 function PerformanceIndicator() {
-  const { metrics, deviceInfo } = usePerformanceOptimization();
-  const [isVisible, setIsVisible] = useState(false);
-
-  return (
-    <>
-      {/* Toggle button */}
-      <button
-        onClick={() => setIsVisible(!isVisible)}
-        className="fixed bottom-4 right-4 z-50 bg-casino-neon-green text-casino-dark p-2 rounded-full shadow-lg"
-        title="Performance Metrics"
-      >
-        📊
-      </button>
-
-      {/* Performance panel */}
-      {isVisible && (
-        <div className="fixed bottom-16 right-4 z-50 bg-black/90 text-white p-4 rounded-lg text-xs max-w-xs backdrop-blur-sm">
-          <div className="font-bold mb-3 text-casino-neon-green">Performance Metrics</div>
-          
-          <div className="space-y-2">
-            <div className="border-b border-gray-600 pb-2">
-              <div className="font-semibold text-gray-300">Device Info</div>
-              <div>Type: {deviceInfo?.isMobile ? 'Mobile' : deviceInfo?.isTablet ? 'Tablet' : 'Desktop'}</div>
-              <div>Memory: {deviceInfo?.memoryGB}GB</div>
-              <div>Connection: {deviceInfo?.connectionType}</div>
-              <div>Low-end: {deviceInfo?.isLowEnd ? 'Yes' : 'No'}</div>
-            </div>
-            
-            <div className="border-b border-gray-600 pb-2">
-              <div className="font-semibold text-gray-300">Core Web Vitals</div>
-              <div>FCP: {metrics.fcp ? `${Math.round(metrics.fcp)}ms` : 'N/A'}</div>
-              <div>LCP: {metrics.lcp ? `${Math.round(metrics.lcp)}ms` : 'N/A'}</div>
-              <div>FID: {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'N/A'}</div>
-              <div>CLS: {metrics.cls ? metrics.cls.toFixed(3) : 'N/A'}</div>
-              <div>TTFB: {metrics.ttfb ? `${Math.round(metrics.ttfb)}ms` : 'N/A'}</div>
-            </div>
-            
-            <div>
-              <div className="font-semibold text-gray-300">Performance Status</div>
-              <div className={cn(
-                'inline-block px-2 py-1 rounded text-xs',
-                metrics.lcp && metrics.lcp < 2500 ? 'bg-green-500/20 text-green-400' :
-                metrics.lcp && metrics.lcp < 4000 ? 'bg-yellow-500/20 text-yellow-400' :
-                'bg-red-500/20 text-red-400'
-              )}>
-                {metrics.lcp && metrics.lcp < 2500 ? 'Good' :
-                 metrics.lcp && metrics.lcp < 4000 ? 'Needs Improvement' :
-                 'Poor'}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
+  // This component is deprecated - performance monitoring is now handled by FloatingWidgetManager
+  return null;
 }
 
 // Responsive text component

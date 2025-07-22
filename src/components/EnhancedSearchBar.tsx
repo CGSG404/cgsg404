@@ -184,8 +184,8 @@ const EnhancedSearchBar = ({
 
   return (
     <div ref={searchRef} className={`relative ${className}`}>
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10" />
+      <div className="relative flex items-center">
+        <Search className="absolute left-3 text-gray-400 w-4 h-4 z-10 pointer-events-none" />
         <input
           ref={inputRef}
           type="text"
@@ -195,14 +195,14 @@ const EnhancedSearchBar = ({
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           autoFocus={autoFocus}
-          className="w-full pl-10 pr-12 py-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-casino-neon-green focus:ring-1 focus:ring-casino-neon-green/50 transition-all duration-200"
+          className="w-full pl-9 pr-12 py-2.5 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-casino-neon-green focus:ring-1 focus:ring-casino-neon-green/50 transition-all duration-200"
         />
         
         {/* Clear button */}
         {query && (
           <button
             onClick={() => setQuery('')}
-            className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+            className="absolute right-9 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -212,7 +212,7 @@ const EnhancedSearchBar = ({
         {showFilters && (
           <button
             onClick={onFiltersToggle}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-casino-neon-green transition-colors"
+            className="absolute right-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-casino-neon-green transition-colors"
           >
             <Filter className="w-4 h-4" />
           </button>
@@ -220,7 +220,7 @@ const EnhancedSearchBar = ({
 
         {/* Loading indicator */}
         {suggestionsLoading && query.length >= 2 && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+          <div className="absolute right-2.5 top-1/2 transform -translate-y-1/2">
             <Loader2 className="w-4 h-4 text-casino-neon-green animate-spin" />
           </div>
         )}

@@ -78,18 +78,31 @@ export function createRateLimiter(config: RateLimitConfig) {
  * Get unique client identifier
  */
 function getClientId(req: NextApiRequest): string {
-  // Try to get real IP address
-  const forwarded = req.headers['x-forwarded-for'];
-  const ip = forwarded 
-    ? (Array.isArray(forwarded) ? forwarded[0] : forwarded.split(',')[0])
-    : req.socket.remoteAddress || 'unknown';
-  
-  // Include User-Agent for better uniqueness (but hash it for privacy)
-  const userAgent = req.headers['user-agent'] || 'unknown';
-  const crypto = require('crypto');
-  const hashedUA = crypto.createHash('sha256').update(userAgent).digest('hex').substring(0, 16);
-  
-  return `${ip}:${hashedUA}`;
+  try {
+    // Try to get real IP address
+    const forwarded = req.headers['x-forwarded-for'];
+    let ip = 'unknown';
+
+    if (forwarded) {
+      if (Array.isArray(forwarded)) {
+        ip = forwarded[0] || 'unknown';
+      } else if (typeof forwarded === 'string') {
+        ip = forwarded.split(',')[0] || 'unknown';
+      }
+    } else {
+      ip = req.socket.remoteAddress || 'unknown';
+    }
+
+    // Include User-Agent for better uniqueness (but hash it for privacy)
+    const userAgent = req.headers['user-agent'] || 'unknown';
+    const crypto = require('crypto');
+    const hashedUA = crypto.createHash('sha256').update(userAgent).digest('hex').substring(0, 16);
+
+    return `${ip}:${hashedUA}`;
+  } catch (error) {
+    console.error('❌ Error getting client ID:', error);
+    return 'unknown:unknown';
+  }
 }
 
 /**

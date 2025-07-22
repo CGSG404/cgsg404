@@ -9,9 +9,20 @@ export default function AuthErrorHandler() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const error = searchParams.get('error');
-    const details = searchParams.get('details');
-    const success = searchParams.get('success');
+    try {
+      // Safe parameter extraction with fallback
+      let error: string | null = null;
+      let details: string | null = null;
+      let success: string | null = null;
+
+      try {
+        error = searchParams.get('error');
+        details = searchParams.get('details');
+        success = searchParams.get('success');
+      } catch (paramError) {
+        console.error('❌ Failed to parse URL parameters:', paramError);
+        return; // Exit early if we can't parse parameters
+      }
 
     if (success === 'login') {
       toast.success('Successfully signed in!', {
@@ -76,11 +87,22 @@ export default function AuthErrorHandler() {
       console.error('🚨 Auth Error:', { error, details, title, description });
     }
 
-    // Clear URL parameters after showing the message
-    if (error || success) {
+      // Clear URL parameters after showing the message
+      if (error || success) {
+        setTimeout(() => {
+          clearRecoveryState();
+        }, 1000); // Give time for toast to show
+      }
+    } catch (handlerError) {
+      console.error('❌ AuthErrorHandler error:', handlerError);
+      // Fallback: just clear the URL
       setTimeout(() => {
-        clearRecoveryState();
-      }, 1000); // Give time for toast to show
+        try {
+          clearRecoveryState();
+        } catch (clearError) {
+          console.error('❌ Failed to clear recovery state:', clearError);
+        }
+      }, 1000);
     }
   }, [searchParams]);
 

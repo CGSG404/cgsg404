@@ -5,9 +5,6 @@ import ClientLayout from './ClientLayout';
 import Navbar from '@/src/components/Navbar';
 import Providers from './providers';
 import CookieConsent from '@/src/components/CookieConsent';
-import { AdminDebugWidget } from '@/src/components/admin/AdminDebugWidget';
-import SessionDebugWidget from '@/src/components/SessionDebugWidget';
-import AdminStatusIndicator from '@/src/components/AdminStatusIndicator';
 
 import './globals.css';
 
@@ -40,13 +37,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Navbar />
           <ClientLayout>{children}</ClientLayout>
           <CookieConsent />
-          {process.env.NODE_ENV === 'development' && (
-            <>
-              <AdminDebugWidget />
-              <SessionDebugWidget />
-              <AdminStatusIndicator />
-            </>
-          )}
         </Providers>
       </body>
     </html>

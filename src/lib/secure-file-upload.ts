@@ -91,6 +91,11 @@ export class SecureFileUpload {
    * Sanitize filename to prevent path traversal and other attacks
    */
   static sanitizeFileName(fileName: string): string {
+    // Input validation
+    if (!fileName || typeof fileName !== 'string') {
+      return 'file';
+    }
+
     // Remove path separators and dangerous characters
     let sanitized = fileName
       .replace(/[\/\\:*?"<>|]/g, '')
@@ -105,8 +110,13 @@ export class SecureFileUpload {
 
     // Limit length
     if (sanitized.length > 100) {
-      const ext = sanitized.split('.').pop();
-      sanitized = sanitized.substring(0, 90) + (ext ? `.${ext}` : '');
+      try {
+        const ext = sanitized.split('.').pop();
+        sanitized = sanitized.substring(0, 90) + (ext ? `.${ext}` : '');
+      } catch (error) {
+        console.error('❌ Error splitting filename:', error);
+        sanitized = sanitized.substring(0, 90);
+      }
     }
 
     return sanitized;
@@ -143,11 +153,31 @@ export class SecureFileUpload {
    * Generate secure filename with timestamp and random string
    */
   static generateSecureFileName(originalName: string, prefix?: string): string {
+    // Input validation
+    if (!originalName || typeof originalName !== 'string') {
+      originalName = 'file.bin';
+    }
+
     const timestamp = Date.now();
     const randomString = generateToken(8); // 8 bytes = 16 hex chars
-    const extension = originalName.split('.').pop() || 'bin';
-    const sanitizedName = this.sanitizeFileName(originalName.split('.')[0]);
-    
+
+    let extension = 'bin';
+    let nameWithoutExt = originalName;
+
+    try {
+      const parts = originalName.split('.');
+      if (parts.length > 1) {
+        extension = parts.pop() || 'bin';
+        nameWithoutExt = parts.join('.');
+      }
+    } catch (error) {
+      console.error('❌ Error parsing filename:', error);
+      extension = 'bin';
+      nameWithoutExt = 'file';
+    }
+
+    const sanitizedName = this.sanitizeFileName(nameWithoutExt);
+
     return `${prefix || 'file'}-${sanitizedName}-${timestamp}-${randomString}.${extension}`;
   }
 

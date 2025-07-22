@@ -3,7 +3,6 @@
 import { type ReactNode, useEffect } from 'react';
 // import Providers from './providers'; // 🚨 REMOVED - Already imported in layout.tsx
 import { AppSidebar } from '@/src/components/ui/sidebar';
-import BackToTop from '@/src/components/BackToTop';
 import { setupGlobalErrorHandler } from '@/src/lib/errorHandler';
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
@@ -22,7 +21,6 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
       {/* Konten utama */}
       <div className="flex-1 min-w-0">
         {children} {/* 🚨 REMOVED DOUBLE PROVIDERS - Already wrapped in layout.tsx */}
-        <BackToTop />
       </div>
     </div>
   );

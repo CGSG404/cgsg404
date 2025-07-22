@@ -271,20 +271,8 @@ export const UserAvatar = (props: Omit<OptimizedImageProps, 'width' | 'height'>)
   />
 );
 
-// Performance monitoring component
+// Performance monitoring component - Now integrated into FloatingWidgetManager
 export function ImagePerformanceMonitor() {
-  const { metrics, deviceInfo } = usePerformanceOptimization();
-
-  if (process.env.NODE_ENV !== 'development') return null;
-
-  return (
-    <div className="fixed bottom-4 left-4 z-50 bg-black/80 text-white p-3 rounded-lg text-xs max-w-xs">
-      <div className="font-bold mb-2">Image Performance</div>
-      <div>Device: {deviceInfo?.isMobile ? 'Mobile' : 'Desktop'}</div>
-      <div>Connection: {deviceInfo?.connectionType}</div>
-      <div>Memory: {deviceInfo?.memoryGB}GB</div>
-      <div>LCP: {metrics.lcp ? `${Math.round(metrics.lcp)}ms` : 'N/A'}</div>
-      <div>CLS: {metrics.cls ? metrics.cls.toFixed(3) : 'N/A'}</div>
-    </div>
-  );
+  // This component is deprecated - performance monitoring is now handled by FloatingWidgetManager
+  return null;
 }
