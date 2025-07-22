@@ -2,10 +2,11 @@
 
 import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
-import { Star, User, LogOut, Menu, X, Search, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText } from 'lucide-react';
+import { Star, User, LogOut, Search, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText, X } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
 import { useAdmin } from '@/src/contexts/AdminContext'; // 🔧 ADD: Admin context for admin button
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
+import { AnimatedHamburger } from '@/src/components/ui/animated-hamburger';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -298,46 +299,48 @@ const Navbar = () => {
 
         {/* Mobile Actions */}
         <div className="flex md:hidden items-center gap-2">
-          {/* Mobile Search Button */}
+          {/* Mobile Search Button - Enhanced */}
           <button
-            className="flex items-center justify-center p-2 rounded hover:bg-casino-neon-green/10 transition-colors"
+            className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-casino-card-bg/50 hover:bg-casino-neon-green/10 border border-casino-border-subtle hover:border-casino-neon-green/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-casino-neon-green/50"
             onClick={toggleMobileSearch}
           >
-            <Search className="w-6 h-6 text-casino-neon-green" />
-          </button>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="flex items-center justify-center p-2 rounded hover:bg-casino-neon-green/10 transition-colors"
-            onClick={toggleMobileMenu}
-          >
-            {mobileMenuOpen ? (
-              <X className="w-7 h-7 text-casino-neon-green" />
-            ) : (
-              <Menu className="w-7 h-7 text-casino-neon-green" />
+            <Search className="w-5 h-5 text-casino-neon-green transition-transform duration-200 hover:scale-110" />
+            {mobileSearchOpen && (
+              <div className="absolute inset-0 rounded-lg border border-casino-neon-green/50 animate-pulse" />
             )}
           </button>
+
+          {/* Mobile Menu Button - Animated Hamburger */}
+          <AnimatedHamburger
+            isOpen={mobileMenuOpen}
+            onClick={toggleMobileMenu}
+            size="md"
+            variant="casino"
+            className="focus:ring-2 focus:ring-casino-neon-green/50"
+          />
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="fixed top-16 right-0 bottom-0 left-0 z-[100] flex justify-end md:hidden">
-          {/* Backdrop - only covers area below top bar */}
+          {/* Synchronized Backdrop - matches hamburger timing */}
           <div
-            className={`absolute inset-0 bg-black/70 transition-opacity duration-300 ease-out ${
-              isClosing ? 'opacity-0' : 'opacity-100'
+            className={`absolute inset-0 bg-black/70 backdrop-blur-sm transition-all duration-300 ease-in-out ${
+              isClosing ? 'opacity-0 backdrop-blur-none' : 'opacity-100 backdrop-blur-sm'
             }`}
             onClick={closeMobileMenu}
           />
-          {/* Drawer - compact width aligned with login button */}
-          <div className={`relative w-[70vw] max-w-[300px] min-w-[240px] h-full bg-casino-card-bg text-white flex flex-col shadow-2xl border-l border-casino-neon-green/20 md:hidden ${
-            isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'
+          {/* Synchronized Drawer - matches hamburger animation exactly */}
+          <div className={`relative w-[70vw] max-w-[300px] min-w-[240px] h-full bg-gradient-to-b from-casino-card-bg to-casino-card-bg/95 text-white flex flex-col shadow-2xl border-l border-casino-neon-green/30 md:hidden ${
+            isClosing ? 'drawer-slide-out' : 'drawer-slide-in'
           }`}>
             {/* Header - REMOVED: Brand section moved to navbar */}
 
-            {/* User Profile Section - Compact margins */}
-            <div className="pl-1 pr-2 py-2 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0">
+            {/* User Profile Section - Synchronized fade animation */}
+            <div className={`pl-1 pr-2 py-2 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0 ${
+              isClosing ? 'sidebar-fade-out sidebar-content-1' : 'sidebar-fade-in sidebar-content-1'
+            }`}>
               {user ? (
                 <div className="space-y-2">
                   {/* Profile Actions Row */}
@@ -399,8 +402,10 @@ const Navbar = () => {
 
 
 
-            {/* Navigation - Compact margins */}
-            <nav className="flex-1 pl-1 pr-2 py-3 space-y-1 bg-gradient-to-b from-slate-800/30 to-slate-900/50 overflow-y-auto">
+            {/* Navigation - Synchronized fade animation */}
+            <nav className={`flex-1 pl-1 pr-2 py-3 space-y-1 bg-gradient-to-b from-slate-800/30 to-slate-900/50 overflow-y-auto ${
+              isClosing ? 'sidebar-fade-out sidebar-content-2' : 'sidebar-fade-in sidebar-content-2'
+            }`}>
               <div className="mb-3">
                 <h4 className="text-xs font-semibold text-casino-neon-green/80 uppercase tracking-wider mb-2 text-right pr-1">
                   Main Navigation
@@ -508,8 +513,10 @@ const Navbar = () => {
               </div>
             </nav>
 
-            {/* Footer - Compact margins with responsive copyright */}
-            <div className="pl-1 pr-2 py-2 border-t border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-lg shadow-casino-border-subtle/30">
+            {/* Footer - Synchronized fade animation */}
+            <div className={`pl-1 pr-2 py-2 border-t border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-lg shadow-casino-border-subtle/30 ${
+              isClosing ? 'sidebar-fade-out sidebar-content-3' : 'sidebar-fade-in sidebar-content-3'
+            }`}>
               <div className="space-y-2">
                 <div className="grid grid-cols-1 gap-1">
                   <Link
@@ -547,18 +554,21 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Mobile Search Overlay */}
+      {/* Enhanced Mobile Search Overlay */}
       {mobileSearchOpen && (
-        <div className="fixed inset-0 bg-casino-dark/95 backdrop-blur-sm z-50 md:hidden">
-          <div className="flex flex-col h-full">
-            {/* Search Header */}
-            <div className="flex items-center justify-between p-4 border-b border-casino-border-subtle">
-              <h3 className="text-lg font-semibold text-white">Search</h3>
+        <div className="fixed inset-0 bg-casino-dark/95 backdrop-blur-sm z-50 md:hidden animate-fade-in">
+          <div className="flex flex-col h-full animate-slide-up">
+            {/* Enhanced Search Header */}
+            <div className="flex items-center justify-between p-4 border-b border-casino-border-subtle bg-gradient-to-r from-casino-card-bg to-casino-card-bg/80">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Search className="w-5 h-5 text-casino-neon-green" />
+                Search
+              </h3>
               <button
                 onClick={() => setMobileSearchOpen(false)}
-                className="p-2 rounded hover:bg-casino-neon-green/10 transition-colors"
+                className="relative p-2 rounded-lg hover:bg-casino-neon-green/10 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-casino-neon-green/50"
               >
-                <X className="w-6 h-6 text-casino-neon-green" />
+                <X className="w-6 h-6 text-casino-neon-green transition-transform duration-200 group-hover:rotate-90" />
               </button>
             </div>
 
