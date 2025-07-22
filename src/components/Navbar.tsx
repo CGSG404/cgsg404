@@ -2,11 +2,11 @@
 
 import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
-import { Star, User, LogOut, Menu, X, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText } from 'lucide-react';
+import { Star, User, LogOut, Menu, X, Search, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
 import { useAdmin } from '@/src/contexts/AdminContext'; // 🔧 ADD: Admin context for admin button
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
-import SessionFixButton from '@/src/components/SessionFixButton'; // 🚀 PRODUCTION FIX
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -17,19 +17,22 @@ const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const { user, signOut, signInWithGoogle, loading } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
   const { isAdmin, adminInfo, isLoading: adminLoading } = useAdmin(); // 🔧 ADD: Get admin status
   const router = useRouter();
 
-  // 🔧 DEBUG: Log admin status for troubleshooting
-  console.log('🔍 Navbar: Admin status:', {
-    isAdmin,
-    adminInfo,
-    adminLoading,
-    user: user?.email,
-    userLoading: loading
-  });
+  // 🔧 DEBUG: Log admin status for troubleshooting (development only)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔍 Navbar: Admin status:', {
+      isAdmin,
+      adminInfo,
+      adminLoading,
+      user: user?.email,
+      userLoading: loading
+    });
+  }
 
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -52,12 +55,30 @@ const Navbar = () => {
     }, 300); // Match animation duration
   };
 
-  // Debug logging
+  // Handle mobile search toggle
+  const toggleMobileSearch = () => {
+    if (mobileMenuOpen) {
+      closeMobileMenu();
+    }
+    setMobileSearchOpen(!mobileSearchOpen);
+  };
+
+  // Handle mobile menu toggle
+  const toggleMobileMenu = () => {
+    if (mobileSearchOpen) {
+      setMobileSearchOpen(false);
+    }
+    mobileMenuOpen ? closeMobileMenu() : setMobileMenuOpen(true);
+  };
+
+  // Debug logging (development only)
   useEffect(() => {
-    console.log('🔍 Navbar - Auth state:', {
-      user: user ? `${user.email} (${user.id})` : 'null',
-      loading
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 Navbar - Auth state:', {
+        user: user ? `${user.email} (${user.id})` : 'null',
+        loading
+      });
+    }
   }, [user, loading]);
 
   if (loading) {
@@ -160,7 +181,9 @@ const Navbar = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    console.log('🔧 Admin button clicked, navigating to /admin');
+                    if (process.env.NODE_ENV === 'development') {
+                      console.log('🔧 Admin button clicked, navigating to /admin');
+                    }
                     router.push('/admin');
                   }}
                   className="border-casino-neon-purple hover:bg-casino-neon-purple/10 text-casino-neon-purple hover:text-casino-neon-purple"
@@ -170,20 +193,11 @@ const Navbar = () => {
                 </Button>
               )}
 
-              {/* 🔧 DEBUG: Show admin status for troubleshooting */}
+              {/* 🔧 DEBUG: Show admin status for troubleshooting (development only) */}
               {process.env.NODE_ENV === 'development' && user && (
                 <div className="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded">
                   Admin: {isAdmin ? '✅' : '❌'} | Loading: {adminLoading ? '⏳' : '✅'}
                 </div>
-              )}
-
-              {/* 🚀 PRODUCTION FIX: Session Fix Button (only show if there are auth issues) */}
-              {user && !isAdmin && process.env.NODE_ENV === 'production' && (
-                <SessionFixButton
-                  variant="ghost"
-                  size="sm"
-                  className="text-yellow-400 hover:text-yellow-300"
-                />
               )}
               <button
                 onClick={() => setShowProfile(!showProfile)}
@@ -248,17 +262,28 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="flex md:hidden items-center justify-center p-2 rounded hover:bg-casino-neon-green/10 transition-colors"
-          onClick={() => mobileMenuOpen ? closeMobileMenu() : setMobileMenuOpen(true)}
-        >
-          {mobileMenuOpen ? (
-            <X className="w-7 h-7 text-casino-neon-green" />
-          ) : (
-            <Menu className="w-7 h-7 text-casino-neon-green" />
-          )}
-        </button>
+        {/* Mobile Actions */}
+        <div className="flex md:hidden items-center gap-2">
+          {/* Mobile Search Button */}
+          <button
+            className="flex items-center justify-center p-2 rounded hover:bg-casino-neon-green/10 transition-colors"
+            onClick={toggleMobileSearch}
+          >
+            <Search className="w-6 h-6 text-casino-neon-green" />
+          </button>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="flex items-center justify-center p-2 rounded hover:bg-casino-neon-green/10 transition-colors"
+            onClick={toggleMobileMenu}
+          >
+            {mobileMenuOpen ? (
+              <X className="w-7 h-7 text-casino-neon-green" />
+            ) : (
+              <Menu className="w-7 h-7 text-casino-neon-green" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer */}
@@ -275,22 +300,10 @@ const Navbar = () => {
           <div className={`relative w-80 h-full bg-casino-card-bg text-white flex flex-col shadow-2xl border-l border-casino-neon-green/20 ${
             isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'
           }`}>
-            {/* Header with Brand Section */}
-            <div className="bg-casino-card-bg border-b border-casino-border-subtle p-4 flex-shrink-0 shadow-lg shadow-casino-border-subtle/30">
-              <div className="flex items-center gap-3 mb-4">
-                {/* Brand Section */}
-                <div className="w-10 h-10 bg-gradient-to-br from-casino-neon-green/30 to-casino-neon-blue/30 rounded-xl flex items-center justify-center shadow-lg">
-                  <Star className="w-5 h-5 text-casino-neon-green" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-bold text-white">CGSG Casino Guide</h2>
-                  <p className="text-xs text-casino-neon-green/80">Your trusted casino companion</p>
-                </div>
-              </div>
-            </div>
+            {/* Header - REMOVED: Brand section moved to navbar */}
 
-            {/* User Profile Section */}
-            <div className="p-4 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0 shadow-md shadow-casino-border-subtle/20">
+            {/* User Profile Section - Moved to top */}
+            <div className="p-3 border-b border-casino-border-subtle bg-casino-card-bg flex-shrink-0">
               {user ? (
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-casino-card-bg/30 border border-casino-neon-green/20">
                   <Avatar className="w-10 h-10 border-2 border-casino-neon-green/30">
@@ -478,6 +491,56 @@ const Navbar = () => {
                   <p className="text-xs text-gray-500">
                     © 2024 CGSG Casino Guide. All rights reserved.
                   </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Search Overlay */}
+      {mobileSearchOpen && (
+        <div className="fixed inset-0 bg-casino-dark/95 backdrop-blur-sm z-50 md:hidden">
+          <div className="flex flex-col h-full">
+            {/* Search Header */}
+            <div className="flex items-center justify-between p-4 border-b border-casino-border-subtle">
+              <h3 className="text-lg font-semibold text-white">Search</h3>
+              <button
+                onClick={() => setMobileSearchOpen(false)}
+                className="p-2 rounded hover:bg-casino-neon-green/10 transition-colors"
+              >
+                <X className="w-6 h-6 text-casino-neon-green" />
+              </button>
+            </div>
+
+            {/* Search Content */}
+            <div className="flex-1 p-4">
+              <EnhancedSearchBar
+                className="w-full mb-6"
+                placeholder="Search casinos, games, reviews..."
+                autoFocus
+              />
+
+              {/* Quick Search Suggestions */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold text-casino-neon-green">Popular Searches</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <button className="p-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-left hover:border-casino-neon-green/50 transition-colors">
+                    <div className="text-sm font-medium text-white">Top Casinos</div>
+                    <div className="text-xs text-gray-400">Best rated</div>
+                  </button>
+                  <button className="p-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-left hover:border-casino-neon-green/50 transition-colors">
+                    <div className="text-sm font-medium text-white">Bonuses</div>
+                    <div className="text-xs text-gray-400">Latest offers</div>
+                  </button>
+                  <button className="p-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-left hover:border-casino-neon-green/50 transition-colors">
+                    <div className="text-sm font-medium text-white">Reviews</div>
+                    <div className="text-xs text-gray-400">User ratings</div>
+                  </button>
+                  <button className="p-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-left hover:border-casino-neon-green/50 transition-colors">
+                    <div className="text-sm font-medium text-white">Live Games</div>
+                    <div className="text-xs text-gray-400">Real dealers</div>
+                  </button>
                 </div>
               </div>
             </div>

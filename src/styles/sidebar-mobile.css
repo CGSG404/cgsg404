@@ -82,19 +82,7 @@
     font-size: 8px !important;
   }
 
-  /* Ultra-compact search */
-  .sidebar-content input {
-    height: 20px !important;
-    padding: 1px 2px 1px 16px !important;
-    font-size: 9px !important;
-    border-radius: 2px !important;
-  }
-
-  .sidebar-content input + svg {
-    width: 10px !important;
-    height: 10px !important;
-    left: 4px !important;
-  }
+  /* Search removed - moved to navbar */
   
   /* Compact featured casino */
   .featured-casino {

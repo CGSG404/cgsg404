@@ -8,7 +8,6 @@ import { PanelLeft } from "lucide-react"
 import { useIsMobile } from "@/src/hooks/use-mobile"
 import { cn } from "@/src/lib/utils"
 import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
 import { Separator } from "@/src/components/ui/separator"
 import { Sheet, SheetContent } from "@/src/components/ui/sheet"
 import { Skeleton } from "@/src/components/ui/skeleton"
@@ -19,7 +18,7 @@ import {
   TooltipTrigger,
 } from "@/src/components/ui/tooltip"
 import Link from 'next/link';
-import { Star, Book, List, MessageCircle, Compass, Newspaper, Users, Gamepad2, Home, Search } from 'lucide-react';
+import { Star, Book, List, MessageCircle, Compass, Newspaper, Users, Gamepad2, Home } from 'lucide-react';
 import { SidebarUserInfo, SidebarQuickStats, SidebarFeaturedCasino } from './sidebar-user-info';
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
@@ -338,23 +337,7 @@ const SidebarInset = React.forwardRef<
 })
 SidebarInset.displayName = "SidebarInset"
 
-const SidebarInput = React.forwardRef<
-  React.ElementRef<typeof Input>,
-  React.ComponentProps<typeof Input>
->(({ className, ...props }, ref) => {
-  return (
-    <Input
-      ref={ref}
-      data-sidebar="input"
-      className={cn(
-        "h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
-        className
-      )}
-      {...props}
-    />
-  )
-})
-SidebarInput.displayName = "SidebarInput"
+// SidebarInput removed - search moved to navbar
 
 const SidebarHeader = React.forwardRef<
   HTMLDivElement,
@@ -750,7 +733,6 @@ export {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarInput,
   SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
@@ -785,17 +767,7 @@ export function AppSidebar() {
           {/* Quick Stats */}
           <SidebarQuickStats />
 
-          {/* Search Bar */}
-          <div className="p-1 sm:p-1.5 border-b border-casino-border-subtle/30">
-            <div className="relative">
-              <Search className="absolute left-1.5 top-1/2 transform -translate-y-1/2 text-gray-400 w-2.5 h-2.5 sm:w-3 sm:h-3" />
-              <Input
-                type="text"
-                placeholder="Search..."
-                className="pl-5 pr-1.5 py-0.5 text-xs h-6 bg-casino-card-bg border-casino-border-subtle text-white placeholder-gray-400 focus:border-casino-neon-green focus:ring-1 focus:ring-casino-neon-green/50 rounded-sm"
-              />
-            </div>
-          </div>
+          {/* Search Bar - REMOVED: Moved to navbar */}
 
           {/* Main Navigation */}
           <div className="flex-1 p-1 sm:p-1.5">

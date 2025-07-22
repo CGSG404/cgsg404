@@ -27,10 +27,12 @@ export const sessionFix = {
       }
       sessionKeysToRemove.forEach(key => sessionStorage.removeItem(key));
 
-      console.log('🧹 Auth storage cleared:', {
-        localStorage: keysToRemove,
-        sessionStorage: sessionKeysToRemove
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🧹 Auth storage cleared:', {
+          localStorage: keysToRemove,
+          sessionStorage: sessionKeysToRemove
+        });
+      }
     } catch (error) {
       console.error('Error clearing auth storage:', error);
     }
@@ -83,7 +85,9 @@ export const sessionFix = {
         return false;
       }
       
-      console.log('✅ Session is healthy');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Session is healthy');
+      }
       return true;
     } catch (error) {
       console.error('Session health check error:', error);
@@ -96,7 +100,9 @@ export const sessionFix = {
     const isHealthy = await sessionFix.checkSessionHealth();
     
     if (!isHealthy) {
-      console.log('🔧 Auto-fixing session issues...');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 Auto-fixing session issues...');
+      }
       await sessionFix.forceSessionRefresh();
     }
     
@@ -127,7 +133,9 @@ export const sessionFix = {
         }
       };
       
-      console.log('🔍 Session Debug Info:', debugInfo);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 Session Debug Info:', debugInfo);
+      }
       return debugInfo;
     } catch (error) {
       console.error('Debug session error:', error);
