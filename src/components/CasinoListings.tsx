@@ -12,6 +12,7 @@ import { databaseApi } from '@/src/lib/database-api';
 import { useIsDesktop } from '@/src/hooks/useIsDesktop';
 import type { CasinoForCard } from '@/types/database';
 import { Skeleton } from '@/src/components/ui/skeleton';
+import { CardLoadingSkeleton } from '@/src/components/LoadingScreen';
 
 // Use the database type instead of local interface
 type Casino = CasinoForCard;
@@ -94,30 +95,8 @@ const CasinoListings = () => {
   const visibleCasinos = filteredAndSortedCasinos.slice(0, visibleCount);
   const hasMore = visibleCount < filteredAndSortedCasinos.length;
 
-  // Loading skeleton
-  const LoadingSkeleton = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="bg-casino-card-bg rounded-lg p-6 border border-casino-border-subtle">
-          <div className="flex items-center gap-4 mb-4">
-            <Skeleton className="w-16 h-16 rounded-lg" />
-            <div className="flex-1">
-              <Skeleton className="h-6 w-32 mb-2" />
-              <Skeleton className="h-4 w-24" />
-            </div>
-          </div>
-          <Skeleton className="h-4 w-full mb-2" />
-          <Skeleton className="h-4 w-3/4 mb-4" />
-          <div className="flex gap-2 mb-4">
-            <Skeleton className="h-6 w-16" />
-            <Skeleton className="h-6 w-20" />
-            <Skeleton className="h-6 w-14" />
-          </div>
-          <Skeleton className="h-10 w-full" />
-        </div>
-      ))}
-    </div>
-  );
+  // Loading skeleton - using new component
+  const LoadingSkeleton = () => <CardLoadingSkeleton count={6} />;
 
   // Error state
   if (error) {

@@ -231,11 +231,13 @@ const Navbar = () => {
                   Admin: {isAdmin ? '✅' : '❌'} | Loading: {adminLoading ? '⏳' : '✅'}
                 </div>
               )}
-              <button
-                onClick={() => setShowProfile(!showProfile)}
-                className="flex items-center gap-2 relative"
-              >
-                <Button variant="ghost" size="icon">
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowProfile(!showProfile)}
+                  className="flex items-center gap-2"
+                >
                   {user?.user_metadata?.avatar_url ? (
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user.user_metadata.avatar_url} alt={user.email || 'User'} />
@@ -267,7 +269,7 @@ const Navbar = () => {
                     </div>
                   </div>
                 )}
-              </button>
+              </div>
               <Button
                 variant="outline"
                 size="sm"

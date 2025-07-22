@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Loader2 } from "lucide-react";
+import { LoadingOverlay } from "@/src/components/LoadingScreen";
 
 /**
  * PageLoader shows a full-screen semi-transparent overlay with a spinner
@@ -28,11 +28,11 @@ export default function PageLoader() {
     };
   }, [router.events]);
 
-  if (!loading) return null;
-
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <Loader2 className="h-12 w-12 animate-spin text-casino-neon-green" />
-    </div>
+    <LoadingOverlay
+      isLoading={loading}
+      text="Navigating..."
+      variant="casino"
+    />
   );
 }

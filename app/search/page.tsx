@@ -14,6 +14,7 @@ import { Checkbox } from '@/src/components/ui/checkbox';
 import { Slider } from '@/src/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CardLoadingSkeleton, LoadingScreen } from '@/src/components/LoadingScreen';
 
 interface SearchFilters {
   safetyIndex: string[];
@@ -309,11 +310,7 @@ const SearchResultsContent = () => {
           {/* Results */}
           <div className="flex-1">
             {isLoading ? (
-              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <Skeleton key={i} className="h-64 bg-casino-card-bg" />
-                ))}
-              </div>
+              <CardLoadingSkeleton count={6} />
             ) : error ? (
               <div className="text-center py-12">
                 <p className="text-red-400 mb-4">Failed to load search results</p>
@@ -371,12 +368,15 @@ const SearchResultsContent = () => {
 const SearchPage = () => {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-casino-dark text-white flex items-center justify-center">
-        <div className="text-center">
-          <Search className="w-16 h-16 mx-auto mb-4 text-gray-400 animate-pulse" />
-          <p className="text-gray-400">Loading search...</p>
-        </div>
-      </div>
+      <LoadingScreen
+        isLoading={true}
+        variant="casino"
+        text="Loading search..."
+        overlay={false}
+        className="min-h-screen bg-casino-dark"
+      >
+        <div />
+      </LoadingScreen>
     }>
       <SearchResultsContent />
     </Suspense>
