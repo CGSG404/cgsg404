@@ -17,8 +17,8 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar kiri, fixed di desktop, drawer di mobile - RESPONSIVE WIDTH */}
-      <div className="hidden md:block w-44 xs:w-48 sm:w-52 md:w-56 lg:w-[14rem] flex-shrink-0 h-full">
+      {/* Sidebar kiri, fixed di desktop, drawer di mobile - ULTRA COMPACT */}
+      <div className="hidden md:block w-40 xs:w-44 sm:w-48 md:w-52 lg:w-56 flex-shrink-0 h-full">
         <AppSidebar />
       </div>
       {/* Konten utama */}

@@ -4,96 +4,96 @@
 @media (max-width: 640px) {
   /* Sidebar container - more compact */
   .sidebar-container {
-    width: 192px !important; /* Force 192px (w-48) on mobile */
-    min-width: 192px !important;
-    max-width: 192px !important;
+    width: 160px !important; /* Even more compact: 160px */
+    min-width: 160px !important;
+    max-width: 160px !important;
   }
 
   /* Sidebar panel wrapper - ensure consistent width */
   [data-sidebar="sidebar"] {
-    width: 192px !important;
-    min-width: 192px !important;
-    max-width: 192px !important;
+    width: 160px !important;
+    min-width: 160px !important;
+    max-width: 160px !important;
   }
 
   /* ClientLayout sidebar panel */
   .flex.min-h-screen > div:first-child {
-    width: 192px !important;
-    min-width: 192px !important;
-    max-width: 192px !important;
+    width: 160px !important;
+    min-width: 160px !important;
+    max-width: 160px !important;
   }
-  
+
   /* Remove all unnecessary spacing on mobile */
   .sidebar-content > div {
-    padding-left: 8px !important;
-    padding-right: 8px !important;
-    padding-top: 6px !important;
-    padding-bottom: 6px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
   }
   
   /* Ultra-compact user info */
   .user-avatar img,
   .user-avatar > div {
-    width: 24px !important;
-    height: 24px !important;
-    font-size: 10px !important;
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 9px !important;
   }
-  
+
   /* Compact stats cards */
   .stats-card {
-    padding: 4px !important;
-    border-radius: 4px !important;
+    padding: 2px !important;
+    border-radius: 2px !important;
   }
-  
+
   .stats-card > div > div {
-    width: 16px !important;
-    height: 16px !important;
+    width: 12px !important;
+    height: 12px !important;
   }
-  
+
   .stats-card span {
-    font-size: 10px !important;
+    font-size: 9px !important;
   }
-  
+
   .stats-card p {
-    font-size: 10px !important;
-    line-height: 1.2 !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
   }
   
   /* Ultra-compact navigation */
   .sidebar-nav-item a {
-    padding: 4px 6px !important;
-    border-radius: 4px !important;
-    gap: 6px !important;
+    padding: 2px 4px !important;
+    border-radius: 2px !important;
+    gap: 4px !important;
   }
-  
+
   .sidebar-nav-item svg {
-    width: 14px !important;
-    height: 14px !important;
-  }
-  
-  .sidebar-nav-item span {
-    font-size: 11px !important;
-    line-height: 1.2 !important;
-  }
-  
-  /* Compact badges */
-  .sidebar-nav-item span[class*="bg-"] {
-    padding: 1px 4px !important;
-    font-size: 9px !important;
-  }
-  
-  /* Ultra-compact search */
-  .sidebar-content input {
-    height: 24px !important;
-    padding: 2px 4px 2px 20px !important;
-    font-size: 10px !important;
-    border-radius: 4px !important;
-  }
-  
-  .sidebar-content input + svg {
     width: 12px !important;
     height: 12px !important;
-    left: 6px !important;
+  }
+
+  .sidebar-nav-item span {
+    font-size: 10px !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Compact badges */
+  .sidebar-nav-item span[class*="bg-"] {
+    padding: 0px 2px !important;
+    font-size: 8px !important;
+  }
+
+  /* Ultra-compact search */
+  .sidebar-content input {
+    height: 20px !important;
+    padding: 1px 2px 1px 16px !important;
+    font-size: 9px !important;
+    border-radius: 2px !important;
+  }
+
+  .sidebar-content input + svg {
+    width: 10px !important;
+    height: 10px !important;
+    left: 4px !important;
   }
   
   /* Compact featured casino */
@@ -188,23 +188,23 @@
 /* Small mobile devices (< 480px) - even more compact */
 @media (max-width: 480px) {
   .sidebar-container {
-    width: 176px !important; /* Even smaller for very small screens */
-    min-width: 176px !important;
-    max-width: 176px !important;
+    width: 144px !important; /* Ultra compact: 144px */
+    min-width: 144px !important;
+    max-width: 144px !important;
   }
 
   /* Sidebar panel wrapper - ultra compact */
   [data-sidebar="sidebar"] {
-    width: 176px !important;
-    min-width: 176px !important;
-    max-width: 176px !important;
+    width: 144px !important;
+    min-width: 144px !important;
+    max-width: 144px !important;
   }
 
   /* ClientLayout sidebar panel - ultra compact */
   .flex.min-h-screen > div:first-child {
-    width: 176px !important;
-    min-width: 176px !important;
-    max-width: 176px !important;
+    width: 144px !important;
+    min-width: 144px !important;
+    max-width: 144px !important;
   }
   
   /* Hide some less important elements */
