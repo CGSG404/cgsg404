@@ -1,0 +1,224 @@
+/* Mobile-First Sidebar Optimizations */
+
+/* Ultra-compact mobile sidebar */
+@media (max-width: 640px) {
+  /* Sidebar container - more compact */
+  .sidebar-container {
+    width: 192px !important; /* Force 192px (w-48) on mobile */
+    min-width: 192px !important;
+    max-width: 192px !important;
+  }
+  
+  /* Remove all unnecessary spacing on mobile */
+  .sidebar-content > div {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+  
+  /* Ultra-compact user info */
+  .user-avatar img,
+  .user-avatar > div {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 10px !important;
+  }
+  
+  /* Compact stats cards */
+  .stats-card {
+    padding: 4px !important;
+    border-radius: 4px !important;
+  }
+  
+  .stats-card > div > div {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  
+  .stats-card span {
+    font-size: 10px !important;
+  }
+  
+  .stats-card p {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Ultra-compact navigation */
+  .sidebar-nav-item a {
+    padding: 4px 6px !important;
+    border-radius: 4px !important;
+    gap: 6px !important;
+  }
+  
+  .sidebar-nav-item svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  .sidebar-nav-item span {
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Compact badges */
+  .sidebar-nav-item span[class*="bg-"] {
+    padding: 1px 4px !important;
+    font-size: 9px !important;
+  }
+  
+  /* Ultra-compact search */
+  .sidebar-content input {
+    height: 24px !important;
+    padding: 2px 4px 2px 20px !important;
+    font-size: 10px !important;
+    border-radius: 4px !important;
+  }
+  
+  .sidebar-content input + svg {
+    width: 12px !important;
+    height: 12px !important;
+    left: 6px !important;
+  }
+  
+  /* Compact featured casino */
+  .featured-casino {
+    padding: 6px !important;
+    border-radius: 4px !important;
+  }
+  
+  .featured-casino > div > div:first-child {
+    margin-bottom: 4px !important;
+  }
+  
+  .featured-casino > div > div:first-child p {
+    font-size: 10px !important;
+  }
+  
+  .featured-casino > div > div:nth-child(2) {
+    gap: 6px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .featured-casino > div > div:nth-child(2) > div:first-child {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 2px !important;
+  }
+  
+  .featured-casino > div > div:nth-child(2) > div:first-child span {
+    font-size: 9px !important;
+  }
+  
+  .featured-casino > div > div:nth-child(2) > div:last-child p {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+  
+  .featured-casino button {
+    padding: 4px 6px !important;
+    font-size: 10px !important;
+    border-radius: 3px !important;
+  }
+  
+  /* Hide section headers on mobile to save space */
+  .sidebar-content h3 {
+    display: none !important;
+  }
+  
+  /* Reduce gaps between sections */
+  .sidebar-content > div + div {
+    margin-top: 4px !important;
+  }
+  
+  /* Compact borders */
+  .sidebar-content [class*="border-b"],
+  .sidebar-content [class*="border-t"] {
+    border-width: 1px !important;
+  }
+  
+  /* Disable complex animations on mobile for performance */
+  .sidebar-nav-item::before,
+  .stats-card::after,
+  .featured-casino::before {
+    display: none !important;
+  }
+  
+  /* Simplify hover effects */
+  .sidebar-nav-item:hover {
+    transform: none !important;
+    background-color: rgba(0, 255, 153, 0.1) !important;
+  }
+  
+  .stats-card:hover {
+    transform: none !important;
+    background-color: rgba(0, 255, 153, 0.05) !important;
+  }
+  
+  /* Compact scrollbar */
+  .sidebar-content::-webkit-scrollbar {
+    width: 2px !important;
+  }
+  
+  .sidebar-content::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+  
+  .sidebar-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 153, 0.3) !important;
+    border-radius: 1px !important;
+  }
+}
+
+/* Small mobile devices (< 480px) - even more compact */
+@media (max-width: 480px) {
+  .sidebar-container {
+    width: 176px !important; /* Even smaller for very small screens */
+    min-width: 176px !important;
+    max-width: 176px !important;
+  }
+  
+  /* Hide some less important elements */
+  .stats-card:nth-child(3),
+  .stats-card:nth-child(4) {
+    display: none !important;
+  }
+  
+  /* Make grid 1 column for stats */
+  .sidebar-content .grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 2px !important;
+  }
+  
+  /* Ultra-compact text */
+  .sidebar-nav-item span {
+    font-size: 10px !important;
+  }
+  
+  .featured-casino p,
+  .featured-casino span {
+    font-size: 9px !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 768px) {
+  .sidebar-container {
+    width: 208px !important; /* w-52 */
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 769px) {
+  .sidebar-container {
+    width: 224px !important; /* w-56 */
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1024px) {
+  .sidebar-container {
+    width: 224px !important; /* Keep compact even on large screens */
+  }
+}

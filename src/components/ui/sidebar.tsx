@@ -24,8 +24,8 @@ import { SidebarUserInfo, SidebarQuickStats, SidebarFeaturedCasino } from './sid
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = "14rem"        // Reduced from 16rem (256px) to 14rem (224px)
-const SIDEBAR_WIDTH_MOBILE = "16rem"   // Reduced from 18rem (288px) to 16rem (256px)
+const SIDEBAR_WIDTH = "14rem"        // Desktop: 224px
+const SIDEBAR_WIDTH_MOBILE = "12rem"   // Mobile: 192px (much more compact)
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
@@ -767,13 +767,14 @@ export {
 // Modern Casino-themed Sidebar with enhanced UX
 export function AppSidebar() {
   React.useEffect(() => {
-    // Import CSS animations
+    // Import CSS animations and mobile optimizations
     import('@/src/styles/sidebar-animations.css');
+    import('@/src/styles/sidebar-mobile.css');
   }, []);
 
   return (
     <SidebarProvider>
-      <Sidebar className="sidebar-container flex h-[calc(100vh-64px)] w-56 sm:w-60 md:w-[14rem] flex-col bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark border-r border-casino-border-subtle/50 mt-[64px] overflow-hidden shadow-2xl sidebar-glow">
+      <Sidebar className="sidebar-container flex h-[calc(100vh-64px)] w-44 xs:w-48 sm:w-52 md:w-56 lg:w-[14rem] flex-col bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark border-r border-casino-border-subtle/50 mt-[64px] overflow-hidden shadow-2xl sidebar-glow">
         <SidebarContent className="sidebar-content flex flex-col h-full">
           {/* User Info Section */}
           <SidebarUserInfo />
@@ -782,24 +783,24 @@ export function AppSidebar() {
           <SidebarQuickStats />
 
           {/* Search Bar */}
-          <div className="p-2 sm:p-3 md:p-4 border-b border-casino-border-subtle/30">
+          <div className="p-1.5 sm:p-2 md:p-3 border-b border-casino-border-subtle/30">
             <div className="relative">
-              <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
               <Input
                 type="text"
-                placeholder="Search casinos, games..."
-                className="pl-7 sm:pl-9 pr-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-casino-card-bg border-casino-border-subtle text-white placeholder-gray-400 focus:border-casino-neon-green focus:ring-1 focus:ring-casino-neon-green/50"
+                placeholder="Search..."
+                className="pl-6 pr-2 py-1 text-xs h-7 bg-casino-card-bg border-casino-border-subtle text-white placeholder-gray-400 focus:border-casino-neon-green focus:ring-1 focus:ring-casino-neon-green/50 rounded-sm"
               />
             </div>
           </div>
 
           {/* Main Navigation */}
-          <div className="flex-1 p-2 sm:p-3 md:p-4">
-            <div className="mb-2 sm:mb-3">
-              <h3 className="text-xs font-semibold text-casino-neon-green uppercase tracking-wider mb-2 sm:mb-3">Main Navigation</h3>
+          <div className="flex-1 p-1.5 sm:p-2 md:p-3">
+            <div className="mb-1.5 sm:mb-2">
+              <h3 className="text-xs font-semibold text-casino-neon-green uppercase tracking-wider mb-1.5 hidden sm:block">Main Navigation</h3>
             </div>
             <SidebarGroup>
-              <div className="space-y-0.5 sm:space-y-1">
+              <div className="space-y-0.5">
                 <div className="sidebar-nav-item"><SidebarNavItem href="/" icon={Home} label="Home" /></div>
                 <div className="sidebar-nav-item"><SidebarNavItem href="/casinos" icon={Gamepad2} label="Casinos" badge="Hot" /></div>
                 <div className="sidebar-nav-item"><SidebarNavItem href="/games" icon={Star} label="Top Casinos" /></div>
@@ -807,11 +808,11 @@ export function AppSidebar() {
               </div>
             </SidebarGroup>
 
-            <div className="mt-4 sm:mt-6 mb-2 sm:mb-3">
-              <h3 className="text-xs font-semibold text-casino-neon-green uppercase tracking-wider mb-2 sm:mb-3">Community</h3>
+            <div className="mt-3 sm:mt-4 mb-1.5 sm:mb-2">
+              <h3 className="text-xs font-semibold text-casino-neon-green uppercase tracking-wider mb-1.5 hidden sm:block">Community</h3>
             </div>
             <SidebarGroup>
-              <div className="space-y-0.5 sm:space-y-1">
+              <div className="space-y-0.5">
                 <div className="sidebar-nav-item"><SidebarNavItem href="/forum" icon={MessageCircle} label="Forum" badge="New" /></div>
                 <div className="sidebar-nav-item"><SidebarNavItem href="/list-report" icon={List} label="List Report" /></div>
               </div>
@@ -840,7 +841,7 @@ function SidebarNavItem({ href, icon: Icon, label, badge }: SidebarNavItemProps)
   return (
     <Link
       href={href}
-      className="group relative flex items-center justify-between px-2 sm:px-3 py-1.5 sm:py-2.5 rounded-lg text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-casino-neon-green/10 hover:to-casino-neon-purple/10 hover:border-casino-neon-green/30 border border-transparent transition-all duration-300 font-medium overflow-hidden"
+      className="group relative flex items-center justify-between px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-casino-neon-green/10 hover:to-casino-neon-purple/10 hover:border-casino-neon-green/30 border border-transparent transition-all duration-300 font-medium overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -850,18 +851,18 @@ function SidebarNavItem({ href, icon: Icon, label, badge }: SidebarNavItemProps)
       {/* Left border accent */}
       <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-casino-neon-green rounded-r-full transition-all duration-300 ${isHovered ? 'h-8 opacity-100' : 'h-0 opacity-0'}`} />
 
-      <div className="relative flex items-center gap-2 sm:gap-3 z-10 flex-1 min-w-0">
+      <div className="relative flex items-center gap-1.5 sm:gap-2 z-10 flex-1 min-w-0">
         <div className="relative flex-shrink-0">
-          <Icon className="w-4 h-4 sm:w-5 sm:h-5 group-hover:text-casino-neon-green transition-all duration-300 group-hover:scale-110" />
+          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:text-casino-neon-green transition-all duration-300 group-hover:scale-110" />
           {/* Icon glow effect */}
-          <Icon className={`absolute inset-0 w-4 h-4 sm:w-5 sm:h-5 text-casino-neon-green transition-opacity duration-300 blur-sm ${isHovered ? 'opacity-50' : 'opacity-0'}`} />
+          <Icon className={`absolute inset-0 w-3.5 h-3.5 sm:w-4 sm:h-4 text-casino-neon-green transition-opacity duration-300 blur-sm ${isHovered ? 'opacity-50' : 'opacity-0'}`} />
         </div>
-        <span className="text-xs sm:text-sm group-hover:text-white transition-colors duration-300 group-hover:translate-x-1 transform truncate">{label}</span>
+        <span className="text-xs group-hover:text-white transition-colors duration-300 group-hover:translate-x-1 transform truncate leading-tight">{label}</span>
       </div>
 
       {badge && (
         <div className="relative z-10 flex-shrink-0">
-          <span className={`text-xs px-1.5 sm:px-2 py-0.5 rounded-full border transition-all duration-300 ${
+          <span className={`text-xs px-1 py-0.5 rounded-full border transition-all duration-300 leading-none ${
             badge === 'Hot'
               ? 'bg-red-500/20 text-red-400 border-red-500/30 group-hover:bg-red-500/30 group-hover:shadow-[0_0_10px_rgba(239,68,68,0.3)]'
               : badge === 'New'
