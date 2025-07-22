@@ -155,6 +155,73 @@
   opacity: 0.7;
 }
 
+/* Responsive optimizations for mobile devices */
+@media (max-width: 640px) {
+  /* Reduce animation intensity on mobile for better performance */
+  .sidebar-glow {
+    animation: sidebar-glow-mobile 4s ease-in-out infinite;
+  }
+
+  @keyframes sidebar-glow-mobile {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(0, 255, 153, 0.08);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(0, 255, 153, 0.12), 0 0 25px rgba(139, 92, 246, 0.08);
+    }
+  }
+
+  .pulse-neon {
+    animation: pulse-neon-mobile 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-neon-mobile {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+  }
+
+  /* Simplify hover effects on mobile */
+  .sidebar-nav-item:hover {
+    transform: translateX(2px);
+    transition: transform 0.15s ease-out;
+  }
+
+  .stats-card:hover {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 4px 15px rgba(0, 255, 153, 0.1);
+  }
+
+  /* Disable complex animations on mobile for performance */
+  .featured-casino::before {
+    animation-duration: 4s;
+  }
+
+  .user-avatar::after {
+    inset: -1px;
+  }
+
+  .user-avatar:hover::after {
+    opacity: 0.2;
+  }
+}
+
+/* Medium screens optimizations */
+@media (min-width: 641px) and (max-width: 768px) {
+  .sidebar-nav-item:hover {
+    transform: translateX(3px);
+  }
+
+  .stats-card:hover {
+    transform: translateY(-1.5px) scale(1.015);
+  }
+}
+
 /* Responsive animations - disable on mobile for performance */
 @media (max-width: 768px) {
   .sidebar-container,
