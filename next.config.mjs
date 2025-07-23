@@ -8,14 +8,28 @@ const nextConfig = {
   },
   // Ultra minimal configuration for maximum Vercel compatibility
   reactStrictMode: false,
+
+  // Performance optimizations for production
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@tanstack/react-query'],
+    optimizeCss: true,
+    scrollRestoration: true,
+  },
+
   images: {
     domains: ['images.unsplash.com', 'via.placeholder.com'],
-    unoptimized: true,
+    unoptimized: true, // Keep for Vercel compatibility
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 3600,
   },
+
+  // Production optimizations
+  compress: true,
+  poweredByHeader: false,
   // Vercel-specific optimizations
   output: 'standalone',
-  // Webpack configuration for better module resolution
-  webpack: (config, { isServer }) => {
+  // Enhanced Webpack configuration for production optimization
+  webpack: (config, { isServer, dev }) => {
     // Improve module resolution
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -33,6 +47,26 @@ const nextConfig = {
       '@/hooks': './src/hooks',
       '@/utils': './src/utils',
     };
+
+    // Production optimizations
+    if (!dev && !isServer) {
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      };
+    }
 
     return config;
   },
@@ -56,6 +90,24 @@ const nextConfig = {
           {
             key: 'Access-Control-Allow-Credentials',
             value: 'true',
+          },
+          // Security headers
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          // Performance headers
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

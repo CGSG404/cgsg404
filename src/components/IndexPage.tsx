@@ -8,10 +8,30 @@ import HeroSlider from '@/src/components/HeroSlider';
 import InfoCard from '@/src/components/InfoCard';
 import HeroBannerSlider from '@/src/components/HeroBannerSlider';
 import { Gift, PartyPopper, Ticket } from 'lucide-react';
+import {
+  LogoSliderSkeleton,
+  ChartSkeleton,
+  FooterSkeleton
+} from '@/src/components/ui/loading-skeletons';
 
-const LogoSlider = lazy(() => import('@/src/components/LogoSlider'));
-const Chart = lazy(() => import('@/src/components/Chart'));
-const Footer = lazy(() => import('@/src/components/Footer'));
+// Progressive Loading - Priority-based component loading
+const LogoSlider = lazy(() =>
+  import('@/src/components/LogoSlider').then(module => ({
+    default: module.default
+  }))
+);
+
+const Chart = lazy(() =>
+  import('@/src/components/Chart').then(module => ({
+    default: module.default
+  }))
+);
+
+const Footer = lazy(() =>
+  import('@/src/components/Footer').then(module => ({
+    default: module.default
+  }))
+);
 
 const IndexPage = () => {
 // Semua logic dan UI utama Index sudah di sini.
@@ -54,9 +74,16 @@ const IndexPage = () => {
           </div>
         </div>
       </div>
-      <Suspense fallback={null}>
+      {/* Enhanced Suspense Boundaries - Professional Loading States */}
+      <Suspense fallback={<LogoSliderSkeleton />}>
         <LogoSlider />
+      </Suspense>
+
+      <Suspense fallback={<ChartSkeleton />}>
         <Chart />
+      </Suspense>
+
+      <Suspense fallback={<FooterSkeleton />}>
         <Footer />
       </Suspense>
     </div>

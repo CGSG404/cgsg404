@@ -1,7 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider, HydrationBoundary } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import IndexPage from "@/src/components/IndexPage";
 
 interface Props {
@@ -12,21 +12,13 @@ export default function IndexHydrated({ dehydratedState }: Props) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000, // 1 minute
-        retry: 1,
+        staleTime: 5 * 60 * 1000, // 5 minutes - longer for casino data
+        cacheTime: 10 * 60 * 1000, // 10 minutes cache
+        retry: 2, // More retries for better reliability
+        refetchOnWindowFocus: false, // Prevent unnecessary refetches
       },
     },
   }));
-
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return <div className="text-white p-4">Loading...</div>;
-  }
 
   return (
     <QueryClientProvider client={queryClient}>
