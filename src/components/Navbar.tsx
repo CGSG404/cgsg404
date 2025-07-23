@@ -2,10 +2,11 @@
 
 import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
-import { Star, User, LogOut, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText, X } from 'lucide-react';
+import { Star, User, LogOut, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText, X, Search } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
 import { useAdmin } from '@/src/contexts/AdminContext'; // 🔧 ADD: Admin context for admin button
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
+import { motion, AnimatePresence } from 'framer-motion';
 // Removed hamburger imports - using professional text-based menu button
 
 import { useState, useEffect } from 'react';
@@ -19,6 +20,7 @@ const Navbar = () => {
   const [isNavigating, setIsNavigating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const { user, signOut, signInWithGoogle, loading } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
   const { isAdmin, adminInfo, isLoading: adminLoading } = useAdmin(); // 🔧 ADD: Get admin status
   const router = useRouter();
@@ -55,12 +57,32 @@ const Navbar = () => {
     }, 300); // Match animation duration
   };
 
+  const toggleMobileSearch = () => {
+    setShowMobileSearch(!showMobileSearch);
+    // Close mobile menu if open
+    if (mobileMenuOpen) {
+      closeMobileMenu();
+    }
+    // Prevent body scroll when search is open
+    if (!showMobileSearch) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  };
+
+  const closeMobileSearch = () => {
+    setShowMobileSearch(false);
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+  };
+
   // Handle mobile menu toggle
   const toggleMobileMenu = () => {
     mobileMenuOpen ? closeMobileMenu() : setMobileMenuOpen(true);
   };
 
-  // Auto-close mobile menu when switching to desktop
+  // Auto-close mobile menu and search when switching to desktop
   useEffect(() => {
     const handleResize = () => {
       // Immediate close when switching to desktop
@@ -68,6 +90,10 @@ const Navbar = () => {
         if (mobileMenuOpen) {
           console.log('🔧 Navbar: Auto-closing mobile menu on desktop resize');
           closeMobileMenu();
+        }
+        if (showMobileSearch) {
+          console.log('🔧 Navbar: Auto-closing mobile search on desktop resize');
+          closeMobileSearch();
         }
       }
     };
@@ -86,7 +112,23 @@ const Navbar = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleOrientationChange);
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, showMobileSearch]);
+
+  // Handle escape key to close mobile search
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (showMobileSearch) {
+          closeMobileSearch();
+        }
+      }
+    };
+
+    if (showMobileSearch) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [showMobileSearch]);
 
   // Debug logging (development only)
   useEffect(() => {
@@ -281,8 +323,19 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Actions - Direct Implementation without Button Containers */}
-        <div className="flex md:hidden items-center gap-4">
+        {/* Mobile Actions - Search + Hamburger Menu */}
+        <div className="flex md:hidden items-center gap-2">
+          {/* Mobile Search Icon */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleMobileSearch}
+            className="text-casino-neon-green hover:bg-casino-neon-green/10 hover:scale-105 transition-all duration-200 p-2 rounded-lg"
+            aria-label="Toggle search"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
+
           {/* Professional Hamburger Menu - Direct Implementation */}
           <div
             className="relative cursor-pointer p-2 focus:outline-none"
@@ -568,7 +621,55 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Mobile Search Overlay Removed - No longer using search button container */}
+      {/* Mobile Search Overlay */}
+      <AnimatePresence>
+        {showMobileSearch && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+              onClick={closeMobileSearch}
+            />
+
+            {/* Search Overlay */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="absolute top-full left-0 right-0 z-50 bg-casino-dark/95 backdrop-blur-md border-b border-casino-neon-green/30 shadow-lg md:hidden"
+            >
+              <div className="p-4">
+                <div className="flex items-center gap-3">
+                  {/* Search Input */}
+                  <div className="flex-1">
+                    <EnhancedSearchBar
+                      className="w-full"
+                      placeholder="Search casinos, games, reviews..."
+                      autoFocus
+                    />
+                  </div>
+
+                  {/* Close Button */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={closeMobileSearch}
+                    className="text-casino-neon-green hover:bg-casino-neon-green/10 transition-colors duration-200 p-2 rounded-lg flex-shrink-0"
+                    aria-label="Close search"
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

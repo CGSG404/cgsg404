@@ -78,7 +78,7 @@ export function LoadingScreen({
           className="mb-6"
         >
           <h2 className="text-2xl font-bold text-white mb-2">CGSG</h2>
-          <p className="text-casino-neon-green text-sm">Casino Guide Singapore</p>
+          <p className="text-casino-neon-green text-sm font-medium">CasinoGuru Singapore</p>
         </motion.div>
 
         {/* Loading Spinner */}

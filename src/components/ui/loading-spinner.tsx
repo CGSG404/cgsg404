@@ -175,6 +175,26 @@ export function LoadingSpinner({
     );
   }
 
+  // Minimal modern spinner (default)
+  if (variant === 'minimal' || variant === 'default') {
+    return (
+      <div className={cn('flex flex-col items-center gap-3', className)} {...props}>
+        <div className={cn('relative', sizeClasses[size])}>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 rounded-full border-2 border-slate-600 border-t-blue-500"
+          />
+        </div>
+        {showText && (
+          <span className={cn('text-slate-300 font-medium', textSizeClasses[size])}>
+            {text}
+          </span>
+        )}
+      </div>
+    );
+  }
+
   return null;
 }
 

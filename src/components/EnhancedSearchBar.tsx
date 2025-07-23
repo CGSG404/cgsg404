@@ -184,8 +184,13 @@ const EnhancedSearchBar = ({
 
   return (
     <div ref={searchRef} className={`relative ${className}`}>
-      <div className="relative flex items-center">
-        <Search className="absolute left-3 text-gray-400 w-4 h-4 z-10 pointer-events-none" />
+      <div className="relative">
+        {/* Search Icon - Left */}
+        <div className="absolute left-3 top-0 bottom-0 flex items-center justify-center pointer-events-none z-10">
+          <Search className="text-gray-400 w-4 h-4 flex-shrink-0" />
+        </div>
+
+        {/* Input Field */}
         <input
           ref={inputRef}
           type="text"
@@ -195,35 +200,48 @@ const EnhancedSearchBar = ({
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           autoFocus={autoFocus}
-          className="w-full pl-9 pr-12 py-2.5 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-casino-neon-green focus:ring-1 focus:ring-casino-neon-green/50 transition-all duration-200"
+          className="w-full h-10 pl-9 pr-16 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-casino-neon-green focus:ring-1 focus:ring-casino-neon-green/50 transition-all duration-200 text-sm"
+          style={{
+            lineHeight: '1.2',
+            paddingTop: '0',
+            paddingBottom: '0',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center'
+          }}
         />
-        
-        {/* Clear button */}
-        {query && (
-          <button
-            onClick={() => setQuery('')}
-            className="absolute right-9 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
 
-        {/* Filters toggle */}
-        {showFilters && (
-          <button
-            onClick={onFiltersToggle}
-            className="absolute right-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-casino-neon-green transition-colors"
-          >
-            <Filter className="w-4 h-4" />
-          </button>
-        )}
+        {/* Right side icons container */}
+        <div className="absolute right-3 top-0 bottom-0 flex items-center justify-center gap-1">
+          {/* Loading indicator */}
+          {suggestionsLoading && query.length >= 2 && (
+            <div className="flex items-center justify-center w-5 h-5">
+              <Loader2 className="w-4 h-4 text-casino-neon-green animate-spin flex-shrink-0" />
+            </div>
+          )}
 
-        {/* Loading indicator */}
-        {suggestionsLoading && query.length >= 2 && (
-          <div className="absolute right-2.5 top-1/2 transform -translate-y-1/2">
-            <Loader2 className="w-4 h-4 text-casino-neon-green animate-spin" />
-          </div>
-        )}
+          {/* Clear button */}
+          {query && !suggestionsLoading && (
+            <button
+              onClick={() => setQuery('')}
+              className="flex items-center justify-center w-5 h-5 text-gray-400 hover:text-white transition-colors rounded-sm hover:bg-gray-700/50"
+              aria-label="Clear search"
+            >
+              <X className="w-4 h-4 flex-shrink-0" />
+            </button>
+          )}
+
+          {/* Filters toggle */}
+          {showFilters && !query && !suggestionsLoading && (
+            <button
+              onClick={onFiltersToggle}
+              className="flex items-center justify-center w-5 h-5 text-gray-400 hover:text-casino-neon-green transition-colors rounded-sm hover:bg-casino-neon-green/10"
+              aria-label="Toggle filters"
+            >
+              <Filter className="w-4 h-4 flex-shrink-0" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Search Dropdown */}

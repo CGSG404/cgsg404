@@ -121,7 +121,7 @@ export default function Loading() {
               transition={{ delay: 0.3, duration: 0.5 }}
               className="text-casino-neon-green text-sm font-medium"
             >
-              Casino Guide Singapore
+              CasinoGuru Singapore
             </motion.p>
           </div>
         </motion.div>
@@ -225,7 +225,7 @@ export default function Loading() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.5 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-8 inset-x-0 flex justify-center"
       >
         <p className="text-xs text-gray-500 text-center">
           Preparing your gaming experience...
