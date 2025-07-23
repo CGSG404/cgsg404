@@ -2,11 +2,11 @@
 
 import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
-import { Star, User, LogOut, Search, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText, X } from 'lucide-react';
+import { Star, User, LogOut, Home, Gamepad2, Book, List, MessageCircle, Compass, Newspaper, Shield, FileText, X } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext'; // ✅ RE-ENABLED: Fixed double providers
 import { useAdmin } from '@/src/contexts/AdminContext'; // 🔧 ADD: Admin context for admin button
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
-import { AnimatedHamburger } from '@/src/components/ui/animated-hamburger';
+// Removed hamburger imports - using professional text-based menu button
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -18,7 +18,6 @@ const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const { user, signOut, signInWithGoogle, loading } = useAuth(); // ✅ RE-ENABLED: Fixed double providers
   const { isAdmin, adminInfo, isLoading: adminLoading } = useAdmin(); // 🔧 ADD: Get admin status
@@ -56,19 +55,8 @@ const Navbar = () => {
     }, 300); // Match animation duration
   };
 
-  // Handle mobile search toggle
-  const toggleMobileSearch = () => {
-    if (mobileMenuOpen) {
-      closeMobileMenu();
-    }
-    setMobileSearchOpen(!mobileSearchOpen);
-  };
-
   // Handle mobile menu toggle
   const toggleMobileMenu = () => {
-    if (mobileSearchOpen) {
-      setMobileSearchOpen(false);
-    }
     mobileMenuOpen ? closeMobileMenu() : setMobileMenuOpen(true);
   };
 
@@ -80,10 +68,6 @@ const Navbar = () => {
         if (mobileMenuOpen) {
           console.log('🔧 Navbar: Auto-closing mobile menu on desktop resize');
           closeMobileMenu();
-        }
-        if (mobileSearchOpen) {
-          console.log('🔧 Navbar: Auto-closing mobile search on desktop resize');
-          setMobileSearchOpen(false);
         }
       }
     };
@@ -102,7 +86,7 @@ const Navbar = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleOrientationChange);
     };
-  }, [mobileMenuOpen, mobileSearchOpen]);
+  }, [mobileMenuOpen]);
 
   // Debug logging (development only)
   useEffect(() => {
@@ -297,27 +281,57 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Actions */}
-        <div className="flex md:hidden items-center gap-2">
-          {/* Mobile Search Button - Enhanced */}
-          <button
-            className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-casino-card-bg/50 hover:bg-casino-neon-green/10 border border-casino-border-subtle hover:border-casino-neon-green/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-casino-neon-green/50"
-            onClick={toggleMobileSearch}
-          >
-            <Search className="w-5 h-5 text-casino-neon-green transition-transform duration-200 hover:scale-110" />
-            {mobileSearchOpen && (
-              <div className="absolute inset-0 rounded-lg border border-casino-neon-green/50 animate-pulse" />
-            )}
-          </button>
-
-          {/* Mobile Menu Button - Animated Hamburger */}
-          <AnimatedHamburger
-            isOpen={mobileMenuOpen}
+        {/* Mobile Actions - Direct Implementation without Button Containers */}
+        <div className="flex md:hidden items-center gap-4">
+          {/* Professional Hamburger Menu - Direct Implementation */}
+          <div
+            className="relative cursor-pointer p-2 focus:outline-none"
             onClick={toggleMobileMenu}
-            size="md"
-            variant="casino"
-            className="focus:ring-2 focus:ring-casino-neon-green/50"
-          />
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMobileMenu();
+              }
+            }}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {/* Professional Hamburger Lines */}
+            <div className="w-6 h-5 flex flex-col justify-between">
+              {/* Top Line */}
+              <div
+                className={`h-0.5 bg-casino-neon-green rounded-full transition-all duration-300 ease-in-out origin-center ${
+                  mobileMenuOpen
+                    ? 'rotate-45 translate-y-2 w-6'
+                    : 'rotate-0 translate-y-0 w-6'
+                }`}
+              />
+
+              {/* Middle Line */}
+              <div
+                className={`h-0.5 bg-casino-neon-green rounded-full transition-all duration-300 ease-in-out ${
+                  mobileMenuOpen
+                    ? 'opacity-0 scale-0'
+                    : 'opacity-100 scale-100 w-5'
+                }`}
+              />
+
+              {/* Bottom Line */}
+              <div
+                className={`h-0.5 bg-casino-neon-green rounded-full transition-all duration-300 ease-in-out origin-center ${
+                  mobileMenuOpen
+                    ? '-rotate-45 -translate-y-2 w-6'
+                    : 'rotate-0 translate-y-0 w-4'
+                }`}
+              />
+            </div>
+
+            {/* Professional Glow Effect */}
+            {mobileMenuOpen && (
+              <div className="absolute inset-0 rounded-lg bg-casino-neon-green/10 animate-pulse" />
+            )}
+          </div>
         </div>
       </div>
 
@@ -554,58 +568,7 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Enhanced Mobile Search Overlay */}
-      {mobileSearchOpen && (
-        <div className="fixed inset-0 bg-casino-dark/95 backdrop-blur-sm z-50 md:hidden animate-fade-in">
-          <div className="flex flex-col h-full animate-slide-up">
-            {/* Enhanced Search Header */}
-            <div className="flex items-center justify-between p-4 border-b border-casino-border-subtle bg-gradient-to-r from-casino-card-bg to-casino-card-bg/80">
-              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                <Search className="w-5 h-5 text-casino-neon-green" />
-                Search
-              </h3>
-              <button
-                onClick={() => setMobileSearchOpen(false)}
-                className="relative p-2 rounded-lg hover:bg-casino-neon-green/10 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-casino-neon-green/50"
-              >
-                <X className="w-6 h-6 text-casino-neon-green transition-transform duration-200 group-hover:rotate-90" />
-              </button>
-            </div>
-
-            {/* Search Content */}
-            <div className="flex-1 p-4">
-              <EnhancedSearchBar
-                className="w-full mb-6"
-                placeholder="Search casinos, games, reviews..."
-                autoFocus
-              />
-
-              {/* Quick Search Suggestions */}
-              <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-casino-neon-green">Popular Searches</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  <button className="p-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-left hover:border-casino-neon-green/50 transition-colors">
-                    <div className="text-sm font-medium text-white">Top Casinos</div>
-                    <div className="text-xs text-gray-400">Best rated</div>
-                  </button>
-                  <button className="p-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-left hover:border-casino-neon-green/50 transition-colors">
-                    <div className="text-sm font-medium text-white">Bonuses</div>
-                    <div className="text-xs text-gray-400">Latest offers</div>
-                  </button>
-                  <button className="p-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-left hover:border-casino-neon-green/50 transition-colors">
-                    <div className="text-sm font-medium text-white">Reviews</div>
-                    <div className="text-xs text-gray-400">User ratings</div>
-                  </button>
-                  <button className="p-3 bg-casino-card-bg border border-casino-border-subtle rounded-lg text-left hover:border-casino-neon-green/50 transition-colors">
-                    <div className="text-sm font-medium text-white">Live Games</div>
-                    <div className="text-xs text-gray-400">Real dealers</div>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Mobile Search Overlay Removed - No longer using search button container */}
     </nav>
   );
 };
