@@ -408,6 +408,36 @@ body {
     @apply bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent;
   }
 
+  /* Ultra Smooth Hamburger Animations */
+  .hamburger-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+  }
+
+  .hamburger-line {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+
+  /* Smooth Mobile Menu Transitions */
+  .mobile-menu-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+  }
+
+  /* Hamburger Hover Effects */
+  .hamburger-container:hover .hamburger-line {
+    background-color: #4ade80;
+  }
+
+  /* Performance Optimizations for Smooth Animations */
+  .smooth-transform {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
