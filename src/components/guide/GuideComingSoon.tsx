@@ -27,7 +27,7 @@ const GuideComingSoon = () => {
 
   return (
     <div className="mb-16">
-      <Card className="bg-gradient-to-r from-casino-neon-green/10 to-casino-neon-purple/10 border-casino-neon-green/30 max-w-4xl mx-auto mb-12">
+      <Card className="bg-casino-card-bg/40 border-casino-neon-green/30 max-w-4xl mx-auto mb-12">
         <CardContent className="p-12 text-center">
           <div className="flex items-center justify-center mb-6">
             <div className="w-16 h-16 bg-casino-neon-green rounded-full flex items-center justify-center">

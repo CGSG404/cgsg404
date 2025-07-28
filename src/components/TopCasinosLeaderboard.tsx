@@ -105,38 +105,38 @@ const TopCasinosLeaderboard = () => {
   };
 
   return (
-    <Card id="top-casinos-leaderboard" className="border-casino-neon-purple/30 bg-casino-card-bg/80 backdrop-blur-sm overflow-hidden shadow-2xl">
-      <CardHeader>
-        <CardTitle className="text-center text-2xl gradient-text flex items-center justify-center gap-2">
-          <Trophy className="w-8 h-8 text-casino-neon-green" />
+    <Card id="top-casinos-leaderboard" className="border-casino-neon-green/20 bg-casino-card-bg/90 backdrop-blur-sm overflow-hidden shadow-xl">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-center text-xl text-white flex items-center justify-center gap-2">
+          <Trophy className="w-6 h-6 text-casino-neon-green" />
           Top 5 Casino Leaderboard
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 pt-0">
         {topCasinos.map((casino) => (
           <div
             key={casino.rank}
             onClick={() => handleCardClick(casino.playUrl)}
-            className={`relative p-4 rounded-lg border cursor-pointer ${
+            className={`relative p-3 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
               casino.rank === 1
-                ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border-yellow-400/30 shadow-lg shadow-yellow-400/20'
-                : 'bg-casino-dark-lighter border-casino-border-subtle hover:border-casino-neon-green/30'
+                ? 'bg-yellow-500/10 border-yellow-400/30 shadow-lg hover:shadow-yellow-400/20'
+                : 'bg-casino-card-bg/50 border-casino-border-subtle hover:border-casino-neon-green/40 hover:bg-casino-card-bg/70'
             }`}
           >
             {/* Rank Badge */}
             <div className="absolute top-2 left-2">
-              <Badge className={`${getRankBadgeColor(casino.rank)} text-xs px-2 py-1 rounded-full shadow-md`}>#{casino.rank}</Badge>
+              <Badge className={`${getRankBadgeColor(casino.rank)} text-xs px-2 py-0.5 rounded-full shadow-md`}>#{casino.rank}</Badge>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex items-start sm:items-center space-x-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-start sm:items-center space-x-3">
                 {/* Rank Icon - Hide on mobile */}
                 <div className="hidden sm:flex flex-shrink-0">
                   {getRankIcon(casino.rank)}
                 </div>
 
                 {/* Casino Logo */}
-                <div className="w-14 h-14 bg-white rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-white rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0 shadow-sm">
                   <img
                     alt={casino.name}
                     className="w-full h-full object-contain rounded-lg"
@@ -151,9 +151,9 @@ const TopCasinosLeaderboard = () => {
                 {/* Casino Info */}
                 <div className="min-w-0 flex-1 overflow-hidden">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
-                    <h3 className="font-bold text-white text-lg leading-tight sm:leading-normal">{casino.name}</h3>
+                    <h3 className="font-bold text-white text-base leading-tight sm:leading-normal">{casino.name}</h3>
                     <div className="flex-shrink-0">
-                      <Badge 
+                      <Badge
                         className={`${getSafetyColor(casino.safetyIndex)} text-[10px] sm:text-xs whitespace-nowrap`}
                       >
                         {casino.safetyIndex === 'Very High' ? 'Very High Safety' : 'High Safety'}
@@ -161,36 +161,44 @@ const TopCasinosLeaderboard = () => {
                     </div>
                   </div>
                   
-                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2">
+                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1.5">
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => {
                         const diff = casino.rating - i;
                         if (diff >= 1) {
                           // Full star
-                          return <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />;
+                          return <Star key={i} className="w-3.5 h-3.5 text-yellow-400 fill-current" />;
                         } else if (diff >= 0.5) {
                           // Half star
-                          return <StarHalf key={i} className="w-4 h-4 text-yellow-400 fill-current" />;
+                          return <StarHalf key={i} className="w-3.5 h-3.5 text-yellow-400 fill-current" />;
                         }
                         // Empty star
-                        return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                        return <Star key={i} className="w-3.5 h-3.5 text-gray-600" />;
                       })}
                     </div>
-                    <span className="text-gray-400 text-sm">({casino.rating}/5)</span>
+                    <span className="text-gray-400 text-xs">({casino.rating}/5)</span>
                   </div>
 
-                  <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-sm text-casino-neon-green mb-2 line-clamp-2">{casino.bonus}</span>
-                    
+                  <span style={{ fontFamily: 'Space Grotesk, sans-serif' }} className="font-semibold text-xs text-casino-neon-green mb-1.5 line-clamp-2 block">{casino.bonus}</span>
+
                   <div className="flex flex-wrap gap-1">
-                    {casino.features.map((feature, index) => (
+                    {casino.features.slice(0, 3).map((feature, index) => (
                       <Badge
                         key={index}
                         variant="secondary"
-                        className="bg-casino-dark text-gray-300 text-xs border border-casino-neon-green"
+                        className="bg-casino-card-bg/50 text-gray-300 text-[10px] border border-casino-neon-green/30 px-1.5 py-0.5"
                       >
                         {feature}
                       </Badge>
                     ))}
+                    {casino.features.length > 3 && (
+                      <Badge
+                        variant="secondary"
+                        className="bg-casino-card-bg/50 text-gray-400 text-[10px] border border-gray-600/30 px-1.5 py-0.5"
+                      >
+                        +{casino.features.length - 3}
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
@@ -198,19 +206,20 @@ const TopCasinosLeaderboard = () => {
               {/* Play Button - Full width on mobile, auto on larger screens */}
               <div className="w-full sm:w-auto flex-shrink-0 mt-2 sm:mt-0">
                 <Button
+                  size="sm"
                   className={`w-full sm:w-auto ${
                     casino.rank === 1
-                      ? 'bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90'
-                      : 'bg-casino-neon-purple text-white hover:bg-casino-neon-purple/90'
-                  } font-bold`}
+                      ? 'bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 shadow-lg shadow-casino-neon-green/20'
+                      : 'bg-casino-neon-green/80 text-white hover:bg-casino-neon-green border border-casino-neon-green/30'
+                  } font-semibold transition-all duration-300`}
                   onClick={(e) => {
                     e.stopPropagation(); // Mencegah event bubbling ke parent
                     window.open(casino.playUrl, '_blank');
                   }}
                 >
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="whitespace-nowrap">Play Now</span>
-                    <ExternalLink className="w-4 h-4 flex-shrink-0" />
+                  <span className="flex items-center justify-center gap-1.5">
+                    <span className="whitespace-nowrap text-sm">Play Now</span>
+                    <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
                   </span>
                 </Button>
               </div>

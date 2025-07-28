@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import type { ReactNode } from 'react';
 
 interface LoadingContextType {
   isLoading: boolean;
@@ -16,7 +17,7 @@ interface LoadingContextType {
 
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
-export function LoadingProvider({ children }: { children: React.ReactNode }) {
+export function LoadingProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('Loading...');
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -123,19 +124,22 @@ export function useNavigationLoading() {
 // Hook for async operations with loading
 export function useAsyncLoading() {
   const { showLoading, hideLoading } = useLoading();
-  
-  const withLoading = useCallback(async <T>(
-    operation: () => Promise<T>,
-    loadingText?: string
-  ): Promise<T> => {
-    try {
-      showLoading(loadingText);
-      const result = await operation();
-      return result;
-    } finally {
-      hideLoading();
-    }
-  }, [showLoading, hideLoading]);
-  
+
+  const withLoading = useCallback(
+    async function <T>(
+      operation: () => Promise<T>,
+      loadingText?: string
+    ): Promise<T> {
+      try {
+        showLoading(loadingText);
+        const result = await operation();
+        return result;
+      } finally {
+        hideLoading();
+      }
+    },
+    [showLoading, hideLoading]
+  );
+
   return { withLoading };
 }

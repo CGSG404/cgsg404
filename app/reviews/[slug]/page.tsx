@@ -6,9 +6,10 @@ import { type Review } from "@/src/components/ReviewDetail/types";
 import { casinos } from "@/src/data/casinos";
 
 // -------- METADATA ---------
-export async function generateMetadata(props: { params: { slug: string } }) {
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
   const { params } = props;
-  const review = casinos.find((r) => r.slug === params.slug);
+  const { slug } = await params;
+  const review = casinos.find((r) => r.slug === slug);
   if (!review) return {};
   
   return {
@@ -18,9 +19,10 @@ export async function generateMetadata(props: { params: { slug: string } }) {
 }
 
 // ---------- PAGE COMPONENT --------------
-export default async function ReviewPage(props: { params: { slug: string } }) {
+export default async function ReviewPage(props: { params: Promise<{ slug: string }> }) {
   const { params } = props;
-  const review = casinos.find((r) => r.slug === params.slug);
+  const { slug } = await params;
+  const review = casinos.find((r) => r.slug === slug);
   
   if (!review) {
     notFound();

@@ -6,15 +6,15 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 interface ArticlePageProps {
-  params: {
+  params: Promise<{
     slug: string;
     articleSlug: string;
-  };
+  }>;
 }
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const { slug, articleSlug } = params;
+  const { slug, articleSlug } = await params;
   const review = casinos.find((c) => c.slug === slug);
   const article = review?.articles?.find((a) => a.slug === articleSlug);
 
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 const ArticlePage = async ({ params }: ArticlePageProps) => {
-  const { slug, articleSlug } = params;
+  const { slug, articleSlug } = await params;
 
   // Cari review kasino berdasarkan slug
   const review = casinos.find((c) => c.slug === slug);

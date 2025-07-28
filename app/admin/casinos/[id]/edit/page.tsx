@@ -34,7 +34,7 @@ export default function EditCasinoPage() {
   const { isAdmin, hasPermission, logActivity } = useAdmin();
   const router = useRouter();
   const params = useParams();
-  const casinoId = params.id as string;
+  const casinoId = params?.id as string;
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

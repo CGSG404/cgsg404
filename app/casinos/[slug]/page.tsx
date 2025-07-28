@@ -4,14 +4,14 @@ import ReviewDetail from "@/src/components/ReviewDetail";
 import { Metadata } from "next";
 
 interface CasinoPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 // Fungsi untuk menghasilkan metadata dinamis
 export async function generateMetadata({
   params,
 }: CasinoPageProps): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
   const casino = casinos.find((c) => c.slug === slug);
 
   if (!casino) {
@@ -26,8 +26,9 @@ export async function generateMetadata({
   };
 }
 
-const CasinoPage = ({ params }: CasinoPageProps) => {
-  const casino = casinos.find((c) => c.slug === params.slug);
+const CasinoPage = async ({ params }: CasinoPageProps) => {
+  const { slug } = await params;
+  const casino = casinos.find((c) => c.slug === slug);
 
   if (!casino) {
     notFound();

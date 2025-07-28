@@ -1,21 +1,30 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+// Use placeholder values if environment variables are not set
+const url = supabaseUrl || 'https://placeholder.supabase.co';
+const key = supabaseAnonKey || 'placeholder_key';
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables:', {
-    url: supabaseUrl ? 'Set' : 'Missing',
-    key: supabaseAnonKey ? 'Set' : 'Missing'
+  console.error('❌ Missing Supabase environment variables:', {
+    url: supabaseUrl ? 'Found' : 'Missing',
+    key: supabaseAnonKey ? 'Found' : 'Missing'
   });
-  throw new Error("Missing Supabase environment variables");
+  console.warn('⚠️ Supabase environment variables not configured. Using placeholder values for development.');
+} else {
+  console.log('✅ Supabase configured successfully');
 }
 
-// Log for debugging (remove in production)
-console.log('🔧 Supabase Config:', {
-  url: supabaseUrl.substring(0, 30) + '...',
-  keyLength: supabaseAnonKey.length
-});
+// Log for debugging (only in development)
+if (process.env.NODE_ENV === 'development') {
+  console.log('🔧 Supabase Config:', {
+    url: url.substring(0, 30) + '...',
+    keyLength: key.length,
+    isPlaceholder: url.includes('placeholder')
+  });
+}
 
 // Custom storage implementation that respects cookie consent
 const createCustomStorage = () => {
@@ -205,7 +214,7 @@ const createCustomStorage = () => {
   };
 };
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(url, key, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,

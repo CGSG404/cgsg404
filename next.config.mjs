@@ -6,8 +6,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Ultra minimal configuration for maximum Vercel compatibility
-  reactStrictMode: false,
+  // Enable React Strict Mode for better development experience
+  reactStrictMode: true,
 
   // Performance optimizations for production
   experimental: {
@@ -26,45 +26,17 @@ const nextConfig = {
   // Production optimizations
   compress: true,
   poweredByHeader: false,
-  // Vercel-specific optimizations
-  output: 'standalone',
-  // Enhanced Webpack configuration for production optimization
+  // Remove standalone output for development
+  // output: 'standalone',
+  // Simplified Webpack configuration
   webpack: (config, { isServer, dev }) => {
-    // Improve module resolution
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      net: false,
-      tls: false,
-    };
-
-    // Add alias for better import resolution
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@/contexts': './src/contexts',
-      '@/components': './src/components',
-      '@/lib': './src/lib',
-      '@/hooks': './src/hooks',
-      '@/utils': './src/utils',
-    };
-
-    // Production optimizations
-    if (!dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            enforce: true,
-          },
-        },
+    // Basic module resolution fixes
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
       };
     }
 

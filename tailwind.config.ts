@@ -147,7 +147,6 @@ export default {
         inter: ['Inter', 'sans-serif'],
       },
       backgroundImage: {
-        'neon-gradient': 'linear-gradient(45deg, #00ff99, #8b5cf6)',
         'card-gradient': 'linear-gradient(135deg, #1a1f2e 0%, #2a3441 100%)',
         'mobile-gradient': 'linear-gradient(180deg, #1a1f2e 0%, #2a3441 100%)',
         'performance-gradient': 'linear-gradient(135deg, rgba(26, 31, 46, 0.8) 0%, rgba(42, 52, 65, 0.8) 100%)',

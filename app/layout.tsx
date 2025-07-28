@@ -2,9 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { type ReactNode } from 'react';
 import ClientLayout from './ClientLayout';
-import Navbar from '@/src/components/NavbarNew';
+import SimpleNavbar from '@/src/components/SimpleNavbar';
 import Providers from './providers';
 import CookieConsent from '@/src/components/CookieConsent';
+import SimpleAuthError from '@/src/components/SimpleAuthError';
 
 import './globals.css';
 
@@ -67,9 +68,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-b from-[#0e181c] via-[#0e181c]/90 to-black min-h-screen`}
       >
         <Providers>
-          <Navbar />
+          <SimpleNavbar />
           <ClientLayout>{children}</ClientLayout>
           <CookieConsent />
+          <SimpleAuthError />
         </Providers>
       </body>
     </html>

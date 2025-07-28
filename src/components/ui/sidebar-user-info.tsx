@@ -15,10 +15,15 @@ export function SidebarUserInfo() {
   const getDisplayName = () => {
     if (user?.user_metadata?.full_name) return user.user_metadata.full_name;
     if (user?.user_metadata?.name) return user.user_metadata.name;
-    if (user?.email) {
-      const emailPart = user.email.split('@')[0];
-      // Capitalize first letter and replace dots/underscores with spaces
-      return emailPart.charAt(0).toUpperCase() + emailPart.slice(1).replace(/[._]/g, ' ');
+    if (user?.email && typeof user.email === 'string') {
+      try {
+        const emailPart = user.email.split('@')[0];
+        // Capitalize first letter and replace dots/underscores with spaces
+        return emailPart.charAt(0).toUpperCase() + emailPart.slice(1).replace(/[._]/g, ' ');
+      } catch (error) {
+        console.error('Error processing email for display name:', error);
+        return 'User';
+      }
     }
     return 'User';
   };

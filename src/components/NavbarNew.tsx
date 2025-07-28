@@ -2,7 +2,8 @@
 
 import { Button } from '@/src/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
-import { Star, User, LogOut, Search, Home, Gamepad2, Book, Shield, List, MessageCircle, Compass, Newspaper, FileText } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/src/components/ui/dropdown-menu';
+import { Star, User, LogOut, Search, Home, Gamepad2, Book, Shield, MessageCircle, Compass, Newspaper, FileText, AlertTriangle, ChevronDown, Users, Flag, Eye, TrendingUp, BarChart3 } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { useAdmin } from '@/src/contexts/AdminContext';
 import SimpleAuthButton from '@/src/components/SimpleAuthButton';
@@ -12,27 +13,29 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import EnhancedSearchBar from '@/src/components/EnhancedSearchBar';
+import SimpleHamburger from '@/src/components/SimpleHamburger';
+import DebugHamburger from '@/src/components/DebugHamburger';
 
 const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [expandedMobileSection, setExpandedMobileSection] = useState<string | null>(null);
   const { user, signOut, loading } = useAuth();
   const { isAdmin } = useAdmin();
   const router = useRouter();
 
   // Mobile menu functions
   const closeMobileMenu = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setMobileMenuOpen(false);
-      setIsClosing(false);
-    }, 300);
+    setMobileMenuOpen(false);
+    setExpandedMobileSection(null);
   };
 
   const toggleMobileMenu = () => {
-    mobileMenuOpen ? closeMobileMenu() : setMobileMenuOpen(true);
+    console.log('Hamburger clicked, current state:', mobileMenuOpen);
+    const newState = !mobileMenuOpen;
+    console.log('Setting new state to:', newState);
+    setMobileMenuOpen(newState);
   };
 
   const toggleMobileSearch = () => {
@@ -93,11 +96,131 @@ const Navbar = () => {
     <nav className="bg-casino-card-bg border-b border-casino-border-subtle sticky top-0 z-50 w-full shadow-lg">
       <div className="w-full flex items-center justify-between h-16 px-6">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-neon-gradient rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-casino-neon-green rounded-xl flex items-center justify-center">
             <Star className="w-6 h-6 text-casino-dark" />
           </div>
           <span className="text-xl gradient-text font-normal">CGSG</span>
         </Link>
+
+        {/* Desktop Navigation Menu */}
+        <nav className="hidden lg:flex items-center space-x-6 ml-8">
+          <Link
+            href="/casinos"
+            className="text-white hover:text-casino-neon-green transition-colors duration-200 font-medium flex items-center gap-2"
+          >
+            <Gamepad2 className="w-4 h-4" />
+            Casinos
+            <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">Hot</span>
+          </Link>
+          <Link
+            href="/games"
+            className="text-white hover:text-casino-neon-green transition-colors duration-200 font-medium flex items-center gap-2"
+          >
+            <Star className="w-4 h-4" />
+            Top Casinos
+          </Link>
+
+          {/* Reviews Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="text-white hover:text-casino-neon-green transition-colors duration-200 font-medium flex items-center gap-2 bg-transparent border-none outline-none focus:outline-none">
+              <Book className="w-4 h-4" />
+              Reviews
+              <ChevronDown className="w-3 h-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-casino-card-bg border-casino-border-subtle shadow-xl min-w-[200px]">
+              <DropdownMenuItem asChild>
+                <Link href="/reviews" className="flex items-center gap-2 text-white hover:text-casino-neon-green hover:bg-casino-neon-green/10 cursor-pointer">
+                  <Eye className="w-4 h-4" />
+                  All Reviews
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/reviews?filter=casino" className="flex items-center gap-2 text-white hover:text-casino-neon-green hover:bg-casino-neon-green/10 cursor-pointer">
+                  <Gamepad2 className="w-4 h-4" />
+                  Casino Reviews
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/reviews?filter=user" className="flex items-center gap-2 text-white hover:text-casino-neon-green hover:bg-casino-neon-green/10 cursor-pointer">
+                  <Users className="w-4 h-4" />
+                  User Reviews
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/reviews?filter=trending" className="flex items-center gap-2 text-white hover:text-casino-neon-green hover:bg-casino-neon-green/10 cursor-pointer">
+                  <TrendingUp className="w-4 h-4" />
+                  Trending Reviews
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* List Report Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="text-white hover:text-casino-neon-green transition-colors duration-200 font-medium flex items-center gap-2 bg-transparent border-none outline-none focus:outline-none">
+              <AlertTriangle className="w-4 h-4" />
+              List Report
+              <ChevronDown className="w-3 h-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-casino-card-bg border-casino-border-subtle shadow-xl min-w-[200px]">
+              <DropdownMenuItem asChild>
+                <Link href="/list-report" className="flex items-center gap-2 text-white hover:text-casino-neon-green hover:bg-casino-neon-green/10 cursor-pointer">
+                  <Eye className="w-4 h-4" />
+                  View Reports
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/list-report?action=submit" className="flex items-center gap-2 text-white hover:text-casino-neon-green hover:bg-casino-neon-green/10 cursor-pointer">
+                  <Flag className="w-4 h-4" />
+                  Submit Report
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/list-report?filter=recent" className="flex items-center gap-2 text-white hover:text-casino-neon-green hover:bg-casino-neon-green/10 cursor-pointer">
+                  <BarChart3 className="w-4 h-4" />
+                  Recent Reports
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/list-report?filter=verified" className="flex items-center gap-2 text-white hover:text-casino-neon-green hover:bg-casino-neon-green/10 cursor-pointer">
+                  <Shield className="w-4 h-4" />
+                  Verified Reports
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Link
+            href="/forum"
+            className="text-white hover:text-casino-neon-green transition-colors duration-200 font-medium flex items-center gap-2"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Forum
+            <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full">New</span>
+          </Link>
+        </nav>
+
+        {/* Compact Navigation for Medium Screens */}
+        <nav className="hidden md:flex lg:hidden items-center space-x-4 ml-4">
+          <Link
+            href="/casinos"
+            className="text-white hover:text-casino-neon-green transition-colors duration-200 font-medium text-sm"
+          >
+            Casinos
+          </Link>
+          <Link
+            href="/reviews"
+            className="text-white hover:text-casino-neon-green transition-colors duration-200 font-medium text-sm"
+          >
+            Reviews
+          </Link>
+          <Link
+            href="/list-report"
+            className="text-white hover:text-casino-neon-green transition-colors duration-200 font-medium text-sm"
+          >
+            Reports
+          </Link>
+        </nav>
 
         <div className="hidden md:flex flex-1 max-w-md mx-8">
           <EnhancedSearchBar />
@@ -133,7 +256,7 @@ const Navbar = () => {
                   </AvatarFallback>
                 </Avatar>
                 <span className="text-white text-sm font-medium hidden lg:block">
-                  {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                  {user.user_metadata?.full_name || (user.email && typeof user.email === 'string' ? user.email.split('@')[0] : 'User')}
                 </span>
               </Button>
 
@@ -159,55 +282,37 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="flex md:hidden items-center gap-2">
+        <div className="md:hidden flex items-center">
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
             onClick={toggleMobileSearch}
-            className="text-casino-neon-green hover:bg-casino-neon-green/10"
+            className="text-casino-neon-green hover:bg-casino-neon-green/10 p-1.5"
           >
             <Search className="w-5 h-5" />
           </Button>
 
-          <motion.div
-            className="relative cursor-pointer p-2 rounded-lg"
+          {/* Hamburger Menu Button */}
+          <DebugHamburger
+            isOpen={mobileMenuOpen}
             onClick={toggleMobileMenu}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="w-6 h-5 relative flex flex-col justify-center">
-              <motion.div
-                className="h-0.5 bg-casino-neon-green rounded-full absolute"
-                animate={{
-                  rotate: mobileMenuOpen ? 45 : 0,
-                  y: mobileMenuOpen ? 0 : -8,
-                  width: 24,
-                }}
-                transition={{ duration: 0.3 }}
-                style={{ transformOrigin: 'center' }}
-              />
-              <motion.div
-                className="h-0.5 bg-casino-neon-green rounded-full absolute"
-                animate={{
-                  opacity: mobileMenuOpen ? 0 : 1,
-                  scale: mobileMenuOpen ? 0.8 : 1,
-                }}
-                transition={{ duration: 0.2 }}
-                style={{ width: '20px' }}
-              />
-              <motion.div
-                className="h-0.5 bg-casino-neon-green rounded-full absolute"
-                animate={{
-                  rotate: mobileMenuOpen ? -45 : 0,
-                  y: mobileMenuOpen ? 0 : 8,
-                  width: mobileMenuOpen ? 24 : 16,
-                }}
-                transition={{ duration: 0.3 }}
-                style={{ transformOrigin: 'center' }}
-              />
+          />
+
+          {/* Debug indicator */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-xs text-white ml-2">
+              {mobileMenuOpen ? 'OPEN' : 'CLOSED'}
             </div>
-          </motion.div>
+          )}
         </div>
       </div>
+
+      {/* Debug info */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed top-20 left-4 z-[200] bg-red-500 text-white p-2 text-xs">
+          Mobile Menu State: {mobileMenuOpen ? 'OPEN' : 'CLOSED'}
+        </div>
+      )}
 
       {/* Mobile Menu Drawer */}
       <AnimatePresence>
@@ -241,7 +346,7 @@ const Navbar = () => {
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white truncate">
-                          {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                          {user.user_metadata?.full_name || (user.email && typeof user.email === 'string' ? user.email.split('@')[0] : 'User')}
                         </p>
                         <p className="text-xs text-gray-400 truncate">{user.email}</p>
                       </div>
@@ -317,16 +422,105 @@ const Navbar = () => {
                           <Star className="w-4 h-4 text-casino-neon-green" />
                         </div>
                       </Link>
-                      <Link
-                        href="/reviews"
-                        onClick={closeMobileMenu}
-                        className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
-                      >
-                        <span className="group-hover:text-casino-neon-green transition-colors">Reviews</span>
-                        <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
-                          <Book className="w-4 h-4 text-casino-neon-green" />
-                        </div>
-                      </Link>
+                      {/* Reviews Section with Submenu */}
+                      <div className="space-y-1">
+                        <button
+                          onClick={() => setExpandedMobileSection(expandedMobileSection === 'reviews' ? null : 'reviews')}
+                          className="w-full flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                        >
+                          <ChevronDown className={`w-3 h-3 transition-transform ${expandedMobileSection === 'reviews' ? 'rotate-180' : ''}`} />
+                          <span className="group-hover:text-casino-neon-green transition-colors">Reviews</span>
+                          <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
+                            <Book className="w-4 h-4 text-casino-neon-green" />
+                          </div>
+                        </button>
+                        <AnimatePresence>
+                          {expandedMobileSection === 'reviews' && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden pl-4 space-y-1"
+                            >
+                              <Link
+                                href="/reviews"
+                                onClick={closeMobileMenu}
+                                className="flex items-center justify-end gap-2 pl-0 pr-1 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                              >
+                                <span>All Reviews</span>
+                                <Eye className="w-3 h-3" />
+                              </Link>
+                              <Link
+                                href="/reviews?filter=casino"
+                                onClick={closeMobileMenu}
+                                className="flex items-center justify-end gap-2 pl-0 pr-1 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                              >
+                                <span>Casino Reviews</span>
+                                <Gamepad2 className="w-3 h-3" />
+                              </Link>
+                              <Link
+                                href="/reviews?filter=user"
+                                onClick={closeMobileMenu}
+                                className="flex items-center justify-end gap-2 pl-0 pr-1 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                              >
+                                <span>User Reviews</span>
+                                <Users className="w-3 h-3" />
+                              </Link>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      {/* List Report Section with Submenu */}
+                      <div className="space-y-1">
+                        <button
+                          onClick={() => setExpandedMobileSection(expandedMobileSection === 'reports' ? null : 'reports')}
+                          className="w-full flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
+                        >
+                          <ChevronDown className={`w-3 h-3 transition-transform ${expandedMobileSection === 'reports' ? 'rotate-180' : ''}`} />
+                          <span className="group-hover:text-casino-neon-green transition-colors">List Report</span>
+                          <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
+                            <AlertTriangle className="w-4 h-4 text-casino-neon-green" />
+                          </div>
+                        </button>
+                        <AnimatePresence>
+                          {expandedMobileSection === 'reports' && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden pl-4 space-y-1"
+                            >
+                              <Link
+                                href="/list-report"
+                                onClick={closeMobileMenu}
+                                className="flex items-center justify-end gap-2 pl-0 pr-1 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                              >
+                                <span>View Reports</span>
+                                <Eye className="w-3 h-3" />
+                              </Link>
+                              <Link
+                                href="/list-report?action=submit"
+                                onClick={closeMobileMenu}
+                                className="flex items-center justify-end gap-2 pl-0 pr-1 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                              >
+                                <span>Submit Report</span>
+                                <Flag className="w-3 h-3" />
+                              </Link>
+                              <Link
+                                href="/list-report?filter=verified"
+                                onClick={closeMobileMenu}
+                                className="flex items-center justify-end gap-2 pl-0 pr-1 py-2 rounded-lg text-gray-300 hover:bg-casino-neon-green/10 hover:text-casino-neon-green transition-all duration-200 text-sm border border-transparent hover:border-casino-neon-green/30"
+                              >
+                                <span>Verified Reports</span>
+                                <Shield className="w-3 h-3" />
+                              </Link>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
                     </div>
                   </div>
 
@@ -345,16 +539,6 @@ const Navbar = () => {
                         <span className="group-hover:text-casino-neon-green transition-colors">Forum</span>
                         <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
                           <MessageCircle className="w-4 h-4 text-casino-neon-green" />
-                        </div>
-                      </Link>
-                      <Link
-                        href="/list-report"
-                        onClick={closeMobileMenu}
-                        className="flex items-center justify-end gap-2 pl-0 pr-1 py-2.5 rounded-lg text-white hover:bg-casino-neon-green/10 hover:border-casino-neon-green/30 transition-all duration-200 font-medium border border-transparent group"
-                      >
-                        <span className="group-hover:text-casino-neon-green transition-colors">List Report</span>
-                        <div className="w-7 h-7 rounded-lg bg-casino-neon-green/10 flex items-center justify-center group-hover:bg-casino-neon-green/20 transition-colors flex-shrink-0">
-                          <List className="w-4 h-4 text-casino-neon-green" />
                         </div>
                       </Link>
                     </div>

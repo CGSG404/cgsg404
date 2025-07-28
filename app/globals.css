@@ -220,18 +220,9 @@ body {
     }
   }
 
-  /* Pulse glow effect */
+  /* Pulse glow effect - DISABLED */
   .animate-pulse-glow {
-    animation: pulseGlow 2s ease-in-out infinite;
-  }
-
-  @keyframes pulseGlow {
-    0%, 100% {
-      box-shadow: 0 0 5px rgba(0, 255, 153, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(0, 255, 153, 0.6), 0 0 30px rgba(0, 255, 153, 0.4);
-    }
+    animation: none;
   }
 
   /* Shake animation for errors */
@@ -385,27 +376,26 @@ body {
 
   body::before {
     content: '';
-    @apply absolute inset-0 bg-neon-gradient opacity-10 blur-[100px] -z-10;
+    @apply absolute inset-0 opacity-10 blur-[100px] -z-10;
   }
 }
 
 /* Component Utilities */
 @layer components {
   .neon-border {
-    @apply border border-casino-neon-green/30 shadow-[0_0_15px_rgba(0,255,153,0.3)];
+    @apply border border-casino-neon-green/30;
   }
 
   .neon-text {
     @apply text-casino-neon-green;
-    text-shadow: 0 0 10px rgba(0, 255, 153, 0.5);
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:scale-105 hover:shadow-[0_10px_40px_rgba(0,255,153,0.1)];
+    @apply transition-all duration-300 hover:scale-105;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent;
+    @apply text-casino-neon-green;
   }
 
   /* Ultra Smooth Hamburger Animations */
@@ -517,4 +507,31 @@ body {
 
 .animate-slide-left {
   animation: slide-left 30s linear infinite;
+}
+
+/* Fix for text visibility issues */
+.text-white {
+  color: #ffffff !important;
+}
+
+.text-gray-400 {
+  color: #9ca3af !important;
+}
+
+.text-gray-300 {
+  color: #d1d5db !important;
+}
+
+/* Ensure mobile menu text is visible */
+.mobile-menu-text {
+  color: #ffffff !important;
+}
+
+/* Force text visibility on cards */
+.card-text {
+  color: #ffffff !important;
+}
+
+.card-text-secondary {
+  color: #9ca3af !important;
 }

@@ -57,7 +57,7 @@ const CasinoSlideshow = () => {
   };
 
   return (
-    <div className="relative w-full h-80 overflow-hidden rounded-xl mb-8 group">
+    <div className="relative w-full h-64 overflow-hidden rounded-xl mb-6 group shadow-lg border border-casino-border-subtle/30">
       {/* Slides */}
       <div className="relative w-full h-full">
         {slides.map((slide, index) => (
@@ -74,10 +74,10 @@ const CasinoSlideshow = () => {
                 alt={slide.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-6 left-6 text-white">
-                <h3 className="text-2xl font-bold mb-2">{slide.title}</h3>
-                <p className="text-gray-200">{slide.description}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute bottom-4 left-4 text-white">
+                <h3 className="text-xl font-bold mb-1">{slide.title}</h3>
+                <p className="text-gray-200 text-sm">{slide.description}</p>
               </div>
             </div>
           </div>
@@ -88,7 +88,7 @@ const CasinoSlideshow = () => {
       <Button
         variant="outline"
         size="icon"
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 border-white/30 text-white hover:bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute left-3 top-1/2 -translate-y-1/2 bg-casino-card-bg/80 border-casino-neon-green/30 text-white hover:bg-casino-neon-green/20 hover:border-casino-neon-green/50 opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
         onClick={prevSlide}
       >
         <ChevronLeft className="h-4 w-4" />
@@ -96,19 +96,21 @@ const CasinoSlideshow = () => {
       <Button
         variant="outline"
         size="icon"
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/20 border-white/30 text-white hover:bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute right-3 top-1/2 -translate-y-1/2 bg-casino-card-bg/80 border-casino-neon-green/30 text-white hover:bg-casino-neon-green/20 hover:border-casino-neon-green/50 opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
         onClick={nextSlide}
       >
         <ChevronRight className="h-4 w-4" />
       </Button>
 
       {/* Dots Indicator */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2">
         {slides.map((_, index) => (
           <button
             key={index}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              index === currentSlide ? 'bg-casino-neon-green' : 'bg-white/50'
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              index === currentSlide
+                ? 'bg-casino-neon-green scale-125'
+                : 'bg-white/50 hover:bg-white/70'
             }`}
             onClick={() => setCurrentSlide(index)}
           />

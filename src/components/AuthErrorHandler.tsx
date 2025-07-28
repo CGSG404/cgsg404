@@ -42,13 +42,33 @@ export default function AuthErrorHandler() {
           title = 'Session Creation Failed';
           description = details || 'Failed to create user session';
           break;
+        case 'session_set_failed':
+          title = 'Session Setup Error';
+          description = details || 'Failed to set up your session. Please try again.';
+          break;
+        case 'session_validation_failed':
+          title = 'Session Validation Error';
+          description = details || 'Session could not be validated. Please try again.';
+          break;
         case 'callback_failed':
           title = 'Authentication Callback Failed';
           description = details || 'Error processing authentication response';
           break;
+        case 'callback_timeout':
+          title = 'Authentication Timeout';
+          description = 'The authentication process took too long. Please try again.';
+          break;
         case 'no_code':
           title = 'Authentication Incomplete';
           description = 'No authorization code received from Google';
+          break;
+        case 'invalid_code':
+          title = 'Invalid Authorization Code';
+          description = 'The authorization code format is invalid. Please try again.';
+          break;
+        case 'auth_retry':
+          title = 'Please Try Again';
+          description = details || 'OAuth data format issue detected. Please try signing in again.';
           break;
         case 'auth_recovery':
           title = 'Authentication Recovered';

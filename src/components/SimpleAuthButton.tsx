@@ -30,10 +30,8 @@ export default function SimpleAuthButton({ className, onClick, customText }: Sim
       const urlParams = new URLSearchParams(window.location.search);
       const redirectTo = urlParams.get('redirectTo');
 
-      // 🔧 DEVELOPMENT FIX: Force localhost redirect in development
-      const redirectOrigin = process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
-        : window.location.origin;
+      // 🔧 DEVELOPMENT FIX: Use current origin for redirect
+      const redirectOrigin = window.location.origin;
 
       // Build callback URL with redirect parameter
       let callbackUrl = `${redirectOrigin}/auth/callback`;

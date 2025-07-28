@@ -1,29 +1,27 @@
 'use client';
 
 import { type ReactNode, useEffect } from 'react';
-// import Providers from './providers'; // 🚨 REMOVED - Already imported in layout.tsx
-import { AppSidebar } from '@/src/components/ui/sidebar';
-import { setupGlobalErrorHandler } from '@/src/lib/errorHandler';
+// Temporarily disable complex imports to fix ChunkLoadError
+// import { AppSidebar } from '@/src/components/ui/sidebar';
+// import { setupGlobalErrorHandler } from '@/src/lib/errorHandler';
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
-  // Setup global error handlers - TEMPORARILY DISABLED
+  // Temporarily disable complex setup to fix ChunkLoadError
   useEffect(() => {
-    // setupGlobalErrorHandler(); // Disabled to prevent infinite loops
-    console.log('🔧 Global error handler disabled for debugging');
-
-    // Import mobile sidebar CSS for panel consistency
-    import('@/src/styles/sidebar-mobile.css');
+    console.log('🔧 ClientLayout: Simplified for debugging');
+    // Temporarily disable CSS import that might cause issues
+    // import('@/src/styles/sidebar-mobile.css');
   }, []);
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar kiri, fixed di desktop, drawer di mobile */}
-      <div className="hidden md:block w-72 flex-shrink-0 h-full">
+      {/* Temporarily disable sidebar to fix ChunkLoadError */}
+      {/* <div className="hidden md:block w-72 flex-shrink-0 h-full">
         <AppSidebar />
-      </div>
-      {/* Konten utama */}
+      </div> */}
+      {/* Konten utama - full width for now */}
       <div className="flex-1 min-w-0">
-        {children} {/* 🚨 REMOVED DOUBLE PROVIDERS - Already wrapped in layout.tsx */}
+        {children}
       </div>
     </div>
   );

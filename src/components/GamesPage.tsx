@@ -1,22 +1,41 @@
 "use client";
 
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CasinoSlideshow from '@/components/CasinoSlideshow';
 import TopCasinosLeaderboard from '@/components/TopCasinosLeaderboard';
+import HeroBannerSliderSimple from './HeroBannerSliderSimple';
+import PromoBanner from './PromoBanner';
+import SimpleDivider from './ui/SimpleDivider';
 
 
 const GamesPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-casino-dark">
+      {/* Hero Banner Slider for Games Page */}
+      <HeroBannerSliderSimple pageType="games" />
+
+      {/* Divider */}
+      <SimpleDivider variant="gradient" spacing="sm" />
+
+      {/* Promo Banner */}
+      <PromoBanner
+        title="🎮 Exclusive Games Bonus!"
+        subtitle="Get up to 300% bonus + 200 free spins on top casino games"
+        ctaText="Play Now"
+        ctaLink="/casinos"
+        variant="info"
+      />
+
+      {/* Divider */}
+      <SimpleDivider variant="default" spacing="sm" />
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-16 pb-12 sm:pb-20">
+      <section className="relative overflow-hidden pt-8 pb-8 sm:pb-12">
         <div className="pointer-events-none absolute -inset-10 -z-10 select-none">
-          <div className="absolute left-0 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-casino-neon-green via-purple-600 to-indigo-600 opacity-30 blur-3xl" />
-          <div className="absolute right-0 top-0 h-96 w-96 translate-x-1/2 rounded-full bg-purple-700/40 opacity-40 blur-3xl" />
+          {/* Background pattern without RGB effects */}
         </div>
 
-        <div className="mx-auto max-w-screen-xl flex flex-col items-start gap-10 px-4 sm:px-6 lg:px-8 md:flex-row md:items-center">
+        <div className="mx-auto max-w-screen-xl flex flex-col items-start gap-6 px-4 sm:px-6 lg:px-8 md:flex-row md:items-center">
           {/* LEFT TEXT */}
           <div className="max-w-xl flex-1">
             <nav className="mb-3 text-sm text-gray-400">
@@ -25,7 +44,7 @@ const GamesPage: React.FC = () => {
               <span className="text-gray-300">Top Games</span>
             </nav>
 
-            <h1 className="text-3xl font-extrabold leading-tight text-white md:text-4xl lg:text-5xl">
+            <h1 className="text-2xl font-extrabold leading-tight text-white md:text-3xl lg:text-4xl">
               Top Online Games for July 2025 – Expert Picks You Can Trust
             </h1>
 
@@ -36,30 +55,42 @@ const GamesPage: React.FC = () => {
               <time dateTime="2025-07-10">10 Jul 2025</time>
             </div>
 
-            <p className="mt-6 text-gray-300">
+            <p className="mt-4 text-gray-300 text-sm">
               Discover our curated list of the <span className="font-semibold text-casino-neon-green">TOP 5</span> Casinos this month, evaluated using our unique Safety Index and community insights.
             </p>
           </div>
 
           {/* RIGHT IMAGE */}
-          <div className="relative mx-auto h-36 w-36 sm:h-48 sm:w-48 md:h-60 md:w-60 lg:h-72 lg:w-72 flex-shrink-0">
+          <div className="relative mx-auto h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-56 lg:w-56 flex-shrink-0">
             <img src="/cgsg-logos.png" alt="Fair game badge" className="object-contain" />
           </div>
         </div>
       </section>
 
+      {/* Divider */}
+      <SimpleDivider variant="casino" spacing="sm">
+        Featured Games
+      </SimpleDivider>
+
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-6">
         <CasinoSlideshow />
       </div>
 
-      {/* Leaderboard Section with green glow */}
-      <section className="relative py-16 overflow-hidden bg-casino-darker">
-        <div className="pointer-events-none absolute -inset-20 -z-10 bg-casino-neon-green/50 blur-3xl" />
+      {/* Divider */}
+      <SimpleDivider variant="neon" spacing="sm">
+        Top Casinos Leaderboard
+      </SimpleDivider>
+
+      {/* Leaderboard Section */}
+      <section className="relative py-6 overflow-hidden bg-casino-darker">
         <div className="container mx-auto px-4">
           <TopCasinosLeaderboard />
         </div>
       </section>
+
+      {/* Divider */}
+      <SimpleDivider variant="minimal" spacing="sm" />
 
       <Footer />
     </div>

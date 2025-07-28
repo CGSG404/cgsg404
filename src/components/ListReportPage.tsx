@@ -1,6 +1,7 @@
+'use client';
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { AlertTriangle, Search } from 'lucide-react';
-import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import ReportCard from '@/src/components/ReportCard';
 import { Swiper, SwiperSlide } from 'swiper/react';

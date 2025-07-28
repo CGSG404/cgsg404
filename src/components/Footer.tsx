@@ -36,6 +36,7 @@ const Footer = () => {
       links: [
         { name: 'Forum', href: '/forum' },
         { name: 'User Reviews', href: '/reviews' },
+        { name: 'List Report', href: '/list-report' },
         { name: 'Success Stories', href: '/success-stories' },
       ]
     },
@@ -50,7 +51,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-casino-dark-lighter border-t border-casino-border-subtle relative z-10">
+    <footer className="bg-casino-dark-lighter border-t border-casino-border-subtle relative z-10 glass-morphism">
       <div className="container mx-auto px-4 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
@@ -61,7 +62,7 @@ const Footer = () => {
               className="inline-flex items-center space-x-2 mb-4 hover:opacity-80 transition-opacity"
               aria-label="Go to homepage"
             >
-              <div className="w-10 h-10 bg-neon-gradient rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-casino-neon-green rounded-xl flex items-center justify-center">
                 <Star className="w-6 h-6 text-casino-dark" />
               </div>
               <span className="text-xl gradient-text font-medium">CasinoGuruSG</span>

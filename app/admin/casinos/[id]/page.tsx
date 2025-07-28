@@ -62,7 +62,7 @@ export default function CasinoDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const casinoId = params.id as string;
+  const casinoId = params?.id as string;
 
   useEffect(() => {
     const fetchCasino = async () => {
