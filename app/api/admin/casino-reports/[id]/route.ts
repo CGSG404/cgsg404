@@ -16,22 +16,7 @@ const supabaseAuth = createClient(
 // Authentication middleware
 async function verifyAdminAuth() {
   try {
-    // Production Authentication: Check session token
-    const sessionToken = request.headers.get('x-session-token');
-    if (sessionToken) {
-      // Import session verification function
-      const { verifySessionToken } = await import('../login/route');
-
-      if (verifySessionToken(sessionToken)) {
-        console.log('✅ Admin session authentication successful');
-        return { user: { id: 'admin-user' }, adminData: { role: 'super_admin' } };
-      } else {
-        console.log('❌ Invalid or expired session token');
-        return { error: 'Invalid session', status: 401 };
-      }
-    }
-
-    // Fallback: Check Supabase authentication
+    // Production: Check Supabase authentication
 
     const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
     
