@@ -192,15 +192,13 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   }, [user, authLoading]);
 
   // Debug logging for isAdmin computation
-  // TEMPORARY: Production bypass for testing (REMOVE AFTER TESTING)
+  // Development bypass for local testing only
   const isDevelopment = process.env.NODE_ENV === 'development';
-  const isProduction = process.env.NODE_ENV === 'production';
-  const computedIsAdmin = (isDevelopment || isProduction) ? true : (adminInfo?.is_admin || false);
+  const computedIsAdmin = isDevelopment ? true : (adminInfo?.is_admin || false);
 
   console.log('🔍 AdminContext: Computing isAdmin:', {
     environment: process.env.NODE_ENV,
     isDevelopment,
-    isProduction,
     adminInfo,
     is_admin: adminInfo?.is_admin,
     computedIsAdmin,
