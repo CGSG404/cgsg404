@@ -1,4 +1,4 @@
-'use client';
+  'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { Search, X, TrendingUp, MapPin, FileText, Users, Star, Gamepad2, Newspaper, BookOpen, AlertTriangle } from 'lucide-react';
@@ -19,13 +19,13 @@ const searchKeywords = [
   { keyword: 'casino games', category: 'Casinos', icon: <Star className="w-4 h-4" />, href: '/casinos' },
   
   // Games
-  { keyword: 'games', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games' },
-  { keyword: 'slot games', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games' },
-  { keyword: 'live casino', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games' },
-  { keyword: 'poker', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games' },
-  { keyword: 'blackjack', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games' },
-  { keyword: 'roulette', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games' },
-  { keyword: 'baccarat', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games' },
+  { keyword: 'games', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos' },
+  { keyword: 'slot games', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos' },
+  { keyword: 'live casino', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos' },
+  { keyword: 'poker', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos' },
+  { keyword: 'blackjack', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos' },
+  { keyword: 'roulette', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos' },
+  { keyword: 'baccarat', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos' },
   { keyword: 'sports betting', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games' },
   
   // Reviews

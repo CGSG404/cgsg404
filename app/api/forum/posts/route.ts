@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Temporary mock data untuk testing
-const mockPosts = [
+// In-memory storage untuk demo (dalam production gunakan database)
+let mockPosts = [
   {
     id: 1,
     title: "Welcome to CGSG Forum!",

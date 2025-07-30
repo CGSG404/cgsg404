@@ -119,32 +119,32 @@ const PromoBanner: React.FC<PromoBannerProps> = ({
           </motion.div>
         </div>
 
-        <div className="relative z-10 p-4 md:p-6">
-          <div className="flex items-center justify-between">
+        <div className="relative z-10 p-3 sm:p-4 lg:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-2">
-                <div className={`p-2 rounded-lg ${currentVariant.button}`}>
-                  <Gift className="w-5 h-5 text-white" />
+              <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                <div className={`p-1.5 sm:p-2 rounded-lg ${currentVariant.button}`}>
+                  <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <h3 className={`text-lg md:text-xl font-bold ${currentVariant.text} truncate`}>
+                <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl font-bold ${currentVariant.text} truncate`}>
                   {title}
                 </h3>
               </div>
-              <p className="text-white/90 text-sm md:text-base mb-4 md:mb-0">
+              <p className="text-white/90 text-xs sm:text-sm md:text-base mb-3 sm:mb-0">
                 {subtitle}
               </p>
             </div>
 
-            <div className="flex items-center gap-3 ml-4">
-              <Link href={ctaLink} className="group">
+            <div className="flex items-center gap-2 sm:gap-3 sm:ml-4">
+              <Link href={ctaLink} className="group flex-1 sm:flex-initial">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`${currentVariant.button} text-white font-bold px-4 md:px-6 py-2 md:py-3 rounded-xl shadow-lg transition-all duration-300 transform hover:shadow-lg`}
+                  className={`w-full sm:w-auto ${currentVariant.button} text-white font-semibold px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-3 text-xs sm:text-sm md:text-base rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:shadow-lg`}
                 >
-                  <span className="flex items-center gap-2 text-sm md:text-base">
-                    {ctaText}
-                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span className="flex items-center justify-center gap-1 sm:gap-2">
+                    <span className="whitespace-nowrap">{ctaText}</span>
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </span>
@@ -156,9 +156,9 @@ const PromoBanner: React.FC<PromoBannerProps> = ({
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setIsVisible(false)}
-                  className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-200"
+                  className="p-1.5 sm:p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-200 flex-shrink-0"
                 >
-                  <X className="w-4 h-4 text-white" />
+                  <X className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                 </motion.button>
               )}
             </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/src/components/ui/button';
 import { motion } from 'framer-motion';
@@ -56,19 +56,20 @@ const HeroSection: React.FC = () => {
             initial={isDesktop ? { opacity: 0, y: 20 } : false}
             animate={isDesktop ? { opacity: 1, y: 0 } : false}
             transition={isDesktop ? { duration: 0.8, delay: 0.3, ease: 'easeOut' } : {}}
-            className="mt-10 flex flex-col sm:flex-row gap-6 justify-center items-center"
+            className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center items-center"
           >
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-bold px-10 py-4 text-lg rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25 group"
+              className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-semibold px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25 group"
               onClick={() => {
                 const section = document.getElementById('top-casinos');
                 section?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              <span className="flex items-center gap-2">
-                Find Best Casinos
-                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="flex items-center gap-1.5 sm:gap-2">
+                <span className="hidden xs:inline">Find Best Casinos</span>
+                <span className="xs:hidden">Best Casinos</span>
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </span>
@@ -77,11 +78,12 @@ const HeroSection: React.FC = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full border-2 border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green hover:text-casino-dark px-10 py-4 text-lg rounded-xl font-bold transition-all duration-300 transform hover:scale-105 bg-transparent backdrop-blur-sm group"
+                className="w-full border-2 border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green hover:text-casino-dark px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-transparent backdrop-blur-sm group"
               >
-                <span className="flex items-center gap-2">
-                  Read Reviews
-                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="hidden xs:inline">Read Reviews</span>
+                  <span className="xs:hidden">Reviews</span>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </span>

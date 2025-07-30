@@ -153,22 +153,22 @@ export default function BannerInfo() {
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
             Ready to Start Your Casino Journey?
           </h3>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/casinos" className="group">
-              <button className="bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-bold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25">
-                <span className="flex items-center gap-2">
-                  Explore Casinos
-                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+            <Link href="/casinos" className="group w-full sm:w-auto">
+              <button className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-semibold px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25">
+                <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                  <span className="whitespace-nowrap">Explore Casinos</span>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </span>
               </button>
             </Link>
-            <Link href="/best-bonuses" className="group">
-              <button className="border-2 border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green hover:text-casino-dark font-bold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 bg-transparent backdrop-blur-sm">
-                <span className="flex items-center gap-2">
-                  View Bonuses
-                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link href="/best-bonuses" className="group w-full sm:w-auto">
+              <button className="w-full sm:w-auto border-2 border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green hover:text-casino-dark font-semibold px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl transition-all duration-300 transform hover:scale-105 bg-transparent backdrop-blur-sm">
+                <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                  <span className="whitespace-nowrap">View Bonuses</span>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                   </svg>
                 </span>

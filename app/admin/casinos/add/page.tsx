@@ -96,6 +96,8 @@ export default function AddCasinoPage() {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
+    console.log('🔍 Validating form data:', formData);
+
     if (!formData.name.trim()) {
       newErrors.name = 'Casino name is required';
     }
@@ -132,33 +134,71 @@ export default function AddCasinoPage() {
       }
     }
 
+    console.log('🔍 Validation errors:', newErrors);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
     try {
+      console.log('🚀 Submitting casino data:', formData);
+
       const newCasino = await databaseApi.createCasino(formData);
-      
-      await logActivity(
-        'casino_created',
-        'casino',
-        newCasino.id.toString(),
-        { name: formData.name, slug: formData.slug },
-        'info'
-      );
+      console.log('✅ Casino created successfully:', newCasino);
+
+      // Log activity only if casino was created successfully and has an ID
+      if (newCasino && newCasino.id) {
+        await logActivity(
+          'casino_created',
+          'casino',
+          newCasino.id.toString(),
+          { name: formData.name, slug: formData.slug },
+          'info'
+        );
+      } else {
+        console.warn('⚠️ Casino created but no ID returned, skipping activity log');
+      }
 
       router.push('/admin/casinos');
     } catch (error) {
-      console.error('Failed to create casino:', error);
-      setErrors({ submit: 'Failed to create casino. Please try again.' });
+      console.error('❌ Failed to create casino:', error);
+
+      // Enhanced error handling
+      let errorMessage = 'Failed to create casino. Please try again.';
+
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
+
+        // Check for specific error types
+        if (error.message.includes('duplicate key')) {
+          errorMessage = 'A casino with this name or slug already exists.';
+        } else if (error.message.includes('violates check constraint')) {
+          errorMessage = 'Invalid data provided. Please check all fields.';
+        } else if (error.message.includes('not-null violation')) {
+          errorMessage = 'Required fields are missing. Please fill all required fields.';
+        } else if (error.message.includes('foreign key')) {
+          errorMessage = 'Invalid reference data. Please check your selections.';
+        } else if (error.message.includes('network')) {
+          errorMessage = 'Network error. Please check your connection and try again.';
+        } else if (error.message.includes('permission')) {
+          errorMessage = 'Permission denied. Please check your admin privileges.';
+        } else {
+          errorMessage = `Error: ${error.message}`;
+        }
+      }
+
+      setErrors({ submit: errorMessage });
     } finally {
       setLoading(false);
     }

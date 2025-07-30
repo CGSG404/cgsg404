@@ -3,10 +3,18 @@ import type { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
+  // 🔄 URL REDIRECTS: Handle legacy URLs
+  const url = request.nextUrl.clone();
+
+  // Redirect /games to /top-casinos
+  if (url.pathname === '/games') {
+    url.pathname = '/top-casinos';
+    return NextResponse.redirect(url, 301); // Permanent redirect
+  }
+
   // 🌐 DOMAIN REDIRECT: Force www.gurusingapore.com (only in production)
   if (process.env.NODE_ENV === 'production') {
     const hostname = request.headers.get('host') || '';
-    const url = request.nextUrl.clone();
 
     // Redirect from gurusingapore.com to www.gurusingapore.com
     if (hostname === 'gurusingapore.com') {

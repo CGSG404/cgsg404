@@ -7,7 +7,7 @@ export async function GET() {
   const staticPages = [
     '',
     '/casinos',
-    '/games',
+    '/top-casinos',
     '/reviews',
     '/news',
     '/forum',

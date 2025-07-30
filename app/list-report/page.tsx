@@ -1,26 +1,23 @@
 import { Metadata } from 'next';
-import ListReportPage from '@/src/components/ListReportPage';
+import CasinoReportsPage from '@/components/CasinoReportsPage';
 
 export const metadata: Metadata = {
-  title: 'Casino List Report - Community Warnings & Trusted Insights | CGSG',
-  description: 'List of online casinos reported by the community. Check their reputation before you play. Stay safe with our up-to-date warnings and trusted user insights.',
-  keywords: 'casino report, scam casino, blacklist casino, casino complaint, fraud report, casino warning',
+  title: 'Casino Reports - CGSG404 | Community Casino Safety Reports',
+  description: 'Browse community-reported casino safety issues, scam alerts, and unlicensed operators. Stay informed about problematic gambling sites in Singapore.',
+  keywords: 'casino reports, scam casinos, unlicensed gambling, casino safety, Singapore gambling',
   openGraph: {
-    title: 'Casino List Report - Community Warnings & Trusted Insights',
-    description: 'List of online casinos reported by the community. Check their reputation before you play.',
+    title: 'Casino Reports - CGSG404',
+    description: 'Community-driven casino safety reports and scam alerts',
     type: 'website',
     url: 'https://gurusingapore.com/list-report',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Casino List Report - Community Warnings & Trusted Insights',
-    description: 'List of online casinos reported by the community. Check their reputation before you play.',
-  },
-  alternates: {
-    canonical: 'https://gurusingapore.com/list-report',
+    title: 'Casino Reports - CGSG404',
+    description: 'Community-driven casino safety reports and scam alerts',
   },
 };
 
-export default function ListReportPageRoute() {
-  return <ListReportPage />;
+export default function ListReportPage() {
+  return <CasinoReportsPage />;
 }

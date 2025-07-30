@@ -9,6 +9,7 @@ import { AdminProvider } from '../src/contexts/AdminContext';
 import { LoadingProvider } from '../src/contexts/LoadingContext';
 import { TooltipProvider } from '../src/components/ui/tooltip';
 import { Toaster } from '../src/components/ui/sonner';
+import { NotificationProvider } from '../src/components/ui/notification';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -24,14 +25,16 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <LoadingProvider>
-        <AuthProvider>
-          <AdminProvider>
-            <TooltipProvider>
-              {children}
-              <Toaster position="top-right" />
-            </TooltipProvider>
-          </AdminProvider>
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <AdminProvider>
+              <TooltipProvider>
+                {children}
+                <Toaster position="top-right" />
+              </TooltipProvider>
+            </AdminProvider>
+          </AuthProvider>
+        </NotificationProvider>
       </LoadingProvider>
     </QueryClientProvider>
   );

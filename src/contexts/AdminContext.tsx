@@ -72,6 +72,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   // Check if user has specific permission (sync - for quick UI checks)
   const hasPermission = (permission: string): boolean => {
+    // SECURITY: No development bypass in production
     if (!adminInfo?.is_admin) return false;
     if (adminInfo.role === 'super_admin') return true; // Super admin has all permissions
 
@@ -191,7 +192,10 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   }, [user, authLoading]);
 
   // Debug logging for isAdmin computation
-  const computedIsAdmin = adminInfo?.is_admin || false;
+  // TEMPORARY: Development bypass for testing (REMOVE BEFORE PRODUCTION)
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const computedIsAdmin = isDevelopment ? true : (adminInfo?.is_admin || false);
+
   console.log('🔍 AdminContext: Computing isAdmin:', {
     adminInfo,
     is_admin: adminInfo?.is_admin,

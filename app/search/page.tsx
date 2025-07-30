@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { databaseApi } from '@/src/lib/database-api';
 import CasinoCard from '@/src/components/CasinoCard';
-import EnhancedSearchBar from '@/src/components/EnhancedSearchBar';
+import SearchBar from '@/src/components/SearchBar';
 import { Button } from '@/src/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { Checkbox } from '@/src/components/ui/checkbox';
@@ -129,7 +129,7 @@ const SearchResultsContent = () => {
             <h1 className="text-2xl font-bold mb-2">Search CGSG Casino Guide</h1>
             <p className="text-gray-400 mb-8">Find the perfect casino for your gaming experience</p>
             <div className="max-w-md mx-auto">
-              <EnhancedSearchBar autoFocus />
+              <SearchBar autoFocus />
             </div>
           </div>
         </div>
@@ -175,10 +175,7 @@ const SearchResultsContent = () => {
 
           {/* Search Bar */}
           <div className="mb-6">
-            <EnhancedSearchBar
-              showFilters
-              onFiltersToggle={() => setShowFilters(!showFilters)}
-            />
+            <SearchBar />
           </div>
 
           {/* Controls */}

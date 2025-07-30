@@ -509,29 +509,15 @@ export const databaseApi = {
     }
   },
 
-  // Get current user admin info
+  // Get current user admin info - SECURITY FIXED
   async getCurrentUserAdminInfo(): Promise<CurrentUserAdminInfo> {
     try {
       console.log('🔍 DatabaseAPI: Getting current user admin info...');
 
-      // First check if user is admin using working RPC with better error handling
-      let isAdminResult = false;
-      try {
-        const { data, error: isAdminError } = await supabase.rpc('is_admin');
-        if (isAdminError) {
-          console.error('❌ DatabaseAPI: Error checking is_admin:', isAdminError);
-          // For non-admin users, this might be expected, so don't throw
-          return {
-            is_admin: false,
-            role: null,
-            email: null,
-            total_permissions: 0
-          };
-        }
-        isAdminResult = Boolean(data);
-      } catch (rpcError) {
-        console.warn('⚠️ DatabaseAPI: is_admin RPC exception:', rpcError);
-        // Assume non-admin on RPC failure
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.log('🔍 DatabaseAPI: No authenticated user');
         return {
           is_admin: false,
           role: null,
@@ -540,8 +526,23 @@ export const databaseApi = {
         };
       }
 
-      if (!isAdminResult) {
-        console.log('🔍 DatabaseAPI: User is not admin');
+      // Direct query to admin_users table - NO RPC FUNCTIONS
+      const { data: adminRecord, error: adminError } = await supabase
+        .from('admin_users')
+        .select(`
+          id,
+          user_id,
+          email,
+          role,
+          is_active,
+          admin_role_permissions(count)
+        `)
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .single();
+
+      if (adminError || !adminRecord) {
+        console.log('🔍 DatabaseAPI: User is not admin (no record found)');
         return {
           is_admin: false,
           role: null,
@@ -550,62 +551,20 @@ export const databaseApi = {
         };
       }
 
-      // Try to get detailed admin info using the working RPC
-      try {
-        const { data: adminInfoData, error: adminInfoError } = await supabase.rpc('get_current_user_admin_info');
+      console.log('✅ DatabaseAPI: User is admin:', adminRecord.email);
 
-        if (adminInfoError) {
-          console.warn('⚠️ DatabaseAPI: get_current_user_admin_info failed, using fallback:', adminInfoError);
+      // Count permissions
+      const permissionCount = Array.isArray(adminRecord.admin_role_permissions)
+        ? adminRecord.admin_role_permissions.length
+        : 0;
 
-          // Fallback: Get user info and return basic admin data
-          const { data: { user } } = await supabase.auth.getUser();
-          return {
-            is_admin: true,
-            role: 'super_admin', // Default for working is_admin
-            email: user?.email || null,
-            total_permissions: 25 // Default permission count
-          };
-        }
+      return {
+        is_admin: true,
+        role: adminRecord.role || 'admin',
+        email: adminRecord.email,
+        total_permissions: permissionCount
+      };
 
-        // Safely handle the response - it might be an array or object
-        let adminInfo = null;
-        if (Array.isArray(adminInfoData) && adminInfoData.length > 0) {
-          adminInfo = adminInfoData[0];
-        } else if (adminInfoData && typeof adminInfoData === 'object') {
-          adminInfo = adminInfoData;
-        }
-
-        console.log('✅ DatabaseAPI: Admin info result:', adminInfo);
-
-        if (!adminInfo) {
-          // Fallback if no detailed info but is_admin is true
-          const { data: { user } } = await supabase.auth.getUser();
-          return {
-            is_admin: true,
-            role: 'super_admin',
-            email: user?.email || null,
-            total_permissions: 25
-          };
-        }
-
-        return {
-          is_admin: true, // We know this is true from is_admin check
-          role: adminInfo.role || 'super_admin',
-          email: adminInfo.email,
-          total_permissions: Number(adminInfo.total_permissions) || 25
-        };
-      } catch (detailError) {
-        console.warn('⚠️ DatabaseAPI: get_current_user_admin_info exception:', detailError);
-
-        // Fallback: Get user info and return basic admin data
-        const { data: { user } } = await supabase.auth.getUser();
-        return {
-          is_admin: true,
-          role: 'super_admin',
-          email: user?.email || null,
-          total_permissions: 25
-        };
-      }
     } catch (error) {
       console.error('❌ DatabaseAPI: getCurrentUserAdminInfo failed:', error);
       return {
@@ -850,14 +809,31 @@ export const databaseApi = {
 
   // Create new casino
   async createCasino(casinoData: any) {
-    const { data, error } = await supabase
-      .from('casinos')
-      .insert([casinoData])
-      .select()
-      .single();
+    try {
+      console.log('🔍 Creating casino with data:', casinoData);
 
-    if (error) throw error;
-    return data;
+      // Use API route for server-side operations
+      const response = await fetch('/api/admin/casinos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(casinoData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ Casino created successfully:', data);
+      return data.data; // Return the actual casino data, not the wrapper
+
+    } catch (error) {
+      console.error('❌ createCasino error:', error);
+      throw error;
+    }
   },
 
   // Get casinos with pagination for admin
@@ -920,74 +896,106 @@ export const databaseApi = {
 
   // Update casino
   async updateCasino(casinoId: string | number, updates: any) {
-    const { data, error } = await supabase
-      .from('casinos')
-      .update(updates)
-      .eq('id', casinoId)
-      .select()
-      .single();
+    try {
+      console.log('🔍 Updating casino:', casinoId, updates);
 
-    if (error) throw error;
-    return data;
+      const response = await fetch(`/api/admin/casinos/${casinoId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ Casino updated successfully:', data);
+      return data.data;
+    } catch (error) {
+      console.error('❌ updateCasino error:', error);
+      throw error;
+    }
   },
 
   // Delete casino
   async deleteCasino(casinoId: number) {
-    const { error } = await supabase
-      .from('casinos')
-      .delete()
-      .eq('id', casinoId);
+    try {
+      console.log('🔍 Deleting casino:', casinoId);
 
-    if (error) throw error;
-    return true;
-  },
+      const response = await fetch(`/api/admin/casinos/${casinoId}`, {
+        method: 'DELETE',
+      });
 
-  // Update casino
-  async updateCasino(id: number, casinoData: any) {
-    const { data, error } = await supabase
-      .from('casinos')
-      .update({ ...casinoData, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select()
-      .single();
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
 
-    if (error) throw error;
-    return data;
-  },
-
-  // Delete casino
-  async deleteCasino(id: number) {
-    const { error } = await supabase
-      .from('casinos')
-      .delete()
-      .eq('id', id);
-
-    if (error) throw error;
-    return true;
+      const data = await response.json();
+      console.log('✅ Casino deleted successfully');
+      return true;
+    } catch (error) {
+      console.error('❌ deleteCasino error:', error);
+      throw error;
+    }
   },
 
   // Bulk delete casinos
   async bulkDeleteCasinos(ids: number[]) {
-    const { error } = await supabase
-      .from('casinos')
-      .delete()
-      .in('id', ids);
+    try {
+      console.log('🔍 Bulk deleting casinos:', ids);
 
-    if (error) throw error;
-    return true;
+      const response = await fetch('/api/admin/casinos/bulk-delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ids }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ Casinos bulk deleted successfully');
+      return true;
+    } catch (error) {
+      console.error('❌ bulkDeleteCasinos error:', error);
+      throw error;
+    }
   },
 
   // Update casino status (featured, hot, new)
   async updateCasinoStatus(id: number, status: { is_featured?: boolean; is_hot?: boolean; is_new?: boolean }) {
-    const { data, error } = await supabase
-      .from('casinos')
-      .update({ ...status, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select()
-      .single();
+    try {
+      console.log('🔍 Updating casino status:', id, status);
 
-    if (error) throw error;
-    return data;
+      const response = await fetch(`/api/admin/casinos/${id}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(status),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ Casino status updated successfully:', data);
+      return data.data;
+    } catch (error) {
+      console.error('❌ updateCasinoStatus error:', error);
+      throw error;
+    }
   },
 
   // Get casinos for admin (with pagination)

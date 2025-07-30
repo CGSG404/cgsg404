@@ -768,7 +768,7 @@ export function AppSidebar() {
               <div className="space-y-2">
                 <SidebarNavItem href="/" icon={Home} label="Home" />
                 <SidebarNavItem href="/casinos" icon={Gamepad2} label="Casinos" badge="Hot" />
-                <SidebarNavItem href="/games" icon={Star} label="Top Casinos" />
+                <SidebarNavItem href="/top-casinos" icon={Star} label="Top Casinos" />
                 <SidebarNavItem href="/reviews" icon={Book} label="Reviews" />
                 <SidebarNavItem href="/list-report" icon={List} label="List Report" />
                 <SidebarNavItem href="/forum" icon={MessageCircle} label="Forum" badge="New" />

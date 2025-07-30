@@ -18,9 +18,11 @@ const nextConfig = {
 
   images: {
     domains: ['images.unsplash.com', 'via.placeholder.com'],
-    unoptimized: true, // Keep for Vercel compatibility
+    unoptimized: false, // Enable Next.js image optimization
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 3600,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
   // Production optimizations
@@ -76,10 +78,10 @@ const nextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
-          // Performance headers
+          // Performance headers - More reasonable cache
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=3600, s-maxage=86400',
           },
         ],
       },

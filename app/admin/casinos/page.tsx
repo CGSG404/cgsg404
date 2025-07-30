@@ -29,7 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/src/components/ui/alert-dialog';
-import { Search, Plus, Edit, Trash2, Eye, Star, Shield, Building2 } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Eye, Star, Shield, Building2, Home, ChevronRight, Filter, Download, RefreshCw } from 'lucide-react';
 
 interface Casino {
   id: number;
@@ -64,6 +64,9 @@ export default function CasinoManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [featuredCount, setFeaturedCount] = useState(0);
+  const [hotCount, setHotCount] = useState(0);
+  const [newCount, setNewCount] = useState(0);
   const limit = 10;
 
   const fetchCasinos = async () => {
@@ -76,15 +79,30 @@ export default function CasinoManagementPage() {
         limit,
         offset: (currentPage - 1) * limit
       };
-      
+
       const data = await databaseApi.getCasinosWithPagination(params);
       setCasinos(data.casinos);
       setTotalPages(data.totalPages);
       setTotal(data.total);
+
+      // Calculate stats
+      setFeaturedCount(data.casinos.filter(c => c.is_featured).length);
+      setHotCount(data.casinos.filter(c => c.is_hot).length);
+      setNewCount(data.casinos.filter(c => c.is_new).length);
     } catch (error) {
       console.error('Failed to fetch casinos:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      // This would implement CSV export functionality
+      console.log('Exporting casinos...');
+      // TODO: Implement actual export logic
+    } catch (error) {
+      console.error('Failed to export casinos:', error);
     }
   };
 
@@ -174,33 +192,103 @@ export default function CasinoManagementPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-casino-dark via-casino-dark-lighter to-casino-dark">
-      {/* Header */}
+      {/* Enhanced Header */}
       <div className="bg-casino-card-bg/50 backdrop-blur-sm border-b border-casino-border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <Building2 className="h-8 w-8 text-casino-neon-green" />
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
-                  Casino Management
-                </h1>
+          {/* Breadcrumb */}
+          <div className="flex items-center space-x-2 py-3 text-sm">
+            <Link href="/admin" className="text-gray-400 hover:text-casino-neon-green transition-colors">
+              <Home className="h-4 w-4" />
+            </Link>
+            <ChevronRight className="h-4 w-4 text-gray-500" />
+            <Link href="/admin" className="text-gray-400 hover:text-casino-neon-green transition-colors">
+              Admin Dashboard
+            </Link>
+            <ChevronRight className="h-4 w-4 text-gray-500" />
+            <span className="text-casino-neon-green font-medium">Casino Management</span>
+          </div>
+
+          {/* Main Header */}
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center py-6 space-y-4 lg:space-y-0">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-casino-neon-green/10 rounded-lg">
+                  <Building2 className="h-8 w-8 text-casino-neon-green" />
+                </div>
+                <div>
+                  <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
+                    Casino Management
+                  </h1>
+                  <p className="text-gray-300 text-sm lg:text-base">
+                    Manage casino listings, bonuses, and content
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-300 mt-2">
-                Manage casino listings, bonuses, and content
-              </p>
+
+              {/* Quick Stats */}
+              <div className="flex flex-wrap gap-3 mt-4">
+                <Badge variant="outline" className="border-casino-neon-green/30 text-casino-neon-green bg-casino-neon-green/5">
+                  <Building2 className="h-3 w-3 mr-1" />
+                  {total} Total
+                </Badge>
+                <Badge variant="outline" className="border-yellow-500/30 text-yellow-400 bg-yellow-500/5">
+                  <Star className="h-3 w-3 mr-1" />
+                  {featuredCount} Featured
+                </Badge>
+                <Badge variant="outline" className="border-red-500/30 text-red-400 bg-red-500/5">
+                  <Shield className="h-3 w-3 mr-1" />
+                  {hotCount} Hot
+                </Badge>
+                <Badge variant="outline" className="border-blue-500/30 text-blue-400 bg-blue-500/5">
+                  <Plus className="h-3 w-3 mr-1" />
+                  {newCount} New
+                </Badge>
+              </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <Badge variant="outline" className="border-casino-neon-green/30 text-casino-neon-green">
-                {total} Casinos
-              </Badge>
-              {hasPermission('16') && (
-                <Button asChild className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/80">
-                  <Link href="/admin/casinos/add" className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    Add Casino
-                  </Link>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              {/* Quick Search */}
+              <div className="relative min-w-[200px]">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Quick search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-casino-dark/50 border-casino-border-subtle text-white placeholder-gray-400 focus:border-casino-neon-green"
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={fetchCasinos}
+                  className="border-casino-border-subtle text-gray-300 hover:text-white hover:border-casino-neon-green"
+                >
+                  <RefreshCw className="h-4 w-4" />
                 </Button>
-              )}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExport}
+                  className="border-casino-border-subtle text-gray-300 hover:text-white hover:border-casino-neon-green"
+                  title="Export to CSV"
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+
+                {hasPermission('16') && (
+                  <Button asChild className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/80">
+                    <Link href="/admin/casinos/add" className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      <span className="hidden sm:inline">Add Casino</span>
+                    </Link>
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -208,23 +296,31 @@ export default function CasinoManagementPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filters and Search */}
+        {/* Advanced Filters */}
         <Card className="bg-casino-card-bg border-casino-border-subtle mb-6">
           <CardHeader>
-            <CardTitle className="text-casino-neon-green">Search & Filter</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-casino-neon-green flex items-center gap-2">
+                <Filter className="h-5 w-5" />
+                Advanced Filters
+              </CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setSearchTerm('');
+                  setSortBy('name');
+                  setSortOrder('asc');
+                  setCurrentPage(1);
+                }}
+                className="text-gray-400 hover:text-white"
+              >
+                Clear All
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search casinos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-casino-dark border-casino-border-subtle text-white"
-                />
-              </div>
-              
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Select value={sortBy} onValueChange={(value: 'name' | 'rating' | 'created_at') => setSortBy(value)}>
                 <SelectTrigger className="bg-casino-dark border-casino-border-subtle text-white">
                   <SelectValue placeholder="Sort by" />
@@ -235,7 +331,7 @@ export default function CasinoManagementPage() {
                   <SelectItem value="created_at">Date Created</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={sortOrder} onValueChange={(value: 'asc' | 'desc') => setSortOrder(value)}>
                 <SelectTrigger className="bg-casino-dark border-casino-border-subtle text-white">
                   <SelectValue placeholder="Order" />
@@ -245,12 +341,13 @@ export default function CasinoManagementPage() {
                   <SelectItem value="desc">Descending</SelectItem>
                 </SelectContent>
               </Select>
-              
-              <Button 
+
+              <Button
                 onClick={fetchCasinos}
-                className="bg-casino-neon-purple text-white hover:bg-casino-neon-purple/80"
+                className="bg-casino-neon-purple text-white hover:bg-casino-neon-purple/80 flex items-center gap-2"
               >
-                Refresh
+                <RefreshCw className="h-4 w-4" />
+                Apply Filters
               </Button>
             </div>
           </CardContent>

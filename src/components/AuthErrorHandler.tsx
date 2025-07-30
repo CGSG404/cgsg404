@@ -40,7 +40,11 @@ export default function AuthErrorHandler() {
           break;
         case 'session_failed':
           title = 'Session Creation Failed';
-          description = details || 'Failed to create user session';
+          if (details && details.includes('Manual token exchange failed: 400')) {
+            description = 'Google authentication failed. Please try signing in again.';
+          } else {
+            description = details || 'Failed to create user session';
+          }
           break;
         case 'session_set_failed':
           title = 'Session Setup Error';

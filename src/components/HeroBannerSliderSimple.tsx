@@ -57,6 +57,7 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
   const [banners, setBanners] = useState<Banner[]>(defaultBanners);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showControls, setShowControls] = useState(false);
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -116,6 +117,16 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
     setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
   };
 
+  // Handle touch and mouse interactions
+  const handleInteractionStart = () => {
+    setShowControls(true);
+  };
+
+  const handleInteractionEnd = () => {
+    // Delay hiding controls to allow for interaction
+    setTimeout(() => setShowControls(false), 2000);
+  };
+
   if (loading) {
     return (
       <div className="w-full h-[400px] md:h-[550px] lg:h-[650px] bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center">
@@ -128,7 +139,13 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
   }
 
   return (
-    <div className="relative w-full hero-banner-slider overflow-hidden">
+    <div
+      className="relative w-full hero-banner-slider overflow-hidden group"
+      onMouseEnter={handleInteractionStart}
+      onMouseLeave={handleInteractionEnd}
+      onTouchStart={handleInteractionStart}
+      onTouchEnd={handleInteractionEnd}
+    >
       <div className="relative w-full h-[400px] md:h-[550px] lg:h-[650px]">
         <AnimatePresence mode="wait">
           <motion.div
@@ -155,51 +172,51 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
               <div className="container mx-auto px-4 max-w-7xl">
                 <div className="max-w-3xl">
                   {/* Animated Title */}
-                  <motion.h1 
+                  <motion.h1
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight"
+                    className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 leading-tight"
                   >
                     {banners[currentSlide]?.title}
                   </motion.h1>
-                  
+
                   {/* Animated Subtitle */}
-                  <motion.p 
+                  <motion.p
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.4 }}
-                    className="text-lg md:text-xl lg:text-2xl text-white/90 mb-6 leading-relaxed"
+                    className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white/90 mb-4 sm:mb-6 leading-relaxed"
                   >
                     {banners[currentSlide]?.subtitle}
                   </motion.p>
                   
                   {/* Animated Highlight */}
                   {banners[currentSlide]?.highlight && (
-                    <motion.div 
+                    <motion.div
                       initial={{ y: 50, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.6 }}
-                      className="mb-8"
+                      className="mb-4 sm:mb-6 lg:mb-8"
                     >
-                      <span className="inline-block bg-casino-neon-green text-casino-dark px-6 py-3 rounded-full font-bold text-lg md:text-xl animate-pulse">
+                      <span className="inline-block bg-casino-neon-green text-casino-dark px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-3 rounded-full font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl animate-pulse">
                         {banners[currentSlide]?.highlight}
                       </span>
                     </motion.div>
                   )}
                   
                   {/* Animated CTA Button */}
-                  <motion.div 
+                  <motion.div
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.8 }}
                   >
                     <Link
                       href={banners[currentSlide]?.ctaLink || '/'}
-                      className="inline-flex items-center px-8 py-4 bg-casino-neon-green text-casino-dark font-bold text-lg rounded-full hover:bg-casino-neon-green/90 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-casino-neon-green/25"
+                      className="inline-flex items-center px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 bg-casino-neon-green text-casino-dark font-semibold text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl lg:rounded-full hover:bg-casino-neon-green/90 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-casino-neon-green/25"
                     >
-                      {banners[currentSlide]?.cta}
-                      <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <span className="whitespace-nowrap">{banners[currentSlide]?.cta}</span>
+                      <svg className="ml-1.5 sm:ml-2 w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </Link>
@@ -215,25 +232,27 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
           <>
             <button
               onClick={prevSlide}
-              className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 z-20
+              className={`absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 z-20
                          bg-casino-dark/80 hover:bg-casino-dark/90
                          border border-casino-neon-green/60 hover:border-casino-neon-green
                          text-casino-neon-green p-2 md:p-3 rounded-full
                          transition-all duration-300 backdrop-blur-sm
                          hover:scale-105 hover:shadow-lg
-                         w-10 h-10 md:w-12 md:h-12 flex items-center justify-center"
+                         w-10 h-10 md:w-12 md:h-12 flex items-center justify-center
+                         ${showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
             >
               <ChevronLeft className="w-4 h-4 md:w-6 md:h-6" />
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-20
+              className={`absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-20
                          bg-casino-dark/80 hover:bg-casino-dark/90
                          border border-casino-neon-green/60 hover:border-casino-neon-green
                          text-casino-neon-green p-2 md:p-3 rounded-full
                          transition-all duration-300 backdrop-blur-sm
                          hover:scale-105 hover:shadow-lg
-                         w-10 h-10 md:w-12 md:h-12 flex items-center justify-center"
+                         w-10 h-10 md:w-12 md:h-12 flex items-center justify-center
+                         ${showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
             >
               <ChevronRight className="w-4 h-4 md:w-6 md:h-6" />
             </button>

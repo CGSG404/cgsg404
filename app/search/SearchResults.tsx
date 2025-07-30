@@ -19,11 +19,11 @@ const searchKeywords = [
   { keyword: 'casino games', category: 'Casinos', icon: <Star className="w-4 h-4" />, href: '/casinos', description: 'Casinos with extensive game libraries' },
   
   // Games
-  { keyword: 'games', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games', description: 'Browse all casino games and categories' },
-  { keyword: 'slot games', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games', description: 'Popular slot games and jackpots' },
-  { keyword: 'live casino', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games', description: 'Live dealer casino games' },
-  { keyword: 'poker', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games', description: 'Poker games and tournaments' },
-  { keyword: 'blackjack', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games', description: 'Blackjack games and strategies' },
+  { keyword: 'games', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos', description: 'Browse all casino games and categories' },
+  { keyword: 'slot games', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos', description: 'Popular slot games and jackpots' },
+  { keyword: 'live casino', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos', description: 'Live dealer casino games' },
+  { keyword: 'poker', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos', description: 'Poker games and tournaments' },
+  { keyword: 'blackjack', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/top-casinos', description: 'Blackjack games and strategies' },
   { keyword: 'roulette', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games', description: 'Roulette games and betting systems' },
   { keyword: 'baccarat', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games', description: 'Baccarat games and rules' },
   { keyword: 'sports betting', category: 'Games', icon: <Gamepad2 className="w-4 h-4" />, href: '/games', description: 'Sports betting and live odds' },

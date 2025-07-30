@@ -22,7 +22,8 @@ import {
   TestTube,
   Cog,
   Database,
-  Upload
+  Upload,
+  FileText
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -179,6 +180,16 @@ export default function AdminDashboardPage() {
       status: 'Coming Soon'
     },
     {
+      title: 'List Reports Management',
+      description: 'Manage casino reports and community warnings',
+      href: '/admin/list-reports',
+      gradient: 'from-red-500/20 to-pink-500/20',
+      borderColor: 'border-red-500/30',
+      hoverGradient: 'hover:from-red-500/30 hover:to-pink-500/30',
+      icon: FileText,
+      status: 'Active'
+    },
+    {
       title: 'Analytics',
       description: 'View detailed analytics and reports',
       href: '/admin/analytics',
@@ -195,25 +206,27 @@ export default function AdminDashboardPage() {
       {/* Header */}
       <div className="bg-casino-card-bg/50 backdrop-blur-sm border-b border-casino-border-subtle">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <Home className="h-8 w-8 text-casino-neon-green" />
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 sm:py-6 gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                <Home className="h-6 w-6 sm:h-8 sm:w-8 text-casino-neon-green" />
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-casino-neon-green to-casino-neon-purple bg-clip-text text-transparent">
                   Admin Dashboard
                 </h1>
               </div>
-              <p className="text-gray-300 mt-2 flex items-center gap-2">
-                Welcome back, <span className="text-casino-neon-green font-medium">{adminInfo?.email}</span>
-                <span className="text-gray-500">•</span>
-                <span className="text-gray-400 text-sm">{currentTime.toLocaleTimeString()}</span>
-              </p>
+              <div className="text-gray-300 mt-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <span className="text-sm sm:text-base">
+                  Welcome back, <span className="text-casino-neon-green font-medium">{adminInfo?.email}</span>
+                </span>
+                <span className="text-gray-500 hidden sm:inline">•</span>
+                <span className="text-gray-400 text-xs sm:text-sm">{currentTime.toLocaleTimeString()}</span>
+              </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <Badge variant="secondary" className="bg-casino-neon-green/20 text-casino-neon-green border-casino-neon-green/30">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <Badge variant="secondary" className="bg-casino-neon-green/20 text-casino-neon-green border-casino-neon-green/30 text-xs sm:text-sm">
                 {adminInfo?.role?.replace('_', ' ').toUpperCase()}
               </Badge>
-              <Badge variant="outline" className="border-casino-neon-purple/30 text-casino-neon-purple">
+              <Badge variant="outline" className="border-casino-neon-purple/30 text-casino-neon-purple text-xs sm:text-sm">
                 {adminInfo?.total_permissions} Permissions
               </Badge>
             </div>
@@ -222,36 +235,36 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Welcome Section */}
-        <Card className="bg-gradient-to-r from-casino-neon-green/10 via-casino-neon-purple/10 to-casino-neon-green/10 border-casino-neon-green/20 mb-8 overflow-hidden relative">
+        <Card className="bg-gradient-to-r from-casino-neon-green/10 via-casino-neon-purple/10 to-casino-neon-green/10 border-casino-neon-green/20 mb-6 sm:mb-8 overflow-hidden relative">
           <div className="absolute inset-0 bg-gradient-to-r from-casino-neon-green/5 to-casino-neon-purple/5 animate-pulse"></div>
-          <CardContent className="p-8 relative z-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-3xl font-bold text-white mb-3">Welcome to CGSG404 Admin Panel</h2>
-                <p className="text-gray-300 text-lg">
+          <CardContent className="p-4 sm:p-6 lg:p-8 relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex-1">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 sm:mb-3">Welcome to CGSG404 Admin Panel</h2>
+                <p className="text-gray-300 text-sm sm:text-base lg:text-lg">
                   Manage your casino platform with powerful admin tools and real-time monitoring.
                 </p>
               </div>
-              <div className="hidden md:block opacity-20">
-                <Building2 className="h-16 w-16 text-casino-neon-green" />
+              <div className="hidden sm:block opacity-20 flex-shrink-0">
+                <Building2 className="h-12 w-12 lg:h-16 lg:w-16 text-casino-neon-green" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
           <Card className="bg-casino-card-bg border-casino-border-subtle hover:border-casino-neon-green/30 transition-all duration-300">
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="mr-4 p-2 bg-casino-neon-green/10 rounded-lg">
-                  <User className="h-6 w-6 text-casino-neon-green" />
+                <div className="mr-2 sm:mr-3 lg:mr-4 p-1.5 sm:p-2 bg-casino-neon-green/10 rounded-lg">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-casino-neon-green" />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-400">Admin Role</p>
-                  <p className="text-xl font-bold text-casino-neon-green">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-400 truncate">Admin Role</p>
+                  <p className="text-sm sm:text-lg lg:text-xl font-bold text-casino-neon-green truncate">
                     {adminInfo?.role?.replace('_', ' ').toUpperCase()}
                   </p>
                 </div>
@@ -260,14 +273,14 @@ export default function AdminDashboardPage() {
           </Card>
 
           <Card className="bg-casino-card-bg border-casino-border-subtle hover:border-casino-neon-purple/30 transition-all duration-300">
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="mr-4 p-2 bg-casino-neon-purple/10 rounded-lg">
-                  <Key className="h-6 w-6 text-casino-neon-purple" />
+                <div className="mr-2 sm:mr-3 lg:mr-4 p-1.5 sm:p-2 bg-casino-neon-purple/10 rounded-lg">
+                  <Key className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-casino-neon-purple" />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-400">Permissions</p>
-                  <p className="text-xl font-bold text-casino-neon-purple">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-400 truncate">Permissions</p>
+                  <p className="text-sm sm:text-lg lg:text-xl font-bold text-casino-neon-purple">
                     {adminInfo?.total_permissions || 0}
                   </p>
                 </div>
@@ -276,14 +289,14 @@ export default function AdminDashboardPage() {
           </Card>
 
           <Card className="bg-casino-card-bg border-casino-border-subtle hover:border-blue-400/30 transition-all duration-300">
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="mr-4 p-2 bg-blue-500/10 rounded-lg">
-                  <Clock className="h-6 w-6 text-blue-400" />
+                <div className="mr-2 sm:mr-3 lg:mr-4 p-1.5 sm:p-2 bg-blue-500/10 rounded-lg">
+                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-blue-400" />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-400">Last Login</p>
-                  <p className="text-xl font-bold text-blue-400">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-400 truncate">Last Login</p>
+                  <p className="text-sm sm:text-lg lg:text-xl font-bold text-blue-400 truncate">
                     {currentTime.toLocaleDateString()}
                   </p>
                 </div>
@@ -292,14 +305,14 @@ export default function AdminDashboardPage() {
           </Card>
 
           <Card className="bg-casino-card-bg border-casino-border-subtle hover:border-green-400/30 transition-all duration-300">
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="mr-4 p-2 bg-green-500/10 rounded-lg">
-                  <Wifi className="h-6 w-6 text-green-400" />
+                <div className="mr-2 sm:mr-3 lg:mr-4 p-1.5 sm:p-2 bg-green-500/10 rounded-lg">
+                  <Wifi className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-green-400" />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-400">Status</p>
-                  <p className="text-xl font-bold text-green-400">Online</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-400 truncate">Status</p>
+                  <p className="text-sm sm:text-lg lg:text-xl font-bold text-green-400">Online</p>
                 </div>
               </div>
             </CardContent>
@@ -307,37 +320,41 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Admin Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
           {adminFeatures.map((feature) => (
             <Card
               key={feature.href}
               className={`bg-gradient-to-br ${feature.gradient} border ${feature.borderColor} hover:scale-105 transition-all duration-300 group cursor-pointer ${feature.hoverGradient}`}
             >
               <Link href={feature.href} className="block">
-                <CardHeader className="pb-4">
+                <CardHeader className="pb-2 sm:pb-3 lg:pb-4 p-3 sm:p-4 lg:p-6">
                   <div className="flex items-center justify-between">
-                    <div className="p-3 bg-white/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                      <feature.icon className="h-8 w-8 text-white" />
+                    <div className="p-2 sm:p-2.5 lg:p-3 bg-white/10 rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300">
+                      <feature.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
                     </div>
                     <Badge
                       variant={feature.status === 'Active' ? 'default' : feature.status === 'Ready' ? 'secondary' : 'outline'}
-                      className={
+                      className={`text-xs sm:text-sm ${
                         feature.status === 'Active'
                           ? 'bg-green-500/20 text-green-400 border-green-500/30'
                           : feature.status === 'Ready'
                           ? 'bg-casino-neon-green/20 text-casino-neon-green border-casino-neon-green/30'
+                          : feature.status === 'Enhanced'
+                          ? 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                          : feature.status === 'Secure'
+                          ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
                           : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
-                      }
+                      }`}
                     >
                       {feature.status}
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-casino-neon-green transition-colors">
+                <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+                  <h3 className="text-sm sm:text-lg lg:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-casino-neon-green transition-colors line-clamp-2">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3">
                     {feature.description}
                   </p>
                 </CardContent>
@@ -347,31 +364,31 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Quick Actions */}
-        <Card className="mt-8 bg-casino-card-bg border-casino-border-subtle">
-          <CardHeader>
-            <CardTitle className="text-casino-neon-green flex items-center gap-2">
-              <Rocket className="h-5 w-5" />
+        <Card className="mt-6 sm:mt-8 bg-casino-card-bg border-casino-border-subtle">
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-casino-neon-green flex items-center gap-2 text-lg sm:text-xl">
+              <Rocket className="h-4 w-4 sm:h-5 sm:w-5" />
               Quick Actions
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white h-12">
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white h-10 sm:h-12 text-sm sm:text-base">
                 <Link href="/admin/monitoring" className="flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4" />
+                  <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
                   View Monitoring
                 </Link>
               </Button>
               <Button
                 onClick={() => logActivity('quick_action_test', 'dashboard', 'test', { action: 'test_button' }, 'info')}
-                className="bg-gradient-to-r from-casino-neon-green to-emerald-600 hover:from-casino-neon-green/80 hover:to-emerald-700 text-casino-dark h-12"
+                className="bg-gradient-to-r from-casino-neon-green to-emerald-600 hover:from-casino-neon-green/80 hover:to-emerald-700 text-casino-dark h-10 sm:h-12 text-sm sm:text-base"
               >
-                <TestTube className="h-4 w-4 mr-2" />
+                <TestTube className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Test Logging
               </Button>
-              <Button asChild className="bg-gradient-to-r from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700 text-white h-12">
+              <Button asChild className="bg-gradient-to-r from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700 text-white h-10 sm:h-12 text-sm sm:text-base sm:col-span-2 lg:col-span-1">
                 <Link href="/admin/settings" className="flex items-center gap-2">
-                  <Cog className="h-4 w-4" />
+                  <Cog className="h-3 w-3 sm:h-4 sm:w-4" />
                   Settings
                 </Link>
               </Button>

@@ -224,6 +224,8 @@ export const supabase = createClient(url, key, {
     debug: process.env.NODE_ENV === 'development',
     // 🚀 CRITICAL FIX: Use default storage key
     storageKey: 'sb-auth-token',
+    // 🔧 Enhanced OAuth settings
+    redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined,
   },
   global: {
     headers: {

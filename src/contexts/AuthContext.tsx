@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '@/src/lib/supabaseClient';
 import { Session, User as SupabaseUser } from '@supabase/supabase-js';
+import { useNotificationHelpers } from '../components/ui/notification';
 
 type User = SupabaseUser;
 
@@ -79,6 +80,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Notification helpers
+  const notifications = useNotificationHelpers();
+
   // Debug tracking
   const initCountRef = useRef(0);
   const lastEventRef = useRef('none');
@@ -136,6 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             include_granted_scopes: 'false',
           },
           scopes: 'openid email profile',
+          skipBrowserRedirect: false,
         },
       });
 
@@ -143,6 +148,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('❌ Auth: OAuth error:', error);
         setError(error.message);
         setLoading(false);
+
+        // Show error notification
+        notifications.error(
+          'Login Failed',
+          error.message || 'Unable to sign in with Google. Please try again.',
+          { duration: 6000 }
+        );
+
         throw error;
       }
 
@@ -152,6 +165,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('❌ Auth: Sign in error:', error);
       setError(error instanceof Error ? error.message : 'Sign in failed');
       setLoading(false);
+
+      // Show error notification
+      notifications.error(
+        'Login Error',
+        error instanceof Error ? error.message : 'An unexpected error occurred during login',
+        { duration: 6000 }
+      );
+
       throw error;
     }
   };
@@ -167,9 +188,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(null);
 
       console.log('✅ Auth: Signed out successfully');
+
+      // Show logout notification
+      notifications.success(
+        'Logged Out Successfully',
+        'You have been safely logged out. See you next time!',
+        { duration: 4000 }
+      );
     } catch (error) {
       console.error('❌ Auth: Sign out error:', error);
       setError(error instanceof Error ? error.message : 'Sign out failed');
+
+      // Show error notification
+      notifications.error(
+        'Logout Failed',
+        error instanceof Error ? error.message : 'An error occurred during logout',
+        { duration: 6000 }
+      );
+
       throw error;
     } finally {
       setLoading(false);
@@ -227,9 +263,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           lastUpdateRef.current = new Date();
 
           if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+            const previousUser = user;
             setUser(session?.user || null);
             setError(null);
             console.log(`✅ Auth: State updated for ${event}`);
+
+            // Show login notification only for new sign-ins (not token refresh)
+            if (event === 'SIGNED_IN' && session?.user && !previousUser) {
+              const userName = session.user.user_metadata?.full_name ||
+                              session.user.user_metadata?.name ||
+                              session.user.email?.split('@')[0] ||
+                              'User';
+
+              notifications.success(
+                'Welcome Back!',
+                `Hello ${userName}, you have successfully logged in.`,
+                { duration: 5000 }
+              );
+            }
           }
         });
 

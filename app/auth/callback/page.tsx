@@ -2,8 +2,9 @@
 
 import { useEffect, Suspense, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { supabase } from '@/src/lib/supabaseClient';
-import { safeExchangeCodeForSession, validateAuthCode } from '@/src/lib/authWorkaround';
+import { handleOAuthCallback, clearAuthState, validateSession } from '@/src/lib/authSimple';
+import { debugCallback, debugAuthFlow } from '@/src/lib/authDebug';
+import { validateAuthCode, sanitizeErrorMessage } from '@/src/lib/authUtils';
 
 function AuthCallbackContent() {
   const router = useRouter();
@@ -29,6 +30,12 @@ function AuthCallbackContent() {
         processedRef.current = true;
 
         console.log('🚀 Auth callback processing started...');
+
+        // Debug current state
+        if (process.env.NODE_ENV === 'development') {
+          debugAuthFlow();
+          debugCallback(searchParams);
+        }
 
         // Check for redirect loops by examining URL length
         const currentUrl = window.location.href;
@@ -64,189 +71,60 @@ function AuthCallbackContent() {
           return;
         }
 
-        if (!code) {
-          console.error('❌ No authorization code found');
-          if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-          }
-          router.replace('/?error=no_code');
-          return;
-        }
-
-        // Validate authorization code format
-        if (!validateAuthCode(code)) {
-          console.error('❌ Invalid authorization code format');
-          if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-          }
-          router.replace('/?error=invalid_code');
-          return;
-        }
-
-        console.log('🔄 Exchanging code for session...');
-        console.log('🔧 Code length:', code.length);
-
-        let data, exchangeError;
-        try {
-          console.log('🔄 Using safe exchange method...');
-
-          // Use the safe exchange method that handles split errors
-          const result = await safeExchangeCodeForSession(code);
-          data = result.data;
-          exchangeError = result.error;
-
-          console.log('🔍 Safe exchange result:', {
-            hasData: !!data,
-            hasError: !!exchangeError,
-            sessionExists: !!data?.session
+        if (code) {
+          console.log('🔧 Authorization code received:', {
+            length: code.length,
+            preview: code.substring(0, 20) + '...'
           });
-
-        } catch (exchangeException) {
-          console.error('❌ Safe exchange exception:', exchangeException);
-
-          // Clear timeout since we're handling the error
-          if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-          }
-
-          // Check for specific errors
-          let errorMessage = 'Exchange failed';
-          if (exchangeException instanceof Error) {
-            if (exchangeException.message.includes('split')) {
-              errorMessage = 'OAuth data format error detected';
-              console.log('🔧 Split error detected - will attempt recovery');
-            } else if (exchangeException.message.includes('timeout')) {
-              errorMessage = 'Authentication timeout';
-            } else {
-              errorMessage = exchangeException.message.substring(0, 200);
-            }
-          }
-
-          exchangeError = { message: errorMessage };
+        } else {
+          console.log('ℹ️ No authorization code in URL - will try session detection');
         }
 
-        if (exchangeError) {
-          console.error('❌ Exchange error:', exchangeError);
-
-          // Clear timeout since we're handling the error
-          if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-          }
-
-          // Check if this is a split function error
-          const errorString = String(exchangeError.message || exchangeError || '');
-          if (errorString.includes('split') || errorString.includes('intermediate value')) {
-            console.log('🔧 Detected Supabase split error, attempting recovery...');
-
-            try {
-              // Clear any problematic auth state
-              await supabase.auth.signOut();
-
-              // Wait a moment for cleanup
-              await new Promise(resolve => setTimeout(resolve, 1000));
-
-              // Redirect to clean home page with retry message
-              router.replace('/?error=auth_retry&message=Please try signing in again');
-              return;
-            } catch (recoveryError) {
-              console.error('❌ Recovery attempt failed:', recoveryError);
-              router.replace('/?error=auth_failed');
-              return;
-            }
-          }
-
-          // Extract safe error message
-          let safeMessage = 'Session exchange failed';
-          try {
-            if (exchangeError && typeof exchangeError === 'object') {
-              safeMessage = (exchangeError as any).message || (exchangeError as any).error_description || 'Unknown error';
-            } else if (typeof exchangeError === 'string') {
-              safeMessage = exchangeError;
-            }
-          } catch (parseError) {
-            console.error('❌ Error parsing exchange error:', parseError);
-            safeMessage = 'Session exchange failed';
-          }
-
-          // Limit message length to prevent URL issues
-          const finalMessage = String(safeMessage).substring(0, 100);
-          router.replace(`/?error=session_failed&details=${encodeURIComponent(finalMessage)}`);
-          return;
-        }
-
-        if (!data?.session) {
-          console.error('❌ No session received');
-          if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-          }
-          router.replace('/?error=session_failed&details=No session data');
-          return;
-        }
-
-        console.log('✅ Session created successfully:', {
-          user: data.session.user?.email,
-          expires: data.session.expires_at
+        console.log('🔄 Using simplified OAuth callback handling...');
+        console.log('🔧 Code details:', {
+          length: code.length,
+          preview: code.substring(0, 20) + '...',
+          hasSpecialChars: /[^a-zA-Z0-9\-_]/.test(code)
         });
 
-        // Clear timeout since we're proceeding successfully
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
+        // Use simplified OAuth handling
+        const authResult = await handleOAuthCallback();
 
-        // Set session explicitly for better persistence
-        console.log('🔧 Setting session explicitly...');
-        const { error: setSessionError } = await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token
-        });
+        if (authResult.success && authResult.session) {
+          console.log(`✅ OAuth callback successful with method: ${authResult.method}`);
 
-        if (setSessionError) {
-          console.error('❌ Failed to set session:', setSessionError);
-          const errorMsg = setSessionError.message.substring(0, 100);
-          router.replace(`/?error=session_set_failed&details=${encodeURIComponent(errorMsg)}`);
-          return;
-        }
+          // Clear timeout
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+          }
 
-        // Quick validation with shorter timeout
-        await new Promise(resolve => setTimeout(resolve, 300));
+          // Validate session
+          const isValid = await validateSession();
 
-        const { data: { session: validationSession }, error: validationError } = await supabase.auth.getSession();
-
-        if (validationError || !validationSession) {
-          console.error('❌ Session validation failed:', validationError);
-          // One quick retry
-          await new Promise(resolve => setTimeout(resolve, 500));
-
-          const { data: { session: retrySession } } = await supabase.auth.getSession();
-          if (!retrySession) {
-            console.error('❌ Session still not available after retry');
-            router.replace('/?error=session_validation_failed');
+          if (isValid) {
+            console.log('✅ Session validated successfully');
+            router.replace('/?success=login');
+            return;
+          } else {
+            console.error('❌ Session validation failed');
+            await clearAuthState();
+            router.replace('/?error=session_validation_failed&details=Session validation failed');
             return;
           }
-        }
+        } else {
+          console.error('❌ OAuth callback failed:', authResult.error);
 
-        console.log('✅ Session validated successfully');
-
-        // Successful authentication - redirect to home
-        console.log('✅ Session validated, redirecting to home...');
-
-        // Simple, clean redirect to prevent loops
-        const redirectUrl = '/';
-        console.log('🔄 Redirecting to:', redirectUrl);
-
-        // Use immediate redirect to prevent any timing issues
-        try {
-          router.replace(`${redirectUrl}?success=login`);
-        } catch (redirectError) {
-          console.error('❌ Redirect error:', redirectError);
-          // Fallback: simple redirect
-          try {
-            router.replace(redirectUrl);
-          } catch (fallbackError) {
-            console.error('❌ Fallback redirect failed:', fallbackError);
-            // Last resort: force page reload
-            window.location.href = redirectUrl;
+          // Clear timeout
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
           }
+
+          // Clear auth state and redirect with error
+          await clearAuthState();
+
+          const errorMessage = authResult.error || 'OAuth callback failed';
+          router.replace(`/?error=callback_failed&details=${encodeURIComponent(errorMessage)}`);
+          return;
         }
 
       } catch (err) {

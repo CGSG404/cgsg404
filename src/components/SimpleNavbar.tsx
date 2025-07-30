@@ -1,13 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Star, Gift, Users, BookOpen, MessageCircle, Newspaper, User, LogOut } from 'lucide-react';
+import { Menu, X, Star, Gift, Users, BookOpen, MessageCircle, Newspaper, User, LogOut, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext';
+import AdminButton from '@/src/components/AdminButton';
 
 const SimpleNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const { user, signOut } = useAuth();
+
+  // Ensure client-side rendering for dynamic content
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -55,11 +62,17 @@ const SimpleNavbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/games" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+            <Link href="/top-casinos" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
               Best Casinos
             </Link>
             <Link href="/casinos" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
               Casinos
+            </Link>
+            <Link href="/reviews" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+              Reviews
+            </Link>
+            <Link href="/list-report" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+              List Report
             </Link>
             <Link href="/forum" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
               Forum
@@ -73,33 +86,41 @@ const SimpleNavbar = () => {
           </div>
 
           {/* Desktop Auth */}
-          <div className="hidden md:flex items-center">
-            {user ? (
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-casino-neon-green rounded-full flex items-center justify-center">
-                    <span className="text-casino-dark font-semibold text-sm">
-                      {user.email && typeof user.email === 'string' ? user.email.charAt(0).toUpperCase() : 'U'}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Admin Button - Only show for admin users */}
+            {isClient && <AdminButton variant="default" />}
+
+            {isClient ? (
+              user ? (
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-casino-neon-green rounded-full flex items-center justify-center">
+                      <span className="text-casino-dark font-semibold text-sm">
+                        {user.email && typeof user.email === 'string' ? user.email.charAt(0).toUpperCase() : 'U'}
+                      </span>
+                    </div>
+                    <span className="text-white text-sm font-medium">
+                      {getDisplayName()}
                     </span>
                   </div>
-                  <span className="text-white text-sm font-medium">
-                    {getDisplayName()}
-                  </span>
+                  <button
+                    onClick={handleSignOut}
+                    className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </button>
                 </div>
-                <button
-                  onClick={handleSignOut}
-                  className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Sign Out</span>
-                </button>
-              </div>
+              ) : (
+                <Link href="/signin">
+                  <button className="bg-gradient-to-r from-casino-neon-green to-emerald-500 hover:from-casino-neon-green/90 hover:to-emerald-500/90 text-casino-dark font-semibold px-6 py-2 rounded-xl transition-all duration-300">
+                    Sign In
+                  </button>
+                </Link>
+              )
             ) : (
-              <Link href="/signin">
-                <button className="bg-gradient-to-r from-casino-neon-green to-emerald-500 hover:from-casino-neon-green/90 hover:to-emerald-500/90 text-casino-dark font-semibold px-6 py-2 rounded-xl transition-all duration-300">
-                  Sign In
-                </button>
-              </Link>
+              // Placeholder for SSR to prevent hydration mismatch
+              <div className="w-20 h-10 bg-transparent"></div>
             )}
           </div>
 
@@ -129,7 +150,7 @@ const SimpleNavbar = () => {
                 </div>
                 
                 <Link
-                  href="/games"
+                  href="/top-casinos"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center py-3 px-4 text-white/90 hover:text-white hover:bg-casino-neon-green/10 transition-all duration-300 rounded-lg"
                 >
@@ -173,6 +194,17 @@ const SimpleNavbar = () => {
                 </Link>
 
                 <Link
+                  href="/list-report"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center py-3 px-4 text-white/90 hover:text-white hover:bg-casino-neon-green/10 transition-all duration-300 rounded-lg"
+                >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-casino-neon-green/15 mr-3">
+                    <AlertTriangle className="w-4 h-4 text-casino-neon-green" />
+                  </div>
+                  <span>List Report</span>
+                </Link>
+
+                <Link
                   href="/guide"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center py-3 px-4 text-white/90 hover:text-white hover:bg-casino-neon-green/10 transition-all duration-300 rounded-lg"
@@ -200,7 +232,7 @@ const SimpleNavbar = () => {
                 <div className="text-xs font-semibold text-casino-neon-green/70 uppercase tracking-wider mb-3">
                   Account
                 </div>
-                {user ? (
+                {isClient && user ? (
                   <div className="space-y-3">
                     {/* User Info */}
                     <div className="flex items-center space-x-3 p-3 bg-casino-neon-green/10 rounded-lg border border-casino-neon-green/20">
@@ -217,6 +249,14 @@ const SimpleNavbar = () => {
                       </div>
                     </div>
 
+                    {/* Admin Button - Only show for admin users */}
+                    {isClient && (
+                      <AdminButton
+                        variant="mobile"
+                        onClick={() => setMobileMenuOpen(false)}
+                      />
+                    )}
+
                     {/* Sign Out Button */}
                     <button
                       onClick={handleSignOut}
@@ -226,13 +266,16 @@ const SimpleNavbar = () => {
                       <span>Sign Out</span>
                     </button>
                   </div>
-                ) : (
+                ) : isClient ? (
                   <Link href="/signin" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full bg-casino-neon-green hover:bg-casino-neon-green/90 text-casino-dark font-semibold py-3 rounded-lg transition-all duration-300 flex items-center justify-center">
                       <User className="w-4 h-4 mr-2" />
                       <span>Sign In to Continue</span>
                     </button>
                   </Link>
+                ) : (
+                  // Placeholder for SSR
+                  <div className="w-full h-12 bg-transparent"></div>
                 )}
               </div>
             </div>

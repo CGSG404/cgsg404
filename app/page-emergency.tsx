@@ -78,12 +78,12 @@ export default function EmergencyHomePage() {
               <div className="font-semibold">Casinos</div>
             </a>
             
-            <a 
-              href="/games" 
+            <a
+              href="/top-casinos"
               className="bg-casino-card-bg border border-casino-border-subtle rounded-lg p-4 text-center hover:bg-casino-neon-green/10 transition-colors"
             >
               <div className="text-2xl mb-2">🎮</div>
-              <div className="font-semibold">Games</div>
+              <div className="font-semibold">Top Casinos</div>
             </a>
             
             <a 

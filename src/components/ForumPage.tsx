@@ -4,81 +4,123 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Footer from '@/components/Footer';
 import ForumHero from '@/components/forum/ForumHero';
-import ForumCategoriesNew from '@/src/components/forum/ForumCategoriesNew';
 import ForumPostsList from '@/src/components/forum/ForumPostsList';
-import CreatePostModal from '@/src/components/forum/CreatePostModal';
+import TweetComposer from '@/src/components/forum/TweetComposer';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { Button } from '@/src/components/ui/button';
-import { Plus } from 'lucide-react';
-
-
+import { Plus, Users, MessageCircle, TrendingUp, Refresh } from 'lucide-react';
+import { Card, CardContent } from '@/src/components/ui/card';
 
 const ForumPage = () => {
   const { user } = useAuth();
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [isSubmittingTweet, setIsSubmittingTweet] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleTweetSubmit = async (content: string) => {
+    setIsSubmittingTweet(true);
+    try {
+      const response = await fetch('/api/forum/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: content.substring(0, 50) + (content.length > 50 ? '...' : ''),
+          content: content,
+          post_type: 'tweet',
+          user_id: user?.id,
+          user_name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Anonymous',
+          user_avatar: user?.user_metadata?.avatar_url || null,
+        })
+      });
+
+      if (response.ok) {
+        // Trigger refresh of posts list
+        setRefreshTrigger(prev => prev + 1);
+      }
+    } catch (error) {
+      console.error('Error posting tweet:', error);
+    } finally {
+      setIsSubmittingTweet(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-casino-dark">
       <ForumHero />
 
+      {/* Content Divider */}
+      <section className="py-4">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="relative flex items-center justify-center"
+          >
+            {/* Main Divider Line */}
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-casino-neon-green/30 to-transparent"></div>
+            </div>
 
+            {/* Center Icon - Perfectly Centered */}
+            <div className="relative z-10 bg-casino-dark px-2 sm:px-4">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-casino-neon-green/20 rounded-full flex items-center justify-center">
+                <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 text-casino-neon-green" />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Main Forum Content */}
-      <div className="py-12 md:py-16">
+      <section className="py-6 md:py-8">
         <div className="container mx-auto px-4 max-w-7xl">
-          {/* Header with Create Post Button */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-2">
-                <span className="text-white">Casino</span> <span className="gradient-text">Community Forum</span>
-              </h2>
-              <p className="text-gray-400 text-base md:text-lg">
-                Share experiences, ask questions, and connect with fellow casino enthusiasts
-              </p>
-            </div>
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-center mb-6"
+          >
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 leading-tight">
+              <span className="text-white">Casino</span>{' '}
+              <span className="bg-gradient-to-r from-casino-neon-green via-emerald-400 to-green-400 bg-clip-text text-transparent">
+                Community
+              </span>
+            </h2>
+            <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+              Share your thoughts, experiences, and connect with fellow casino enthusiasts in real-time.
+            </p>
+          </motion.div>
 
-            {user && (
-              <Button
-                onClick={() => setShowCreatePost(true)}
-                className="bg-casino-neon-green hover:bg-casino-neon-green/80 text-casino-dark font-semibold px-6 py-3"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Create Post
-              </Button>
-            )}
-          </div>
+          {/* Tweet Composer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mb-6"
+          >
+            <TweetComposer
+              onTweetSubmit={handleTweetSubmit}
+              isSubmitting={isSubmittingTweet}
+            />
+          </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Categories Sidebar */}
-            <div className="lg:col-span-1">
-              <ForumCategoriesNew
-                selectedCategory={selectedCategory}
-                onCategorySelect={setSelectedCategory}
-              />
-            </div>
-
-            {/* Posts List */}
-            <div className="lg:col-span-3">
-              <ForumPostsList
-                categoryId={selectedCategory}
-                onPostCreated={() => {}}
-              />
-            </div>
-          </div>
+          {/* Posts Feed */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="max-w-2xl mx-auto"
+            data-section="forum-content"
+          >
+            <ForumPostsList
+              categoryId={null}
+              onPostCreated={() => {}}
+              refreshTrigger={refreshTrigger}
+            />
+          </motion.div>
         </div>
-      </div>
-
-      {/* Create Post Modal */}
-      {showCreatePost && (
-        <CreatePostModal
-          isOpen={showCreatePost}
-          onClose={() => setShowCreatePost(false)}
-          onPostCreated={() => {
-            setShowCreatePost(false);
-          }}
-        />
-      )}
+      </section>
 
       <Footer />
     </div>

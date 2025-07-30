@@ -8,8 +8,30 @@ interface ErrorInfo {
 
 export const logError = ({ error, context = {} }: ErrorInfo) => {
   if (process.env.NODE_ENV === 'production') {
-    // In production, you would send this to your error tracking service
-    console.error('Error:', error, 'Context:', context);
+    // Production error reporting - send to external service
+    try {
+      // Send to error tracking service (Sentry, LogRocket, etc.)
+      fetch('/api/errors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: error.message,
+          stack: error.stack,
+          name: error.name,
+          context,
+          timestamp: new Date().toISOString(),
+          url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+          userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'unknown'
+        })
+      }).catch(reportError => {
+        console.error('Failed to report error:', reportError);
+      });
+    } catch (reportError) {
+      console.error('Error reporting failed:', reportError);
+    }
+
+    // Still log to console as fallback
+    console.error('Error:', error.message, 'Context:', context);
   } else {
     // In development, log to console with more details
     console.group('Error Details');
