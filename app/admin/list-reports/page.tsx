@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Plus, Edit, Trash2, Search, Calendar, ExternalLink, Shield, Users, AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAdmin } from '@/src/contexts/AdminContext';
 
 interface CasinoReport {
   id: number;
@@ -250,26 +250,45 @@ export default function AdminListReportsPage() {
     });
   };
 
-  // Auth check
+  // Show loading state while checking authentication
   if (authLoading) {
     return (
       <div className="min-h-screen bg-casino-dark flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-casino-neon-green mx-auto mb-4"></div>
           <p className="text-gray-400">Checking admin access...</p>
+          {/* Debug info for production */}
+          <div className="mt-4 text-xs text-gray-500 max-w-md">
+            <p>Environment: {process.env.NODE_ENV}</p>
+            <p>Auth Loading: {authLoading.toString()}</p>
+            <p>Is Admin: {isAdmin.toString()}</p>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Show access denied if not admin
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-casino-dark flex items-center justify-center">
         <Card className="bg-red-500/10 border-red-500/20 max-w-md">
           <CardContent className="p-6 text-center">
             <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-red-400 mb-2">Access Denied</h3>
-            <p className="text-gray-300">You need admin privileges to access this page.</p>
+            <h3 className="text-lg font-semibold text-red-400 mb-2">Admin Login Required</h3>
+            <p className="text-gray-300 mb-4">Please login with your admin Google account to access this page.</p>
+            <Button
+              onClick={() => window.location.href = '/auth'}
+              className="bg-casino-neon-green text-black hover:bg-casino-neon-green/80"
+            >
+              Login with Google
+            </Button>
+            {/* Debug info for production */}
+            <div className="mt-4 text-xs text-gray-500">
+              <p>Environment: {process.env.NODE_ENV}</p>
+              <p>Auth Loading: {authLoading.toString()}</p>
+              <p>Is Admin: {isAdmin.toString()}</p>
+            </div>
           </CardContent>
         </Card>
       </div>

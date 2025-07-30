@@ -16,7 +16,7 @@ const supabaseAuth = createClient(
 // Authentication middleware
 async function verifyAdminAuth() {
   try {
-    // Production: Full authentication required
+    // Production: Check Supabase authentication
 
     const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
     

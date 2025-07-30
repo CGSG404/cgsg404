@@ -5,10 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "build:unsafe": "next build",
     "start": "next start",
-    "prod": "next build && next start",
-    "fix-admin": "tsx scripts/fix-admin-access.ts",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "vercel-build": "next build",
