@@ -534,8 +534,7 @@ export const databaseApi = {
           user_id,
           email,
           role,
-          is_active,
-          admin_role_permissions(count)
+          is_active
         `)
         .eq('user_id', user.id)
         .eq('is_active', true)
@@ -553,16 +552,23 @@ export const databaseApi = {
 
       console.log('✅ DatabaseAPI: User is admin:', adminRecord.email);
 
-      // Count permissions
-      const permissionCount = Array.isArray(adminRecord.admin_role_permissions)
-        ? adminRecord.admin_role_permissions.length
-        : 0;
+      // Separate query to count permissions
+      const { count: permissionCount, error: countError } = await supabase
+        .from('admin_role_permissions')
+        .select('*', { count: 'exact', head: true })
+        .eq('admin_user_id', adminRecord.id);
+
+      if (countError) {
+        console.error('❌ DatabaseAPI: Error counting permissions:', countError);
+      }
+
+      console.log('🔍 DatabaseAPI: Permission count for', adminRecord.email, ':', permissionCount);
 
       return {
         is_admin: true,
         role: adminRecord.role || 'admin',
         email: adminRecord.email,
-        total_permissions: permissionCount
+        total_permissions: permissionCount || 0
       };
 
     } catch (error) {
