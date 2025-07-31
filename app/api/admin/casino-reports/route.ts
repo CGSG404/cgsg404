@@ -14,15 +14,26 @@ const supabaseAuth = createClient(
 );
 
 // Authentication middleware
-async function verifyAdminAuth() {
+async function verifyAdminAuth(request: NextRequest) {
   try {
-    // Production: Check Supabase authentication
-
-    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
-    
-    if (authError || !user) {
+    // Get authorization header from request
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log('❌ No valid authorization header found');
       return { error: 'Unauthorized', status: 401 };
     }
+
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+
+    // Verify the token with Supabase
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser(token);
+
+    if (authError || !user) {
+      console.log('❌ Token verification failed:', authError?.message);
+      return { error: 'Unauthorized', status: 401 };
+    }
+
+    console.log('✅ User authenticated:', user.email);
 
     // Check if user is admin
     const { data: adminData, error: adminError } = await supabaseAdmin
@@ -33,21 +44,23 @@ async function verifyAdminAuth() {
       .single();
 
     if (adminError || !adminData) {
+      console.log('❌ User is not admin:', user.email);
       return { error: 'Admin access required', status: 403 };
     }
 
+    console.log('✅ Admin access verified:', user.email);
     return { user, adminData };
   } catch (error) {
-    console.error('Auth verification error:', error);
+    console.error('❌ Auth verification error:', error);
     return { error: 'Authentication failed', status: 500 };
   }
 }
 
 // GET - Admin endpoint for fetching casino reports
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     // Verify admin authentication
-    const authResult = await verifyAdminAuth();
+    const authResult = await verifyAdminAuth(request);
     if ('error' in authResult) {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
@@ -88,7 +101,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     // Verify admin authentication
-    const authResult = await verifyAdminAuth();
+    const authResult = await verifyAdminAuth(request);
     if ('error' in authResult) {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
@@ -157,7 +170,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Verify admin authentication
-    const authResult = await verifyAdminAuth();
+    const authResult = await verifyAdminAuth(request);
     if ('error' in authResult) {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }

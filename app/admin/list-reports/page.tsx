@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Plus, Edit, Trash2, Search, Calendar, ExternalLink, Shield, Users, AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
 import { useAdmin } from '@/src/contexts/AdminContext';
+import { supabase } from '@/src/lib/supabaseClient';
 
 interface CasinoReport {
   id: number;
@@ -73,20 +74,42 @@ export default function AdminListReportsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
+  // Helper function to get auth headers
+  const getAuthHeaders = async () => {
+    try {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error || !session?.access_token) {
+        throw new Error('No valid session found');
+      }
+
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      };
+    } catch (error) {
+      console.error('❌ Error getting auth headers:', error);
+      throw new Error('Authentication failed');
+    }
+  };
+
   // Fetch reports
   const fetchReports = async () => {
     try {
       setLoading(true);
       console.log('📡 Admin fetching casino reports...');
 
-      const response = await fetch('/api/admin/casino-reports');
-      
+      const headers = await getAuthHeaders();
+      const response = await fetch('/api/admin/casino-reports', {
+        method: 'GET',
+        headers
+      });
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
-      
+
       if (result.success) {
         console.log(`✅ Admin loaded ${result.data.length} reports`);
         setReports(result.data);
@@ -208,8 +231,10 @@ export default function AdminListReportsPage() {
       setDeletingId(id);
       console.log('🗑️ Deleting casino report:', id);
 
+      const headers = await getAuthHeaders();
       const response = await fetch(`/api/admin/casino-reports/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers
       });
 
       const result = await response.json();
