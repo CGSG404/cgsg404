@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Delete API</title>
+</head>
+<body>
+    <h1>Test Delete Report API</h1>
+    <button onclick="testDelete()">Test Delete Report ID 13</button>
+    <div id="result"></div>
+
+    <script>
+        async function testDelete() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                console.log('🔄 Starting delete test...');
+                
+                const response = await fetch('/api/admin/reports?id=13', {
+                    method: 'DELETE',
+                });
+                
+                console.log('📡 Response status:', response.status);
+                console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
+                
+                const responseText = await response.text();
+                console.log('📡 Raw response:', responseText);
+                
+                if (response.ok) {
+                    let result;
+                    try {
+                        result = responseText ? JSON.parse(responseText) : { success: true };
+                        console.log('✅ Success:', result);
+                        resultDiv.innerHTML = `<h3>Success!</h3><pre>${JSON.stringify(result, null, 2)}</pre>`;
+                    } catch (parseError) {
+                        console.error('❌ Parse error:', parseError);
+                        resultDiv.innerHTML = `<h3>Success but parse error</h3><p>Raw: ${responseText}</p>`;
+                    }
+                } else {
+                    let error;
+                    try {
+                        error = responseText ? JSON.parse(responseText) : { error: 'No response body' };
+                    } catch (parseError) {
+                        error = { error: responseText || 'Unknown error' };
+                    }
+                    console.error('❌ Error:', error);
+                    resultDiv.innerHTML = `<h3>Error!</h3><pre>${JSON.stringify(error, null, 2)}</pre>`;
+                }
+            } catch (error) {
+                console.error('❌ Network error:', error);
+                resultDiv.innerHTML = `<h3>Network Error!</h3><p>${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

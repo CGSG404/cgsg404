@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://gurusingapore.com
+
+# Sitemaps
+Sitemap: https://gurusingapore.com/sitemap.xml

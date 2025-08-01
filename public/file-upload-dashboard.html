@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📁 File Upload Security Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d1b69, #11998e);
+            color: #ffffff;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #11998e;
+            text-shadow: 0 0 10px rgba(17, 153, 142, 0.3);
+            margin-bottom: 30px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(17, 153, 142, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: #11998e;
+            box-shadow: 0 0 20px rgba(17, 153, 142, 0.2);
+        }
+        .card h3 {
+            color: #11998e;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-success { background: #38ef7d; }
+        .status-error { background: #ff5722; }
+        .status-warning { background: #ff9800; }
+        .status-loading { background: #11998e; animation: pulse 1.5s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        button {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
+        }
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .test-results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        .test-success { color: #38ef7d; }
+        .test-error { color: #ff5722; }
+        .test-warning { color: #ff9800; }
+        .upload-area {
+            border: 2px dashed rgba(17, 153, 142, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+        .upload-area:hover {
+            border-color: #11998e;
+            background: rgba(17, 153, 142, 0.1);
+        }
+        .upload-area.dragover {
+            border-color: #38ef7d;
+            background: rgba(56, 239, 125, 0.1);
+        }
+        .file-info {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .security-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .feature-card {
+            background: rgba(17, 153, 142, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        .feature-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #11998e;
+        }
+        .error {
+            color: #ff5722;
+            background: rgba(255, 87, 34, 0.1);
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .wide-card {
+            grid-column: 1 / -1;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin: 0;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📁 File Upload Security Dashboard</h1>
+        
+        <div class="dashboard-grid">
+            <!-- Security Testing -->
+            <div class="card">
+                <h3>
+                    <span class="status-indicator status-loading" id="securityStatus"></span>
+                    Security Testing
+                </h3>
+                <div id="securityResults">
+                    <div class="loading">Ready to test security features...</div>
+                </div>
+                <button onclick="runSecurityTests()">Run Security Tests</button>
+            </div>
+            
+            <!-- File Upload Test -->
+            <div class="card">
+                <h3>
+                    <span class="status-indicator status-loading" id="uploadStatus"></span>
+                    Secure Upload Test
+                </h3>
+                <div id="uploadResults">
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <div>📁 Click to select file or drag & drop</div>
+                        <div style="font-size: 0.8em; opacity: 0.7; margin-top: 5px;">
+                            Test secure upload with encryption & virus scanning
+                        </div>
+                    </div>
+                    <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)">
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="encryptFile" checked>
+                            <label for="encryptFile">🔐 Encrypt File</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="virusScan" checked>
+                            <label for="virusScan">🦠 Virus Scan</label>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar" id="uploadProgress" style="display: none;">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Metrics -->
+            <div class="card">
+                <h3>
+                    <span class="status-indicator status-loading" id="performanceStatus"></span>
+                    Performance Metrics
+                </h3>
+                <div id="performanceResults">
+                    <div class="loading">Ready to measure performance...</div>
+                </div>
+                <button onclick="runPerformanceTest()">Run Performance Test</button>
+            </div>
+        </div>
+        
+        <!-- Security Features Overview -->
+        <div class="card wide-card">
+            <h3>🛡️ Security Features Overview</h3>
+            <div class="security-features">
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <div class="feature-label">File Encryption</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🦠</div>
+                    <div class="feature-label">Virus Scanning</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-label">Type Validation</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📏</div>
+                    <div class="feature-label">Size Limits</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-label">Secure Naming</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-label">Path Protection</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comprehensive Test Results -->
+        <div class="card wide-card">
+            <h3>
+                <span class="status-indicator status-loading" id="comprehensiveStatus"></span>
+                Comprehensive Security Test
+            </h3>
+            <div id="comprehensiveResults">
+                <div class="loading">Ready for comprehensive testing...</div>
+            </div>
+            <div style="text-align: center; margin-top: 15px;">
+                <button onclick="runComprehensiveTest()" style="font-size: 1.1em; padding: 15px 30px;">
+                    🚀 Run All Security Tests
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-run security tests on load
+        window.addEventListener('load', () => {
+            runSecurityTests();
+        });
+
+        async function runSecurityTests() {
+            const statusEl = document.getElementById('securityStatus');
+            const resultsEl = document.getElementById('securityResults');
+            
+            statusEl.className = 'status-indicator status-loading';
+            resultsEl.innerHTML = '<div class="loading">Running security tests...</div>';
+            
+            try {
+                const response = await fetch('/api/test-file-upload');
+                const data = await response.json();
+                
+                if (data.success) {
+                    statusEl.className = 'status-indicator status-success';
+                    resultsEl.innerHTML = `
+                        <div class="test-results">
+                            ${data.testResults.slice(0, 4).map(test => `
+                                <div class="test-item">
+                                    <span>${test.test}</span>
+                                    <span class="${test.success ? 'test-success' : 'test-error'}">
+                                        ${test.success ? '✅ PASS' : '❌ FAIL'}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 10px; color: #38ef7d;">
+                            ✅ ${data.summary.passedTests}/${data.summary.totalTests} security tests passed
+                        </div>
+                    `;
+                } else {
+                    statusEl.className = 'status-indicator status-error';
+                    resultsEl.innerHTML = `<div class="error">❌ ${data.message}</div>`;
+                }
+            } catch (error) {
+                statusEl.className = 'status-indicator status-error';
+                resultsEl.innerHTML = `<div class="error">❌ Security test failed: ${error.message}</div>`;
+            }
+        }
+
+        async function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusEl = document.getElementById('uploadStatus');
+            const resultsEl = document.getElementById('uploadResults');
+            const progressEl = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+
+            statusEl.className = 'status-indicator status-loading';
+            progressEl.style.display = 'block';
+            progressFill.style.width = '0%';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('bucket', 'secure-files');
+                formData.append('encrypt', document.getElementById('encryptFile').checked);
+                formData.append('virusScan', document.getElementById('virusScan').checked);
+
+                // Simulate progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 20;
+                    if (progress > 90) progress = 90;
+                    progressFill.style.width = progress + '%';
+                }, 100);
+
+                const response = await fetch('/api/secure-upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                clearInterval(progressInterval);
+                progressFill.style.width = '100%';
+
+                const data = await response.json();
+
+                if (data.success) {
+                    statusEl.className = 'status-indicator status-success';
+                    resultsEl.innerHTML = `
+                        <div class="file-info">
+                            <strong>✅ Upload Successful!</strong><br>
+                            <strong>File:</strong> ${data.fileName}<br>
+                            <strong>Size:</strong> ${Math.round(data.size / 1024)}KB<br>
+                            <strong>Type:</strong> ${data.type}<br>
+                            <strong>Encrypted:</strong> ${data.security.encrypted ? '🔐 Yes' : '❌ No'}<br>
+                            <strong>Virus Scanned:</strong> ${data.security.virusScanned ? '🦠 Clean' : '❌ No'}<br>
+                            ${data.scanResult ? `<strong>Scan Time:</strong> ${data.scanResult.scanTime}ms` : ''}
+                        </div>
+                        <div style="margin-top: 10px; color: #38ef7d;">
+                            🎉 File uploaded securely with all protections enabled!
+                        </div>
+                    `;
+                } else {
+                    statusEl.className = 'status-indicator status-error';
+                    resultsEl.innerHTML = `<div class="error">❌ Upload failed: ${data.error}</div>`;
+                }
+
+                setTimeout(() => {
+                    progressEl.style.display = 'none';
+                }, 2000);
+
+            } catch (error) {
+                statusEl.className = 'status-indicator status-error';
+                resultsEl.innerHTML = `<div class="error">❌ Upload error: ${error.message}</div>`;
+                progressEl.style.display = 'none';
+            }
+        }
+
+        async function runPerformanceTest() {
+            const statusEl = document.getElementById('performanceStatus');
+            const resultsEl = document.getElementById('performanceResults');
+            
+            statusEl.className = 'status-indicator status-loading';
+            resultsEl.innerHTML = '<div class="loading">Running performance tests...</div>';
+            
+            try {
+                const tests = [];
+                
+                // Test multiple API calls for performance
+                for (let i = 0; i < 3; i++) {
+                    const startTime = Date.now();
+                    await fetch('/api/test-file-upload');
+                    const endTime = Date.now();
+                    tests.push(endTime - startTime);
+                }
+                
+                const avgTime = Math.round(tests.reduce((a, b) => a + b, 0) / tests.length);
+                const minTime = Math.min(...tests);
+                const maxTime = Math.max(...tests);
+                
+                statusEl.className = 'status-indicator status-success';
+                resultsEl.innerHTML = `
+                    <div class="test-results">
+                        <div class="test-item">
+                            <span>Average Response Time</span>
+                            <span class="test-success">${avgTime}ms</span>
+                        </div>
+                        <div class="test-item">
+                            <span>Fastest Response</span>
+                            <span class="test-success">${minTime}ms</span>
+                        </div>
+                        <div class="test-item">
+                            <span>Slowest Response</span>
+                            <span class="test-success">${maxTime}ms</span>
+                        </div>
+                        <div class="test-item">
+                            <span>Test Runs</span>
+                            <span class="test-success">${tests.length}</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; color: #38ef7d;">
+                        ⚡ Performance metrics collected successfully
+                    </div>
+                `;
+            } catch (error) {
+                statusEl.className = 'status-indicator status-error';
+                resultsEl.innerHTML = `<div class="error">❌ Performance test failed: ${error.message}</div>`;
+            }
+        }
+
+        async function runComprehensiveTest() {
+            const statusEl = document.getElementById('comprehensiveStatus');
+            const resultsEl = document.getElementById('comprehensiveResults');
+            
+            statusEl.className = 'status-indicator status-loading';
+            resultsEl.innerHTML = '<div class="loading">Running comprehensive security tests...</div>';
+            
+            try {
+                const response = await fetch('/api/test-file-upload');
+                const data = await response.json();
+                
+                if (data.success) {
+                    statusEl.className = 'status-indicator status-success';
+                    resultsEl.innerHTML = `
+                        <div class="test-results">
+                            ${data.testResults.map(test => `
+                                <div class="test-item">
+                                    <div>
+                                        <strong>${test.test}</strong>
+                                        ${test.details ? `<div style="font-size: 0.8em; opacity: 0.7;">${JSON.stringify(test.details.totalTests || test.details.allSecure || 'OK')}</div>` : ''}
+                                    </div>
+                                    <span class="${test.success ? 'test-success' : 'test-error'}">
+                                        ${test.success ? '✅ PASS' : '❌ FAIL'}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 15px; color: #38ef7d; text-align: center;">
+                            🎉 ${data.summary.passedTests}/${data.summary.totalTests} tests passed (${data.summary.successRate})
+                        </div>
+                    `;
+                } else {
+                    statusEl.className = 'status-indicator status-error';
+                    resultsEl.innerHTML = `<div class="error">❌ ${data.message}</div>`;
+                }
+            } catch (error) {
+                statusEl.className = 'status-indicator status-error';
+                resultsEl.innerHTML = `<div class="error">❌ Comprehensive test failed: ${error.message}</div>`;
+            }
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('fileInput').files = files;
+                handleFileSelect({ target: { files } });
+            }
+        });
+    </script>
+</body>
+</html>
