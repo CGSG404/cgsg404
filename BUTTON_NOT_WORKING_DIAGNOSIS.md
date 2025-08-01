@@ -1,6 +1,6 @@
 # 🔧 BUTTON NOT WORKING DIAGNOSIS - CGSG Project
 
-## ❌ **MASALAH: Button Debug Tidak Dapat Difungsikan**
+## ❌ **MASALAH: Button Debug Tidak Dapat Difungsikan*
 
 ### **🔍 GEJALA YANG DILAPORKAN:**
 ```
