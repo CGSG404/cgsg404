@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/src/lib/utils";
 import { motion } from "framer-motion";
 import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Loader2, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";

@@ -15,8 +15,7 @@ const UserMenu = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
-      localStorage.removeItem("sb-access-token");
-      localStorage.removeItem("sb-refresh-token");
+      // No need to manually remove tokens - Supabase handles this
       toast.success("Signed out successfully");
       router.refresh();
     } catch (error) {

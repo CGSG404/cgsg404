@@ -22,6 +22,7 @@ interface Banner {
 
 interface HeroBannerSliderProps {
   pageType?: string;
+  isHomePage?: boolean;
 }
 
 // Default fallback banners
@@ -58,7 +59,7 @@ const defaultBanners = [
   },
 ];
 
-export default function HeroBannerSlider({ pageType = 'home' }: HeroBannerSliderProps) {
+export default function HeroBannerSlider({ pageType = 'home', isHomePage = false }: HeroBannerSliderProps) {
   const [banners, setBanners] = useState<Banner[]>(defaultBanners);
   const [loading, setLoading] = useState(true);
 
@@ -103,7 +104,7 @@ export default function HeroBannerSlider({ pageType = 'home' }: HeroBannerSlider
 
   if (loading) {
     return (
-      <div className="w-full h-[400px] md:h-[550px] lg:h-[650px] bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center">
+      <div className={`w-full ${isHomePage ? 'h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'} bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center`}>
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casino-neon-green mx-auto mb-4"></div>
           <p className="text-lg">Loading banner...</p>
@@ -113,9 +114,9 @@ export default function HeroBannerSlider({ pageType = 'home' }: HeroBannerSlider
   }
 
   return (
-    <div className="relative w-full hero-banner-slider overflow-hidden group">
+    <div className={`relative w-full hero-banner-slider overflow-hidden group ${isHomePage ? 'h-screen' : ''}`}>
       <ClientOnly fallback={
-        <div className="w-full h-[400px] md:h-[550px] lg:h-[650px] bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center">
+        <div className={`w-full ${isHomePage ? 'h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'} bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center`}>
           <div className="text-center text-white">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casino-neon-green mx-auto mb-4"></div>
             <p className="text-lg">Loading banner...</p>
@@ -148,7 +149,7 @@ export default function HeroBannerSlider({ pageType = 'home' }: HeroBannerSlider
       >
         {banners.map((banner, idx) => (
           <SwiperSlide key={idx}>
-            <div className="relative w-full h-[400px] md:h-[550px] lg:h-[650px]">
+            <div className={`relative w-full ${isHomePage ? 'h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'}`}>
               {/* Background Image */}
               <div className="absolute inset-0 z-0">
                 <img

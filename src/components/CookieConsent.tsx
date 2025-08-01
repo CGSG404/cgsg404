@@ -5,6 +5,8 @@ import { Button } from '@/src/components/ui/button';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { X, Cookie, Shield, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { supabase } from '@/src/lib/supabaseClient';
+import { useAuth } from '@/src/contexts/AuthContext';
 
 interface CookiePreferences {
   necessary: boolean;
@@ -14,6 +16,7 @@ interface CookiePreferences {
 }
 
 export default function CookieConsent() {
+  const { user } = useAuth();
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>({
@@ -24,41 +27,88 @@ export default function CookieConsent() {
   });
 
   useEffect(() => {
-    // Check if user has already made a choice
-    const consent = localStorage.getItem('cookie-consent');
-    if (!consent) {
-      // Show banner after a short delay
-      const timer = setTimeout(() => setShowBanner(true), 1000);
-      return () => clearTimeout(timer);
-    } else {
-      // Load saved preferences
+    const loadPreferences = async () => {
       try {
-        const savedPrefs = JSON.parse(consent);
-        setPreferences(savedPrefs);
-      } catch (error) {
-        console.error('Error parsing cookie preferences:', error);
-      }
-    }
-  }, []);
+        if (user) {
+          // For logged-in users, try to load from Supabase
+          const { data, error } = await supabase
+            .from('user_preferences')
+            .select('cookie_preferences')
+            .eq('user_id', user.id)
+            .single();
 
-  const savePreferences = (prefs: CookiePreferences) => {
-    localStorage.setItem('cookie-consent', JSON.stringify(prefs));
-    setPreferences(prefs);
-    setShowBanner(false);
-    setShowSettings(false);
-    
-    // Apply preferences
-    if (prefs.analytics) {
-      // Enable analytics
-      console.log('🍪 Analytics cookies enabled');
-    }
-    if (prefs.marketing) {
-      // Enable marketing
-      console.log('🍪 Marketing cookies enabled');
-    }
-    if (prefs.functional) {
-      // Enable functional
-      console.log('🍪 Functional cookies enabled');
+          if (!error && data?.cookie_preferences) {
+            setPreferences(data.cookie_preferences);
+            return;
+          }
+        }
+
+        // Fallback to localStorage for cookie consent (GDPR compliance requirement)
+        const consent = localStorage.getItem('cookie-consent');
+        if (!consent) {
+          // Show banner after a short delay
+          const timer = setTimeout(() => setShowBanner(true), 1000);
+          return () => clearTimeout(timer);
+        } else {
+          // Load saved preferences
+          try {
+            const savedPrefs = JSON.parse(consent);
+            setPreferences(savedPrefs);
+          } catch (error) {
+            console.error('Error parsing cookie preferences:', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading cookie preferences:', error);
+        // Fallback to localStorage
+        const consent = localStorage.getItem('cookie-consent');
+        if (!consent) {
+          const timer = setTimeout(() => setShowBanner(true), 1000);
+          return () => clearTimeout(timer);
+        }
+      }
+    };
+
+    loadPreferences();
+  }, [user]);
+
+  const savePreferences = async (prefs: CookiePreferences) => {
+    try {
+      // Always save to localStorage for GDPR compliance
+      localStorage.setItem('cookie-consent', JSON.stringify(prefs));
+      
+      // If user is logged in, also save to Supabase
+      if (user) {
+        await supabase
+          .from('user_preferences')
+          .upsert({
+            user_id: user.id,
+            cookie_preferences: prefs,
+            updated_at: new Date().toISOString()
+          });
+      }
+
+      setPreferences(prefs);
+      setShowBanner(false);
+      setShowSettings(false);
+      
+      // Apply preferences
+      if (prefs.analytics) {
+        console.log('🍪 Analytics cookies enabled');
+      }
+      if (prefs.marketing) {
+        console.log('🍪 Marketing cookies enabled');
+      }
+      if (prefs.functional) {
+        console.log('🍪 Functional cookies enabled');
+      }
+    } catch (error) {
+      console.error('Error saving cookie preferences:', error);
+      // Still save to localStorage as fallback
+      localStorage.setItem('cookie-consent', JSON.stringify(prefs));
+      setPreferences(prefs);
+      setShowBanner(false);
+      setShowSettings(false);
     }
   };
 

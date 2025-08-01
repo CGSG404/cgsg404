@@ -1,28 +1,25 @@
 'use client';
 
 import { type ReactNode, useEffect } from 'react';
-// Temporarily disable complex imports to fix ChunkLoadError
-// import { AppSidebar } from '@/src/components/ui/sidebar';
-// import { setupGlobalErrorHandler } from '@/src/lib/errorHandler';
+import { setupGlobalErrorHandler } from '@/src/lib/errorHandler';
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
-  // Temporarily disable complex setup to fix ChunkLoadError
   useEffect(() => {
-    console.log('🔧 ClientLayout: Simplified for debugging');
-    // Temporarily disable CSS import that might cause issues
-    // import('@/src/styles/sidebar-mobile.css');
+    // Setup global error handlers for better error recovery
+    try {
+      setupGlobalErrorHandler();
+      console.log('✅ ClientLayout: Error handlers initialized');
+    } catch (error) {
+      console.warn('⚠️ ClientLayout: Error handler setup failed:', error);
+    }
   }, []);
 
   return (
-    <div className="flex min-h-screen">
-      {/* Temporarily disable sidebar to fix ChunkLoadError */}
-      {/* <div className="hidden md:block w-72 flex-shrink-0 h-full">
-        <AppSidebar />
-      </div> */}
-      {/* Konten utama - full width for now */}
-      <div className="flex-1 min-w-0">
+    <div className="min-h-screen bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark">
+      {/* Main content area - full width without sidebar */}
+      <main className="min-h-screen">
         {children}
-      </div>
+      </main>
     </div>
   );
 }

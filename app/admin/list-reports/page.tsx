@@ -164,9 +164,10 @@ export default function AdminListReportsPage() {
       setIsSubmitting(true);
       console.log('📝 Creating new casino report...');
 
+      const headers = await getAuthHeaders();
       const response = await fetch('/api/admin/casino-reports', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(formData)
       });
 
@@ -197,9 +198,10 @@ export default function AdminListReportsPage() {
       setIsSubmitting(true);
       console.log('📝 Updating casino report:', editingReport.id);
 
+      const headers = await getAuthHeaders();
       const response = await fetch(`/api/admin/casino-reports/${editingReport.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(formData)
       });
 

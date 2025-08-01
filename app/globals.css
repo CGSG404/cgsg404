@@ -4,7 +4,39 @@
 @tailwind utilities;
 
 :root {
-  --foreground: #171717;
+  --foreground: #f9fafb;
+
+  /* Casino Design System Variables */
+  --casino-primary: #00ff99;
+  --casino-primary-dark: #00cc7a;
+  --casino-primary-light: #33ffb3;
+
+  --casino-secondary: #8b5cf6;
+  --casino-accent: #3b82f6;
+  --casino-warning: #f59e0b;
+
+  --casino-bg-primary: #0a0e13;
+  --casino-bg-secondary: #0f1419;
+  --casino-bg-elevated: #1a1f2e;
+
+  --casino-text-primary: #f9fafb;
+  --casino-text-secondary: #d1d5db;
+  --casino-text-muted: #9ca3af;
+
+  --casino-border-subtle: #2a3441;
+  --casino-border-accent: #374151;
+
+  /* Shadows */
+  --casino-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --casino-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --casino-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --casino-shadow-glow: 0 0 20px rgba(0, 255, 153, 0.2);
+
+  /* Radius */
+  --casino-radius-sm: 0.375rem;
+  --casino-radius-md: 0.5rem;
+  --casino-radius-lg: 0.75rem;
+  --casino-radius-xl: 1rem;
 }
 
 @theme inline {
@@ -15,12 +47,45 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground: #ededed;
+    --foreground: #f9fafb;
   }
 }
 
 body {
-  @apply bg-casino-dark text-white font-sans;
+  @apply bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark text-casino-text-primary font-sans antialiased;
+}
+
+/* Modern Design System Utilities */
+.glass-effect {
+  @apply bg-casino-card-bg/80 backdrop-blur-md border border-casino-border-subtle/50;
+}
+
+.neon-glow {
+  @apply shadow-[0_0_20px_rgba(0,255,153,0.3)];
+}
+
+.neon-glow-hover {
+  @apply hover:shadow-[0_0_30px_rgba(0,255,153,0.5)] transition-shadow duration-300;
+}
+
+.card-modern {
+  @apply bg-casino-card-bg border border-casino-border-subtle rounded-xl shadow-lg backdrop-blur-sm;
+}
+
+.card-hover {
+  @apply hover:border-casino-border-accent hover:shadow-xl hover:shadow-casino-neon-green/10 transition-all duration-300;
+}
+
+.text-gradient {
+  @apply bg-gradient-to-r from-casino-neon-green to-casino-neon-blue bg-clip-text text-transparent;
+}
+
+.btn-primary {
+  @apply bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green-dark hover:shadow-lg hover:shadow-casino-neon-green/25 active:scale-95 transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply bg-casino-surface text-casino-text-primary border border-casino-border-subtle hover:bg-casino-surface-elevated hover:border-casino-border-accent transition-all duration-200;
 }
 
 /* Performance optimizations for mobile devices */
@@ -354,14 +419,6 @@ body {
     --input: 217.2 32.6% 17.5%;
     --ring: 142 76% 50%;
     --radius: 0.5rem;
-    --sidebar-background: 218 25% 12%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 142 76% 50%;
-    --sidebar-primary-foreground: 222 22% 7%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 142 76% 50%;
   }
 
   * {
@@ -369,7 +426,8 @@ body {
   }
 
   body {
-    @apply bg-background text-foreground relative font-inter;
+    @apply bg-background text-foreground relative;
+    font-family: 'Inter', system-ui, sans-serif;
     background: linear-gradient(135deg, #0e1117 0%, #11141c 100%);
     min-height: 100vh;
   }

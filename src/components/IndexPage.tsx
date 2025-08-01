@@ -80,7 +80,7 @@ const IndexPage = () => {
         <meta name="description" content="Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <HeroBannerSlider />
+      <HeroBannerSlider isHomePage={true} />
 
       {/* Divider after Hero Banner */}
       <SimpleDivider variant="gradient" spacing="lg" />

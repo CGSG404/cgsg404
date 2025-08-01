@@ -113,21 +113,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('🧹 Clearing existing sessions...');
       await supabase.auth.signOut();
 
-      // Clear all possible storage locations
-      const keysToRemove = [
-        'sb-auth-token',
-        'sb-plhpubcmugqosexcgdhj-auth-token',
-        'supabase.auth.token'
-      ];
-
-      keysToRemove.forEach(key => {
-        try {
-          localStorage.removeItem(key);
-          sessionStorage.removeItem(key);
-        } catch (e) {
-          console.warn(`Failed to clear ${key}:`, e);
-        }
-      });
+      // Clear Supabase session properly - no localStorage manipulation needed
+      console.log('🧹 Session cleared via Supabase');
 
       console.log('🚀 Starting OAuth flow...');
       const { data, error } = await supabase.auth.signInWithOAuth({

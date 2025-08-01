@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X, Star, Gift, Users, BookOpen, MessageCircle, Newspaper, User, LogOut, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext';
 import AdminButton from '@/src/components/AdminButton';
@@ -9,12 +10,68 @@ import AdminButton from '@/src/components/AdminButton';
 const SimpleNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { user, signOut } = useAuth();
+  const pathname = usePathname();
+
+  // Check if current page is homepage
+  const isHomePage = pathname === '/';
 
   // Ensure client-side rendering for dynamic content
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Scroll detection for homepage
+  useEffect(() => {
+    if (!isHomePage) {
+      setIsVisible(true); // Always show navbar on non-homepage
+      return;
+    }
+
+    // Hide navbar initially on homepage (when at top)
+    const initialScrollY = window.scrollY;
+    setIsVisible(initialScrollY > 50);
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Hide navbar when at very top (within 50px) to show fullscreen banner clearly
+      if (currentScrollY <= 50) {
+        setIsVisible(false);
+      }
+      // Show navbar when scrolling down past 50px
+      else if (currentScrollY > 50 && currentScrollY > lastScrollY) {
+        // Scrolling down - show navbar after passing threshold
+        setIsVisible(true);
+      }
+      // Show navbar when scrolling up (regardless of position, as long as not at top)
+      else if (currentScrollY > 50 && currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', throttledHandleScroll);
+    };
+  }, [isHomePage, lastScrollY]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -46,7 +103,9 @@ const SimpleNavbar = () => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-casino-card-bg via-casino-card-bg to-casino-dark/90 border-b border-casino-neon-green/20 sticky top-0 z-50">
+    <nav className={`glass-effect border-b border-casino-border-subtle/30 sticky top-0 z-50 backdrop-blur-xl transition-transform duration-300 ease-in-out ${
+      isHomePage && !isVisible ? '-translate-y-full' : 'translate-y-0'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}

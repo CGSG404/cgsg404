@@ -21,6 +21,7 @@ import { Card, CardContent } from '@/src/components/ui/card';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { useAdmin } from '@/src/contexts/AdminContext';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/src/lib/supabaseClient';
 
 interface FloatingWidget {
   id: string;
@@ -237,14 +238,20 @@ export default function FloatingWidgetManager() {
             <div className="mt-3 pt-2 border-t border-gray-600">
               <Button
                 size="sm"
-                onClick={() => {
-                  localStorage.clear();
-                  window.location.reload();
+                onClick={async () => {
+                  // Use Supabase signOut instead of localStorage.clear()
+                  try {
+                    await supabase.auth.signOut();
+                    window.location.reload();
+                  } catch (error) {
+                    console.error('Error signing out:', error);
+                    window.location.reload();
+                  }
                 }}
                 variant="destructive"
                 className="w-full text-xs"
               >
-                Clear Session & Reload
+                Sign Out & Reload
               </Button>
             </div>
           </div>

@@ -114,7 +114,7 @@ export async function PUT(
 ) {
   try {
     // Verify admin authentication
-    const authResult = await verifyAdminAuth();
+    const authResult = await verifyAdminAuth(request);
     if ('error' in authResult) {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
@@ -183,7 +183,7 @@ export async function DELETE(
 ) {
   try {
     // Verify admin authentication
-    const authResult = await verifyAdminAuth();
+    const authResult = await verifyAdminAuth(request);
     if ('error' in authResult) {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }

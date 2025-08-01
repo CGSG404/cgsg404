@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { supabase } from '@/src/lib/supabaseClient';
 import { databaseApi } from '@/src/lib/database-api';
-import type { CurrentUserAdminInfo } from '@/types/database';
+import type { CurrentUserAdminInfo } from '@/src/types/database';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface AdminContextType {
@@ -59,7 +59,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       setAdminInfo(info);
     } catch (error) {
       console.error('❌ AdminContext: Failed to fetch admin info:', error);
-      setAdminInfo({ is_admin: false });
+      setAdminInfo(null);
     } finally {
       setIsLoading(false);
     }
@@ -105,11 +105,8 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     if (!adminInfo?.is_admin) return;
 
     try {
-      // Generate session ID if not exists
-      if (!sessionStorage.getItem('admin_session_id')) {
-        sessionStorage.setItem('admin_session_id', `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
-      }
-      const sessionId = sessionStorage.getItem('admin_session_id');
+      // Generate session ID using user ID and timestamp for production
+      const sessionId = user ? `session_${user.id}_${Date.now()}` : `anonymous_${Date.now()}`;
 
       await databaseApi.logAdminActivity(action, resourceType, resourceId, details, severity, sessionId);
     } catch (error) {
@@ -187,18 +184,15 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       fetchAdminInfo();
     } else if (!authLoading && !user) {
       console.log('🔍 AdminContext: No user, clearing admin info');
-      setAdminInfo({ is_admin: false });
+      setAdminInfo(null);
     }
   }, [user, authLoading]);
 
-  // Debug logging for isAdmin computation
-  // Development bypass for local testing only
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const computedIsAdmin = isDevelopment ? true : (adminInfo?.is_admin || false);
+  // Production-ready admin check - no development bypass
+  const computedIsAdmin = adminInfo?.is_admin || false;
 
   console.log('🔍 AdminContext: Computing isAdmin:', {
     environment: process.env.NODE_ENV,
-    isDevelopment,
     adminInfo,
     is_admin: adminInfo?.is_admin,
     computedIsAdmin,
