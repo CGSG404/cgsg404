@@ -1,17 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client with service role key for admin operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
+// Lazy initialization to avoid build-time errors
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createClient(supabaseUrl, serviceRoleKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false
     }
-  }
-);
+  });
+}
 
 export async function GET(
   request: NextRequest,
@@ -20,6 +25,7 @@ export async function GET(
   try {
     console.log('🔧 Admin Casino API: GET single casino', params.id);
     
+    const supabaseAdmin = getSupabaseAdmin();
     const { data, error } = await supabaseAdmin
       .from('casinos')
       .select('*')
@@ -112,6 +118,7 @@ export async function PUT(
     console.log('✅ Validation passed, updating casino...');
     
     // Update casino using service role (bypasses RLS)
+    const supabaseAdmin = getSupabaseAdmin();
     const { data, error } = await supabaseAdmin
       .from('casinos')
       .update(updates)
@@ -170,6 +177,7 @@ export async function DELETE(
     console.log('🔧 Admin Casino API: DELETE request for casino', params.id);
     
     // Delete casino using service role (bypasses RLS)
+    const supabaseAdmin = getSupabaseAdmin();
     const { error } = await supabaseAdmin
       .from('casinos')
       .delete()

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/src/components/ui/button';
 import { Card, CardContent } from '@/src/components/ui/card';
 import { X, Cookie, Shield, Settings } from 'lucide-react';
@@ -17,14 +18,20 @@ interface CookiePreferences {
 
 export default function CookieConsent() {
   const { user } = useAuth();
+  const pathname = usePathname();
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [preferences, setPreferences] = useState<CookiePreferences>({
     necessary: true, // Always required
     functional: false,
     analytics: false,
     marketing: false,
   });
+
+  // Check if current page is homepage
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
     const loadPreferences = async () => {
@@ -71,6 +78,56 @@ export default function CookieConsent() {
 
     loadPreferences();
   }, [user]);
+
+  // Scroll detection for homepage - same logic as navbar
+  useEffect(() => {
+    if (!isHomePage || !showBanner) {
+      setIsVisible(true); // Always show on non-homepage or when banner not shown
+      return;
+    }
+
+    // Hide cookie banner initially on homepage (when at top)
+    const initialScrollY = window.scrollY;
+    setIsVisible(initialScrollY > 50);
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Hide cookie banner when at very top (within 50px) to show fullscreen banner clearly
+      if (currentScrollY <= 50) {
+        setIsVisible(false);
+      }
+      // Show cookie banner when scrolling down past 50px
+      else if (currentScrollY > 50 && currentScrollY > lastScrollY) {
+        // Scrolling down - show cookie banner after passing threshold
+        setIsVisible(true);
+      }
+      // Show cookie banner when scrolling up (regardless of position, as long as not at top)
+      else if (currentScrollY > 50 && currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', throttledHandleScroll);
+    };
+  }, [isHomePage, lastScrollY, showBanner]);
 
   const savePreferences = async (prefs: CookiePreferences) => {
     try {
@@ -144,9 +201,16 @@ export default function CookieConsent() {
       {showBanner && (
         <motion.div
           initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          animate={{
+            y: 0,
+            opacity: 1,
+            // Apply visibility logic for homepage
+            transform: isHomePage && !isVisible ? 'translateY(100%)' : 'translateY(0)'
+          }}
           exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4"
+          className={`fixed bottom-0 left-0 right-0 z-40 p-4 transition-transform duration-300 ease-in-out ${
+            isHomePage && !isVisible ? 'translate-y-full' : 'translate-y-0'
+          }`}
         >
           <Card className="bg-casino-dark/95 backdrop-blur-lg border-casino-neon-green/20 shadow-2xl">
             <CardContent className="p-6">

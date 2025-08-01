@@ -1,17 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Admin Supabase client for write operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Lazy initialization to avoid build-time errors
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createClient(supabaseUrl, serviceRoleKey);
+}
 
-// Auth client for user verification
-const supabaseAuth = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+function getSupabaseAuth() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !anonKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createClient(supabaseUrl, anonKey);
+}
 
 // Authentication middleware
 async function verifyAdminAuth(request: NextRequest) {
@@ -26,6 +37,7 @@ async function verifyAdminAuth(request: NextRequest) {
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     // Verify the token with Supabase
+    const supabaseAuth = getSupabaseAuth();
     const { data: { user }, error: authError } = await supabaseAuth.auth.getUser(token);
 
     if (authError || !user) {
@@ -36,6 +48,7 @@ async function verifyAdminAuth(request: NextRequest) {
     console.log('✅ User authenticated:', user.email);
 
     // Check if user is admin
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: adminData, error: adminError } = await supabaseAdmin
       .from('admin_users')
       .select('id, role, is_active')
@@ -67,6 +80,7 @@ export async function GET(request: NextRequest) {
 
     console.log('📡 Admin fetching casino reports...');
 
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: reports, error } = await supabaseAdmin
       .from('casino_reports')
       .select('*')
@@ -129,6 +143,7 @@ export async function POST(request: NextRequest) {
     console.log('📝 Creating new casino report:', { casino_name, status });
 
     // Use service role key to bypass RLS for admin operations
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: newReport, error } = await supabaseAdmin
       .from('casino_reports')
       .insert({
@@ -199,13 +214,14 @@ export async function PUT(request: NextRequest) {
     console.log('📝 Updating casino report:', id);
 
     // Build update object with only provided fields
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     if (casino_name) updateData.casino_name = casino_name;
     if (status) updateData.status = status;
     if (last_reported) updateData.last_reported = last_reported;
     if (summary) updateData.summary = summary;
     if (url !== undefined) updateData.url = url;
 
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: updatedReport, error } = await supabaseAdmin
       .from('casino_reports')
       .update(updateData)

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface Banner {
   id: number;
@@ -54,10 +55,15 @@ const defaultBanners = [
 ];
 
 export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBannerSliderProps) {
+  const pathname = usePathname();
   const [banners, setBanners] = useState<Banner[]>(defaultBanners);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showControls, setShowControls] = useState(false);
+
+  // Check if this is a non-homepage that needs navbar compensation
+  const isHomePage = pathname === '/';
+  const needsNavbarCompensation = !isHomePage;
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -129,7 +135,11 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
 
   if (loading) {
     return (
-      <div className="w-full h-[400px] md:h-[550px] lg:h-[650px] bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center">
+      <div className={`w-full bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center ${
+        needsNavbarCompensation
+          ? '-mt-16 h-[464px] md:h-[614px] lg:h-[714px]'
+          : 'h-[400px] md:h-[550px] lg:h-[650px]'
+      }`}>
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casino-neon-green mx-auto mb-4"></div>
           <p className="text-lg">Loading banner...</p>
@@ -140,13 +150,19 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
 
   return (
     <div
-      className="relative w-full hero-banner-slider overflow-hidden group"
+      className={`relative w-full hero-banner-slider overflow-hidden group ${
+        needsNavbarCompensation ? '-mt-16' : ''
+      }`}
       onMouseEnter={handleInteractionStart}
       onMouseLeave={handleInteractionEnd}
       onTouchStart={handleInteractionStart}
       onTouchEnd={handleInteractionEnd}
     >
-      <div className="relative w-full h-[400px] md:h-[550px] lg:h-[650px]">
+      <div className={`relative w-full ${
+        needsNavbarCompensation
+          ? 'h-[464px] md:h-[614px] lg:h-[714px]'
+          : 'h-[400px] md:h-[550px] lg:h-[650px]'
+      }`}>
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide}
