@@ -23,6 +23,11 @@ interface PageMaintenance {
   updated_at: string;
 }
 
+interface ApiResponse {
+  pages: PageMaintenance[];
+  mock?: boolean;
+}
+
 const MaintenanceManagementPage = () => {
   const [pages, setPages] = useState<PageMaintenance[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,19 +35,21 @@ const MaintenanceManagementPage = () => {
   const [editingPage, setEditingPage] = useState<number | null>(null);
   const [editMessage, setEditMessage] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [isMockData, setIsMockData] = useState(false);
 
   // Fetch pages data
   const fetchPages = async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/admin/page-maintenance');
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch pages');
       }
 
-      const data = await response.json();
+      const data: ApiResponse = await response.json();
       setPages(data.pages || []);
+      setIsMockData(data.mock || false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
@@ -174,6 +181,21 @@ const MaintenanceManagementPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Mock Data Warning */}
+      {isMockData && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center gap-3">
+            <AlertTriangle className="w-5 h-5 text-yellow-600" />
+            <div className="flex-1">
+              <span className="text-yellow-800 font-medium">Development Mode</span>
+              <p className="text-yellow-700 text-sm mt-1">
+                Using mock data. Database migration required for production use.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Error Message */}
       {error && (
