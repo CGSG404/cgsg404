@@ -4,30 +4,23 @@ import Footer from '@/components/Footer';
 import CasinoSlideshow from '@/components/CasinoSlideshow';
 import TopCasinosLeaderboard from '@/components/TopCasinosLeaderboard';
 import HeroBannerSliderSimple from './HeroBannerSliderSimple';
-import PromoBanner from './PromoBanner';
+import RunningTextTicker from './RunningTextTicker';
 import SimpleDivider from './ui/SimpleDivider';
+import MaintenanceWrapper from './MaintenanceWrapper';
 
 
 const GamesPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-casino-dark">
+    <MaintenanceWrapper>
+      <div className="min-h-screen bg-casino-dark">
       {/* Hero Banner Slider for Games Page */}
       <HeroBannerSliderSimple pageType="games" />
 
-      {/* Divider */}
-      <SimpleDivider variant="gradient" spacing="sm" />
+      {/* Running Text Ticker */}
+      <RunningTextTicker />
 
-      {/* Promo Banner */}
-      <PromoBanner
-        title="🎮 Exclusive Games Bonus!"
-        subtitle="Get up to 300% bonus + 200 free spins on top casino games"
-        ctaText="Play Now"
-        ctaLink="/casinos"
-        variant="info"
-      />
-
-      {/* Divider */}
-      <SimpleDivider variant="default" spacing="sm" />
+      {/* Divider after Ticker */}
+      <SimpleDivider variant="default" spacing="lg" />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-8 pb-8 sm:pb-12">
@@ -93,7 +86,8 @@ const GamesPage: React.FC = () => {
       <SimpleDivider variant="minimal" spacing="sm" />
 
       <Footer />
-    </div>
+      </div>
+    </MaintenanceWrapper>
   );
 };
 

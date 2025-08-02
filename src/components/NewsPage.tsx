@@ -11,6 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import MaintenanceWrapper from './MaintenanceWrapper';
 
 const NewsPage = () => {
   // List of news articles (in a real app this would come from an API)
@@ -48,7 +49,8 @@ const NewsPage = () => {
       : newsArticles.filter((article) => article.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-casino-dark text-white">
+    <MaintenanceWrapper>
+      <div className="min-h-screen bg-casino-dark text-white">
       <Head>
         <title>Casino News</title>
       </Head>
@@ -164,7 +166,8 @@ const NewsPage = () => {
       </section>
 
       <Footer />
-    </div>
+      </div>
+    </MaintenanceWrapper>
   );
 };
 

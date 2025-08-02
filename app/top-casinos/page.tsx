@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function TopCasinosPage() {
   return (
-    <main className="relative overflow-hidden">
+    <main className="relative overflow-hidden -mt-16">
       <TopCasinosClient />
     </main>
   );

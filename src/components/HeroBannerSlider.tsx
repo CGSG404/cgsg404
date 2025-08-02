@@ -162,7 +162,6 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
 
               {/* Simple Dark Overlay */}
               <div className="absolute inset-0 bg-black/60 z-10" />
-              <div className="absolute bottom-0 left-0 w-full h-32 md:h-40 bg-gradient-to-t from-[#0e181c] via-[#0e181c]/80 to-transparent z-20" />
 
 
 

@@ -20,27 +20,7 @@ const HeroBannerSlider = dynamic(() => import('@/src/components/HeroBannerSlider
   ),
 });
 import BannerInfo from '@/src/components/BannerInfo';
-const PromoBanner = dynamic(() => import('@/src/components/PromoBanner'), {
-  ssr: false,
-  loading: () => (
-    <div className="relative overflow-hidden bg-casino-card-bg/40 backdrop-blur-sm border border-casino-neon-green/30 rounded-2xl mx-4 my-4 shadow-lg">
-      <div className="relative z-10 p-4 md:p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-casino-neon-green">
-                <div className="w-5 h-5 bg-white rounded"></div>
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-casino-neon-green">
-                Loading bonus offer...
-              </h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  ),
-});
+import RunningTextTicker from '@/src/components/RunningTextTicker';
 import { Gift, PartyPopper, Ticket } from 'lucide-react';
 import {
   LogoSliderSkeleton,
@@ -50,6 +30,7 @@ import {
 import Divider from '@/src/components/ui/Divider';
 import SimpleDivider from '@/src/components/ui/SimpleDivider';
 import SectionDivider from '@/src/components/ui/SectionDivider';
+import MaintenanceWrapper from '@/src/components/MaintenanceWrapper';
 
 // Progressive Loading - Priority-based component loading
 const LogoSlider = lazy(() =>
@@ -74,7 +55,8 @@ const IndexPage = () => {
 // Semua logic dan UI utama Index sudah di sini.
 
   return (
-    <div className="min-h-screen bg-casino-dark">
+    <MaintenanceWrapper>
+      <div className="min-h-screen bg-casino-dark">
       <Head>
         <title>Guru Singapore - Your Ultimate Guide to Online Casinos & Bonuses</title>
         <meta name="description" content="Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling." />
@@ -82,18 +64,10 @@ const IndexPage = () => {
       </Head>
       <HeroBannerSlider isHomePage={true} />
 
-      {/* Divider after Hero Banner */}
-      <SimpleDivider variant="gradient" spacing="lg" />
+      {/* Running Text Ticker */}
+      <RunningTextTicker />
 
-      <PromoBanner
-        title="🎉 Exclusive CGSG Bonus!"
-        subtitle="Get up to 200% welcome bonus + 140 free spins on your first deposit"
-        ctaText="Claim Bonus"
-        ctaLink="/best-bonuses"
-        variant="default"
-      />
-
-      {/* Divider after Promo Banner */}
+      {/* Divider after Ticker */}
       <SimpleDivider variant="default" spacing="lg" />
 
       <HeroSection />
@@ -187,7 +161,8 @@ const IndexPage = () => {
       <Suspense fallback={<FooterSkeleton />}>
         <Footer />
       </Suspense>
-    </div>
+      </div>
+    </MaintenanceWrapper>
   );
 };
 

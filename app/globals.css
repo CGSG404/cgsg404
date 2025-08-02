@@ -60,6 +60,55 @@ body {
   @apply bg-casino-card-bg/80 backdrop-blur-md border border-casino-border-subtle/50;
 }
 
+/* Top Banner Fullscreen Fix */
+.top-banner-fullscreen {
+  position: relative;
+  z-index: 10;
+}
+
+.top-banner-fullscreen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px; /* navbar height */
+  background: transparent;
+  z-index: -1;
+}
+
+/* Running Text Ticker Animation - True Seamless Infinite Scroll */
+@keyframes scroll-seamless {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-scroll-seamless {
+  animation: scroll-seamless 120s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+/* Mobile faster animation */
+@media (max-width: 768px) {
+  .animate-scroll-seamless {
+    animation: scroll-seamless 80s linear infinite;
+  }
+}
+
+/* Animation states for pause/resume */
+.animate-scroll-seamless.paused {
+  animation-play-state: paused;
+}
+
+.animate-scroll-seamless.running {
+  animation-play-state: running;
+}
+
 .neon-glow {
   @apply shadow-[0_0_20px_rgba(0,255,153,0.3)];
 }

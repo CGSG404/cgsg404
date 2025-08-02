@@ -8,6 +8,7 @@ import ReviewsHero from '@/src/components/reviews/ReviewsHero';
 import ReviewsGrid from '@/src/components/reviews/ReviewsGrid';
 import ReviewsCTA from '@/src/components/reviews/ReviewsCTA';
 import { Search } from 'lucide-react';
+import MaintenanceWrapper from './MaintenanceWrapper';
 
 const ReviewsPage = () => {
 // Semua logic dan UI utama Reviews sudah di sini.
@@ -15,7 +16,8 @@ const ReviewsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="min-h-screen bg-casino-dark">
+    <MaintenanceWrapper>
+      <div className="min-h-screen bg-casino-dark">
       <Head>
         <title>Online Casino Reviews - Expert Ratings & Reports | CGSG</title>
         <meta name="description" content="Read our in-depth online casino reviews. We provide expert ratings on games, bonuses, security, and customer support to help you choose the best casino." />
@@ -42,7 +44,8 @@ const ReviewsPage = () => {
         </div>
       </main>
       <Footer />
-    </div>
+      </div>
+    </MaintenanceWrapper>
   );
 };
 
