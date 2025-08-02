@@ -11,9 +11,62 @@ const supabase = createClient(
 // In-memory storage for development/testing
 let maintenanceData = [...mockPageMaintenanceData];
 
-// GET - Get all page maintenance statuses
-export async function GET() {
+// Admin authentication helper
+async function verifyAdminAccess(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader) {
+      return { error: 'No authorization header', status: 401 };
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return { error: 'Invalid token', status: 401 };
+    }
+
+    // Create authenticated supabase client with user token
+    const supabaseAuth = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        global: {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      }
+    );
+
+    // Check admin status using database function
+    const { data: isAdmin, error: adminError } = await supabaseAuth.rpc('is_admin');
+
+    if (adminError) {
+      console.error('Admin check error:', adminError);
+      return { error: 'Admin verification failed', status: 500 };
+    }
+
+    if (!isAdmin) {
+      return { error: 'Admin access required', status: 403 };
+    }
+
+    return { user, isAdmin: true };
+  } catch (error) {
+    console.error('Admin verification error:', error);
+    return { error: 'Authentication failed', status: 500 };
+  }
+}
+
+// GET - Get all page maintenance statuses
+export async function GET(request: NextRequest) {
+  try {
+    // SECURITY: Verify admin access first
+    const authResult = await verifyAdminAccess(request);
+    if ('error' in authResult) {
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    }
+
     // Try database first
     const { data: pages, error } = await supabase
       .from('page_maintenance')
@@ -21,28 +74,48 @@ export async function GET() {
       .order('page_path');
 
     if (error) {
-      console.warn('Database not available, using mock data:', error.message);
-      // Return mock data if database is not available
+      console.error('Database error:', error.message);
+
+      // SECURITY: Only use mock data in development
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Development mode: Using mock data');
+        return NextResponse.json({
+          pages: maintenanceData.sort((a, b) => a.page_path.localeCompare(b.page_path)),
+          mock: true
+        });
+      }
+
+      // Production: Return error instead of mock data
+      return NextResponse.json({ error: 'Database connection failed' }, { status: 500 });
+    }
+
+    return NextResponse.json({ pages });
+  } catch (error) {
+    console.error('Database error:', error);
+
+    // SECURITY: Only use mock data in development
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Development mode: Using mock data');
       return NextResponse.json({
         pages: maintenanceData.sort((a, b) => a.page_path.localeCompare(b.page_path)),
         mock: true
       });
     }
 
-    return NextResponse.json({ pages });
-  } catch (error) {
-    console.warn('Database error, using mock data:', error);
-    // Fallback to mock data
-    return NextResponse.json({
-      pages: maintenanceData.sort((a, b) => a.page_path.localeCompare(b.page_path)),
-      mock: true
-    });
+    // Production: Return error instead of mock data
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 // POST - Toggle maintenance mode for a page
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY: Verify admin access first
+    const authResult = await verifyAdminAccess(request);
+    if ('error' in authResult) {
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    }
+
     const body = await request.json();
     const { page_path, is_maintenance, maintenance_message } = body;
 
@@ -110,6 +183,12 @@ export async function POST(request: NextRequest) {
 // PUT - Update maintenance message for a page
 export async function PUT(request: NextRequest) {
   try {
+    // SECURITY: Verify admin access first
+    const authResult = await verifyAdminAccess(request);
+    if ('error' in authResult) {
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    }
+
     const body = await request.json();
     const { page_path, maintenance_message } = body;
 
