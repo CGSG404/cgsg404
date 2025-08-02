@@ -135,11 +135,17 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
 
   if (loading) {
     return (
-      <div className={`w-full bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center ${
-        needsNavbarCompensation
-          ? '-mt-16 h-[464px] md:h-[614px] lg:h-[714px]'
-          : 'h-[400px] md:h-[550px] lg:h-[650px]'
-      }`}>
+      <div
+        className={`w-full bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center ${
+          needsNavbarCompensation
+            ? 'h-[480px] md:h-[630px] lg:h-[730px] top-banner-fullscreen'
+            : 'h-[400px] md:h-[550px] lg:h-[650px]'
+        }`}
+        style={needsNavbarCompensation ? {
+          marginTop: '-64px',
+          paddingTop: '64px'
+        } : {}}
+      >
         <div className="text-center text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casino-neon-green mx-auto mb-4"></div>
           <p className="text-lg">Loading banner...</p>
@@ -151,16 +157,20 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
   return (
     <div
       className={`relative w-full hero-banner-slider overflow-hidden group ${
-        needsNavbarCompensation ? '-mt-16' : ''
+        needsNavbarCompensation ? 'top-banner-fullscreen' : ''
       }`}
       onMouseEnter={handleInteractionStart}
       onMouseLeave={handleInteractionEnd}
       onTouchStart={handleInteractionStart}
       onTouchEnd={handleInteractionEnd}
+      style={needsNavbarCompensation ? {
+        marginTop: '-64px',
+        paddingTop: '64px'
+      } : {}}
     >
       <div className={`relative w-full ${
         needsNavbarCompensation
-          ? 'h-[464px] md:h-[614px] lg:h-[714px]'
+          ? 'h-[480px] md:h-[630px] lg:h-[730px]'
           : 'h-[400px] md:h-[550px] lg:h-[650px]'
       }`}>
         <AnimatePresence mode="wait">
@@ -173,16 +183,16 @@ export default function HeroBannerSliderSimple({ pageType = 'home' }: HeroBanner
             className="absolute inset-0"
           >
             {/* Background Image */}
-            <div 
+            <div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat"
               style={{
                 backgroundImage: `url(${banners[currentSlide]?.img})`,
               }}
             />
-            
+
             {/* Simple Dark Overlay */}
             <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
-            
+
             {/* Content */}
             <div className="relative z-10 h-full flex items-center">
               <div className="container mx-auto px-4 max-w-7xl">

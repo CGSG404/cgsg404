@@ -23,7 +23,8 @@ import {
   Cog,
   Database,
   Upload,
-  FileText
+  FileText,
+  Wrench
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -168,6 +169,16 @@ export default function AdminDashboardPage() {
       hoverGradient: 'hover:from-orange-500/30 hover:to-red-500/30',
       icon: Users,
       status: 'Coming Soon'
+    },
+    {
+      title: 'Page Maintenance',
+      description: 'Control maintenance mode for each page in the application',
+      href: '/admin/maintenance',
+      gradient: 'from-orange-500/20 to-yellow-500/20',
+      borderColor: 'border-orange-500/30',
+      hoverGradient: 'hover:from-orange-500/30 hover:to-yellow-500/30',
+      icon: Wrench,
+      status: 'Active'
     },
     {
       title: 'System Settings',

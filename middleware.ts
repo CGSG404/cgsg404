@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
+
+// Pages that should be checked for maintenance mode
+const MAINTENANCE_PAGES = [
+  '/',
+  '/top-casinos',
+  '/casinos',
+  '/reviews',
+  '/list-report',
+  '/forum',
+  '/guide',
+  '/news'
+];
 
 export async function middleware(request: NextRequest) {
   // 🔄 URL REDIRECTS: Handle legacy URLs
@@ -49,6 +62,35 @@ export async function middleware(request: NextRequest) {
     }
     // Let the page handle authentication client-side
     return response;
+  }
+
+  // 🔧 MAINTENANCE MODE CHECK
+  if (MAINTENANCE_PAGES.includes(request.nextUrl.pathname)) {
+    try {
+      // Initialize Supabase client for maintenance check
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+
+      // Check if page is in maintenance mode
+      const { data, error } = await supabase.rpc('get_page_maintenance_status', {
+        page_path_param: request.nextUrl.pathname
+      });
+
+      if (!error && data && data.length > 0 && data[0].is_maintenance) {
+        // Page is in maintenance mode - let client-side MaintenanceWrapper handle it
+        // We don't redirect here to allow admin bypass on client-side
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔧 Page in maintenance mode:', request.nextUrl.pathname);
+        }
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('🔧 Maintenance check error:', error);
+      }
+      // If there's an error, allow access (fail open)
+    }
   }
 
 

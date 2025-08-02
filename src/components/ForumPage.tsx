@@ -10,6 +10,7 @@ import { useAuth } from '@/src/contexts/AuthContext';
 import { Button } from '@/src/components/ui/button';
 import { Plus, Users, MessageCircle, TrendingUp, Refresh } from 'lucide-react';
 import { Card, CardContent } from '@/src/components/ui/card';
+import MaintenanceWrapper from './MaintenanceWrapper';
 
 const ForumPage = () => {
   const { user } = useAuth();
@@ -44,7 +45,8 @@ const ForumPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-casino-dark">
+    <MaintenanceWrapper>
+      <div className="min-h-screen bg-casino-dark">
       <ForumHero />
 
       {/* Content Divider */}
@@ -123,7 +125,8 @@ const ForumPage = () => {
       </section>
 
       <Footer />
-    </div>
+      </div>
+    </MaintenanceWrapper>
   );
 };
 
