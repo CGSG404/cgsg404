@@ -43,7 +43,9 @@ async function verifyAdminAccess(request: NextRequest) {
     const { data: isAdmin, error: adminError } = await supabaseAuth.rpc('is_admin');
 
     if (adminError) {
-      console.error('Admin check error:', adminError);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Admin check error:', adminError);
+      }
       return { error: 'Admin verification failed', status: 500 };
     }
 
@@ -53,7 +55,9 @@ async function verifyAdminAccess(request: NextRequest) {
 
     return { user, isAdmin: true };
   } catch (error) {
-    console.error('Admin verification error:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Admin verification error:', error);
+    }
     return { error: 'Authentication failed', status: 500 };
   }
 }
@@ -74,7 +78,9 @@ export async function GET(request: NextRequest) {
       .order('page_path');
 
     if (error) {
-      console.error('Database error:', error.message);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Database error:', error.message);
+      }
 
       // SECURITY: Only use mock data in development
       if (process.env.NODE_ENV === 'development') {
@@ -91,7 +97,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ pages });
   } catch (error) {
-    console.error('Database error:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Database error:', error);
+    }
 
     // SECURITY: Only use mock data in development
     if (process.env.NODE_ENV === 'development') {
@@ -113,14 +121,18 @@ export async function POST(request: NextRequest) {
     // SECURITY: Verify admin access first
     const authResult = await verifyAdminAccess(request);
     if ('error' in authResult) {
-      console.error('❌ Admin access denied:', authResult.error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Admin access denied:', authResult.error);
+      }
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
 
     const body = await request.json();
     const { page_path, is_maintenance, maintenance_message } = body;
 
-    console.log('🔧 Toggle maintenance request:', { page_path, is_maintenance, maintenance_message });
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔧 Toggle maintenance request:', { page_path, is_maintenance, maintenance_message });
+    }
 
     // Validate required fields
     if (!page_path || typeof is_maintenance !== 'boolean') {
@@ -129,21 +141,63 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Try database first
+    // Try database first - use RPC function, fallback to direct update
     try {
-      console.log('📊 Attempting database update...');
-      const { data, error } = await supabase.rpc('toggle_page_maintenance', {
-        page_path_param: page_path,
-        maintenance_status: is_maintenance,
-        message_param: maintenance_message || null
-      });
-
-      if (error) {
-        console.error('❌ Database RPC error:', error);
-        throw error;
+      if (process.env.NODE_ENV === 'development') {
+        console.log('📊 Attempting database update...');
       }
 
-      if (data) {
+      let updateResult = null;
+      let rpcError = null;
+
+      // Try RPC function first
+      try {
+        const { data, error } = await supabase.rpc('toggle_page_maintenance', {
+          page_path_param: page_path,
+          maintenance_status: is_maintenance,
+          message_param: maintenance_message || null
+        });
+
+        if (error) {
+          rpcError = error;
+          throw error;
+        }
+
+        updateResult = data;
+      } catch (rpcErr) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('⚠️ RPC function failed, trying direct update:', rpcErr instanceof Error ? rpcErr.message : 'Unknown error');
+        }
+
+        // Fallback to direct update
+        const updateData: {
+          is_maintenance: boolean;
+          updated_at: string;
+          maintenance_message?: string | null;
+        } = {
+          is_maintenance,
+          updated_at: new Date().toISOString()
+        };
+
+        if (maintenance_message !== undefined) {
+          updateData.maintenance_message = maintenance_message;
+        }
+
+        const { data: directUpdateResult, error: directUpdateError } = await supabase
+          .from('page_maintenance')
+          .update(updateData)
+          .eq('page_path', page_path)
+          .select()
+          .single();
+
+        if (directUpdateError) {
+          throw directUpdateError;
+        }
+
+        updateResult = directUpdateResult;
+      }
+
+      if (updateResult) {
         // Get updated page data to confirm the change
         const { data: updatedPage, error: fetchError } = await supabase
           .from('page_maintenance')
@@ -152,19 +206,26 @@ export async function POST(request: NextRequest) {
           .single();
 
         if (!fetchError && updatedPage) {
-          console.log('✅ Database update successful:', updatedPage);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('✅ Database update successful:', updatedPage);
+          }
           return NextResponse.json({
             success: true,
             page: updatedPage,
             message: `Maintenance mode ${is_maintenance ? 'enabled' : 'disabled'} for ${page_path}`,
+            method: rpcError ? 'direct_update' : 'rpc_function',
             timestamp: new Date().toISOString()
           });
         } else {
-          console.error('❌ Failed to fetch updated page:', fetchError);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('❌ Failed to fetch updated page:', fetchError);
+          }
         }
       }
     } catch (dbError) {
-      console.error('❌ Database error:', dbError);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Database error:', dbError);
+      }
       
       // Only use mock data in development
       if (process.env.NODE_ENV !== 'development') {
@@ -206,7 +267,9 @@ export async function POST(request: NextRequest) {
     }, { status: 500 });
 
   } catch (error) {
-    console.error('❌ Unexpected error in POST /api/admin/page-maintenance:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('❌ Unexpected error in POST /api/admin/page-maintenance:', error);
+    }
     return NextResponse.json({
       error: 'Internal server error',
       details: error instanceof Error ? error.message : 'Unknown error'
@@ -250,7 +313,9 @@ export async function PUT(request: NextRequest) {
         });
       }
     } catch (dbError) {
-      console.warn('Database not available, using mock data');
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Database not available, using mock data');
+      }
     }
 
     // Fallback to mock data
@@ -273,7 +338,9 @@ export async function PUT(request: NextRequest) {
       mock: true
     });
   } catch (error) {
-    console.error('Unexpected error:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Unexpected error:', error);
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
