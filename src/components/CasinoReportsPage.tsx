@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Search, Calendar, ExternalLink, Shield, Users, AlertCircle, RefreshCw } from 'lucide-react';
 import MaintenanceWrapper from './MaintenanceWrapper';
+import { devConsole } from '@/src/utils/production-console-override';
 
 interface CasinoReport {
   id: number;
@@ -48,11 +49,11 @@ export default function CasinoReportsPage() {
 
   // Debug state changes
   useEffect(() => {
-    console.log('🔍 Reports state changed:', reports.length, 'reports');
+    devConsole.log('🔍 Reports state changed:', reports.length, 'reports');
   }, [reports]);
 
   useEffect(() => {
-    console.log('🔍 FilteredReports state changed:', filteredReports.length, 'filtered reports');
+    devConsole.log('🔍 FilteredReports state changed:', filteredReports.length, 'filtered reports');
   }, [filteredReports]);
 
   // Fetch reports function (extracted for reuse)
@@ -64,7 +65,7 @@ export default function CasinoReportsPage() {
         setLoading(true);
       }
 
-      console.log('📡 Fetching casino reports...');
+      devConsole.log('📡 Fetching casino reports...');
 
       const response = await fetch('/api/casino-reports', {
         method: 'GET',
@@ -74,31 +75,31 @@ export default function CasinoReportsPage() {
         cache: 'no-store' // Prevent caching issues
       });
 
-      console.log('📡 Response status:', response.status);
+      devConsole.log('📡 Response status:', response.status);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
-      console.log('🔍 API Response:', result);
+      devConsole.log('🔍 API Response:', result);
 
       if (result.success && result.data) {
-        console.log(`✅ Loaded ${result.data.length} reports`);
-        console.log('📋 Reports data:', result.data);
+        devConsole.log(`✅ Loaded ${result.data.length} reports`);
+        devConsole.log('📋 Reports data:', result.data);
 
         // Force state update with new array reference
         const newReports = [...result.data];
         setReports(newReports);
         setError(null);
 
-        console.log('🔄 State updated with reports:', newReports.length);
+        devConsole.log('🔄 State updated with reports:', newReports.length);
       } else {
-        console.error('❌ API returned error or no data:', result);
+        devConsole.error('❌ API returned error or no data:', result);
         throw new Error(result.error || 'No data received');
       }
     } catch (err) {
-      console.error('❌ Error fetching reports:', err);
+      devConsole.error('❌ Error fetching reports:', err);
       setError(err instanceof Error ? err.message : 'Failed to load reports');
       setReports([]); // Clear reports on error
     } finally {
@@ -135,8 +136,8 @@ export default function CasinoReportsPage() {
 
   // Filter reports based on search and status
   useEffect(() => {
-    console.log('🔄 Filtering reports. Total reports:', reports.length);
-    console.log('📊 Reports state:', reports);
+    devConsole.log('🔄 Filtering reports. Total reports:', reports.length);
+    devConsole.log('📊 Reports state:', reports);
     let filtered = reports;
 
     // Filter by search term

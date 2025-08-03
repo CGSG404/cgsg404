@@ -5,6 +5,7 @@ import { supabase } from '@/src/lib/supabaseClient';
 import { databaseApi } from '@/src/lib/database-api';
 import type { CurrentUserAdminInfo } from '@/src/types/database';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { adminLogger } from '@/src/utils/logger';
 
 interface AdminContextType {
   // Auth state (independent)
@@ -36,7 +37,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   // Fetch admin info when user changes
   const fetchAdminInfo = async () => {
     if (!user) {
-      console.log('🔍 AdminContext: No user, setting admin to false');
+      adminLogger.debug('AdminContext: No user, setting admin to false');
       setAdminInfo(null);
       setIsLoading(false);
       return;
@@ -44,21 +45,21 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
     try {
       setIsLoading(true);
-      console.log('🔍 AdminContext: Fetching admin info for user:', {
+      adminLogger.debug('AdminContext: Fetching admin info for user:', {
         id: user.id,
         email: user.email,
         timestamp: new Date().toISOString()
       });
 
       const info = await databaseApi.getCurrentUserAdminInfo();
-      console.log('🔍 AdminContext: Admin info received:', {
+      adminLogger.debug('AdminContext: Admin info received:', {
         ...info,
         timestamp: new Date().toISOString()
       });
 
       setAdminInfo(info);
     } catch (error) {
-      console.error('❌ AdminContext: Failed to fetch admin info:', error);
+      adminLogger.error('AdminContext: Failed to fetch admin info:', error);
       setAdminInfo(null);
     } finally {
       setIsLoading(false);
@@ -89,7 +90,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     try {
       return await databaseApi.hasPermission(permission);
     } catch (error) {
-      console.error('Failed to check permission:', error);
+      adminLogger.error('Failed to check permission:', error);
       return false;
     }
   };
@@ -110,7 +111,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
       await databaseApi.logAdminActivity(action, resourceType, resourceId, details, severity, sessionId);
     } catch (error) {
-      console.error('Failed to log admin activity:', error);
+      adminLogger.error('Failed to log admin activity:', error);
     }
   };
 
@@ -118,7 +119,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let isMounted = true;
 
-    console.log('🚀 AdminContext: Starting independent auth initialization...');
+    adminLogger.debug('AdminContext: Starting independent auth initialization...');
 
     const initializeAuth = async () => {
       try {
@@ -128,10 +129,10 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         if (!isMounted) return;
 
         if (error) {
-          console.error('❌ AdminContext: Auth error:', error);
+          adminLogger.error('AdminContext: Auth error:', error);
           setUser(null);
         } else {
-          console.log('✅ AdminContext: Auth state:', session?.user ? 'User found' : 'No user');
+          adminLogger.debug('AdminContext: Auth state:', session?.user ? 'User found' : 'No user');
           setUser(session?.user || null);
         }
 
@@ -141,7 +142,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
           if (!isMounted) return;
 
-          console.log(`🔄 AdminContext: Auth event - ${event}`);
+          adminLogger.debug(`AdminContext: Auth event - ${event}`);
 
           if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
             setUser(session?.user || null);
@@ -151,7 +152,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         subscriptionRef.current = data.subscription;
 
       } catch (error) {
-        console.error('❌ AdminContext: Auth initialization error:', error);
+        adminLogger.error('AdminContext: Auth initialization error:', error);
         if (isMounted) {
           setUser(null);
           setAuthLoading(false);
@@ -162,7 +163,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     initializeAuth();
 
     return () => {
-      console.log('🧹 AdminContext: Auth cleanup');
+      adminLogger.debug('AdminContext: Auth cleanup');
       isMounted = false;
       mountedRef.current = false;
 
@@ -170,7 +171,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         try {
           subscriptionRef.current.unsubscribe();
         } catch (error) {
-          console.warn('⚠️ AdminContext: Cleanup error:', error);
+          adminLogger.warn('AdminContext: Cleanup error:', error);
         }
         subscriptionRef.current = null;
       }
@@ -180,10 +181,10 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   // Fetch admin info when user changes
   useEffect(() => {
     if (!authLoading && user) {
-      console.log('🔍 AdminContext: User changed, fetching admin info...');
+      adminLogger.debug('AdminContext: User changed, fetching admin info...');
       fetchAdminInfo();
     } else if (!authLoading && !user) {
-      console.log('🔍 AdminContext: No user, clearing admin info');
+      adminLogger.debug('AdminContext: No user, clearing admin info');
       setAdminInfo(null);
     }
   }, [user, authLoading]);
@@ -191,7 +192,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   // Production-ready admin check - no development bypass
   const computedIsAdmin = adminInfo?.is_admin || false;
 
-  console.log('🔍 AdminContext: Computing isAdmin:', {
+  adminLogger.debug('AdminContext: Computing isAdmin:', {
     environment: process.env.NODE_ENV,
     adminInfo,
     is_admin: adminInfo?.is_admin,

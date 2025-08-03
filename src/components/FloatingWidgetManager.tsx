@@ -22,6 +22,7 @@ import { useAuth } from '@/src/contexts/AuthContext';
 import { useAdmin } from '@/src/contexts/AdminContext';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/src/lib/supabaseClient';
+import { devConsole } from '@/src/utils/production-console-override';
 
 interface FloatingWidget {
   id: string;
@@ -57,7 +58,7 @@ export default function FloatingWidgetManager() {
   // Only show for admin users
   const shouldShowAdminPanel = !authLoading && !adminLoading && user && isAdmin;
 
-  console.log('🎛️ FloatingWidgetManager: State', {
+  devConsole.log('🎛️ FloatingWidgetManager: State', {
     user: user?.email,
     isAdmin,
     shouldShowAdminPanel,
@@ -167,7 +168,7 @@ export default function FloatingWidgetManager() {
                       key={action.id}
                       size="sm"
                       onClick={() => {
-                        console.log(`🔧 Quick action: ${action.id}`);
+                        devConsole.log(`🔧 Quick action: ${action.id}`);
                         action.action();
                         setIsExpanded(false);
                       }}
@@ -190,7 +191,7 @@ export default function FloatingWidgetManager() {
                       size="sm"
                       variant={activePanel === panel.id ? "default" : "ghost"}
                       onClick={() => {
-                        console.log(`🔧 Panel clicked: ${panel.id}`);
+                        devConsole.log(`🔧 Panel clicked: ${panel.id}`);
                         setActivePanel(panel.id);
                         setIsExpanded(false); // Close main panel when detail panel opens
                       }}
@@ -244,7 +245,7 @@ export default function FloatingWidgetManager() {
                     await supabase.auth.signOut();
                     window.location.reload();
                   } catch (error) {
-                    console.error('Error signing out:', error);
+                    devConsole.error('Error signing out:', error);
                     window.location.reload();
                   }
                 }}
@@ -265,7 +266,7 @@ export default function FloatingWidgetManager() {
               <Button
                 size="sm"
                 onClick={() => {
-                  console.log('🔧 Navigating to /admin');
+                  devConsole.log('🔧 Navigating to /admin');
                   router.push('/admin');
                 }}
                 className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/80"
@@ -275,7 +276,7 @@ export default function FloatingWidgetManager() {
               <Button
                 size="sm"
                 onClick={() => {
-                  console.log('🔧 Navigating to /debug-admin');
+                  devConsole.log('🔧 Navigating to /debug-admin');
                   router.push('/debug-admin');
                 }}
                 className="bg-casino-neon-blue text-white hover:bg-casino-neon-blue/80"
@@ -287,7 +288,7 @@ export default function FloatingWidgetManager() {
               <Button
                 size="sm"
                 onClick={() => {
-                  console.log('🔧 Opening admin in new tab');
+                  devConsole.log('🔧 Opening admin in new tab');
                   window.open('/admin', '_blank');
                 }}
                 variant="outline"
@@ -311,7 +312,7 @@ export default function FloatingWidgetManager() {
                 <Button
                   size="sm"
                   onClick={() => {
-                    console.log('🔧 Current state:', { user, isAdmin, authLoading, adminLoading });
+                    devConsole.log('🔧 Current state:', { user, isAdmin, authLoading, adminLoading });
                     alert(`Debug Info:\nUser: ${user?.email}\nAdmin: ${isAdmin}\nAuth Loading: ${authLoading}\nAdmin Loading: ${adminLoading}`);
                   }}
                   className="bg-yellow-600 text-white hover:bg-yellow-700 text-xs"
@@ -321,7 +322,7 @@ export default function FloatingWidgetManager() {
                 <Button
                   size="sm"
                   onClick={() => {
-                    console.log('🔧 Refreshing page');
+                    devConsole.log('🔧 Refreshing page');
                     window.location.reload();
                   }}
                   variant="outline"
@@ -345,7 +346,7 @@ export default function FloatingWidgetManager() {
               <Button
                 size="sm"
                 onClick={() => {
-                  console.log('🔧 Performance check triggered');
+                  devConsole.log('🔧 Performance check triggered');
                   const performanceInfo = {
                     memory: (performance as any).memory ? {
                       used: Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024),
@@ -377,15 +378,15 @@ export default function FloatingWidgetManager() {
               <Button
                 size="sm"
                 onClick={() => {
-                  console.log('🔧 Testing database connection');
+                  devConsole.log('🔧 Testing database connection');
                   fetch('/api/test-db')
                     .then(res => res.json())
                     .then(data => {
-                      console.log('🔧 DB Test result:', data);
+                      devConsole.log('🔧 DB Test result:', data);
                       alert(`Database Test:\n${JSON.stringify(data, null, 2)}`);
                     })
                     .catch(err => {
-                      console.error('🔧 DB Test error:', err);
+                      devConsole.error('🔧 DB Test error:', err);
                       alert(`Database Error:\n${err.message}`);
                     });
                 }}

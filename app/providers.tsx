@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Import providers with correct paths
@@ -10,6 +10,7 @@ import { LoadingProvider } from '../src/contexts/LoadingContext';
 import { TooltipProvider } from '../src/components/ui/tooltip';
 import { Toaster } from '../src/components/ui/sonner';
 import { NotificationProvider } from '../src/components/ui/notification';
+import { setupProductionConsole } from '../src/utils/production-console-override';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -22,6 +23,11 @@ const queryClient = new QueryClient({
 });
 
 export default function Providers({ children }: { children: ReactNode }) {
+  // Setup production console override
+  useEffect(() => {
+    setupProductionConsole();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <LoadingProvider>
