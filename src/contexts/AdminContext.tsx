@@ -115,44 +115,31 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // INDEPENDENT AUTH INITIALIZATION - No circular dependency
+  // SIMPLIFIED: Use AuthContext instead of creating duplicate auth listener
   useEffect(() => {
     let isMounted = true;
 
-    adminLogger.debug('AdminContext: Starting independent auth initialization...');
+    adminLogger.debug('AdminContext: Starting session check...');
 
-    const initializeAuth = async () => {
+    const checkSession = async () => {
       try {
-        // Get initial session independently
+        // Get initial session only, don't create listener (AuthContext handles this)
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (!isMounted) return;
 
         if (error) {
-          adminLogger.error('AdminContext: Auth error:', error);
+          adminLogger.error('AdminContext: Session check error:', error);
           setUser(null);
         } else {
-          adminLogger.debug('AdminContext: Auth state:', session?.user ? 'User found' : 'No user');
+          adminLogger.debug('AdminContext: Session state:', session?.user ? 'User found' : 'No user');
           setUser(session?.user || null);
         }
 
         setAuthLoading(false);
 
-        // Setup independent auth listener
-        const { data } = supabase.auth.onAuthStateChange((event, session) => {
-          if (!isMounted) return;
-
-          adminLogger.debug(`AdminContext: Auth event - ${event}`);
-
-          if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-            setUser(session?.user || null);
-          }
-        });
-
-        subscriptionRef.current = data.subscription;
-
       } catch (error) {
-        adminLogger.error('AdminContext: Auth initialization error:', error);
+        adminLogger.error('AdminContext: Session check error:', error);
         if (isMounted) {
           setUser(null);
           setAuthLoading(false);
@@ -160,21 +147,12 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    initializeAuth();
+    checkSession();
 
     return () => {
-      adminLogger.debug('AdminContext: Auth cleanup');
+      adminLogger.debug('AdminContext: Cleanup');
       isMounted = false;
       mountedRef.current = false;
-
-      if (subscriptionRef.current) {
-        try {
-          subscriptionRef.current.unsubscribe();
-        } catch (error) {
-          adminLogger.warn('AdminContext: Cleanup error:', error);
-        }
-        subscriptionRef.current = null;
-      }
     };
   }, []);
 
