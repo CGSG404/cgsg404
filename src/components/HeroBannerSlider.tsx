@@ -9,6 +9,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
 import ClientOnly from './ClientOnly';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Banner {
   id: number;
@@ -152,10 +153,14 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
             <div className={`relative w-full ${isHomePage ? 'h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'}`}>
               {/* Background Image */}
               <div className="absolute inset-0 z-0">
-                <img
+                <Image
                   src={banner.img}
                   alt={banner.title}
-                  className="object-cover w-full h-full scale-105 transition-transform ease-out"
+                  fill
+                  priority={idx === 0}
+                  quality={90}
+                  sizes="100vw"
+                  className="object-cover scale-105 transition-transform ease-out"
                   style={{ transitionDuration: '8000ms' }}
                 />
               </div>
