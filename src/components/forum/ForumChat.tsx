@@ -43,15 +43,21 @@ const ForumChat = () => {
   const { user } = useAuth();
 
   useEffect(() => {
+    let cleanup: (() => void) | null = null;
+    
     const initChat = async () => {
       await fetchMessages();
-      const unsubscribe = setupRealtimeSubscription();
-      return () => {
-        if (unsubscribe) unsubscribe();
-      };
+      cleanup = setupRealtimeSubscription();
     };
     
     initChat();
+    
+    // Cleanup function
+    return () => {
+      if (cleanup) {
+        cleanup();
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -120,15 +126,17 @@ const ForumChat = () => {
   };
 
   const setupRealtimeSubscription = () => {
+    // Create unique channel name to avoid conflicts
+    const channelName = `chat_messages_${Date.now()}_${Math.random()}`;
+    
     const channel = supabase
-      .channel('chat_messages')
+      .channel(channelName)
       .on(
         'postgres_changes',
-        { 
-          event: 'INSERT', 
-          schema: 'public', 
-          table: 'chat_messages',
-          filter: 'event=eq.insert'
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'chat_messages'
         },
         async (payload: any) => {
           if (payload.new) {
@@ -148,11 +156,19 @@ const ForumChat = () => {
         }
       )
       .subscribe((status) => {
-        console.log('Forum chat subscription status:', status);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Forum chat subscription status:', status);
+        }
       });
 
     return () => {
-      channel.unsubscribe();
+      try {
+        channel.unsubscribe();
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('Error unsubscribing from chat channel:', error);
+        }
+      }
     };
   };
 

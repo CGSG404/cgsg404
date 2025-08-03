@@ -1,17 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/src/lib/supabaseClient';
 
 interface MaintenanceStatus {
   is_maintenance: boolean;
   maintenance_message: string | null;
 }
-
-// Initialize Supabase client for realtime subscriptions
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export const useMaintenanceMode = () => {
   const [maintenanceStatus, setMaintenanceStatus] = useState<MaintenanceStatus>({
@@ -26,25 +20,47 @@ export const useMaintenanceMode = () => {
     try {
       setError(null);
 
+      // Handle null pathname
+      if (!pathname) {
+        setMaintenanceStatus({
+          is_maintenance: false,
+          maintenance_message: null
+        });
+        return;
+      }
+
       // Convert pathname to API format
       const pathForApi = pathname === '/' ? 'home' : pathname.substring(1);
       
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
       const response = await fetch(`/api/maintenance/${encodeURIComponent(pathForApi)}`, {
-        cache: 'no-store', // Ensure fresh data
+        cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache'
-        }
+        },
+        signal: controller.signal
       });
       
+      clearTimeout(timeoutId);
+      
       if (!response.ok) {
-        throw new Error('Failed to check maintenance status');
+        throw new Error(`HTTP ${response.status}: Failed to check maintenance status`);
       }
 
       const data = await response.json();
       setMaintenanceStatus(data);
     } catch (err) {
-      console.error('Error checking maintenance status:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      if (err instanceof Error && err.name === 'AbortError') {
+        console.warn('⚠️ Maintenance check timeout - defaulting to not in maintenance');
+        setError('Connection timeout');
+      } else {
+        console.error('❌ Error checking maintenance status:', err);
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      }
+      
       // Default to not in maintenance if there's an error (fail-safe)
       setMaintenanceStatus({
         is_maintenance: false,
@@ -61,7 +77,7 @@ export const useMaintenanceMode = () => {
 
     // Setup realtime subscription for maintenance changes
     const channel = supabase
-      .channel(`maintenance_${pathname}`)
+      .channel(`maintenance_${pathname}_${Date.now()}`) // Unique channel name
       .on(
         'postgres_changes',
         {
@@ -78,10 +94,10 @@ export const useMaintenanceMode = () => {
       )
       .subscribe();
 
-    // Auto-refresh every 60 seconds as fallback
+    // Auto-refresh every 2 minutes as fallback
     const autoRefreshInterval = setInterval(() => {
       checkMaintenanceStatus();
-    }, 60000);
+    }, 120000); // 2 minutes
 
     // Cleanup
     return () => {
