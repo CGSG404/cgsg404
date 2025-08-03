@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Search, Calendar, ExternalLink, Shield, Users, AlertCircle, RefreshCw } from 'lucide-react';
+import MaintenanceWrapper from './MaintenanceWrapper';
 
 interface CasinoReport {
   id: number;
@@ -164,56 +165,61 @@ export default function CasinoReportsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-casino-dark">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-casino-neon-green mx-auto mb-4"></div>
-              <p className="text-gray-400">Loading casino reports...</p>
+      <MaintenanceWrapper>
+        <div className="min-h-screen bg-casino-dark">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-casino-neon-green mx-auto mb-4"></div>
+                <p className="text-gray-400">Loading casino reports...</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </MaintenanceWrapper>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-casino-dark">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <Card className="bg-red-500/10 border-red-500/20 max-w-md">
-              <CardContent className="p-6 text-center">
-                <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-red-400 mb-2">Error Loading Reports</h3>
-                <p className="text-gray-300 mb-4">{error}</p>
-                <Button
-                  onClick={() => fetchReports()}
-                  variant="outline"
-                  className="border-red-500/30 text-red-400 hover:bg-red-500/10"
-                >
-                  Try Again
-                </Button>
-              </CardContent>
-            </Card>
+      <MaintenanceWrapper>
+        <div className="min-h-screen bg-casino-dark">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <Card className="bg-red-500/10 border-red-500/20 max-w-md">
+                <CardContent className="p-6 text-center">
+                  <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-red-400 mb-2">Error Loading Reports</h3>
+                  <p className="text-gray-300 mb-4">{error}</p>
+                  <Button
+                    onClick={() => fetchReports()}
+                    variant="outline"
+                    className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                  >
+                    Try Again
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
+      </MaintenanceWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen bg-casino-dark">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Casino Safety Reports
-          </h1>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            Community-driven reports about problematic gambling sites. Stay informed and gamble safely.
-          </p>
-        </div>
+    <MaintenanceWrapper>
+      <div className="min-h-screen bg-casino-dark">
+        <div className="container mx-auto px-4 py-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Casino Safety Reports
+            </h1>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+              Community-driven reports about problematic gambling sites. Stay informed and gamble safely.
+            </p>
+          </div>
 
         {/* Filters */}
         <div className="mb-8 space-y-4 md:space-y-0 md:flex md:items-center md:gap-4">
@@ -353,6 +359,7 @@ export default function CasinoReportsPage() {
           </Card>
         </div>
       </div>
-    </div>
+      </div>
+    </MaintenanceWrapper>
   );
 }
