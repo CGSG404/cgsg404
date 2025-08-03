@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js'
 const MAINTENANCE_PAGES = [
   '/',
   '/top-casinos',
-  '/casinos',
+  '/casinos-singapore',
   '/reviews',
   '/list-report',
   '/forum',
@@ -22,6 +22,12 @@ export async function middleware(request: NextRequest) {
   // Redirect /games to /top-casinos
   if (url.pathname === '/games') {
     url.pathname = '/top-casinos';
+    return NextResponse.redirect(url, 301); // Permanent redirect
+  }
+
+  // Redirect /casinos to /casinos-singapore
+  if (url.pathname === '/casinos') {
+    url.pathname = '/casinos-singapore';
     return NextResponse.redirect(url, 301); // Permanent redirect
   }
 

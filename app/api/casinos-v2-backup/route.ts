@@ -32,7 +32,7 @@ export async function OPTIONS() {
   });
 }
 
-// GET /api/casinos - Optimized casino data fetching
+// GET /api/casinos-v2 - Optimized casino data fetching
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
