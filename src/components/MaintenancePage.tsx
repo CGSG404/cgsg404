@@ -105,9 +105,14 @@ const MaintenancePage: React.FC<MaintenancePageProps> = ({
             If you continue to see this message, please contact our support team.
           </p>
           <div className="flex items-center justify-center gap-4 mt-4">
-            <Link href="/contact" className="text-casino-neon-green hover:text-casino-neon-green/80 text-sm transition-colors">
+            <a
+              href="https://t.me/ysfcreatorr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-casino-neon-green hover:text-casino-neon-green/80 text-sm transition-colors"
+            >
               Contact Support
-            </Link>
+            </a>
             <span className="text-gray-600">•</span>
             <Link href="/status" className="text-casino-neon-green hover:text-casino-neon-green/80 text-sm transition-colors">
               System Status
