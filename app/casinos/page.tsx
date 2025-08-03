@@ -1,6 +1,7 @@
 import { fetchAllCasinos } from '@/lib/api';
 import { QueryClient } from '@tanstack/react-query';
 import { Metadata } from 'next';
+import MaintenanceWrapper from '@/src/components/MaintenanceWrapper';
 import CasinosClient from './CasinosClient';
 
 // export const revalidate = 3600;
@@ -20,6 +21,8 @@ export default async function CasinosPage() {
 
   const casinosData = queryClient.getQueryData(['casinos']) ?? [];
   return (
-    <CasinosClient dehydratedState={JSON.parse(JSON.stringify(casinosData))} />
+    <MaintenanceWrapper>
+      <CasinosClient dehydratedState={JSON.parse(JSON.stringify(casinosData))} />
+    </MaintenanceWrapper>
   );
 }

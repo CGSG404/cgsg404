@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import MaintenanceWrapper from '@/src/components/MaintenanceWrapper';
 import ReviewsClient from './ReviewsClient';
 
 // export const revalidate = 3600;
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function ReviewsPage() {
-  return <ReviewsClient />;
+  return (
+    <MaintenanceWrapper>
+      <ReviewsClient />
+    </MaintenanceWrapper>
+  );
 }

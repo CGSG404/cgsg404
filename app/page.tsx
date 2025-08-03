@@ -1,4 +1,5 @@
 import IndexPage from "@/src/components/IndexPage";
+import MaintenanceWrapper from "@/src/components/MaintenanceWrapper";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <IndexPage />;
+  return (
+    <MaintenanceWrapper>
+      <IndexPage />
+    </MaintenanceWrapper>
+  );
 }
