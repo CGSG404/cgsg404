@@ -60,7 +60,9 @@ const MaintenanceManagementPage = () => {
       setIsMockData(data.mock || false);
       setLastRefresh(new Date());
     } catch (err) {
-      console.error('❌ Error fetching pages:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Error fetching pages:', err);
+      }
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       if (showLoading) setLoading(false);
@@ -80,7 +82,9 @@ const MaintenanceManagementPage = () => {
         'Authorization': `Bearer ${session.access_token}`
       };
     } catch (error) {
-      console.error('❌ Error getting auth headers:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Error getting auth headers:', error);
+      }
       throw new Error('Authentication failed');
     }
   };
@@ -122,9 +126,13 @@ const MaintenanceManagementPage = () => {
         fetchPages(false);
       }, 1000);
 
-      console.log('✅ Maintenance mode toggled:', data.message);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Maintenance mode toggled:', data.message);
+      }
     } catch (err) {
-      console.error('❌ Error toggling maintenance:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Error toggling maintenance:', err);
+      }
       setError(err instanceof Error ? err.message : 'Failed to toggle maintenance');
       
       // Revert optimistic update on error
@@ -161,7 +169,9 @@ const MaintenanceManagementPage = () => {
       setEditingPage(null);
       setEditMessage('');
     } catch (err) {
-      console.error('Error updating message:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error updating message:', err);
+      }
       setError(err instanceof Error ? err.message : 'Failed to update message');
     } finally {
       setActionLoading(null);
@@ -195,7 +205,9 @@ const MaintenanceManagementPage = () => {
           table: 'page_maintenance'
         },
         (payload) => {
-          console.log('🔄 Realtime update received:', payload);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('🔄 Realtime update received:', payload);
+          }
           // Refresh data when changes occur
           fetchPages(false); // Don't show loading spinner for realtime updates
         }

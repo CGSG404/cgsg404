@@ -76,18 +76,23 @@ export const useMaintenanceMode = () => {
     checkMaintenanceStatus();
 
     // Setup realtime subscription for maintenance changes
+    // Convert pathname to match database format (remove leading slash)
+    const pathForSubscription = pathname === '/' ? 'home' : pathname.substring(1);
+    
     const channel = supabase
-      .channel(`maintenance_${pathname}_${Date.now()}`) // Unique channel name
+      .channel(`maintenance_${pathForSubscription}_${Date.now()}`) // Unique channel name
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'page_maintenance',
-          filter: `page_path=eq.${pathname}`
+          filter: `page_path=eq.${pathForSubscription}`
         },
         (payload) => {
-          console.log('🔄 Maintenance status changed:', payload);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('🔄 Maintenance status changed:', payload);
+          }
           // Refresh maintenance status when changes occur
           checkMaintenanceStatus();
         }
