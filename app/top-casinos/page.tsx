@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import MaintenanceWrapper from '@/src/components/MaintenanceWrapper';
 import TopCasinosClient from './TopCasinosClient';
 
 // export const revalidate = 3600;
@@ -10,8 +11,10 @@ export const metadata: Metadata = {
 
 export default function TopCasinosPage() {
   return (
-    <main className="relative overflow-hidden -mt-16">
-      <TopCasinosClient />
-    </main>
+    <MaintenanceWrapper>
+      <main className="relative overflow-hidden -mt-16">
+        <TopCasinosClient />
+      </main>
+    </MaintenanceWrapper>
   );
 }

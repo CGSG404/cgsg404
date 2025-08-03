@@ -10,37 +10,72 @@ const supabase = createClient(
 // GET - Check maintenance status for a specific page
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string } }
+  { params }: { params: Promise<{ path: string }> }
 ) {
   try {
-    const pagePath = decodeURIComponent(params.path);
+    // Await params for Next.js 15 compatibility
+    const resolvedParams = await params;
+    const pagePath = decodeURIComponent(resolvedParams.path);
+    
+    console.log('🔧 Checking maintenance status for path:', pagePath);
     
     // Convert encoded path back to actual path
     const actualPath = pagePath === 'home' ? '/' : `/${pagePath}`;
+    
+    console.log('🔧 Converted to actual path:', actualPath);
 
-    const { data, error } = await supabase.rpc('get_page_maintenance_status', {
-      page_path_param: actualPath
-    });
+    try {
+      const { data, error } = await supabase.rpc('get_page_maintenance_status', {
+        page_path_param: actualPath
+      });
 
-    if (error) {
-      console.error('Error checking maintenance status:', error);
-      return NextResponse.json({ error: 'Failed to check maintenance status' }, { status: 500 });
-    }
+      if (error) {
+        console.error('❌ Database RPC error:', error);
+        
+        // Fallback: return not in maintenance if database fails
+        return NextResponse.json({
+          is_maintenance: false,
+          maintenance_message: null,
+          fallback: true,
+          error: error.message
+        });
+      }
 
-    // If no data found, assume page is not in maintenance
-    if (!data || data.length === 0) {
-      return NextResponse.json({ 
-        is_maintenance: false, 
-        maintenance_message: null 
+      console.log('✅ Database response:', data);
+
+      // If no data found, assume page is not in maintenance
+      if (!data || data.length === 0) {
+        console.log('📝 No maintenance data found, defaulting to not in maintenance');
+        return NextResponse.json({
+          is_maintenance: false,
+          maintenance_message: null
+        });
+      }
+
+      return NextResponse.json({
+        is_maintenance: data[0].is_maintenance,
+        maintenance_message: data[0].maintenance_message
+      });
+    } catch (dbError) {
+      console.error('❌ Database connection error:', dbError);
+      
+      // Fallback: return not in maintenance if database fails (fail-safe)
+      return NextResponse.json({
+        is_maintenance: false,
+        maintenance_message: null,
+        fallback: true,
+        error: dbError instanceof Error ? dbError.message : 'Database connection failed'
       });
     }
-
-    return NextResponse.json({
-      is_maintenance: data[0].is_maintenance,
-      maintenance_message: data[0].maintenance_message
-    });
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('❌ Unexpected error in maintenance check:', error);
+    
+    // Fallback: return not in maintenance if anything fails (fail-safe)
+    return NextResponse.json({
+      is_maintenance: false,
+      maintenance_message: null,
+      fallback: true,
+      error: error instanceof Error ? error.message : 'Internal server error'
+    });
   }
 }

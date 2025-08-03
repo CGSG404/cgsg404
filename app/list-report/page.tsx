@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import MaintenanceWrapper from '@/src/components/MaintenanceWrapper';
 import CasinoReportsPage from '@/components/CasinoReportsPage';
 
 export const metadata: Metadata = {
@@ -19,5 +20,9 @@ export const metadata: Metadata = {
 };
 
 export default function ListReportPage() {
-  return <CasinoReportsPage />;
+  return (
+    <MaintenanceWrapper>
+      <CasinoReportsPage />
+    </MaintenanceWrapper>
+  );
 }

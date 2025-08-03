@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import MaintenanceWrapper from "@/src/components/MaintenanceWrapper";
 import NewsPage from "@/components/NewsPage";
 
 // export const revalidate = 600;
@@ -11,8 +12,10 @@ export const metadata: Metadata = {
 
 export default function News() {
   return (
-    <main className="relative overflow-hidden">
-      <NewsPage />
-    </main>
+    <MaintenanceWrapper>
+      <main className="relative overflow-hidden">
+        <NewsPage />
+      </main>
+    </MaintenanceWrapper>
   );
 }

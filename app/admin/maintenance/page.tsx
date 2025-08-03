@@ -89,6 +89,7 @@ const MaintenanceManagementPage = () => {
   const toggleMaintenance = async (page: PageMaintenance) => {
     try {
       setActionLoading(`toggle-${page.id}`);
+      setError(null);
 
       const headers = await getAuthHeaders();
       const response = await fetch('/api/admin/page-maintenance', {
@@ -101,21 +102,33 @@ const MaintenanceManagementPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to toggle maintenance mode');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to toggle maintenance mode`);
       }
 
       const data = await response.json();
       
-      // Update local state
-      setPages(prev => prev.map(p => 
-        p.id === page.id ? { ...p, is_maintenance: !p.is_maintenance } : p
+      // Optimistically update local state
+      setPages(prev => prev.map(p =>
+        p.id === page.id ? {
+          ...p,
+          is_maintenance: !p.is_maintenance,
+          updated_at: new Date().toISOString()
+        } : p
       ));
 
-      // Show success message (you can implement toast here)
-      console.log(data.message);
+      // Verify the change by refetching data after a short delay
+      setTimeout(() => {
+        fetchPages(false);
+      }, 1000);
+
+      console.log('✅ Maintenance mode toggled:', data.message);
     } catch (err) {
-      console.error('Error toggling maintenance:', err);
+      console.error('❌ Error toggling maintenance:', err);
       setError(err instanceof Error ? err.message : 'Failed to toggle maintenance');
+      
+      // Revert optimistic update on error
+      fetchPages(false);
     } finally {
       setActionLoading(null);
     }
