@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState, useRef } from 'r
 import { supabase } from '@/src/lib/supabaseClient';
 import { Session, User as SupabaseUser } from '@supabase/supabase-js';
 import { useNotificationHelpers } from '../components/ui/notification';
+import { authLogger } from '@/src/utils/logger';
 
 type User = SupabaseUser;
 
@@ -40,7 +41,7 @@ export const AuthErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ chi
     const handleError = (event: ErrorEvent) => {
       if (event.error?.message?.includes('AuthContext') ||
           event.error?.message?.includes('useAuth')) {
-        console.error('🚨 Auth Error Boundary caught:', event.error);
+        authLogger.criticalError('Auth Error Boundary caught:', event.error);
         setHasError(true);
         setError(event.error);
       }
@@ -100,23 +101,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Simplified Google sign in with forced consent
   const signInWithGoogle = async () => {
     if (loading) {
-      console.log('⚠️ Auth: Sign in already in progress');
+      authLogger.debug('Auth: Sign in already in progress');
       return;
     }
 
     try {
       setLoading(true);
       setError(null);
-      console.log('🚀 Auth: Starting Google OAuth with forced consent...');
+      authLogger.debug('Auth: Starting Google OAuth with forced consent...');
 
       // 🚀 PRODUCTION FIX: Enhanced OAuth flow with better error handling
-      console.log('🧹 Clearing existing sessions...');
+      authLogger.debug('Clearing existing sessions...');
       await supabase.auth.signOut();
 
       // Clear Supabase session properly - no localStorage manipulation needed
-      console.log('🧹 Session cleared via Supabase');
+      authLogger.debug('Session cleared via Supabase');
 
-      console.log('🚀 Starting OAuth flow...');
+      authLogger.debug('Starting OAuth flow...');
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -132,7 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
-        console.error('❌ Auth: OAuth error:', error);
+        authLogger.error('Auth: OAuth error:', error);
         setError(error.message);
         setLoading(false);
 
@@ -146,10 +147,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      console.log('✅ Auth: OAuth initiated successfully');
+      authLogger.debug('Auth: OAuth initiated successfully');
       // Loading state will be handled by redirect
     } catch (error) {
-      console.error('❌ Auth: Sign in error:', error);
+      authLogger.error('Auth: Sign in error:', error);
       setError(error instanceof Error ? error.message : 'Sign in failed');
       setLoading(false);
 
@@ -169,12 +170,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       setError(null);
-      console.log('🚀 Auth: Signing out...');
+      authLogger.debug('Auth: Signing out...');
 
       await supabase.auth.signOut();
       setUser(null);
 
-      console.log('✅ Auth: Signed out successfully');
+      authLogger.debug('Auth: Signed out successfully');
 
       // Show logout notification
       notifications.success(
@@ -183,7 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { duration: 4000 }
       );
     } catch (error) {
-      console.error('❌ Auth: Sign out error:', error);
+      authLogger.error('Auth: Sign out error:', error);
       setError(error instanceof Error ? error.message : 'Sign out failed');
 
       // Show error notification
@@ -205,45 +206,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initCountRef.current += 1;
     const currentInit = initCountRef.current;
 
-    console.log(`🚀 Auth: Initialization #${currentInit} starting...`);
+    authLogger.debug(`Auth: Initialization #${currentInit} starting...`);
 
     const initializeAuth = async () => {
       try {
         // Get initial session
-        console.log('🔍 Auth: Getting initial session...');
+        authLogger.debug('Auth: Getting initial session...');
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (!isMounted) {
-          console.log('⚠️ Auth: Component unmounted during init, aborting...');
+          authLogger.debug('Auth: Component unmounted during init, aborting...');
           return;
         }
 
         if (error) {
-          console.error('❌ Auth: Initial session error:', error);
+          authLogger.error('Auth: Initial session error:', error);
           setError(error.message);
           setUser(null);
         } else {
-          console.log('✅ Auth: Initial session:', session?.user ? 'User found' : 'No user');
+          authLogger.debug('Auth: Initial session:', session?.user ? 'User found' : 'No user');
           if (session?.user) {
-            console.log('🔍 Auth: User details:', { id: session.user.id, email: session.user.email });
+            authLogger.debug('Auth: User details:', { id: session.user.id, email: session.user.email });
           }
           setUser(session?.user || null);
           lastEventRef.current = 'initial_session';
           lastUpdateRef.current = new Date();
         }
 
-        console.log('🔍 Auth: Setting loading to false');
+        authLogger.debug('Auth: Setting loading to false');
         setLoading(false);
 
         // Setup auth state listener
-        console.log('🎧 Auth: Setting up state listener...');
+        authLogger.debug('Auth: Setting up state listener...');
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
           if (!isMounted) {
-            console.log('⚠️ Auth: Received event but component unmounted, ignoring...');
+            authLogger.debug('Auth: Received event but component unmounted, ignoring...');
             return;
           }
 
-          console.log(`🔄 Auth: Event received - ${event}`, session?.user ? 'User present' : 'No user');
+          authLogger.debug(`Auth: Event received - ${event}`, session?.user ? 'User present' : 'No user');
 
           // Update state based on event
           lastEventRef.current = event;
@@ -253,7 +254,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const previousUser = user;
             setUser(session?.user || null);
             setError(null);
-            console.log(`✅ Auth: State updated for ${event}`);
+            authLogger.debug(`Auth: State updated for ${event}`);
 
             // Show login notification only for new sign-ins (not token refresh)
             if (event === 'SIGNED_IN' && session?.user && !previousUser) {
@@ -272,10 +273,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
 
         subscriptionRef.current = data.subscription;
-        console.log('✅ Auth: Listener setup complete');
+        authLogger.debug('Auth: Listener setup complete');
 
       } catch (error) {
-        console.error('❌ Auth: Initialization error:', error);
+        authLogger.error('Auth: Initialization error:', error);
         if (isMounted) {
           setError(error instanceof Error ? error.message : 'Auth initialization failed');
           setUser(null);
@@ -288,16 +289,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Cleanup function
     return () => {
-      console.log(`🧹 Auth: Cleanup for init #${currentInit}`);
+      authLogger.debug(`Auth: Cleanup for init #${currentInit}`);
       isMounted = false;
       mountedRef.current = false;
 
       if (subscriptionRef.current) {
         try {
           subscriptionRef.current.unsubscribe();
-          console.log('✅ Auth: Subscription cleaned up');
+          authLogger.debug('Auth: Subscription cleaned up');
         } catch (error) {
-          console.warn('⚠️ Auth: Error during cleanup:', error);
+          authLogger.warn('Auth: Error during cleanup:', error);
         }
         subscriptionRef.current = null;
       }

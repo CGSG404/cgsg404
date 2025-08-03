@@ -9,6 +9,13 @@ const nextConfig = {
   // Enable React Strict Mode for better development experience
   reactStrictMode: true,
 
+  // Environment variables
+  env: {
+    // Disable console logging in production
+    NEXT_PUBLIC_ENABLE_LOGGING: process.env.NODE_ENV === 'development' ? 'true' : 'false',
+    NEXT_PUBLIC_LOG_LEVEL: process.env.NODE_ENV === 'development' ? 'debug' : 'error',
+  },
+
   // Performance optimizations for production
   experimental: {
     optimizePackageImports: ['lucide-react', '@tanstack/react-query'],

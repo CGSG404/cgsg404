@@ -8,6 +8,7 @@ import { X, Cookie, Shield, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/src/lib/supabaseClient';
 import { useAuth } from '@/src/contexts/AuthContext';
+import { conditionalLog } from '@/src/utils/production-ready-console';
 
 interface CookiePreferences {
   necessary: boolean;
@@ -62,11 +63,11 @@ export default function CookieConsent() {
             const savedPrefs = JSON.parse(consent);
             setPreferences(savedPrefs);
           } catch (error) {
-            console.error('Error parsing cookie preferences:', error);
+            conditionalLog.error('Error parsing cookie preferences:', error);
           }
         }
       } catch (error) {
-        console.error('Error loading cookie preferences:', error);
+        conditionalLog.error('Error loading cookie preferences:', error);
         // Fallback to localStorage
         const consent = localStorage.getItem('cookie-consent');
         if (!consent) {
@@ -151,16 +152,16 @@ export default function CookieConsent() {
       
       // Apply preferences
       if (prefs.analytics) {
-        console.log('🍪 Analytics cookies enabled');
+        conditionalLog.dev('🍪 Analytics cookies enabled');
       }
       if (prefs.marketing) {
-        console.log('🍪 Marketing cookies enabled');
+        conditionalLog.dev('🍪 Marketing cookies enabled');
       }
       if (prefs.functional) {
-        console.log('🍪 Functional cookies enabled');
+        conditionalLog.dev('🍪 Functional cookies enabled');
       }
     } catch (error) {
-      console.error('Error saving cookie preferences:', error);
+      conditionalLog.error('Error saving cookie preferences:', error);
       // Still save to localStorage as fallback
       localStorage.setItem('cookie-consent', JSON.stringify(prefs));
       setPreferences(prefs);
