@@ -7,6 +7,7 @@ import { setupGlobalErrorHandler } from '@/src/lib/errorHandler';
 export default function ClientLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+  const isCasinosSingaporePage = pathname === '/casinos-singapore';
 
   useEffect(() => {
     // Setup global error handlers for better error recovery
@@ -21,7 +22,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-casino-dark via-casino-dark-lighter to-casino-dark">
       {/* Main content area - add padding-top for non-homepage to account for fixed navbar */}
-      <main className={`min-h-screen ${!isHomePage ? 'pt-16' : ''}`}>
+      <main className={`min-h-screen ${!isHomePage && !isCasinosSingaporePage ? 'pt-16' : ''}`}>
         {children}
       </main>
     </div>

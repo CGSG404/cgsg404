@@ -137,7 +137,7 @@ export async function PUT(
     console.log('📝 Updating casino report:', id);
 
     // Build update object with only provided fields
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     if (casino_name) updateData.casino_name = casino_name;
     if (status) updateData.status = status;
     if (last_reported) updateData.last_reported = last_reported;
