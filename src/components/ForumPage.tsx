@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Footer from '@/components/Footer';
+import SimpleNavbar from '@/src/components/SimpleNavbar';
 import ForumHero from '@/components/forum/ForumHero';
 import ForumPostsList from '@/src/components/forum/ForumPostsList';
 import TweetComposer from '@/src/components/forum/TweetComposer';
@@ -47,6 +48,9 @@ const ForumPage = () => {
   return (
     <MaintenanceWrapper>
       <div className="min-h-screen bg-casino-dark">
+      {/* Add SimpleNavbar */}
+      <SimpleNavbar />
+      
       <ForumHero />
 
       {/* Content Divider */}
