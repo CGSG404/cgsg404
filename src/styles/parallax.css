@@ -6,7 +6,7 @@
   width: 100vw !important;
   height: 100vh !important;
   height: 100dvh !important; /* Dynamic viewport height for better mobile support */
-  z-index: 5 !important; /* Lower z-index to ensure navbar/cookies show above */
+  z-index: 10 !important; /* Increased z-index for proper banner positioning */
   overflow: hidden !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -35,7 +35,7 @@
 /* Ensure navbar stays above parallax banner */
 nav {
   position: relative !important;
-  z-index: 50 !important; /* Navbar stays above banner (z-5) */
+  z-index: 50 !important; /* Navbar stays above banner (z-10) */
 }
 
 /* Ensure mobile menu stays above parallax */
@@ -293,7 +293,8 @@ html {
 /* Cookie Panel: z-40 (below navbar, above content) */
 /* Overlay: z-25 (above content) */
 /* Content: z-20 (above banner) */
-/* Banner: z-5 (background layer - LOWERED) */
+/* Scroll Animation: z-15 (visible on banner) */
+/* Banner: z-10 (background layer - FIXED) */
 
 /* Force clear any interfering elements */
 body {
