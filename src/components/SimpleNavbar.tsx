@@ -23,31 +23,96 @@ const SimpleNavbar = () => {
     setIsClient(true);
   }, []);
 
-  // Scroll detection for homepage - ROBUST VERSION
+  // Scroll detection for homepage - IMPROVED VERSION
   useEffect(() => {
     if (!isHomePage) {
       setIsVisible(true); // Always show navbar on non-homepage
       return;
     }
 
-    // Check initial scroll position
-    const initialScroll = window.scrollY;
-    setIsVisible(initialScroll > 50);
+    // Get banner height for better detection
+    const getBannerHeight = () => {
+      const bannerElement = document.querySelector('.hero-banner-slider') || 
+                           document.querySelector('[data-banner="true"]') ||
+                           document.querySelector('.swiper-container') ||
+                           document.querySelector('.parallax-banner');
+      
+      if (bannerElement) {
+        const rect = bannerElement.getBoundingClientRect();
+        // Only use banner height if it's reasonable (not 0 or too small)
+        if (rect.height > 200) {
+          return rect.height;
+        }
+      }
+      
+      // Fallback to viewport height for fullscreen banners
+      return window.innerHeight;
+    };
+
+    // Check initial scroll position with banner consideration
+    const checkVisibility = () => {
+      const currentScrollY = window.scrollY;
+      const bannerHeight = getBannerHeight();
+      const viewportHeight = window.innerHeight;
+      const threshold = Math.min(bannerHeight * 0.7, viewportHeight * 0.8); // Use smaller of banner 70% or viewport 80%
+      
+      const shouldBeVisible = currentScrollY > threshold && currentScrollY > 150; // Increased minimum scroll threshold
+      setIsVisible(shouldBeVisible);
+      setLastScrollY(currentScrollY);
+      
+      // Debug logging (remove in production)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Navbar Debug:', {
+          scrollY: currentScrollY,
+          bannerHeight,
+          viewportHeight,
+          threshold,
+          shouldBeVisible,
+          isVisible: shouldBeVisible
+        });
+      }
+    };
+
+    // Initial check with delay to ensure banner is rendered
+    const initialCheck = () => {
+      setTimeout(() => {
+        checkVisibility();
+      }, 300); // Increased delay to ensure banner is fully rendered and positioned
+    };
+    initialCheck();
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const bannerHeight = getBannerHeight();
+      const viewportHeight = window.innerHeight;
+      const threshold = Math.min(bannerHeight * 0.7, viewportHeight * 0.8); // Use smaller of banner 70% or viewport 80%
       
-      // Show navbar when scrolling down past 50px
-      setIsVisible(currentScrollY > 50);
+      // Show navbar when scrolling past threshold for better UX
+      const shouldBeVisible = currentScrollY > threshold && currentScrollY > 150; // Increased minimum scroll threshold
+      
+      // Only update if state actually changes to prevent unnecessary re-renders
+      if (shouldBeVisible !== isVisible) {
+        setIsVisible(shouldBeVisible);
+      }
+      
       setLastScrollY(currentScrollY);
     };
 
-    // Add event listener
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Add event listener with debouncing for better performance
+    let scrollTimeout: NodeJS.Timeout;
+    const debouncedHandleScroll = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        handleScroll();
+      }, 10); // Slightly increased debounce to prevent flickering
+    };
+
+    window.addEventListener('scroll', debouncedHandleScroll, { passive: true });
     
     // Cleanup
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', debouncedHandleScroll);
+      clearTimeout(scrollTimeout);
     };
   }, [isHomePage]);
 
@@ -83,9 +148,9 @@ const SimpleNavbar = () => {
   return (
     <nav className={`glass-effect border-b border-casino-border-subtle/30 ${
       isHomePage ? 'fixed' : 'sticky'
-    } top-0 z-50 backdrop-blur-xl transition-transform duration-300 ease-in-out ${
-      isHomePage && !isVisible ? '-translate-y-full' : 'translate-y-0'
-    } w-full`}>
+    } top-0 z-[9999] backdrop-blur-xl transition-all duration-700 ease-out ${
+      isHomePage && !isVisible ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
+    } w-full ${isHomePage && isVisible ? 'bg-casino-dark/95 shadow-xl border-casino-neon-green/20' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
