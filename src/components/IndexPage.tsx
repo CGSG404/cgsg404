@@ -1,7 +1,6 @@
 'use client';
 
 import { lazy, Suspense } from 'react';
-import Head from 'next/head';
 import HeroSection from '@/src/components/HeroSection';
 import HeroSlider from '@/src/components/HeroSlider';
 import InfoCard from '@/src/components/InfoCard';
@@ -19,39 +18,20 @@ import {
   ChartSkeleton,
   FooterSkeleton
 } from '@/src/components/ui/loading-skeletons';
-import Divider from '@/src/components/ui/Divider';
 import SimpleDivider from '@/src/components/ui/SimpleDivider';
 import SectionDivider from '@/src/components/ui/SectionDivider';
 
-// Progressive Loading - Priority-based component loading
-const LogoSlider = lazy(() =>
-  import('@/src/components/LogoSlider').then(module => ({
-    default: module.default
-  }))
-);
-
-const Chart = lazy(() =>
-  import('@/src/components/Chart').then(module => ({
-    default: module.default
-  }))
-);
-
-const Footer = lazy(() =>
-  import('@/src/components/Footer').then(module => ({
-    default: module.default
-  }))
-);
+// Progressive Loading - Optimized syntax
+const LogoSlider = lazy(() => import('@/src/components/LogoSlider'));
+const Chart = lazy(() => import('@/src/components/Chart'));
+const Footer = lazy(() => import('@/src/components/Footer'));
 
 const IndexPage = () => {
 // Semua logic dan UI utama Index sudah di sini.
 
   return (
     <div className="min-h-screen bg-casino-dark">
-      <Head>
-        <title>Guru Singapore - Your Ultimate Guide to Online Casinos & Bonuses</title>
-        <meta name="description" content="Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling." />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      {/* Metadata moved to app/page.tsx - removed Head component to prevent conflicts */}
       
       {/* Add Navbar */}
       <SimpleNavbar />
@@ -160,7 +140,6 @@ const IndexPage = () => {
         <Suspense fallback={<FooterSkeleton />}>
           <Footer />
         </Suspense>
-      </div>
       </div>
       
       {/* Add Cookie Consent */}
