@@ -201,20 +201,22 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
 
               {/* Scroll Indicator - Only show on homepage */}
               {isHomePage && (
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-[20] animate-bounce">
-                  <div className="flex flex-col items-center text-white hover:text-casino-neon-green transition-all duration-300 cursor-pointer group"
-                       onClick={() => {
-                         window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-                       }}>
-                    {/* Desktop and Mobile responsive sizing */}
-                    <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-white/80 rounded-full flex items-center justify-center mb-2 group-hover:border-casino-neon-green group-hover:shadow-lg group-hover:shadow-casino-neon-green/25 transition-all duration-300 bg-black/30 backdrop-blur-sm">
-                      <svg className="w-4 h-4 md:w-5 md:h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                      </svg>
+                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-[15] flex items-center justify-center">
+                  <div 
+                    className="flex flex-col items-center cursor-pointer group animate-bounce hover:animate-none transition-all duration-500"
+                    onClick={() => {
+                      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+                    }}
+                  >
+                    {/* Modern scroll indicator circle */}
+                    <div className="relative w-8 h-12 border-2 border-white/60 rounded-full flex justify-center group-hover:border-white transition-all duration-300">
+                      {/* Scroll dot */}
+                      <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse group-hover:bg-white group-hover:animate-none transition-all duration-300"></div>
                     </div>
-                    {/* Text label - smaller and responsive */}
-                    <span className="text-xs md:text-sm font-medium uppercase tracking-wider bg-black/30 backdrop-blur-sm px-2 md:px-3 py-1 rounded-full border border-white/30 group-hover:border-casino-neon-green/50 transition-all duration-300">
-                      Scroll
+                    
+                    {/* Simple text below */}
+                    <span className="text-white/60 text-xs font-light mt-2 group-hover:text-white transition-all duration-300 tracking-wide">
+                      SCROLL
                     </span>
                   </div>
                 </div>

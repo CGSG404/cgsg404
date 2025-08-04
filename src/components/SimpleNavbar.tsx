@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -54,30 +54,51 @@ const SimpleNavbar = () => {
     // Homepage only: Hide navbar when at top, show when scrolling down
     console.log('🏠 Homepage detected, setting up scroll behavior');
 
+    let ticking = false;
+    
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const scrollThreshold = window.innerHeight * 0.15; // Show navbar after scrolling 15% of viewport
-      const shouldShow = scrollY > scrollThreshold;
-      
-      setIsVisible(shouldShow);
-      console.log(`🏠 Scroll: ${scrollY}, threshold: ${scrollThreshold}, shouldShow: ${shouldShow}`);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const viewportHeight = window.innerHeight;
+          const scrollThreshold = viewportHeight * 0.3; // Show navbar after scrolling 30% of viewport
+          const shouldShow = scrollY > scrollThreshold;
+          
+          setIsVisible(prev => {
+            if (prev !== shouldShow) {
+              console.log(`🏠 Scroll: ${scrollY}, threshold: ${scrollThreshold}, shouldShow: ${shouldShow}`);
+            }
+            return shouldShow;
+          });
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    // Set initial state for homepage based on current scroll position
-    const initialScrollY = window.scrollY;
-    const initialThreshold = window.innerHeight * 0.15;
-    const initialShow = initialScrollY > initialThreshold;
-    console.log(`🏠 Homepage initial state: scrollY=${initialScrollY}, threshold=${initialThreshold}, shouldShow=${initialShow}`);
-    setIsVisible(initialShow);
+    // Set initial state for homepage - always start hidden
+    setIsVisible(false);
+    console.log('🏠 Homepage initial state: navbar hidden');
 
-    // Add scroll listener for homepage
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Add scroll listener for homepage with slight delay to ensure page is loaded
+    const timer = setTimeout(() => {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      
+      // Check initial position after page load
+      const currentScrollY = window.scrollY;
+      const currentThreshold = window.innerHeight * 0.3;
+      const currentShow = currentScrollY > currentThreshold;
+      setIsVisible(currentShow);
+      console.log(`🏠 Initial check after load: scrollY=${currentScrollY}, shouldShow=${currentShow}`);
+    }, 300);
 
     // Cleanup
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isHomePage, pathname]); // Add pathname to dependencies
+  }, [isHomePage, pathname]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
