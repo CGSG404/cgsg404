@@ -80,31 +80,29 @@ export default function CookieConsent() {
     loadPreferences();
   }, [user]);
 
-  // Scroll detection for homepage - SIMPLIFIED SAME AS NAVBAR
+  // Scroll detection for homepage - ROBUST VERSION SAME AS NAVBAR
   useEffect(() => {
     if (!isHomePage || !showBanner) {
       setIsVisible(true); // Always show on non-homepage or when banner not shown
       return;
     }
 
-    // Hide cookie banner initially on homepage
-    setIsVisible(false);
+    // Check initial scroll position
+    const initialScroll = window.scrollY;
+    setIsVisible(initialScroll > 50);
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Simple logic: show cookie banner when user scrolls down from top
-      if (currentScrollY > 100) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-      
+      // Show cookie banner when scrolling down past 50px
+      setIsVisible(currentScrollY > 50);
       setLastScrollY(currentScrollY);
     };
 
+    // Add event listener
     window.addEventListener('scroll', handleScroll, { passive: true });
     
+    // Cleanup
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
