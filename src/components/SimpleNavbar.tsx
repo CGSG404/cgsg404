@@ -22,7 +22,7 @@ import AdminButton from '@/src/components/AdminButton';
 const SimpleNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false); // Start hidden on homepage
   const [lastScrollY, setLastScrollY] = useState(0);
   const { user, signOut } = useAuth();
   const pathname = usePathname();
@@ -42,57 +42,98 @@ const SimpleNavbar = () => {
       return;
     }
 
-    // Simplified banner height detection - more reliable
+    // Enhanced banner height detection with better debugging
     const getBannerHeight = () => {
-      // Try specific selectors in order of priority
-      const selectors = [
-        '.hero-banner-slider', // Primary selector
-        '.parallax-banner', // Homepage specific
-        '[data-banner="true"]', // Data attribute fallback
-      ];
+      // For homepage, be more specific about banner detection
+      if (isHomePage) {
+        // Try to find the actual banner container first
+        const homepageBanner =
+          document.querySelector('.parallax-banner.hero-banner-slider') ||
+          document.querySelector('.parallax-banner') ||
+          document.querySelector('.hero-banner-slider[data-banner="true"]') ||
+          document.querySelector('.hero-banner-slider');
 
-      for (const selector of selectors) {
-        const element = document.querySelector(selector);
-        if (element) {
-          const height = element.getBoundingClientRect().height;
-          if (height > 300) {
-            // Reasonable minimum height
+        if (homepageBanner) {
+          const rect = homepageBanner.getBoundingClientRect();
+          const height = rect.height;
+
+          // For homepage, expect fullscreen or near-fullscreen height
+          if (height > window.innerHeight * 0.5) {
+            console.log('✅ Found homepage banner:', {
+              selector: homepageBanner.className,
+              height,
+            });
             return height;
           }
         }
-      }
 
-      // Fallback to viewport height for fullscreen homepage banners
-      return window.innerHeight;
+        // Fallback to viewport height for homepage
+        console.log('⚠️ Using viewport height fallback for homepage');
+        return window.innerHeight;
+      } else {
+        // For non-homepage, look for banner with compensation
+        const banner = document.querySelector('.hero-banner-slider');
+        if (banner) {
+          const height = banner.getBoundingClientRect().height;
+          if (height > 200) {
+            return height;
+          }
+        }
+        return 600; // Default height for non-homepage banners
+      }
     };
 
-    // Simplified scroll handler - no complex calculations
+    // Enhanced scroll handler with debugging
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const bannerHeight = getBannerHeight();
 
-      // Simple threshold: 60% of banner height, minimum 200px
-      const threshold = Math.max(bannerHeight * 0.6, 200);
-
+      // Adjusted threshold: 50% of banner height for better UX, minimum 250px
+      const threshold = Math.max(bannerHeight * 0.5, 250);
       const shouldBeVisible = currentScrollY > threshold;
+
+      // Debug logging in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 Navbar Debug:', {
+          scrollY: currentScrollY,
+          bannerHeight,
+          threshold,
+          shouldBeVisible,
+          currentlyVisible: isVisible,
+        });
+      }
 
       // Only update if state actually changes
       if (shouldBeVisible !== isVisible) {
+        console.log(`🔄 Navbar visibility changing: ${isVisible} → ${shouldBeVisible}`);
         setIsVisible(shouldBeVisible);
       }
 
       setLastScrollY(currentScrollY);
     };
 
-    // Initial check - no delay, immediate execution
-    handleScroll();
+    // Initial check with small delay to ensure DOM is ready
+    const initialCheck = () => {
+      try {
+        handleScroll();
+      } catch (error) {
+        console.error('Error in initial navbar check:', error);
+      }
+    };
+
+    // Use setTimeout to ensure components are fully mounted
+    const timeoutId = setTimeout(initialCheck, 100);
 
     // Add throttled scroll listener for better performance
     let isScrolling = false;
     const throttledHandleScroll = () => {
       if (!isScrolling) {
         window.requestAnimationFrame(() => {
-          handleScroll();
+          try {
+            handleScroll();
+          } catch (error) {
+            console.error('Error in scroll handler:', error);
+          }
           isScrolling = false;
         });
         isScrolling = true;
@@ -104,6 +145,7 @@ const SimpleNavbar = () => {
 
     // Cleanup
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('scroll', throttledHandleScroll);
       window.removeEventListener('resize', handleScroll);
     };
