@@ -80,50 +80,35 @@ export default function CookieConsent() {
     loadPreferences();
   }, [user]);
 
-  // Scroll detection for homepage - same logic as navbar
+  // Scroll detection for homepage - SIMPLIFIED SAME AS NAVBAR
   useEffect(() => {
     if (!isHomePage || !showBanner) {
       setIsVisible(true); // Always show on non-homepage or when banner not shown
       return;
     }
 
-    // Show cookie banner initially on homepage after small delay for better UX
-    const initialScrollY = window.scrollY;
-    setIsVisible(initialScrollY > 50); // Higher threshold - only hide when truly at top
+    // Hide cookie banner initially on homepage
+    setIsVisible(false);
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Show cookie banner when scrolling down past 50px (better threshold)
-      if (currentScrollY > 50) {
+      // Simple logic: show cookie banner when user scrolls down from top
+      if (currentScrollY > 100) {
         setIsVisible(true);
-      }
-      // Hide cookie banner only when at very top (within 50px)
-      else if (currentScrollY <= 50) {
+      } else {
         setIsVisible(false);
       }
       
       setLastScrollY(currentScrollY);
     };
 
-    // Throttle scroll events for better performance
-    let ticking = false;
-    const throttledHandleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     return () => {
-      window.removeEventListener('scroll', throttledHandleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [isHomePage, lastScrollY, showBanner]);
+  }, [isHomePage, showBanner]);
 
   const savePreferences = async (prefs: CookiePreferences) => {
     try {
