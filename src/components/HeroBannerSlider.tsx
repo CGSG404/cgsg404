@@ -201,17 +201,21 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
 
               {/* Scroll Indicator - Only show on homepage */}
               {isHomePage && (
-                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-[50] animate-bounce">
-                  <div className="flex flex-col items-center text-white hover:text-casino-neon-green transition-colors cursor-pointer group"
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-[20] animate-bounce">
+                  <div className="flex flex-col items-center text-white hover:text-casino-neon-green transition-all duration-300 cursor-pointer group"
                        onClick={() => {
                          window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
                        }}>
-                    <div className="w-12 h-12 border-2 border-white rounded-full flex items-center justify-center mb-3 group-hover:border-casino-neon-green transition-all duration-300 bg-black/40 backdrop-blur-md shadow-lg">
-                      <svg className="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {/* Desktop and Mobile responsive sizing */}
+                    <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-white/80 rounded-full flex items-center justify-center mb-2 group-hover:border-casino-neon-green group-hover:shadow-lg group-hover:shadow-casino-neon-green/25 transition-all duration-300 bg-black/30 backdrop-blur-sm">
+                      <svg className="w-4 h-4 md:w-5 md:h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                       </svg>
                     </div>
-                    <span className="text-sm font-bold uppercase tracking-wider bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg">Scroll Down</span>
+                    {/* Text label - smaller and responsive */}
+                    <span className="text-xs md:text-sm font-medium uppercase tracking-wider bg-black/30 backdrop-blur-sm px-2 md:px-3 py-1 rounded-full border border-white/30 group-hover:border-casino-neon-green/50 transition-all duration-300">
+                      Scroll
+                    </span>
                   </div>
                 </div>
               )}
