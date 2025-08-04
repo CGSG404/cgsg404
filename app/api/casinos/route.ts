@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { sanitizeInput, SECURITY_HEADERS, RateLimiter } from '@/src/lib/security';
 
 // Initialize Supabase client with service role for server-side operations
 const supabase = createClient(
@@ -13,15 +14,19 @@ const supabase = createClient(
   }
 );
 
-// CORS headers for production
+// Rate limiter for API requests
+const rateLimiter = new RateLimiter(60, 60000); // 60 requests per minute
+
+// CORS headers for production with security headers
 const corsHeaders = {
-  'Access-Control-Allow-Origin': process.env.NODE_ENV === 'production' 
-    ? 'https://www.gurusingapore.com' 
+  'Access-Control-Allow-Origin': process.env.NODE_ENV === 'production'
+    ? 'https://www.gurusingapore.com'
     : '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
   'Access-Control-Allow-Credentials': 'true',
   'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600', // 5min cache, 10min stale
+  ...SECURITY_HEADERS
 };
 
 // Handle preflight OPTIONS request
@@ -32,21 +37,36 @@ export async function OPTIONS() {
   });
 }
 
-// GET /api/casinos - Optimized casino data fetching
+// GET /api/casinos - Optimized casino data fetching with security
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting check
+    const clientIP = request.headers.get('x-forwarded-for') ||
+                     request.headers.get('x-real-ip') ||
+                     request.headers.get('cf-connecting-ip') ||
+                     'anonymous';
+    if (!rateLimiter.isAllowed(clientIP)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: corsHeaders
+        }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     
-    // Parse query parameters
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '12'), 50); // Max 50 per request
-    const search = searchParams.get('search') || '';
-    const safetyIndex = searchParams.get('safetyIndex')?.split(',') || [];
+    // Parse and sanitize query parameters
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(Math.max(1, parseInt(searchParams.get('limit') || '12')), 50); // Max 50 per request
+    const search = sanitizeInput(searchParams.get('search') || '');
+    const safetyIndex = searchParams.get('safetyIndex')?.split(',').map(s => sanitizeInput(s)).filter(s => s) || [];
     const isNew = searchParams.get('isNew') === 'true';
     const isFeatured = searchParams.get('isFeatured') === 'true';
     const isHot = searchParams.get('isHot') === 'true';
-    const sortBy = searchParams.get('sortBy') || 'rating';
-    const sortOrder = searchParams.get('sortOrder') || 'desc';
+    const sortBy = sanitizeInput(searchParams.get('sortBy') || 'rating');
+    const sortOrder = sanitizeInput(searchParams.get('sortOrder') || 'desc');
 
     // Build optimized query
     let query = supabase
@@ -71,9 +91,11 @@ export async function GET(request: NextRequest) {
         casino_links(link_type, url)
       `, { count: 'exact' });
 
-    // Apply filters - only apply if values are meaningful
-    if (search && search.trim()) {
-      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,bonus.ilike.%${search}%`);
+    // Apply filters - only apply if values are meaningful and safe
+    if (search && search.trim() && search.length <= 100) {
+      // Escape special characters for SQL LIKE query
+      const escapedSearch = search.replace(/[%_]/g, '\\$&');
+      query = query.or(`name.ilike.%${escapedSearch}%,description.ilike.%${escapedSearch}%,bonus.ilike.%${escapedSearch}%`);
     }
 
     // Filter out empty strings from safetyIndex
@@ -138,24 +160,24 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Transform data to optimized format
+    // Transform data to optimized format with sanitization
     const casinos = rawCasinos?.map(casino => ({
       id: casino.id,
-      name: casino.name,
-      slug: casino.slug,
-      logo: casino.logo,
-      rating: casino.rating,
-      safetyIndex: casino.safety_index,
-      bonus: casino.bonus,
-      description: casino.description,
-      playUrl: casino.play_url,
-      isNew: casino.is_new,
-      isHot: casino.is_hot,
-      isFeatured: casino.is_featured,
-      features: casino.casino_features?.map(f => f.feature) || [],
-      badges: casino.casino_badges?.map(b => b.badge) || [],
+      name: sanitizeInput(casino.name || ''),
+      slug: sanitizeInput(casino.slug || ''),
+      logo: casino.logo || '/casino-logos/default-casino.png',
+      rating: Math.max(0, Math.min(5, casino.rating || 0)),
+      safetyIndex: sanitizeInput(casino.safety_index || 'Medium'),
+      bonus: sanitizeInput(casino.bonus || ''),
+      description: sanitizeInput(casino.description || ''),
+      playUrl: casino.play_url || '#',
+      isNew: Boolean(casino.is_new),
+      isHot: Boolean(casino.is_hot),
+      isFeatured: Boolean(casino.is_featured),
+      features: casino.casino_features?.map(f => sanitizeInput(f.feature || '')) || [],
+      badges: casino.casino_badges?.map(b => sanitizeInput(b.badge || '')) || [],
       links: {
-        bonus: casino.casino_links?.find(l => l.link_type === 'bonus')?.url || casino.play_url,
+        bonus: casino.casino_links?.find(l => l.link_type === 'bonus')?.url || casino.play_url || '#',
         review: casino.casino_links?.find(l => l.link_type === 'review')?.url || '#',
         complaint: casino.casino_links?.find(l => l.link_type === 'complaint')?.url || '#'
       },

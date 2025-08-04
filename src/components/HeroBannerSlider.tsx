@@ -7,6 +7,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
+import '@/src/styles/parallax.css';
 import ClientOnly from './ClientOnly';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -115,7 +116,7 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
   }
 
   return (
-    <div className={`relative w-full hero-banner-slider overflow-hidden group ${isHomePage ? 'h-screen' : ''}`}>
+    <div className={`${isHomePage ? 'parallax-banner' : 'relative w-full'} hero-banner-slider overflow-hidden group ${!isHomePage ? 'h-[400px] md:h-[550px] lg:h-[650px]' : ''}`}>
       <ClientOnly fallback={
         <div className={`w-full ${isHomePage ? 'h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'} bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center`}>
           <div className="text-center text-white">
@@ -151,8 +152,11 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
         {banners.map((banner, idx) => (
           <SwiperSlide key={idx}>
             <div className={`relative w-full ${isHomePage ? 'h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'}`}>
+              {/* Fallback Background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-casino-dark via-casino-darker to-purple-900 z-0" />
+              
               {/* Background Image */}
-              <div className="absolute inset-0 z-0">
+              <div className="absolute inset-0 z-5">
                 <Image
                   src={banner.img}
                   alt={banner.title}
@@ -162,13 +166,46 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
                   sizes="100vw"
                   className="object-cover scale-105 transition-transform ease-out"
                   style={{ transitionDuration: '8000ms' }}
+                  onError={(e) => {
+                    // Hide image if it fails to load, fallback background will show
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               </div>
 
-              {/* Simple Dark Overlay */}
-              <div className="absolute inset-0 bg-black/60 z-10" />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 bg-black/50 z-10" />
 
+              {/* Banner Content */}
+              <div className="absolute inset-0 z-20 flex items-center justify-center">
+                <div className="text-center text-white px-4 max-w-4xl mx-auto">
+                  {/* Highlight Text */}
+                  <div className="mb-4">
+                    <span className="inline-block bg-gradient-to-r from-casino-neon-green to-emerald-400 text-casino-dark px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider animate-pulse">
+                      {banner.highlight}
+                    </span>
+                  </div>
 
+                  {/* Main Title */}
+                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                    <span className="bg-gradient-to-r from-white via-casino-neon-green to-white bg-clip-text text-transparent">
+                      {banner.title}
+                    </span>
+                  </h1>
+
+                  {/* Subtitle */}
+                  <p className="text-xl md:text-2xl lg:text-3xl text-white/90 mb-8 font-light leading-relaxed">
+                    {banner.subtitle}
+                  </p>
+
+                  {/* CTA Button */}
+                  <Link href={banner.ctaLink}>
+                    <button className="bg-gradient-to-r from-casino-neon-green to-emerald-500 hover:from-casino-neon-green/90 hover:to-emerald-500/90 text-casino-dark font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                      {banner.cta}
+                    </button>
+                  </Link>
+                </div>
+              </div>
 
             </div>
           </SwiperSlide>

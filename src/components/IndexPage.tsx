@@ -6,6 +6,7 @@ import HeroSection from '@/src/components/HeroSection';
 import HeroSlider from '@/src/components/HeroSlider';
 import InfoCard from '@/src/components/InfoCard';
 import dynamic from 'next/dynamic';
+import '@/src/styles/parallax.css';
 
 // Dynamic import untuk mencegah hydration mismatch
 const HeroBannerSlider = dynamic(() => import('@/src/components/HeroBannerSlider'), {
@@ -64,8 +65,13 @@ const IndexPage = () => {
       </Head>
       <HeroBannerSlider isHomePage={true} />
 
-      {/* Running Text Ticker */}
-      <RunningTextTicker />
+      {/* Content Container with proper z-index and background */}
+      <div className="parallax-content">
+        {/* Smooth transition overlay */}
+        <div className="content-overlay">
+          {/* Running Text Ticker */}
+          <RunningTextTicker />
+        </div>
 
       {/* Divider after Ticker */}
       <SimpleDivider variant="default" spacing="lg" />
@@ -158,9 +164,10 @@ const IndexPage = () => {
       {/* Divider before Footer */}
       <SimpleDivider variant="minimal" spacing="xl" />
 
-      <Suspense fallback={<FooterSkeleton />}>
-        <Footer />
-      </Suspense>
+        <Suspense fallback={<FooterSkeleton />}>
+          <Footer />
+        </Suspense>
+      </div>
       </div>
     </MaintenanceWrapper>
   );

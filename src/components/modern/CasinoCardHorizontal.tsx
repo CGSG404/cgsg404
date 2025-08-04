@@ -28,6 +28,7 @@ import { Label } from '@/src/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select';
 import { supabase } from '@/src/lib/supabaseClient';
 import { toast } from 'sonner';
+import { sanitizeInput, sanitizeUrl, validateReportData } from '@/src/lib/security';
 
 interface CasinoV2 {
   id: number;
@@ -152,20 +153,30 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
     try {
       setIsSubmitting(true);
       
+      // Validate and sanitize input data
+      const reportData = {
+        casino_name: casino.name,
+        status: reportStatus,
+        summary: reportSummary,
+        url: casino.links.review || '#',
+        last_reported: new Date().toISOString().split('T')[0]
+      };
+
+      const validation = validateReportData(reportData);
+      
+      if (!validation.isValid) {
+        toast.error(`Validation failed: ${validation.errors?.join(', ')}`);
+        return;
+      }
+
       // Get auth headers
       const headers = await getAuthHeaders();
       
-      // Submit to existing admin casino reports API
+      // Submit sanitized data to existing admin casino reports API
       const response = await fetch('/api/admin/casino-reports', {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-          casino_name: casino.name,
-          status: reportStatus,
-          last_reported: new Date().toISOString().split('T')[0],
-          summary: reportSummary,
-          url: casino.links.review || '#'
-        })
+        body: JSON.stringify(validation.sanitizedData)
       });
 
       const result = await response.json();
@@ -222,7 +233,7 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
           {/* Casino Title */}
           <div className="mb-4">
             <h3 className="text-2xl font-bold text-white mb-2">
-              {casino.name}
+              {sanitizeInput(casino.name)}
             </h3>
           </div>
 
@@ -327,7 +338,7 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
               <span className="font-semibold text-green-300">BONUS:</span>
             </div>
             <p className="text-green-200 font-bold text-lg">
-              {casino.bonus}
+              {sanitizeInput(casino.bonus)}
             </p>
             <p className="text-xs text-green-400 mt-1">*T&Cs apply</p>
           </div>
@@ -338,7 +349,7 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
               asChild
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold flex items-center gap-2"
             >
-              <a href={casino.playUrl} target="_blank" rel="noopener noreferrer">
+              <a href={sanitizeUrl(casino.playUrl)} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="w-4 h-4" />
                 Visit Casino
               </a>
@@ -349,7 +360,7 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
               variant="outline"
               className="border-purple-600 text-purple-600 hover:bg-purple-50 px-6 py-2 rounded-lg font-semibold flex items-center gap-2"
             >
-              <a href={casino.links.review} target="_blank" rel="noopener noreferrer">
+              <a href={sanitizeUrl(casino.links.review)} target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="w-4 h-4" />
                 Read Review
               </a>
@@ -367,7 +378,7 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Report Issue with {casino.name}</DialogTitle>
+                  <DialogTitle>Report Issue with {sanitizeInput(casino.name)}</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
@@ -389,7 +400,7 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
                       id="report-summary"
                       placeholder="Please describe the issues with this casino..."
                       value={reportSummary}
-                      onChange={(e) => setReportSummary(e.target.value)}
+                      onChange={(e) => setReportSummary(sanitizeInput(e.target.value))}
                       className="min-h-[100px]"
                     />
                   </div>

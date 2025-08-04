@@ -1,0 +1,142 @@
+/* Parallax Banner Styles - Production Optimized */
+.parallax-banner {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for better mobile support */
+  z-index: 10; /* Increased to accommodate internal z-index hierarchy */
+  overflow: hidden;
+}
+
+/* Ensure banner is visible */
+.parallax-banner .swiper {
+  height: 100vh !important;
+  width: 100% !important;
+}
+
+.parallax-banner .swiper-slide {
+  height: 100vh !important;
+  width: 100% !important;
+}
+
+/* Ensure navbar stays above parallax banner */
+nav {
+  position: relative;
+  z-index: 50; /* Navbar stays above banner (z-index: 1) */
+}
+
+/* Ensure mobile menu stays above parallax */
+nav .md\:hidden div[class*="absolute"] {
+  z-index: 60;
+}
+
+.parallax-content {
+  position: relative;
+  z-index: 20; /* Above banner (z-10) to show content properly */
+  background: linear-gradient(135deg, #0f1419 0%, #1a2332 50%, #0f1419 100%);
+  min-height: 100vh;
+  transition: transform 0.3s ease-out;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced parallax effect with transform - Performance Optimized */
+@media (prefers-reduced-motion: no-preference) {
+  .parallax-banner .swiper-slide img {
+    transform: scale(1.1);
+    transition: transform 4s ease-out; /* Reduced from 8s for better performance */
+    will-change: transform; /* Optimize for GPU acceleration */
+  }
+
+  /* Only apply hover effects on devices that support hover */
+  @media (hover: hover) {
+    .parallax-banner:hover .swiper-slide img {
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* Responsive adjustments - Cleaned up redundancies */
+@media (max-width: 1024px) {
+  .parallax-content {
+    margin-top: 100vh;
+    margin-top: 100dvh; /* Dynamic viewport for mobile */
+  }
+
+  .content-overlay {
+    margin-top: -150px;
+    padding-top: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .parallax-content {
+    margin-top: 100vh;
+    margin-top: 100dvh; /* Dynamic viewport for mobile */
+  }
+
+  .content-overlay {
+    margin-top: -120px;
+    padding-top: 120px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(15, 20, 25, 0.9) 15%,
+      #0f1419 35%
+    );
+  }
+}
+
+@media (max-width: 640px) {
+  .parallax-content {
+    margin-top: 100vh;
+    margin-top: 100dvh; /* Dynamic viewport for mobile */
+  }
+
+  .content-overlay {
+    margin-top: -100px;
+    padding-top: 100px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(15, 20, 25, 0.95) 10%,
+      #0f1419 30%
+    );
+  }
+
+  /* Disable parallax effect on very small screens for performance */
+  @media (max-width: 480px) {
+    .parallax-banner .swiper-slide img {
+      transform: scale(1) !important;
+      transition: none !important;
+    }
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .parallax-banner .swiper-slide img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Ensure content covers banner properly */
+.content-overlay {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(15, 20, 25, 0.8) 20%,
+    #0f1419 40%
+  );
+  min-height: 200px;
+  position: relative;
+  z-index: 25; /* Above content to create smooth transition */
+  margin-top: -200px;
+  padding-top: 200px;
+}
