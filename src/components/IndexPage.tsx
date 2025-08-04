@@ -5,6 +5,8 @@ import Head from 'next/head';
 import HeroSection from '@/src/components/HeroSection';
 import HeroSlider from '@/src/components/HeroSlider';
 import InfoCard from '@/src/components/InfoCard';
+import SimpleNavbar from '@/src/components/SimpleNavbar';
+import CookieConsent from '@/src/components/CookieConsent';
 import '@/src/styles/parallax.css';
 
 // Direct import untuk HeroBannerSlider - no more dynamic import
@@ -50,6 +52,10 @@ const IndexPage = () => {
         <meta name="description" content="Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      
+      {/* Add Navbar */}
+      <SimpleNavbar />
+      
       <HeroBannerSlider isHomePage={true} />
 
       {/* Content Container with proper z-index and background */}
@@ -156,6 +162,10 @@ const IndexPage = () => {
         </Suspense>
       </div>
       </div>
+      
+      {/* Add Cookie Consent */}
+      <CookieConsent />
+    </div>
   );
 };
 
