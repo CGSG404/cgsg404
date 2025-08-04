@@ -119,7 +119,10 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
   }
 
   return (
-    <div className={`${isHomePage ? 'parallax-banner' : 'relative w-full'} hero-banner-slider overflow-hidden group ${!isHomePage ? 'h-[400px] md:h-[550px] lg:h-[650px]' : ''}`}>
+    <div 
+      data-banner="true"
+      className={`${isHomePage ? 'parallax-banner' : 'relative w-full'} hero-banner-slider overflow-hidden group ${!isHomePage ? 'h-[400px] md:h-[550px] lg:h-[650px]' : ''}`}
+    >
       <Swiper
         modules={[Autoplay, EffectFade]}
         autoplay={{
