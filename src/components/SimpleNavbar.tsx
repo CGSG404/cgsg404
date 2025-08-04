@@ -23,50 +23,35 @@ const SimpleNavbar = () => {
     setIsClient(true);
   }, []);
 
-  // Scroll detection for homepage
+  // Scroll detection for homepage - SIMPLIFIED
   useEffect(() => {
     if (!isHomePage) {
       setIsVisible(true); // Always show navbar on non-homepage
       return;
     }
 
-    // Show navbar initially on homepage after small delay for better UX
-    const initialScrollY = window.scrollY;
-    setIsVisible(initialScrollY > 50); // Higher threshold - only hide when truly at top
+    // Hide navbar initially on homepage
+    setIsVisible(false);
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Show navbar when scrolling down past 50px (better threshold)
-      if (currentScrollY > 50) {
+      // Simple logic: show navbar when user scrolls down from top
+      if (currentScrollY > 100) {
         setIsVisible(true);
-      }
-      // Hide navbar only when at very top (within 50px)
-      else if (currentScrollY <= 50) {
+      } else {
         setIsVisible(false);
       }
       
       setLastScrollY(currentScrollY);
     };
 
-    // Throttle scroll events for better performance
-    let ticking = false;
-    const throttledHandleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     return () => {
-      window.removeEventListener('scroll', throttledHandleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [isHomePage, lastScrollY]);
+  }, [isHomePage]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
