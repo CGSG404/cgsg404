@@ -3,7 +3,19 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Star, Gift, Users, BookOpen, MessageCircle, Newspaper, User, LogOut, AlertTriangle } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Star,
+  Gift,
+  Users,
+  BookOpen,
+  MessageCircle,
+  Newspaper,
+  User,
+  LogOut,
+  AlertTriangle,
+} from 'lucide-react';
 import { useAuth } from '@/src/contexts/AuthContext';
 import AdminButton from '@/src/components/AdminButton';
 
@@ -23,98 +35,79 @@ const SimpleNavbar = () => {
     setIsClient(true);
   }, []);
 
-  // Scroll detection for homepage - IMPROVED VERSION
+  // Simplified scroll detection for homepage - FIXED VERSION
   useEffect(() => {
     if (!isHomePage) {
       setIsVisible(true); // Always show navbar on non-homepage
       return;
     }
 
-    // Get banner height for better detection
+    // Simplified banner height detection - more reliable
     const getBannerHeight = () => {
-      const bannerElement = document.querySelector('.hero-banner-slider') || 
-                           document.querySelector('[data-banner="true"]') ||
-                           document.querySelector('.swiper-container') ||
-                           document.querySelector('.parallax-banner');
-      
-      if (bannerElement) {
-        const rect = bannerElement.getBoundingClientRect();
-        // Only use banner height if it's reasonable (not 0 or too small)
-        if (rect.height > 200) {
-          return rect.height;
+      // Try specific selectors in order of priority
+      const selectors = [
+        '.hero-banner-slider', // Primary selector
+        '.parallax-banner', // Homepage specific
+        '[data-banner="true"]', // Data attribute fallback
+      ];
+
+      for (const selector of selectors) {
+        const element = document.querySelector(selector);
+        if (element) {
+          const height = element.getBoundingClientRect().height;
+          if (height > 300) {
+            // Reasonable minimum height
+            return height;
+          }
         }
       }
-      
-      // Fallback to viewport height for fullscreen banners
+
+      // Fallback to viewport height for fullscreen homepage banners
       return window.innerHeight;
     };
 
-    // Check initial scroll position with banner consideration
-    const checkVisibility = () => {
-      const currentScrollY = window.scrollY;
-      const bannerHeight = getBannerHeight();
-      const viewportHeight = window.innerHeight;
-      const threshold = Math.min(bannerHeight * 0.7, viewportHeight * 0.8); // Use smaller of banner 70% or viewport 80%
-      
-      const shouldBeVisible = currentScrollY > threshold && currentScrollY > 150; // Increased minimum scroll threshold
-      setIsVisible(shouldBeVisible);
-      setLastScrollY(currentScrollY);
-      
-      // Debug logging (remove in production)
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Navbar Debug:', {
-          scrollY: currentScrollY,
-          bannerHeight,
-          viewportHeight,
-          threshold,
-          shouldBeVisible,
-          isVisible: shouldBeVisible
-        });
-      }
-    };
-
-    // Initial check with delay to ensure banner is rendered
-    const initialCheck = () => {
-      setTimeout(() => {
-        checkVisibility();
-      }, 300); // Increased delay to ensure banner is fully rendered and positioned
-    };
-    initialCheck();
-
+    // Simplified scroll handler - no complex calculations
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const bannerHeight = getBannerHeight();
-      const viewportHeight = window.innerHeight;
-      const threshold = Math.min(bannerHeight * 0.7, viewportHeight * 0.8); // Use smaller of banner 70% or viewport 80%
-      
-      // Show navbar when scrolling past threshold for better UX
-      const shouldBeVisible = currentScrollY > threshold && currentScrollY > 150; // Increased minimum scroll threshold
-      
-      // Only update if state actually changes to prevent unnecessary re-renders
+
+      // Simple threshold: 60% of banner height, minimum 200px
+      const threshold = Math.max(bannerHeight * 0.6, 200);
+
+      const shouldBeVisible = currentScrollY > threshold;
+
+      // Only update if state actually changes
       if (shouldBeVisible !== isVisible) {
         setIsVisible(shouldBeVisible);
       }
-      
+
       setLastScrollY(currentScrollY);
     };
 
-    // Add event listener with debouncing for better performance
-    let scrollTimeout: NodeJS.Timeout;
-    const debouncedHandleScroll = () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        handleScroll();
-      }, 10); // Slightly increased debounce to prevent flickering
+    // Initial check - no delay, immediate execution
+    handleScroll();
+
+    // Add throttled scroll listener for better performance
+    let isScrolling = false;
+    const throttledHandleScroll = () => {
+      if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          isScrolling = false;
+        });
+        isScrolling = true;
+      }
     };
 
-    window.addEventListener('scroll', debouncedHandleScroll, { passive: true });
-    
+    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true }); // Handle resize
+
     // Cleanup
     return () => {
-      window.removeEventListener('scroll', debouncedHandleScroll);
-      clearTimeout(scrollTimeout);
+      window.removeEventListener('scroll', throttledHandleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
-  }, [isHomePage]);
+  }, [isHomePage, isVisible]); // Add isVisible dependency
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -146,11 +139,17 @@ const SimpleNavbar = () => {
   };
 
   return (
-    <nav className={`glass-effect border-b border-casino-border-subtle/30 ${
-      isHomePage ? 'fixed' : 'sticky'
-    } top-0 z-[9999] backdrop-blur-xl transition-all duration-700 ease-out ${
-      isHomePage && !isVisible ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
-    } w-full ${isHomePage && isVisible ? 'bg-casino-dark/95 shadow-xl border-casino-neon-green/20' : 'bg-transparent'}`}>
+    <nav
+      className={`glass-effect border-b border-casino-border-subtle/30 ${
+        isHomePage ? 'fixed' : 'sticky'
+      } top-0 z-[9999] backdrop-blur-xl transition-all duration-700 ease-out ${
+        isHomePage && !isVisible ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
+      } w-full ${
+        isHomePage && isVisible
+          ? 'bg-casino-dark/95 shadow-xl border-casino-neon-green/20'
+          : 'bg-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -160,31 +159,54 @@ const SimpleNavbar = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-xl text-casino-neon-green font-bold">CGSG</span>
-              <span className="text-xs text-casino-neon-green/70 font-medium -mt-1">Casino Guide</span>
+              <span className="text-xs text-casino-neon-green/70 font-medium -mt-1">
+                Casino Guide
+              </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/top-casinos" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+            <Link
+              href="/top-casinos"
+              className="text-white/90 hover:text-casino-neon-green transition-colors font-medium"
+            >
               Best Casinos
             </Link>
-            <Link href="/casinos" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+            <Link
+              href="/casinos"
+              className="text-white/90 hover:text-casino-neon-green transition-colors font-medium"
+            >
               Casinos
             </Link>
-            <Link href="/reviews" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+            <Link
+              href="/reviews"
+              className="text-white/90 hover:text-casino-neon-green transition-colors font-medium"
+            >
               Reviews
             </Link>
-            <Link href="/list-report" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+            <Link
+              href="/list-report"
+              className="text-white/90 hover:text-casino-neon-green transition-colors font-medium"
+            >
               List Report
             </Link>
-            <Link href="/forum" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+            <Link
+              href="/forum"
+              className="text-white/90 hover:text-casino-neon-green transition-colors font-medium"
+            >
               Forum
             </Link>
-            <Link href="/guide" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+            <Link
+              href="/guide"
+              className="text-white/90 hover:text-casino-neon-green transition-colors font-medium"
+            >
               Guide
             </Link>
-            <Link href="/news" className="text-white/90 hover:text-casino-neon-green transition-colors font-medium">
+            <Link
+              href="/news"
+              className="text-white/90 hover:text-casino-neon-green transition-colors font-medium"
+            >
               News
             </Link>
           </div>
@@ -200,12 +222,12 @@ const SimpleNavbar = () => {
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-casino-neon-green rounded-full flex items-center justify-center">
                       <span className="text-casino-dark font-semibold text-sm">
-                        {user.email && typeof user.email === 'string' ? user.email.charAt(0).toUpperCase() : 'U'}
+                        {user.email && typeof user.email === 'string'
+                          ? user.email.charAt(0).toUpperCase()
+                          : 'U'}
                       </span>
                     </div>
-                    <span className="text-white text-sm font-medium">
-                      {getDisplayName()}
-                    </span>
+                    <span className="text-white text-sm font-medium">{getDisplayName()}</span>
                   </div>
                   <button
                     onClick={handleSignOut}
@@ -234,11 +256,7 @@ const SimpleNavbar = () => {
               onClick={toggleMobileMenu}
               className="p-2.5 text-white/80 hover:text-casino-neon-green hover:bg-casino-neon-green/10 transition-colors rounded-lg"
             >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -252,7 +270,7 @@ const SimpleNavbar = () => {
                 <div className="text-xs font-semibold text-casino-neon-green/70 uppercase tracking-wider mb-4">
                   Navigation
                 </div>
-                
+
                 <Link
                   href="/top-casinos"
                   onClick={() => setMobileMenuOpen(false)}
@@ -342,7 +360,9 @@ const SimpleNavbar = () => {
                     <div className="flex items-center space-x-3 p-3 bg-casino-neon-green/10 rounded-lg border border-casino-neon-green/20">
                       <div className="w-10 h-10 bg-casino-neon-green rounded-full flex items-center justify-center">
                         <span className="text-casino-dark font-semibold">
-                          {user.email && typeof user.email === 'string' ? user.email.charAt(0).toUpperCase() : 'U'}
+                          {user.email && typeof user.email === 'string'
+                            ? user.email.charAt(0).toUpperCase()
+                            : 'U'}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
@@ -355,10 +375,7 @@ const SimpleNavbar = () => {
 
                     {/* Admin Button - Only show for admin users */}
                     {isClient && (
-                      <AdminButton
-                        variant="mobile"
-                        onClick={() => setMobileMenuOpen(false)}
-                      />
+                      <AdminButton variant="mobile" onClick={() => setMobileMenuOpen(false)} />
                     )}
 
                     {/* Sign Out Button */}
