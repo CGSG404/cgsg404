@@ -1,5 +1,6 @@
 "use client";
 
+import SimpleNavbar from '@/src/components/SimpleNavbar';
 import Footer from '@/components/Footer';
 import CasinoSlideshow from '@/components/CasinoSlideshow';
 import TopCasinosLeaderboard from '@/components/TopCasinosLeaderboard';
@@ -13,6 +14,7 @@ const GamesPage: React.FC = () => {
   return (
     <MaintenanceWrapper>
       <div className="min-h-screen bg-casino-dark">
+      <SimpleNavbar />
       {/* Hero Banner Slider for Games Page */}
       <HeroBannerSliderSimple pageType="games" />
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import SimpleNavbar from '@/src/components/SimpleNavbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -211,6 +212,7 @@ export default function CasinoReportsPage() {
   return (
     <MaintenanceWrapper>
       <div className="min-h-screen bg-casino-dark">
+        <SimpleNavbar />
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="text-center mb-8">

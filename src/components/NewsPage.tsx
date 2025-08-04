@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Head from 'next/head';
-import Navbar from '@/components/Navbar';
+import SimpleNavbar from '@/src/components/SimpleNavbar';
 import Footer from '@/components/Footer';
 import { Calendar, User, Tag } from 'lucide-react';
 import Link from 'next/link';
@@ -51,6 +51,7 @@ const NewsPage = () => {
   return (
     <MaintenanceWrapper>
       <div className="min-h-screen bg-casino-dark text-white">
+      <SimpleNavbar />
       <Head>
         <title>Casino News</title>
       </Head>

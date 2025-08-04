@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Head from 'next/head';
-import Navbar from '@/src/components/Navbar';
+import SimpleNavbar from '@/src/components/SimpleNavbar';
 import Footer from '@/src/components/Footer';
 import ReviewsHero from '@/src/components/reviews/ReviewsHero';
 import ReviewsGrid from '@/src/components/reviews/ReviewsGrid';
@@ -22,6 +22,10 @@ const ReviewsPage = () => {
         <title>Online Casino Reviews - Expert Ratings & Reports | CGSG</title>
         <meta name="description" content="Read our in-depth online casino reviews. We provide expert ratings on games, bonuses, security, and customer support to help you choose the best casino." />
       </Head>
+      
+      {/* Add SimpleNavbar */}
+      <SimpleNavbar />
+      
       <main className="relative overflow-hidden">
         <ReviewsHero />
         <div className="py-16">
