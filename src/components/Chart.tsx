@@ -1,5 +1,5 @@
 
-import { Card } from '@/components/ui/card';
+import { Card } from '@/src/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 const Chart = () => {

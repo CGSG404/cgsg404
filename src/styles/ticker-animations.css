@@ -1,0 +1,81 @@
+/* Ticker Animation Styles */
+@keyframes scroll-seamless {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll-seamless {
+  animation: scroll-seamless 60s linear infinite;
+  display: flex;
+  will-change: transform;
+}
+
+.animate-scroll-seamless.paused {
+  animation-play-state: paused;
+}
+
+.animate-scroll-seamless.running {
+  animation-play-state: running;
+}
+
+/* Smooth fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fade-in 0.8s ease-out 0.2s both;
+}
+
+/* Pulse glow effect */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 255, 153, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 153, 0.8), 0 0 30px rgba(0, 255, 153, 0.6);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Neon gradient background */
+.bg-neon-gradient {
+  background: linear-gradient(45deg, 
+    rgba(0, 255, 153, 0.1) 0%, 
+    rgba(139, 92, 246, 0.1) 50%, 
+    rgba(0, 255, 153, 0.1) 100%);
+}
+
+/* Gradient text effect */
+.gradient-text {
+  background: linear-gradient(135deg, #00ff99, #00cc7a, #00ff99);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

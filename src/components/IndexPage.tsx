@@ -5,21 +5,10 @@ import Head from 'next/head';
 import HeroSection from '@/src/components/HeroSection';
 import HeroSlider from '@/src/components/HeroSlider';
 import InfoCard from '@/src/components/InfoCard';
-import dynamic from 'next/dynamic';
 import '@/src/styles/parallax.css';
 
-// Dynamic import untuk mencegah hydration mismatch
-const HeroBannerSlider = dynamic(() => import('@/src/components/HeroBannerSlider'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[400px] md:h-[550px] lg:h-[650px] bg-casino-dark flex items-center justify-center">
-      <div className="text-center text-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-casino-neon-green mx-auto mb-4"></div>
-        <p className="text-lg">Loading banner...</p>
-      </div>
-    </div>
-  ),
-});
+// Direct import untuk HeroBannerSlider - no more dynamic import
+import HeroBannerSlider from '@/src/components/HeroBannerSlider';
 import BannerInfo from '@/src/components/BannerInfo';
 import RunningTextTicker from '@/src/components/RunningTextTicker';
 import { Gift, PartyPopper, Ticket } from 'lucide-react';
@@ -31,7 +20,6 @@ import {
 import Divider from '@/src/components/ui/Divider';
 import SimpleDivider from '@/src/components/ui/SimpleDivider';
 import SectionDivider from '@/src/components/ui/SectionDivider';
-import MaintenanceWrapper from '@/src/components/MaintenanceWrapper';
 
 // Progressive Loading - Priority-based component loading
 const LogoSlider = lazy(() =>
@@ -56,8 +44,7 @@ const IndexPage = () => {
 // Semua logic dan UI utama Index sudah di sini.
 
   return (
-    <MaintenanceWrapper>
-      <div className="min-h-screen bg-casino-dark">
+    <div className="min-h-screen bg-casino-dark">
       <Head>
         <title>Guru Singapore - Your Ultimate Guide to Online Casinos & Bonuses</title>
         <meta name="description" content="Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling." />
@@ -169,7 +156,6 @@ const IndexPage = () => {
         </Suspense>
       </div>
       </div>
-    </MaintenanceWrapper>
   );
 };
 

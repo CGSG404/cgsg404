@@ -36,7 +36,7 @@ export default function Providers({ children }: { children: ReactNode }) {
             <AdminProvider>
               <TooltipProvider>
                 {children}
-                <Toaster position="top-right" />
+                <Toaster position="top-right" className="z-[100]" />
               </TooltipProvider>
             </AdminProvider>
           </AuthProvider>
