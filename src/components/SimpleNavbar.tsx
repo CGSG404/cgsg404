@@ -22,13 +22,15 @@ import AdminButton from '@/src/components/AdminButton';
 const SimpleNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); // Start hidden on homepage
   const [lastScrollY, setLastScrollY] = useState(0);
   const { user, signOut } = useAuth();
   const pathname = usePathname();
 
   // Check if current page is homepage
   const isHomePage = pathname === '/';
+  
+  // Initialize visibility based on page type
+  const [isVisible, setIsVisible] = useState(true);
 
   // Ensure client-side rendering for dynamic content
   useEffect(() => {
@@ -184,12 +186,14 @@ const SimpleNavbar = () => {
     <nav
       className={`glass-effect border-b border-casino-border-subtle/30 ${
         isHomePage ? 'fixed' : 'sticky'
-      } top-0 z-[9999] backdrop-blur-xl transition-all duration-700 ease-out ${
+      } top-0 z-50 backdrop-blur-xl transition-all duration-500 ease-out ${
         isHomePage && !isVisible ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
       } w-full ${
         isHomePage && isVisible
           ? 'bg-casino-dark/95 shadow-xl border-casino-neon-green/20'
-          : 'bg-transparent'
+          : isHomePage 
+          ? 'bg-transparent'
+          : 'bg-casino-dark/90'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
