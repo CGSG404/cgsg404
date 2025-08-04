@@ -201,17 +201,17 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
 
               {/* Scroll Indicator - Only show on homepage */}
               {isHomePage && (
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-[15] animate-bounce">
-                  <div className="flex flex-col items-center text-white/90 hover:text-casino-neon-green transition-colors cursor-pointer group"
+                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-[50] animate-bounce">
+                  <div className="flex flex-col items-center text-white hover:text-casino-neon-green transition-colors cursor-pointer group"
                        onClick={() => {
                          window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
                        }}>
-                    <div className="w-10 h-10 border-2 border-current rounded-full flex items-center justify-center mb-3 group-hover:border-casino-neon-green transition-all duration-300 bg-black/20 backdrop-blur-sm">
-                      <svg className="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 border-2 border-white rounded-full flex items-center justify-center mb-3 group-hover:border-casino-neon-green transition-all duration-300 bg-black/40 backdrop-blur-md shadow-lg">
+                      <svg className="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                       </svg>
                     </div>
-                    <span className="text-sm font-medium uppercase tracking-wider bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full">Scroll Down</span>
+                    <span className="text-sm font-bold uppercase tracking-wider bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg">Scroll Down</span>
                   </div>
                 </div>
               )}

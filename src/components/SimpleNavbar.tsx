@@ -29,8 +29,8 @@ const SimpleNavbar = () => {
   // Check if current page is homepage
   const isHomePage = pathname === '/';
 
-  // Initialize visibility: always true for non-homepage, false for homepage
-  const [isVisible, setIsVisible] = useState(true);
+  // Initialize visibility: always true for non-homepage, true for homepage initially
+  const [isVisible, setIsVisible] = useState(!isHomePage || typeof window === 'undefined');
 
   // Ensure client-side rendering for dynamic content
   useEffect(() => {
@@ -39,6 +39,9 @@ const SimpleNavbar = () => {
 
   // Page-specific navbar behavior
   useEffect(() => {
+    // Ensure we're on client side
+    if (typeof window === 'undefined') return;
+    
     console.log(`🔍 Navbar: Page changed to ${pathname}, isHomePage: ${isHomePage}`);
 
     if (!isHomePage) {
@@ -48,25 +51,32 @@ const SimpleNavbar = () => {
       return;
     }
 
-    // Homepage only: Hide navbar at top, show when scrolling down
+    // Homepage only: Show navbar initially, then hide/show based on scroll
     console.log('🏠 Homepage detected, setting up scroll behavior');
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const shouldShow = scrollY > window.innerHeight * 0.8;
+      const shouldShow = scrollY > window.innerHeight * 0.3; // Reduced threshold
       setIsVisible(shouldShow);
+      console.log(`🏠 Scroll: ${scrollY}, shouldShow: ${shouldShow}`);
     };
 
-    // Set initial state for homepage
-    const initialShow = window.scrollY > window.innerHeight * 0.8;
-    console.log(`🏠 Homepage initial state: scrollY=${window.scrollY}, shouldShow=${initialShow}`);
-    setIsVisible(initialShow);
+    // Set initial state for homepage - show initially
+    setIsVisible(true);
 
-    // Add scroll listener only for homepage
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Add scroll listener for homepage after a short delay
+    const timer = setTimeout(() => {
+      const initialScrollY = window.scrollY;
+      const initialShow = initialScrollY > window.innerHeight * 0.3;
+      console.log(`🏠 Homepage initial state: scrollY=${initialScrollY}, shouldShow=${initialShow}`);
+      setIsVisible(initialShow);
+      
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }, 1000); // Give time for page to load
 
     // Cleanup
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [isHomePage, pathname]); // Add pathname to dependencies
@@ -100,22 +110,19 @@ const SimpleNavbar = () => {
     return 'User';
   };
 
+  // Debug info
+  console.log('SimpleNavbar render:', { pathname, isHomePage, isVisible, isClient });
+
   return (
     <nav
       className={`glass-effect border-b border-casino-border-subtle/30 ${
         isHomePage ? 'fixed' : 'sticky'
       } top-0 z-50 backdrop-blur-xl w-full transition-all duration-300 ease-in-out ${
-        // Visibility logic: hide only on homepage when not scrolled
-        isHomePage && !isVisible
-          ? '-translate-y-full opacity-0 pointer-events-none'
-          : 'translate-y-0 opacity-100 pointer-events-auto'
+        // Simplified visibility logic: always show navbar
+        'translate-y-0 opacity-100 pointer-events-auto'
       } ${
-        // Background logic: different styles per page type
-        !isHomePage
-          ? 'bg-casino-dark/90 shadow-lg' // Non-homepage: always dark background
-          : isVisible
-          ? 'bg-casino-dark/95 shadow-xl border-casino-neon-green/20' // Homepage scrolled
-          : 'bg-transparent' // Homepage top
+        // Background logic: always use dark background for visibility
+        'bg-casino-dark/95 shadow-lg'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
