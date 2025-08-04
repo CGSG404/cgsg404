@@ -1,83 +1,67 @@
-import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import { type ReactNode } from 'react';
-import ClientLayout from './ClientLayout';
-import SimpleNavbar from '@/src/components/SimpleNavbar';
-import Providers from './providers';
-import CookieConsent from '@/src/components/CookieConsent';
-import SimpleAuthError from '@/src/components/SimpleAuthError';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Providers from "./providers";
+import PerformanceMonitor from "@/src/components/PerformanceMonitor";
 
-import './globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-  display: 'swap', // Optimize font loading
-  preload: true, // Preload for better performance
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-  display: 'swap', // Optimize font loading
-  preload: false, // Don't preload mono font (less critical)
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: {
-    default: 'CGSG - Casino Guide Singapore',
-    template: '%s | CGSG',
+  title: "GuruSingapore - Your Ultimate Guide to Online Casinos & Bonuses",
+  description: "Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling.",
+  keywords: "casino singapore, online casino, casino bonus, free credit, casino guide, gambling singapore",
+  authors: [{ name: "GuruSingapore Team" }],
+  creator: "GuruSingapore",
+  publisher: "GuruSingapore",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
-  description: 'Your trusted guide to online casinos in Singapore.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://gurusingapore.com'),
-
-  // Performance and SEO optimizations
-  keywords: ['casino', 'singapore', 'online casino', 'gambling', 'slots', 'poker'],
-  authors: [{ name: 'CGSG Team' }],
-  creator: 'CGSG',
-  publisher: 'CGSG',
-
-  // Open Graph
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://gurusingapore.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    type: 'website',
-    locale: 'en_SG',
-    url: 'https://gurusingapore.com',
-    siteName: 'CGSG - Casino Guide Singapore',
-    title: 'CGSG - Casino Guide Singapore',
-    description: 'Your trusted guide to online casinos in Singapore.',
+    title: "GuruSingapore - Your Ultimate Guide to Online Casinos & Bonuses",
+    description: "Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling.",
+    url: "/",
+    siteName: "GuruSingapore",
+    locale: "en_US",
+    type: "website",
   },
-
-  // Twitter
   twitter: {
-    card: 'summary_large_image',
-    title: 'CGSG - Casino Guide Singapore',
-    description: 'Your trusted guide to online casinos in Singapore.',
+    card: "summary_large_image",
+    title: "GuruSingapore - Your Ultimate Guide to Online Casinos & Bonuses",
+    description: "Find the best online casinos, exclusive bonuses, free credits, and expert reviews. CGSG is your trusted source for safe and exciting online gambling.",
   },
-
-  // Performance hints
-  other: {
-    'theme-color': '#00ff99',
-    'color-scheme': 'dark',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
   },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-b from-[#0e181c] via-[#0e181c]/90 to-black min-h-screen`}
-      >
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
         <Providers>
-          <SimpleNavbar />
-          <ClientLayout>{children}</ClientLayout>
-          <CookieConsent />
-          <SimpleAuthError />
+          <PerformanceMonitor />
+          {children}
         </Providers>
       </body>
     </html>

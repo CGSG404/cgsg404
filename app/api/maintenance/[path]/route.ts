@@ -99,50 +99,6 @@ export async function GET(
         error: dbError instanceof Error ? dbError.message : 'Database connection failed'
       });
     }
-
-    try {
-      const { data, error } = await supabase.rpc('get_page_maintenance_status', {
-        page_path_param: actualPath
-      });
-
-      if (error) {
-        console.error('❌ Database RPC error:', error);
-        
-        // Fallback: return not in maintenance if database fails
-        return NextResponse.json({
-          is_maintenance: false,
-          maintenance_message: null,
-          fallback: true,
-          error: error.message
-        });
-      }
-
-      console.log('✅ Database response:', data);
-
-      // If no data found, assume page is not in maintenance
-      if (!data || data.length === 0) {
-        console.log('📝 No maintenance data found, defaulting to not in maintenance');
-        return NextResponse.json({
-          is_maintenance: false,
-          maintenance_message: null
-        });
-      }
-
-      return NextResponse.json({
-        is_maintenance: data[0].is_maintenance,
-        maintenance_message: data[0].maintenance_message
-      });
-    } catch (dbError) {
-      console.error('❌ Database connection error:', dbError);
-      
-      // Fallback: return not in maintenance if database fails (fail-safe)
-      return NextResponse.json({
-        is_maintenance: false,
-        maintenance_message: null,
-        fallback: true,
-        error: dbError instanceof Error ? dbError.message : 'Database connection failed'
-      });
-    }
   } catch (error) {
     console.error('❌ Unexpected error in maintenance check:', error);
     

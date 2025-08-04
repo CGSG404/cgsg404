@@ -88,15 +88,23 @@ body {
 }
 
 .animate-scroll-seamless {
-  animation: scroll-seamless 120s linear infinite;
+  animation: scroll-seamless 90s linear infinite;
   display: flex;
   width: max-content;
+  will-change: transform;
 }
 
-/* Mobile faster animation */
+/* Mobile faster animation with reduced motion support */
 @media (max-width: 768px) {
   .animate-scroll-seamless {
-    animation: scroll-seamless 80s linear infinite;
+    animation: scroll-seamless 60s linear infinite;
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-seamless {
+    animation: scroll-seamless 120s linear infinite;
   }
 }
 
@@ -107,6 +115,50 @@ body {
 
 .animate-scroll-seamless.running {
   animation-play-state: running;
+}
+
+/* Banner Animation Classes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 255, 153, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 153, 0.6);
+    transform: scale(1.02);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 .neon-glow {

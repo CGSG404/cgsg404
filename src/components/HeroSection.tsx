@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import ClientOnly from './ClientOnly';
 
-const FaqSection = dynamic(() => import('@/components/FaqSection'), { ssr: false });
+const FaqSection = dynamic(() => import('@/src/components/FaqSection'), { ssr: false });
 
 const stats = [
   { icon: <Shield className="w-8 h-8 mx-auto text-casino-neon-green mb-2" />, value: '87+', label: 'Casinos Reviewed' },
@@ -157,18 +157,18 @@ const HeroSection: React.FC = () => {
           </p>
         </motion.div>
 
-         {/* CGSG Logo + Caption */}
+         {/* Fair Gaming Logo + Caption */}
          <motion.div
           initial={isDesktop ? { opacity: 0, y: 20 } : false}
           animate={isDesktop ? { opacity: 1, y: 0 } : false}
-          transition={isDesktop ? { duration: 0.8, delay: 0.5, ease: 'easeOut' } : {}}
+          transition={isDesktop ? { duration: 0.8, delay: 0.6, ease: 'easeOut' } : {}}
           className="mt-12 flex flex-col items-center justify-center gap-3"
         >
           <div className="relative w-40 h-40 md:w-56 md:h-56">
-            <Image src="/fair-logos.png" alt="CGSG Logo" fill priority className="object-contain" />
+            <Image src="/fair-logos.png" alt="Fair Gaming License" fill priority className="object-contain" />
           </div>
           <p className="text-base md:text-lg text-gray-300 max-w-xl text-center px-2">
-           CGSG license, We issue to every trusted company ensures the integrity and legacy of their transaction records.
+           CGSG license ensures the integrity and legacy of trusted company transaction records.
           </p>
         </motion.div>
 

@@ -1,5 +1,6 @@
 import IndexPage from "@/src/components/IndexPage";
 import MaintenanceWrapper from "@/src/components/MaintenanceWrapper";
+import ErrorBoundary from "@/src/components/ErrorBoundary";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,8 +10,10 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <MaintenanceWrapper>
-      <IndexPage />
-    </MaintenanceWrapper>
+    <ErrorBoundary>
+      <MaintenanceWrapper>
+        <IndexPage />
+      </MaintenanceWrapper>
+    </ErrorBoundary>
   );
 }

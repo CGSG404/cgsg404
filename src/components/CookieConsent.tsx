@@ -87,25 +87,20 @@ export default function CookieConsent() {
       return;
     }
 
-    // Hide cookie banner initially on homepage (when at top)
+    // Show cookie banner initially on homepage after small delay for better UX
     const initialScrollY = window.scrollY;
-    setIsVisible(initialScrollY > 50);
+    setIsVisible(initialScrollY > 50); // Higher threshold - only hide when truly at top
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Hide cookie banner when at very top (within 50px) to show fullscreen banner clearly
-      if (currentScrollY <= 50) {
+      // Show cookie banner when scrolling down past 50px (better threshold)
+      if (currentScrollY > 50) {
+        setIsVisible(true);
+      }
+      // Hide cookie banner only when at very top (within 50px)
+      else if (currentScrollY <= 50) {
         setIsVisible(false);
-      }
-      // Show cookie banner when scrolling down past 50px
-      else if (currentScrollY > 50 && currentScrollY > lastScrollY) {
-        // Scrolling down - show cookie banner after passing threshold
-        setIsVisible(true);
-      }
-      // Show cookie banner when scrolling up (regardless of position, as long as not at top)
-      else if (currentScrollY > 50 && currentScrollY < lastScrollY) {
-        setIsVisible(true);
       }
       
       setLastScrollY(currentScrollY);

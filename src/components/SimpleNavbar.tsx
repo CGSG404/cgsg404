@@ -30,25 +30,20 @@ const SimpleNavbar = () => {
       return;
     }
 
-    // Hide navbar initially on homepage (when at top)
+    // Show navbar initially on homepage after small delay for better UX
     const initialScrollY = window.scrollY;
-    setIsVisible(initialScrollY > 50);
+    setIsVisible(initialScrollY > 50); // Higher threshold - only hide when truly at top
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Hide navbar when at very top (within 50px) to show fullscreen banner clearly
-      if (currentScrollY <= 50) {
+      // Show navbar when scrolling down past 50px (better threshold)
+      if (currentScrollY > 50) {
+        setIsVisible(true);
+      }
+      // Hide navbar only when at very top (within 50px)
+      else if (currentScrollY <= 50) {
         setIsVisible(false);
-      }
-      // Show navbar when scrolling down past 50px
-      else if (currentScrollY > 50 && currentScrollY > lastScrollY) {
-        // Scrolling down - show navbar after passing threshold
-        setIsVisible(true);
-      }
-      // Show navbar when scrolling up (regardless of position, as long as not at top)
-      else if (currentScrollY > 50 && currentScrollY < lastScrollY) {
-        setIsVisible(true);
       }
       
       setLastScrollY(currentScrollY);

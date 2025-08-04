@@ -14,7 +14,7 @@ import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { Star, Shield, Gift, ExternalLink } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTopCasinos } from '@/lib/api';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/src/components/ui/button';
 
 // Import Swiper styles
 import 'swiper/css';
