@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar Debug Tool</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #0f1419;
+            color: white;
+        }
+        .debug-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #00ff88;
+            z-index: 10000;
+            max-width: 300px;
+        }
+        .debug-item {
+            margin: 5px 0;
+            padding: 5px;
+            background: rgba(0,255,136,0.1);
+            border-radius: 4px;
+        }
+        .test-banner {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content {
+            height: 200vh;
+            background: linear-gradient(to bottom, #0f1419, #1a2332);
+            padding: 50px;
+        }
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-panel">
+        <h3>🔍 Navbar Debug</h3>
+        <div class="debug-item">Scroll Y: <span id="scrollY">0</span></div>
+        <div class="debug-item">Banner Height: <span id="bannerHeight">0</span></div>
+        <div class="debug-item">Threshold: <span id="threshold">0</span></div>
+        <div class="debug-item">Should Show: <span id="shouldShow">false</span></div>
+        <div class="debug-item">
+            <strong>Banner Found:</strong>
+            <div id="bannerElements"></div>
+        </div>
+    </div>
+
+    <div class="scroll-indicator">
+        Scroll: <span id="scrollPercent">0%</span>
+    </div>
+
+    <!-- Simulate banner elements with different classes -->
+    <div class="test-banner parallax-banner hero-banner-slider" data-banner="true">
+        <div>
+            <h1>Test Banner (Homepage)</h1>
+            <p>Classes: parallax-banner hero-banner-slider</p>
+            <p>Data: data-banner="true"</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <h2>Scroll down to test navbar behavior</h2>
+        <p>This content simulates the rest of the page...</p>
+        
+        <div style="margin: 50px 0;">
+            <h3>Testing Banner Detection</h3>
+            <p>The debug panel shows if the banner elements are found correctly.</p>
+        </div>
+
+        <div style="margin: 50px 0;">
+            <h3>Scroll Behavior Test</h3>
+            <p>Watch the debug values change as you scroll.</p>
+        </div>
+
+        <div style="margin: 50px 0;">
+            <h3>Expected Behavior</h3>
+            <ul>
+                <li>Banner Height should be 100vh (viewport height)</li>
+                <li>Threshold should be 50% of banner height + 250px minimum</li>
+                <li>Navbar should show when scroll > threshold</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Simulate the navbar detection logic
+        function getBannerHeight() {
+            const selectors = [
+                '.parallax-banner.hero-banner-slider',
+                '.parallax-banner',
+                '.hero-banner-slider[data-banner="true"]',
+                '.hero-banner-slider'
+            ];
+
+            const foundElements = [];
+            
+            for (const selector of selectors) {
+                const element = document.querySelector(selector);
+                if (element) {
+                    const height = element.getBoundingClientRect().height;
+                    foundElements.push(`${selector}: ${height}px`);
+                    if (height > window.innerHeight * 0.5) {
+                        return { height, found: foundElements };
+                    }
+                }
+            }
+            
+            return { height: window.innerHeight, found: foundElements };
+        }
+
+        function updateDebugInfo() {
+            const scrollY = window.scrollY;
+            const { height: bannerHeight, found } = getBannerHeight();
+            const threshold = Math.max(bannerHeight * 0.5, 250);
+            const shouldShow = scrollY > threshold;
+            const scrollPercent = Math.round((scrollY / bannerHeight) * 100);
+
+            document.getElementById('scrollY').textContent = scrollY;
+            document.getElementById('bannerHeight').textContent = bannerHeight;
+            document.getElementById('threshold').textContent = threshold;
+            document.getElementById('shouldShow').textContent = shouldShow;
+            document.getElementById('shouldShow').style.color = shouldShow ? '#00ff88' : '#ff6b6b';
+            document.getElementById('scrollPercent').textContent = scrollPercent + '%';
+            
+            document.getElementById('bannerElements').innerHTML = found.map(el => 
+                `<div style="font-size: 11px; color: #00ff88;">${el}</div>`
+            ).join('');
+        }
+
+        // Update debug info on scroll
+        let isScrolling = false;
+        window.addEventListener('scroll', () => {
+            if (!isScrolling) {
+                requestAnimationFrame(() => {
+                    updateDebugInfo();
+                    isScrolling = false;
+                });
+                isScrolling = true;
+            }
+        }, { passive: true });
+
+        // Initial update
+        updateDebugInfo();
+
+        // Test function to check selectors
+        console.log('🔍 Testing banner selectors...');
+        const testSelectors = [
+            '.parallax-banner.hero-banner-slider',
+            '.parallax-banner',
+            '.hero-banner-slider[data-banner="true"]',
+            '.hero-banner-slider'
+        ];
+
+        testSelectors.forEach(selector => {
+            const element = document.querySelector(selector);
+            console.log(`${selector}:`, element ? 'FOUND' : 'NOT FOUND', element);
+        });
+    </script>
+</body>
+</html>
