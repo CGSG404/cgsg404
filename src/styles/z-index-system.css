@@ -1,0 +1,78 @@
+/* Z-Index System - Professional Layout Management */
+:root {
+  /* Base Layers */
+  --z-base: 0;
+  --z-ground: 1;
+  
+  /* Content Layers */
+  --z-content: 10;
+  --z-content-elevated: 15;
+  --z-content-overlay: 20;
+  
+  /* Banner & Parallax */
+  --z-banner: 5;
+  --z-parallax: 8;
+  --z-parallax-content: 12;
+  
+  /* Navigation */
+  --z-navbar: 50;
+  --z-mobile-menu: 60;
+  --z-dropdown: 55;
+  
+  /* Interactive Elements */
+  --z-button: 25;
+  --z-tooltip: 30;
+  --z-modal-backdrop: 70;
+  --z-modal: 75;
+  --z-drawer: 80;
+  
+  /* Notifications & Toasts */
+  --z-toast: 85;
+  --z-notification: 90;
+  
+  /* Highest Priority */
+  --z-overlay: 95;
+  --z-loading: 100;
+}
+
+/* Z-Index Utility Classes */
+.z-banner { z-index: var(--z-banner); }
+.z-content { z-index: var(--z-content); }
+.z-content-elevated { z-index: var(--z-content-elevated); }
+.z-content-overlay { z-index: var(--z-content-overlay); }
+.z-navbar { z-index: var(--z-navbar); }
+.z-mobile-menu { z-index: var(--z-mobile-menu); }
+.z-modal { z-index: var(--z-modal); }
+.z-toast { z-index: var(--z-toast); }
+.z-loading { z-index: var(--z-loading); }
+
+/* Layer Management */
+.layer-banner { z-index: var(--z-banner); }
+.layer-content { z-index: var(--z-content); }
+.layer-navbar { z-index: var(--z-navbar); }
+.layer-modal { z-index: var(--z-modal); }
+.layer-toast { z-index: var(--z-toast); }
+
+/* Responsive Z-Index Adjustments */
+@media (max-width: 768px) {
+  :root {
+    --z-navbar: 45;
+    --z-mobile-menu: 55;
+    --z-modal: 70;
+  }
+}
+
+/* High DPI Display Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .layer-content {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .layer-content {
+    transform: none;
+  }
+}

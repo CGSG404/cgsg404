@@ -22,83 +22,67 @@ import AdminButton from '@/src/components/AdminButton';
 const SimpleNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { user, signOut } = useAuth();
   const pathname = usePathname();
 
   // Check if current page is homepage
   const isHomePage = pathname === '/';
 
-  // Initialize visibility: always true for non-homepage, false for homepage initially
-  const [isVisible, setIsVisible] = useState(!isHomePage);
-
   // Ensure client-side rendering for dynamic content
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Page-specific navbar behavior
+  // Simplified scroll behavior
   useEffect(() => {
-    // Ensure we're on client side
     if (typeof window === 'undefined') return;
     
     console.log(`🔍 Navbar: Page changed to ${pathname}, isHomePage: ${isHomePage}`);
 
+    // For non-homepage, always show navbar
     if (!isHomePage) {
-      // Non-homepage: always show navbar
       console.log('✅ Setting navbar visible for non-homepage');
-      setIsVisible(true);
+      setIsScrolled(true);
       return;
     }
 
-    // Homepage only: Hide navbar when at top, show when scrolling down
+    // For homepage, show navbar when scrolled
     console.log('🏠 Homepage detected, setting up scroll behavior');
 
-    let ticking = false;
-    
     const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          const viewportHeight = window.innerHeight;
-          const scrollThreshold = viewportHeight * 0.3; // Show navbar after scrolling 30% of viewport
-          const shouldShow = scrollY > scrollThreshold;
-          
-          setIsVisible(prev => {
-            if (prev !== shouldShow) {
-              console.log(`🏠 Scroll: ${scrollY}, threshold: ${scrollThreshold}, shouldShow: ${shouldShow}`);
-            }
-            return shouldShow;
-          });
-          
-          ticking = false;
-        });
-        ticking = true;
-      }
+      const scrollY = window.scrollY;
+      const shouldShow = scrollY > 50; // Simple threshold
+      
+      setIsScrolled(prev => {
+        if (prev !== shouldShow) {
+          console.log(`🏠 Scroll: ${scrollY}, shouldShow: ${shouldShow}`);
+        }
+        return shouldShow;
+      });
     };
 
-    // Set initial state for homepage - always start hidden
-    setIsVisible(false);
+    // Set initial state for homepage
+    setIsScrolled(false);
     console.log('🏠 Homepage initial state: navbar hidden');
 
-    // Add scroll listener for homepage with slight delay to ensure page is loaded
+    // Add scroll listener with passive option for better performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Check initial position after page load
     const timer = setTimeout(() => {
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      
-      // Check initial position after page load
       const currentScrollY = window.scrollY;
-      const currentThreshold = window.innerHeight * 0.3;
-      const currentShow = currentScrollY > currentThreshold;
-      setIsVisible(currentShow);
+      const currentShow = currentScrollY > 50;
+      setIsScrolled(currentShow);
       console.log(`🏠 Initial check after load: scrollY=${currentScrollY}, shouldShow=${currentShow}`);
-    }, 300);
+    }, 100);
 
     // Cleanup
     return () => {
       clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isHomePage, pathname]);
+  }, [pathname, isHomePage]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -113,10 +97,7 @@ const SimpleNavbar = () => {
     }
   };
 
-  // Safe display name function
   const getDisplayName = () => {
-    if (user?.user_metadata?.full_name) return user.user_metadata.full_name;
-    if (user?.user_metadata?.name) return user.user_metadata.name;
     if (user?.email && typeof user.email === 'string') {
       try {
         const emailPart = user.email.split('@')[0];
@@ -130,22 +111,22 @@ const SimpleNavbar = () => {
   };
 
   // Debug info
-  console.log('SimpleNavbar render:', { pathname, isHomePage, isVisible, isClient });
+  console.log('SimpleNavbar render:', { pathname, isHomePage, isScrolled, isClient });
 
   return (
     <nav
       className={`glass-effect border-b border-casino-border-subtle/30 ${
         isHomePage ? 'fixed' : 'sticky'
-      } top-0 z-50 backdrop-blur-xl w-full transition-all duration-300 ease-in-out ${
+      } top-0 z-navbar backdrop-blur-xl w-full transition-all duration-300 ease-in-out ${
         // Visibility logic: hide on homepage when at top, show when scrolled or on other pages
-        isHomePage && !isVisible
+        isHomePage && !isScrolled
           ? '-translate-y-full opacity-0 pointer-events-none'
           : 'translate-y-0 opacity-100 pointer-events-auto'
       } ${
         // Background logic: different styles per page type
         !isHomePage
           ? 'bg-casino-dark/95 shadow-lg' // Non-homepage: always dark background
-          : isVisible
+          : isScrolled
           ? 'bg-casino-dark/95 shadow-xl border-casino-neon-green/20' // Homepage scrolled
           : 'bg-transparent' // Homepage top (hidden anyway)
       }`}
@@ -263,7 +244,7 @@ const SimpleNavbar = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-casino-dark/95 border-t border-casino-neon-green/30 absolute left-0 right-0 top-full w-full">
+          <div className="md:hidden bg-casino-dark/95 border-t border-casino-neon-green/30 absolute left-0 right-0 top-full w-full z-mobile-menu">
             <div className="px-6 py-6 space-y-4 max-w-sm mx-auto">
               {/* Navigation Links */}
               <div className="space-y-3">

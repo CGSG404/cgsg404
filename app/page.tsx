@@ -2,6 +2,7 @@ import IndexPage from "@/src/components/IndexPage";
 import MaintenanceWrapper from "@/src/components/MaintenanceWrapper";
 import ErrorBoundary from "@/src/components/ErrorBoundary";
 import { Metadata } from "next";
+import "@/src/styles/parallax.css";
 
 export const metadata: Metadata = {
   title: "Casino Singapore | GuruSingapore",
