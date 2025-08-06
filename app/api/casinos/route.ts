@@ -138,25 +138,23 @@ export async function GET(request: NextRequest) {
     const { data: rawCasinos, error, count } = await query;
 
     if (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('❌ Supabase query error:', error);
-      }
+      console.error('❌ Database error:', {
+        message: error.message,
+        code: error.code,
+        timestamp: new Date().toISOString()
+      });
       
-      // Return mock data for development/fallback
-      const availableFeatures = ['Live Dealers', 'Mobile Optimized', '24/7 Support', 'Crypto Payments', 'Fast Withdrawals', 'VIP Program'];
-      const availableBadges = ['Verified', 'Popular', 'Trusted', 'Licensed', 'Secure'];
-      
+      // Return proper error response instead of mock data
       return NextResponse.json({
-        casinos: generateMockCasinos(limit),
-        total: 20,
-        page,
-        limit,
-        totalPages: Math.ceil(20 / limit),
-        availableFeatures,
-        availableBadges
+        error: 'Unable to fetch casino data. Please try again later.',
+        errorCode: 'DB_CONNECTION_ERROR',
+        timestamp: new Date().toISOString()
       }, {
-        status: 200,
-        headers: corsHeaders
+        status: 503, // Service Unavailable
+        headers: {
+          ...corsHeaders,
+          'Retry-After': '60' // Suggest retry after 60 seconds
+        }
       });
     }
 
@@ -209,17 +207,10 @@ export async function GET(request: NextRequest) {
       console.error('❌ API Error:', error);
     }
 
-    const availableFeatures = ['Live Dealers', 'Mobile Optimized', '24/7 Support', 'Crypto Payments', 'Fast Withdrawals', 'VIP Program'];
-    const availableBadges = ['Verified', 'Popular', 'Trusted', 'Licensed', 'Secure'];
-    
     return NextResponse.json({
-      casinos: generateMockCasinos(12),
-      total: 20,
-      page: 1,
-      limit: 12,
-      totalPages: 2,
-      availableFeatures,
-      availableBadges
+      error: 'An unexpected error occurred. Please try again later.',
+      errorCode: 'INTERNAL_SERVER_ERROR',
+      timestamp: new Date().toISOString()
     }, {
       status: 500,
       headers: corsHeaders
@@ -227,62 +218,3 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Generate mock casino data for development/fallback
-function generateMockCasinos(count: number) {
-  const mockCasinos = [];
-  const casinoNames = [
-    'Royal Vegas Casino', 'Golden Palace', 'Diamond Crown', 'Lucky Star Casino',
-    'Platinum Elite', 'Silver Moon', 'Crystal Bay Casino', 'Emerald Isle',
-    'Ruby Fortune', 'Sapphire Lounge', 'Pearl Harbor Casino', 'Jade Garden',
-    'Opal Dreams', 'Topaz Tower', 'Amber Palace', 'Onyx Elite',
-    'Coral Reef Casino', 'Ivory Coast', 'Marble Mansion', 'Bronze Star'
-  ];
-
-  const safetyIndexes = ['Very High', 'High', 'Medium', 'Low'];
-  const bonuses = [
-    '100% up to $500 + 50 Free Spins',
-    '200% up to $1000 Welcome Bonus',
-    '150% up to $750 + 100 Free Spins',
-    '300% up to $2000 Mega Bonus',
-    '125% up to $625 + 25 Free Spins'
-  ];
-
-  const features = [
-    ['Live Dealers', 'Mobile Optimized', '24/7 Support'],
-    ['Crypto Payments', 'Fast Withdrawals', 'VIP Program'],
-    ['Sports Betting', 'Live Casino', 'Tournaments'],
-    ['No Deposit Bonus', 'Free Spins', 'Cashback'],
-    ['Multi-Language', 'Secure Gaming', 'Fair Play']
-  ];
-
-  for (let i = 0; i < count; i++) {
-    const name = casinoNames[i % casinoNames.length];
-    const rating = Math.round((Math.random() * 2 + 3) * 10) / 10; // 3.0 - 5.0
-    
-    mockCasinos.push({
-      id: i + 1,
-      name,
-      slug: name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-      logo: `/casino-logos/${name.toLowerCase().replace(/\s+/g, '-')}.png`,
-      rating,
-      safetyIndex: safetyIndexes[Math.floor(Math.random() * safetyIndexes.length)],
-      bonus: bonuses[Math.floor(Math.random() * bonuses.length)],
-      description: `Experience premium gaming at ${name} with top-tier security, exciting games, and generous bonuses. Join thousands of satisfied players today!`,
-      playUrl: `https://example.com/play/${name.toLowerCase().replace(/\s+/g, '-')}`,
-      isNew: Math.random() > 0.8,
-      isHot: Math.random() > 0.7,
-      isFeatured: Math.random() > 0.6,
-      features: features[Math.floor(Math.random() * features.length)],
-      badges: Math.random() > 0.5 ? ['Verified', 'Popular'] : ['Trusted'],
-      links: {
-        bonus: `https://example.com/bonus/${i + 1}`,
-        review: `https://example.com/review/${i + 1}`,
-        complaint: `https://example.com/complaint/${i + 1}`
-      },
-      createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date().toISOString()
-    });
-  }
-
-  return mockCasinos;
-}

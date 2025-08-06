@@ -11,7 +11,11 @@ export async function fetchFeaturedCasinos() {
 }
 
 export async function fetchAllCasinos() {
-  const res = await fetch("https://gurusingapore.com/api/casinos", {
+  // Use internal API instead of external circular call
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                  (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+  
+  const res = await fetch(`${baseUrl}/api/casinos`, {
     cache: 'force-cache',
     next: {
       revalidate: 1800, // 30 minutes - more frequent for casino list

@@ -44,19 +44,20 @@ const LogoSlider: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-12 md:py-16 bg-casino-dark">
-      <div className="container mx-auto px-4">
+    <section className="py-4 sm:py-6 lg:py-8 xl:py-12 bg-black">
+      {/* Responsive container matching site pattern */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="text-center mb-10 md:mb-12 px-4"
+          className="text-center mb-4 sm:mb-6 lg:mb-8 xl:mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5 }}
         >
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+          <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-white mb-2 sm:mb-3">
           Check Gaming License & Certification
           </h3>
-          <p className="text-gray-400 text-sm md:text-base">
+          <p className="text-gray-400 text-xs sm:text-sm lg:text-base">
           Real Domain Provide Safety License & Certification for you.
           </p>
         </motion.div>

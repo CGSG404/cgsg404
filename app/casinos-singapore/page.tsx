@@ -232,7 +232,7 @@ const CasinosV2Page: React.FC = () => {
   if (isError) {
     return (
       <CasinoErrorBoundary>
-        <div className="container mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
           <CasinoErrorFallback
             error={error as Error}
             onRetry={() => refetch()}
@@ -255,7 +255,7 @@ const CasinosV2Page: React.FC = () => {
         <link rel="canonical" href="/casinos-singapore" />
       </Head>
 
-      <div className="min-h-screen bg-gray-900 pt-16">
+      <div className="min-h-screen bg-black pt-16">
         {/* Modern Header with Gradient Background - Full Height */}
         <div className="relative bg-gradient-to-br from-emerald-600 via-teal-700 to-purple-800 overflow-hidden -mt-16">
           {/* Background Pattern */}
@@ -267,7 +267,7 @@ const CasinosV2Page: React.FC = () => {
           <div className="absolute bottom-10 left-10 w-24 h-24 bg-emerald-400/20 rounded-full blur-lg"></div>
           <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-purple-400/30 rounded-full blur-md"></div>
           
-          <div className="container mx-auto px-4 py-12 relative z-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 relative z-10">
             {/* Breadcrumb Navigation */}
             <nav className="flex items-center space-x-2 text-sm mb-8">
               <a href="/" className="flex items-center text-white/80 hover:text-white transition-colors">
@@ -368,7 +368,7 @@ const CasinosV2Page: React.FC = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
           {/* Stats Section - Moved here */}
           <div className="mb-8">
 

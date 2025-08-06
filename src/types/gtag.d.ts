@@ -6,6 +6,7 @@ declare global {
       targetId: string | Date,
       config?: Record<string, string | number | boolean | undefined>
     ) => void;
+    dataLayer?: any[];
   }
 }
 

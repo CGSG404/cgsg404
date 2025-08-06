@@ -24,7 +24,7 @@ const HeroSection: React.FC = () => {
 
   return (
     <>
-      <section className="relative text-center pt-16 pb-12 md:pt-24 md:pb-20 bg-gradient-to-b from-casino-dark via-casino-darker to-casino-dark">
+      <section className="relative text-center py-4 sm:py-8 lg:py-12 xl:py-16 bg-black">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div
@@ -33,21 +33,22 @@ const HeroSection: React.FC = () => {
           ></div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-20">
+        {/* Proper responsive: Mobile COMPACT, Desktop NORMAL/BIG */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
           <motion.div
             initial={isDesktop ? { opacity: 0, y: 30 } : false}
             animate={isDesktop ? { opacity: 1, y: 0 } : false}
             transition={isDesktop ? { duration: 1, ease: 'easeOut' } : {}}
-            className="max-w-5xl mx-auto"
+            className="w-full"
           >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-6">
+            <h1 className="text-xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-black text-white leading-tight mb-2 sm:mb-4 lg:mb-6">
               Your Trusted
               <br />
               <span className="bg-gradient-to-r from-casino-neon-green via-emerald-400 to-green-400 bg-clip-text text-transparent">
                 Casino Guide
               </span>
             </h1>
-            <p className="mt-6 text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            <p className="mt-2 sm:mt-4 lg:mt-6 text-xs sm:text-base lg:text-lg xl:text-xl text-gray-300 w-full leading-relaxed">
               Discover first-class online casinos with expert reviews, trusted reports, and safe gambling platforms recommended by CGSG professionals.
             </p>
           </motion.div>
@@ -56,34 +57,34 @@ const HeroSection: React.FC = () => {
             initial={isDesktop ? { opacity: 0, y: 20 } : false}
             animate={isDesktop ? { opacity: 1, y: 0 } : false}
             transition={isDesktop ? { duration: 0.8, delay: 0.3, ease: 'easeOut' } : {}}
-            className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center items-center"
+            className="mt-3 sm:mt-6 lg:mt-8 flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4 justify-center items-center w-full"
           >
             <Button
-              size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-semibold px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25 group"
+              size="sm"
+              className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-semibold px-3 sm:px-4 lg:px-6 xl:px-8 py-1.5 sm:py-2 lg:py-2.5 xl:py-3 text-xs sm:text-sm lg:text-base xl:text-lg rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25 group"
               onClick={() => {
                 const section = document.getElementById('top-casinos');
                 section?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              <span className="flex items-center gap-1.5 sm:gap-2">
+              <span className="flex items-center gap-1 sm:gap-1.5 lg:gap-2">
                 <span className="hidden xs:inline">Find Best Casinos</span>
                 <span className="xs:hidden">Best Casinos</span>
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 sm:w-4 lg:w-5 h-3 sm:h-4 lg:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </span>
             </Button>
             <Link href="/reviews" className="w-full sm:w-auto">
               <Button
-                size="lg"
+                size="sm"
                 variant="outline"
-                className="w-full border-2 border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green hover:text-casino-dark px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-transparent backdrop-blur-sm group"
+                className="w-full border-2 border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green hover:text-casino-dark px-3 sm:px-4 lg:px-6 xl:px-8 py-1.5 sm:py-2 lg:py-2.5 xl:py-3 text-xs sm:text-sm lg:text-base xl:text-lg rounded-lg sm:rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-transparent backdrop-blur-sm group"
               >
-                <span className="flex items-center gap-1.5 sm:gap-2">
+                <span className="flex items-center gap-1 sm:gap-1.5 lg:gap-2">
                   <span className="hidden xs:inline">Read Reviews</span>
                   <span className="xs:hidden">Reviews</span>
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 sm:w-4 lg:w-5 h-3 sm:h-4 lg:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </span>
@@ -91,29 +92,29 @@ const HeroSection: React.FC = () => {
             </Link>
           </motion.div>
 
-        {/* Stats Grid */}
+        {/* Stats Grid - Responsive: Mobile COMPACT, Desktop NORMAL */}
         <motion.div
           initial={isDesktop ? { opacity: 0, y: 20 } : false}
           animate={isDesktop ? { opacity: 1, y: 0 } : false}
           transition={isDesktop ? { duration: 0.8, delay: 0.4, ease: 'easeOut' } : {}}
-          className="mt-12 md:mt-16 max-w-4xl mx-auto"
+          className="mt-4 sm:mt-8 lg:mt-10 xl:mt-12 w-full"
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 xl:gap-6">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                className="bg-gradient-to-br from-casino-card-bg/60 to-casino-darker/60 border border-casino-neon-green/20 rounded-xl p-6 text-center transition-all duration-300 hover:border-casino-neon-green/40 hover:shadow-lg hover:shadow-casino-neon-green/10 backdrop-blur-sm"
-                whileHover={{ scale: isDesktop ? 1.05 : 1 }}
+                className="bg-gray-900/60 border border-casino-neon-green/20 rounded-lg sm:rounded-xl p-2 sm:p-4 lg:p-5 xl:p-6 text-center transition-all duration-300 hover:border-casino-neon-green/40 hover:shadow-lg hover:shadow-casino-neon-green/10 backdrop-blur-sm"
+                whileHover={{ scale: isDesktop ? 1.03 : 1 }}
                 initial={isDesktop ? { opacity: 0, y: 20 } : false}
                 animate={isDesktop ? { opacity: 1, y: 0 } : false}
                 transition={isDesktop ? { duration: 0.6, delay: 0.6 + index * 0.1 } : {}}
               >
-                <div className="mb-3 flex justify-center">
-                  <div className="p-3 rounded-xl bg-casino-neon-green/10 border border-casino-neon-green/20">
+                <div className="mb-1 sm:mb-2 lg:mb-3 flex justify-center">
+                  <div className="p-1.5 sm:p-2 lg:p-3 rounded-lg sm:rounded-xl bg-casino-neon-green/10 border border-casino-neon-green/20">
                     {stat.icon}
                   </div>
                 </div>
-                <p className="text-2xl md:text-3xl font-black text-casino-neon-green mb-2">
+                <p className="text-sm sm:text-xl lg:text-2xl xl:text-3xl font-black text-casino-neon-green mb-0.5 sm:mb-1 lg:mb-2">
                   <ClientOnly fallback={<span>{stat.value}</span>}>
                     {stat.value.includes('+') ? (
                       <CountUp
@@ -136,58 +137,58 @@ const HeroSection: React.FC = () => {
                     )}
                   </ClientOnly>
                 </p>
-                <p className="text-sm md:text-base text-gray-300 font-medium">{stat.label}</p>
+                <p className="text-xs sm:text-sm lg:text-base xl:text-lg text-gray-300 font-medium">{stat.label}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* CGSG Logo + Caption */}
+        {/* CGSG Logo + Caption - Responsive: Mobile COMPACT, Desktop NORMAL */}
         <motion.div
           initial={isDesktop ? { opacity: 0, y: 20 } : false}
           animate={isDesktop ? { opacity: 1, y: 0 } : false}
           transition={isDesktop ? { duration: 0.8, delay: 0.5, ease: 'easeOut' } : {}}
-          className="mt-12 flex flex-col items-center justify-center gap-3"
+          className="mt-4 sm:mt-8 lg:mt-10 xl:mt-12 flex flex-col items-center justify-center gap-1 sm:gap-2 lg:gap-3"
         >
-          <div className="relative w-40 h-40 md:w-56 md:h-56">
+          <div className="relative w-20 sm:w-32 lg:w-40 xl:w-48 h-20 sm:h-32 lg:h-40 xl:h-48">
             <Image src="/favicon.ico" alt="CGSG Logo" fill priority className="object-contain" />
           </div>
-          <p className="text-base md:text-lg text-gray-300 max-w-xl text-center px-2">
+          <p className="text-xs sm:text-sm lg:text-base xl:text-lg text-gray-300 text-center px-1 sm:px-2">
             As an independent platform, CGSG delivers transparent, data-driven reviews and analytics to help you play smarter and safer.
           </p>
         </motion.div>
 
-         {/* Fair Gaming Logo + Caption */}
+         {/* Fair Gaming Logo + Caption - Responsive: Mobile COMPACT, Desktop NORMAL */}
          <motion.div
           initial={isDesktop ? { opacity: 0, y: 20 } : false}
           animate={isDesktop ? { opacity: 1, y: 0 } : false}
           transition={isDesktop ? { duration: 0.8, delay: 0.6, ease: 'easeOut' } : {}}
-          className="mt-12 flex flex-col items-center justify-center gap-3"
+          className="mt-4 sm:mt-8 lg:mt-10 xl:mt-12 flex flex-col items-center justify-center gap-1 sm:gap-2 lg:gap-3"
         >
-          <div className="relative w-40 h-40 md:w-56 md:h-56">
+          <div className="relative w-20 sm:w-32 lg:w-40 xl:w-48 h-20 sm:h-32 lg:h-40 xl:h-48">
             <Image src="/fair-logos.png" alt="Fair Gaming License" fill priority className="object-contain" />
           </div>
-          <p className="text-base md:text-lg text-gray-300 max-w-xl text-center px-2">
+          <p className="text-xs sm:text-sm lg:text-base xl:text-lg text-gray-300 text-center px-1 sm:px-2">
            CGSG license ensures the integrity and legacy of trusted company transaction records.
           </p>
         </motion.div>
 
-          {/* About Us teaser */}
+          {/* About Us teaser - Responsive: Mobile COMPACT, Desktop NORMAL */}
           <motion.div
             initial={isDesktop ? { opacity: 0, y: 20 } : false}
             animate={isDesktop ? { opacity: 1, y: 0 } : false}
             transition={isDesktop ? { duration: 0.8, delay: 0.6, ease: 'easeOut' } : {}}
-            className="mt-14 max-w-4xl mx-auto"
+            className="mt-4 sm:mt-8 lg:mt-10 xl:mt-12 w-full"
           >
             <Link href="/about-us" className="block group" prefetch>
-              <div className="rounded-xl border border-gray-700/60 bg-gray-800/60 hover:border-casino-neon-green/60 transition-colors p-6 md:p-8">
-                <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 group-hover:text-casino-neon-green transition-colors">
+              <div className="rounded-lg sm:rounded-xl border border-gray-700/60 bg-gray-800/60 hover:border-casino-neon-green/60 transition-colors p-3 sm:p-4 lg:p-5 xl:p-6">
+                <h3 className="text-sm sm:text-lg lg:text-xl xl:text-2xl font-semibold text-white mb-1 sm:mb-2 lg:mb-3 group-hover:text-casino-neon-green transition-colors">
                   Learn more about CGSG
                 </h3>
-                <p className="text-gray-300 text-sm md:text-base">
+                <p className="text-gray-300 text-xs sm:text-sm lg:text-base xl:text-lg">
                   Discover our mission, team, and how we ensure a transparent & safe gambling environment for players worldwide.
                 </p>
-                <span className="inline-block mt-4 text-casino-neon-green font-medium group-hover:underline">
+                <span className="inline-block mt-2 sm:mt-3 lg:mt-4 text-casino-neon-green font-medium group-hover:underline text-xs sm:text-sm lg:text-base xl:text-lg">
                   Read About Us &rarr;
                 </span>
               </div>
@@ -196,7 +197,7 @@ const HeroSection: React.FC = () => {
 
       </div>
     </section>
-            <FaqSection />
+    <FaqSection />
     </>
   );
 };

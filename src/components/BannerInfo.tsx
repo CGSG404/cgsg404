@@ -45,20 +45,20 @@ export default function BannerInfo() {
 
   return (
     <ClientOnly fallback={
-      <section className="relative py-16 md:py-24 bg-gradient-to-b from-casino-dark via-casino-darker to-casino-dark overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-6">
+      <section className="relative py-6 sm:py-12 lg:py-16 xl:py-20 bg-black overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-4 sm:mb-8 lg:mb-12 xl:mb-16">
+            <h2 className="text-lg sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-black text-white mb-2 sm:mb-4 lg:mb-6">
               Why Choose <span className="bg-gradient-to-r from-casino-neon-green to-emerald-400 bg-clip-text text-transparent">CGSG</span>?
             </h2>
-            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-base lg:text-lg xl:text-xl text-gray-300 leading-relaxed">
               Loading features...
             </p>
           </div>
         </div>
       </section>
     }>
-      <section className="relative py-16 md:py-24 bg-gradient-to-b from-casino-dark via-casino-darker to-casino-dark overflow-hidden">
+      <section className="relative py-6 sm:py-12 lg:py-16 xl:py-20 bg-black overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div
@@ -67,25 +67,25 @@ export default function BannerInfo() {
         ></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Header */}
+      <div className="w-full px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header - Responsive: Mobile COMPACT, Desktop NORMAL */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-4 sm:mb-8 lg:mb-12 xl:mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-6">
+          <h2 className="text-lg sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-black text-white mb-2 sm:mb-4 lg:mb-6">
             Why Choose <span className="bg-gradient-to-r from-casino-neon-green to-emerald-400 bg-clip-text text-transparent">CGSG</span>?
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-base lg:text-lg xl:text-xl text-gray-300 max-w-xs sm:max-w-3xl mx-auto leading-relaxed">
             Your trusted partner in finding the best online casinos with expert reviews, exclusive bonuses, and community-driven insights.
           </p>
         </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16">
+        {/* Features Grid - Responsive: Mobile COMPACT, Desktop NORMAL */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 xl:gap-8 mb-4 sm:mb-8 lg:mb-12 xl:mb-16">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -95,28 +95,28 @@ export default function BannerInfo() {
               viewport={{ once: true }}
               className="group"
             >
-              <div className="bg-gradient-to-br from-casino-card-bg/60 to-casino-darker/60 backdrop-blur-sm border border-casino-neon-green/20 rounded-2xl p-6 text-center transition-all duration-300 hover:border-casino-neon-green/40 hover:shadow-lg hover:shadow-casino-neon-green/10 transform hover:scale-105">
-                <div className={`inline-flex p-4 rounded-xl bg-gradient-to-r ${feature.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+              <div className="bg-gray-900/60 backdrop-blur-sm border border-casino-neon-green/20 rounded-lg sm:rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-5 xl:p-6 text-center transition-all duration-300 hover:border-casino-neon-green/40 hover:shadow-lg hover:shadow-casino-neon-green/10 transform hover:scale-105">
+                <div className={`inline-flex p-2 sm:p-3 lg:p-4 rounded-lg sm:rounded-xl bg-gradient-to-r ${feature.color} mb-2 sm:mb-3 lg:mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <div className="text-white">
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">{feature.description}</p>
+                <h3 className="text-sm sm:text-base lg:text-lg xl:text-xl font-bold text-white mb-1 sm:mb-2 lg:mb-3">{feature.title}</h3>
+                <p className="text-gray-300 text-xs sm:text-sm lg:text-base leading-relaxed">{feature.description}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Stats Section */}
+        {/* Stats Section - Responsive: Mobile COMPACT, Desktop NORMAL */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-r from-casino-card-bg/40 to-casino-darker/40 backdrop-blur-sm border border-casino-neon-green/20 rounded-3xl p-8 md:p-12"
+          className="bg-gray-900/40 backdrop-blur-sm border border-casino-neon-green/20 rounded-lg sm:rounded-xl lg:rounded-2xl xl:rounded-3xl p-3 sm:p-6 lg:p-8 xl:p-12"
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 xl:gap-8">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
@@ -126,15 +126,15 @@ export default function BannerInfo() {
                 viewport={{ once: true }}
                 className="text-center group"
               >
-                <div className="inline-flex p-3 rounded-xl bg-casino-neon-green/10 border border-casino-neon-green/20 mb-3 group-hover:bg-casino-neon-green/20 transition-colors duration-300">
+                <div className="inline-flex p-1.5 sm:p-2 lg:p-3 rounded-lg sm:rounded-xl bg-casino-neon-green/10 border border-casino-neon-green/20 mb-1 sm:mb-2 lg:mb-3 group-hover:bg-casino-neon-green/20 transition-colors duration-300">
                   <div className="text-casino-neon-green">
                     {stat.icon}
                   </div>
                 </div>
-                <div className="text-2xl md:text-3xl font-black text-casino-neon-green mb-1">
+                <div className="text-sm sm:text-lg lg:text-2xl xl:text-3xl font-black text-casino-neon-green mb-0.5 sm:mb-1">
                   {stat.value}
                 </div>
-                <div className="text-sm md:text-base text-gray-300 font-medium">
+                <div className="text-xs sm:text-sm lg:text-base text-gray-300 font-medium">
                   {stat.label}
                 </div>
               </motion.div>

@@ -3,6 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom styles imports */
+@import '../src/styles/ticker-animations.css';
+@import '../src/styles/parallax.css';
+@import '../src/styles/skeleton.css';
+
 :root {
   --foreground: #f9fafb;
 

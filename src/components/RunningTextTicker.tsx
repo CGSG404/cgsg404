@@ -109,7 +109,7 @@ const RunningTextTicker: React.FC = () => {
 
   return (
     <div
-      className="relative w-full bg-gradient-to-r from-casino-dark via-casino-dark-lighter to-casino-dark border-y border-casino-neon-green/20 overflow-hidden select-none"
+      className="relative w-full bg-black border-y border-casino-neon-green/20 overflow-hidden select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -118,35 +118,35 @@ const RunningTextTicker: React.FC = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,153,0.1),transparent_50%)]" />
       </div>
 
-      {/* Ticker Container */}
-      <div className="relative py-2 md:py-3">
-        {/* Ticker Label */}
+      {/* Ticker Container - Responsive */}
+      <div className="relative py-1.5 sm:py-2 lg:py-3">
+        {/* Ticker Label - Responsive */}
         <div className="absolute left-0 top-0 bottom-0 z-10 flex items-center">
-          <div className="bg-casino-neon-green text-casino-dark px-2 md:px-4 py-1.5 md:py-2 font-bold text-xs md:text-sm flex items-center gap-1 md:gap-2">
-            <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
-            <span className="hidden sm:inline">LIVE</span>
-            <span className="sm:hidden">•</span>
+          <div className="bg-casino-neon-green text-casino-dark px-1.5 sm:px-2 lg:px-4 py-1 sm:py-1.5 lg:py-2 font-bold text-xs sm:text-xs lg:text-sm flex items-center gap-1 sm:gap-1.5 lg:gap-2">
+            <Sparkles className="w-2.5 sm:w-3 lg:w-4 h-2.5 sm:h-3 lg:h-4" />
+            <span className="hidden xs:inline text-xs sm:text-xs lg:text-sm">LIVE</span>
+            <span className="xs:hidden">•</span>
           </div>
-          <div className="w-0 h-0 border-l-[8px] md:border-l-[12px] border-l-casino-neon-green border-t-[16px] md:border-t-[20px] border-t-transparent border-b-[16px] md:border-b-[20px] border-b-transparent"></div>
+          <div className="w-0 h-0 border-l-[6px] sm:border-l-[8px] lg:border-l-[12px] border-l-casino-neon-green border-t-[12px] sm:border-t-[16px] lg:border-t-[20px] border-t-transparent border-b-[12px] sm:border-b-[16px] lg:border-b-[20px] border-b-transparent"></div>
         </div>
 
-        {/* Scrolling Content */}
-        <div className="ml-12 md:ml-20 overflow-hidden relative">
+        {/* Scrolling Content - Responsive */}
+        <div className="ml-8 sm:ml-12 lg:ml-20 overflow-hidden relative">
           <div className={`animate-scroll-seamless ${isPaused ? 'paused' : 'running'}`}>
             {/* Render items multiple times for true seamless scrolling */}
             {[...Array(3)].map((_, setIndex) => (
               <div key={`set-${setIndex}`} className="flex">
                 {tickerItems.map((item, index) => (
-                  <div key={`${setIndex}-${item.id}-${index}`} className="flex items-center whitespace-nowrap mr-8 md:mr-12 pointer-events-none">
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <div className={`flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full bg-casino-neon-green/10 ${getTypeColor(item.type)}`}>
+                  <div key={`${setIndex}-${item.id}-${index}`} className="flex items-center whitespace-nowrap mr-4 sm:mr-6 lg:mr-8 xl:mr-12 pointer-events-none">
+                    <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3">
+                      <div className={`flex items-center justify-center w-4 sm:w-5 lg:w-6 xl:w-8 h-4 sm:h-5 lg:h-6 xl:h-8 rounded-full bg-casino-neon-green/10 ${getTypeColor(item.type)}`}>
                         {getTypeIcon(item.type)}
                       </div>
-                      <span className="text-white/90 text-xs md:text-sm font-medium">
+                      <span className="text-white/90 text-xs sm:text-xs lg:text-sm font-medium">
                         {item.text}
                       </span>
                       {item.highlight && (
-                        <span className={`${getTypeColor(item.type)} font-bold text-xs md:text-sm px-1.5 md:px-2 py-0.5 md:py-1 rounded-full bg-white/10`}>
+                        <span className={`${getTypeColor(item.type)} font-bold text-xs sm:text-xs lg:text-sm px-1 sm:px-1.5 lg:px-2 py-0.5 sm:py-0.5 lg:py-1 rounded-full bg-white/10`}>
                           {item.highlight}
                         </span>
                       )}
@@ -159,9 +159,9 @@ const RunningTextTicker: React.FC = () => {
         </div>
       </div>
 
-      {/* Gradient Overlays for Smooth Edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-casino-dark to-transparent pointer-events-none z-10" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-casino-dark to-transparent pointer-events-none z-10" />
+      {/* Gradient Overlays for Smooth Edges - Responsive */}
+      <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-16 lg:w-24 bg-gradient-to-r from-black to-transparent pointer-events-none z-10" />
+      <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-16 lg:w-24 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
     </div>
   );
 };

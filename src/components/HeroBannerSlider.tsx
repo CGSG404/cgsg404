@@ -121,14 +121,14 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
   return (
     <div 
       data-banner="true"
-      className={`${isHomePage ? 'parallax-banner' : 'relative w-full'} hero-banner-slider overflow-hidden group ${!isHomePage ? 'h-[400px] md:h-[550px] lg:h-[650px]' : ''}`}
+      className={`${isHomePage ? 'parallax-banner' : 'relative w-full'} hero-banner-slider overflow-hidden group ${!isHomePage ? 'h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] xl:h-[600px]' : ''}`}
     >
       <Swiper
         modules={[Autoplay, EffectFade]}
         autoplay={{
-          delay: 8000,
+          delay: 6000, // Reduced for better engagement
           disableOnInteraction: false,
-          pauseOnMouseEnter: false
+          pauseOnMouseEnter: true // Better UX
         }}
         loop
         className="w-full h-full"
@@ -136,34 +136,37 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
         fadeEffect={{
           crossFade: true
         }}
-        speed={1500}
+        speed={1200} // Faster transition for better performance
         allowTouchMove={false}
         watchSlidesProgress={true}
         watchOverflow={true}
+        preloadImages={false} // Better performance
+        lazy={true} // Enable lazy loading
       >
         {banners.map((banner, idx) => (
           <SwiperSlide key={`${banner.id}-${idx}`}>
-            <div className={`relative w-full ${isHomePage ? 'h-screen min-h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'}`}>
+            <div className={`relative w-full ${isHomePage ? 'h-screen min-h-[100dvh] max-h-screen' : 'h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] xl:h-[600px]'}`}>
               {/* Fallback Background */}
               <div className="absolute inset-0 bg-gradient-to-br from-casino-dark via-casino-darker to-purple-900 z-[1]" />
 
-              {/* Background Image */}
+              {/* Background Image - Optimized for responsive performance */}
               <div className="absolute inset-0 z-[2]">
                 <Image
                   src={banner.img}
                   alt={`${banner.title} - Casino Banner`}
                   fill
                   priority={idx === 0}
-                  quality={95}
-                  sizes="100vw"
-                  className="object-cover object-center transition-transform duration-700 ease-out"
+                  quality={idx === 0 ? 90 : 80} // First image higher quality
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                  className="object-cover object-center transition-transform duration-500 ease-out"
+                  loading={idx === 0 ? "eager" : "lazy"} // First image loads immediately
                   onError={(e) => {
                     // Hide image if it fails to load, fallback background will show
                     e.currentTarget.style.display = 'none';
                   }}
                   onLoad={(e) => {
-                    // Add subtle zoom effect on load
-                    e.currentTarget.style.transform = 'scale(1.05)';
+                    // Reduced zoom for better performance
+                    e.currentTarget.style.transform = 'scale(1.02)';
                   }}
                 />
               </div>
@@ -199,23 +202,25 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
                 </div>
               )}
 
-              {/* Scroll Indicator - Only show on homepage */}
+              {/* Scroll Indicator - Only show on homepage, responsive positioning */}
               {isHomePage && (
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-[15] flex items-center justify-center">
+                <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-[15] flex items-center justify-center">
                   <div 
-                    className="flex flex-col items-center cursor-pointer group animate-bounce hover:animate-none transition-all duration-500"
+                    className="flex flex-col items-center cursor-pointer group animate-bounce hover:animate-none transition-all duration-300"
                     onClick={() => {
-                      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+                      // Use dynamic viewport height for better responsiveness
+                      const scrollTarget = window.innerHeight || document.documentElement.clientHeight;
+                      window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
                     }}
                   >
-                    {/* Modern scroll indicator circle */}
-                    <div className="relative w-8 h-12 border-2 border-white/60 rounded-full flex justify-center group-hover:border-white transition-all duration-300">
-                      {/* Scroll dot */}
-                      <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse group-hover:bg-white group-hover:animate-none transition-all duration-300"></div>
+                    {/* Responsive scroll indicator circle */}
+                    <div className="relative w-6 h-10 sm:w-8 sm:h-12 border-2 border-white/70 rounded-full flex justify-center group-hover:border-white transition-all duration-300 bg-black/20 backdrop-blur-sm">
+                      {/* Responsive scroll dot */}
+                      <div className="w-1 h-2 sm:h-3 bg-white/70 rounded-full mt-1.5 sm:mt-2 animate-pulse group-hover:bg-white group-hover:animate-none transition-all duration-300"></div>
                     </div>
                     
-                    {/* Simple text below */}
-                    <span className="text-white/60 text-xs font-light mt-2 group-hover:text-white transition-all duration-300 tracking-wide">
+                    {/* Responsive text below */}
+                    <span className="text-white/70 text-xs font-light mt-1 sm:mt-2 group-hover:text-white transition-all duration-300 tracking-wide hidden sm:block">
                       SCROLL
                     </span>
                   </div>

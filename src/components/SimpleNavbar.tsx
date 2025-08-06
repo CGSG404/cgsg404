@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -100,10 +100,12 @@ const SimpleNavbar = () => {
     };
   }, [isHomePage, pathname]);
 
+  // Toggle function
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  // Sign out handler
   const handleSignOut = async () => {
     try {
       await signOut();

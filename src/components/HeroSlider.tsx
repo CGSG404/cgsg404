@@ -111,13 +111,14 @@ const HeroSlider: React.FC = () => {
     initialData: casinoData,
   });
   return (
-    <div id="top-casinos" className="relative w-full container mx-auto py-8 md:py-12">
+    <div id="top-casinos" className="relative w-full py-4 sm:py-6 lg:py-8 xl:py-12">
       <div className="absolute inset-0 bg-neon-gradient opacity-10 -z-10"></div>
-      <div className="relative z-10">
-        {/* Title Section */}
-        <div className="text-center mb-8 md:mb-12 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">Top Casinos</h2>
-          <p className="text-lg text-gray-400 mt-2">Find the best deals from the most trusted casinos.</p>
+      {/* Responsive container matching site pattern */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Title Section - Responsive Typography */}
+        <div className="text-center mb-4 sm:mb-6 lg:mb-8 xl:mb-12 animate-fade-in">
+          <h2 className="text-lg sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">Top Casinos</h2>
+          <p className="text-xs sm:text-base lg:text-lg text-gray-400 mt-1 sm:mt-2">Find the best deals from the most trusted casinos.</p>
         </div>
 
         <Swiper

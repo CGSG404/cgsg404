@@ -1,4 +1,3 @@
-
 import { Card } from '@/src/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
@@ -20,18 +19,19 @@ const Chart = () => {
   ];
 
   return (
-    <section className="py-16">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 text-white">
+    <section className="py-4 sm:py-6 lg:py-8 xl:py-12">
+      {/* Responsive container matching site pattern */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-4 sm:mb-6 lg:mb-8 xl:mb-12">
+          <h2 className="text-lg sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 sm:mb-3 lg:mb-4 text-white">
             Review <span className="gradient-text">Analytics</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-xs sm:text-base lg:text-lg text-center">
             Track our review progress and safety ratings distribution across all platforms.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 xl:gap-8">
           {/* Casino Reviews Over Time */}
           <Card className="bg-casino-card-bg border-casino-border-subtle p-6">
             <h3 className="text-xl font-bold text-white mb-6">Casino Reviews Over Time</h3>
@@ -42,10 +42,12 @@ const Chart = () => {
                   dataKey="month" 
                   stroke="#9ca3af"
                   fontSize={12}
+                  tick={{ fontSize: 12 }}
                 />
                 <YAxis 
                   stroke="#9ca3af"
                   fontSize={12}
+                  tick={{ fontSize: 12 }}
                 />
                 <Tooltip 
                   contentStyle={{ 
@@ -63,6 +65,7 @@ const Chart = () => {
                   strokeWidth={3}
                   dot={{ fill: '#00ff99', strokeWidth: 2, r: 4 }}
                   name="New Casinos"
+                  connectNulls={false}
                 />
                 <Line 
                   isAnimationActive={false}
@@ -72,6 +75,7 @@ const Chart = () => {
                   strokeWidth={3}
                   dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
                   name="Total Reviews"
+                  connectNulls={false}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -87,10 +91,12 @@ const Chart = () => {
                   dataKey="rating" 
                   stroke="#9ca3af"
                   fontSize={12}
+                  tick={{ fontSize: 12 }}
                 />
                 <YAxis 
                   stroke="#9ca3af"
                   fontSize={12}
+                  tick={{ fontSize: 12 }}
                 />
                 <Tooltip 
                   contentStyle={{ 

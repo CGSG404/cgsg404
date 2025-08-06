@@ -18,9 +18,18 @@ const nextConfig = {
 
   // Performance optimizations for production
   experimental: {
-    optimizePackageImports: ['lucide-react', '@tanstack/react-query'],
+    optimizePackageImports: [
+      'lucide-react', 
+      '@tanstack/react-query',
+      'framer-motion',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-tooltip',
+      'recharts'
+    ],
     optimizeCss: true,
     scrollRestoration: true,
+    webpackBuildWorker: true,
   },
 
   images: {
@@ -37,7 +46,7 @@ const nextConfig = {
   poweredByHeader: false,
   // Remove standalone output for development
   // output: 'standalone',
-  // Simplified Webpack configuration
+  // Optimized Webpack configuration
   webpack: (config, { isServer, dev }) => {
     // Basic module resolution fixes
     if (!isServer) {
@@ -46,6 +55,46 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
+      };
+    }
+
+    // Production optimizations
+    if (!dev) {
+      // Enable tree shaking for CSS
+      config.optimization.usedExports = true;
+      
+      // Optimize chunk splitting
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          // Framework chunk
+          framework: {
+            name: 'framework',
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
+            priority: 40,
+            enforce: true,
+          },
+          // Common components chunk
+          commons: {
+            name: 'commons',
+            chunks: 'all',
+            minChunks: 2,
+            priority: 20,
+          },
+          // Vendor chunk
+          vendor: {
+            name(module) {
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+              return `vendor-${packageName.replace('@', '')}`;
+            },
+            test: /[\\/]node_modules[\\/]/,
+            chunks: 'all',
+            priority: 10,
+          },
+        },
       };
     }
 
@@ -85,10 +134,10 @@ const nextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
-          // Performance headers - More reasonable cache
+          // Performance headers - Optimized caching strategy
           {
             key: 'Cache-Control',
-            value: 'public, max-age=3600, s-maxage=86400',
+            value: 'public, max-age=31536000, immutable', // 1 year for static assets
           },
         ],
       },
@@ -110,6 +159,44 @@ const nextConfig = {
           {
             key: 'Access-Control-Allow-Credentials',
             value: 'true',
+          },
+        ],
+      },
+      // Optimized caching for static assets
+      {
+        source: '/images/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/fonts/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // HTML pages - shorter cache
+      {
+        source: '/(.*).html',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
           },
         ],
       },
