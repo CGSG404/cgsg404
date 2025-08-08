@@ -68,7 +68,7 @@ const SectionDivider: React.FC<SectionDividerProps> = ({
       default:
         return {
           container: '',
-          line: 'bg-gradient-to-r from-transparent via-casino-border-subtle to-transparent',
+          line: 'bg-gradient-to-r from-transparent via-casino-neon-green/50 to-transparent',
           title: 'text-white text-2xl md:text-3xl font-bold',
           subtitle: 'text-gray-300 text-base'
         };

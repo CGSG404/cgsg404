@@ -1,6 +1,75 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { mockPageMaintenanceData } from './mock-data';
+import { supabaseAdmin } from '../../../../lib/supabase/server'; // Path diperbaiki
+import { z } from 'zod';
+
+// Skema validasi untuk request body
+const maintenanceSchema = z.object({
+  is_maintenance_mode: z.boolean(),
+  allowed_ips: z.array(z.string().ip({ version: 'v4' })).optional().nullable(),
+});
+
+// Handler untuk GET request: Mengambil status maintenance
+export async function GET(req: NextRequest) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('maintenance_settings')
+      .select('*')
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116: no rows found, which is ok
+      console.error('Error fetching maintenance status:', error);
+      return NextResponse.json({ error: 'Failed to fetch maintenance status', details: error.message }, { status: 500 });
+    }
+
+    // Jika tidak ada data, kembalikan status default (non-maintenance)
+    const settings = data || { is_maintenance_mode: false, allowed_ips: [] };
+
+    return NextResponse.json(settings, { status: 200 });
+  } catch (e) {
+    const error = e as Error;
+    console.error('Catastrophic error in GET /api/admin/page-maintenance:', error);
+    return NextResponse.json({ error: 'An unexpected error occurred.', details: error.message }, { status: 500 });
+  }
+}
+
+// Handler untuk POST request: Memperbarui status maintenance
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    
+    // Validasi input
+    const validation = maintenanceSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json({ error: 'Invalid input', details: validation.error.format() }, { status: 400 });
+    }
+
+    const { is_maintenance_mode, allowed_ips } = validation.data;
+
+    // Operasi Upsert: update jika ada, insert jika tidak ada.
+    // Kita gunakan 'id' sebagai primary key atau unique column untuk dicocokkan.
+    const { data, error } = await supabaseAdmin
+      .from('maintenance_settings')
+      .upsert({
+        id: 1, // Asumsi kita hanya punya satu baris setting dengan id=1
+        is_maintenance_mode,
+        allowed_ips: allowed_ips || [],
+        updated_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating maintenance status:', error);
+      return NextResponse.json({ error: 'Failed to update maintenance status', details: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ message: 'Maintenance status updated successfully', settings: data }, { status: 200 });
+  } catch (e) {
+    const error = e as Error;
+    console.error('Catastrophic error in POST /api/admin/page-maintenance:', error);
+    return NextResponse.json({ error: 'An unexpected error occurred.', details: error.message }, { status: 500 });
+  }
+}
 
 // Initialize Supabase client
 const supabase = createClient(

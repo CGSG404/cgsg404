@@ -1,7 +1,7 @@
 'use client';
 
 import Footer from '@/components/Footer';
-import SimpleNavbar from '@/src/components/SimpleNavbar';
+import ProfessionalNavbar from '@/src/components/ProfessionalNavbar';
 import MaintenanceWrapper from './MaintenanceWrapper';
 
 const ListReportPage = () => {
@@ -9,7 +9,7 @@ const ListReportPage = () => {
     <MaintenanceWrapper>
       <div className="min-h-screen bg-casino-dark">
         {/* Add SimpleNavbar */}
-        <SimpleNavbar />
+        <ProfessionalNavbar />
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4 text-white">

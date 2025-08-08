@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import {
   Plus,
   Edit,
@@ -385,11 +386,15 @@ export default function ContentManagementPage() {
                       <p className="text-gray-300 text-sm">{banner.subtitle}</p>
                       <p className="text-casino-neon-green text-sm font-medium">{banner.highlight}</p>
                       {banner.image_url && (
-                        <img 
-                          src={banner.image_url} 
-                          alt={banner.title}
-                          className="w-full h-32 object-cover rounded-lg"
-                        />
+                        <div className="relative w-full h-32">
+                          <Image 
+                            src={banner.image_url} 
+                            alt={banner.title}
+                            fill
+                            className="object-cover rounded-lg"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
+                        </div>
                       )}
                       <div className="flex justify-between items-center text-xs text-gray-400">
                         <span>Order: {banner.display_order}</span>
@@ -492,11 +497,15 @@ export default function ContentManagementPage() {
                 <Card key={media.id} className="bg-casino-card-bg border-casino-border-subtle">
                   <CardContent className="p-4">
                     <div className="space-y-3">
-                      <img 
-                        src={media.file_path} 
-                        alt={media.alt_text || media.original_name}
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
+                      <div className="relative w-full h-32">
+                        <Image 
+                          src={media.file_path} 
+                          alt={media.alt_text || media.original_name}
+                          fill
+                          className="object-cover rounded-lg"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                        />
+                      </div>
                       <div>
                         <p className="text-white text-sm font-medium truncate">
                           {media.original_name}

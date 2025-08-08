@@ -32,45 +32,47 @@ const LogoSlider: React.FC = () => {
           const duration = scrollWidth / PIXELS_PER_SECOND;
           setAnimationConfig({ width: -scrollWidth, duration });
         } else {
-          setAnimationConfig({ width: 0, duration: 0 }); // No animation if content fits
+          setAnimationConfig({ width: 0, duration: 0 });
         }
       }
     };
 
     calculateAnimation();
-
     window.addEventListener('resize', calculateAnimation);
     return () => window.removeEventListener('resize', calculateAnimation);
   }, []);
 
   return (
-    <section className="py-12 md:py-16 bg-casino-dark">
+    <section className="py-12 md:py-16 bg-black">
       <div className="container mx-auto px-4">
+        {/* Header Section */}
         <motion.div
-          className="text-center mb-10 md:mb-12 px-4"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5 }}
         >
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-          Check Gaming License & Certification
+          <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Gaming License & Certification
           </h3>
-          <p className="text-gray-400 text-sm md:text-base">
-          Real Domain Provide Safety License & Certification for you.
+          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+            Trusted and verified by leading gaming authorities and security organizations worldwide.
           </p>
         </motion.div>
 
+        {/* Logo Slider Container */}
         <div
           ref={containerRef}
-          className="w-full overflow-hidden group py-4"
+          className="w-full overflow-hidden py-6"
           style={{
-            maskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)',
+            maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
           }}
         >
           <motion.div
             ref={logosRef}
-            className="flex w-max"
+            className="flex w-max gap-8"
             style={{ willChange: 'transform' }}
             animate={{ x: [0, animationConfig.width] }}
             transition={{
@@ -83,27 +85,47 @@ const LogoSlider: React.FC = () => {
             }}
           >
             {logos.map((logo, index) => (
-              <div
+              <motion.div
                 key={`${logo.name}-${index}`}
-                className="flex-shrink-0 px-4"
+                className="flex-shrink-0"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
               >
                 <div
-                  className="w-40 h-20 bg-gray-800/50 rounded-lg flex items-center justify-center relative 
-                            border border-gray-700/50 hover:border-casino-neon-green/30 transition-[transform,border-color] duration-300
-                            transform hover:scale-110"
+                  className="w-36 h-20 sm:w-44 sm:h-24 bg-black rounded-xl flex items-center justify-center relative overflow-hidden group cursor-pointer"
+                  style={{ backgroundColor: '#000000' }}
                 >
+                  {/* Subtle glow effect on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-casino-neon-green/0 via-casino-neon-green/5 to-casino-neon-green/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
                   <Image
                     src={logo.src}
-                    alt={logo.name}
+                    alt={`${logo.name} certification`}
                     fill
-                    sizes="160px"
-                    className="object-contain p-2 transition-colors duration-300"
+                    sizes="(max-width: 640px) 144px, 176px"
+                    className="object-contain p-3 filter brightness-90 group-hover:brightness-100 transition-all duration-300"
                   />
                 </div>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
+
+        {/* Trust Badge */}
+        <motion.div
+          className="text-center mt-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-casino-neon-green/10 rounded-full border border-casino-neon-green/20">
+            <div className="w-2 h-2 bg-casino-neon-green rounded-full animate-pulse" />
+            <span className="text-casino-neon-green text-sm font-medium">
+              Verified & Trusted
+            </span>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

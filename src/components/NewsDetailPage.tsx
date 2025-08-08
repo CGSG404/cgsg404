@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
-import SimpleNavbar from '@/src/components/SimpleNavbar';
+import ProfessionalNavbar from '@/src/components/ProfessionalNavbar';
 import Footer from '@/src/components/Footer';
 import { Calendar, User, Tag, ChevronLeft } from 'lucide-react';
 
@@ -62,7 +62,7 @@ const NewsDetailPage = () => {
   return (
     <div className="min-h-screen bg-casino-dark text-white">
       {/* Add SimpleNavbar */}
-      <SimpleNavbar />
+      <ProfessionalNavbar />
       <main className="container mx-auto px-4 py-16 max-w-3xl">
         <Link href="/news" className="flex items-center gap-2 text-sm text-casino-neon-green mb-6 hover:underline">
           <ChevronLeft className="w-4 h-4" /> Back to News

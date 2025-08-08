@@ -27,36 +27,36 @@ const GuideComingSoon = () => {
 
   return (
     <div className="mb-16">
-      <Card className="bg-casino-card-bg/40 border-casino-neon-green/30 max-w-4xl mx-auto mb-12">
-        <CardContent className="p-12 text-center">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-casino-neon-green rounded-full flex items-center justify-center">
-              <BookOpen className="w-8 h-8 text-casino-dark" />
+      <Card className="bg-casino-card-bg/40 border-casino-neon-green/30 max-w-4xl mx-auto mb-8 md:mb-12">
+        <CardContent className="p-6 md:p-12 text-center">
+          <div className="flex items-center justify-center mb-4 md:mb-6">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-casino-neon-green rounded-full flex items-center justify-center">
+              <BookOpen className="w-6 h-6 md:w-8 md:h-8 text-casino-dark" />
             </div>
           </div>
           
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-xl md:text-3xl font-bold mb-3 md:mb-4">
             <span className="text-white">Casino</span> <span className="gradient-text">Learning Center</span>
           </h2>
           
-          <p className="text-gray-400 text-lg mb-6 max-w-2xl mx-auto">
+          <p className="text-gray-400 text-sm md:text-lg mb-4 md:mb-6 max-w-2xl mx-auto">
             Comprehensive guides and tutorials are coming soon. In the meantime, here are some essential tips:
           </p>
         </CardContent>
       </Card>
 
       {/* Quick Tips Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
         {quickTips.map((tip, index) => (
           <Card key={index} className="bg-casino-card-bg border-casino-border-subtle hover:scale-105 transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-casino-neon-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <tip.icon className="w-6 h-6 text-casino-neon-green" />
+            <CardContent className="p-4 md:p-6">
+              <div className="flex items-start gap-3 md:gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-casino-neon-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <tip.icon className="w-5 h-5 md:w-6 md:h-6 text-casino-neon-green" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">{tip.title}</h4>
-                  <p className="text-gray-400 text-sm leading-relaxed">{tip.tip}</p>
+                  <h4 className="text-base md:text-lg font-semibold text-white mb-1 md:mb-2">{tip.title}</h4>
+                  <p className="text-gray-400 text-xs md:text-sm leading-relaxed">{tip.tip}</p>
                 </div>
               </div>
             </CardContent>

@@ -1,4 +1,4 @@
-import SimpleNavbar from '@/src/components/SimpleNavbar';
+import ProfessionalNavbar from '@/src/components/ProfessionalNavbar';
 import Footer from '@/src/components/Footer';
 import GuideHero from '@/src/components/guide/GuideHero';
 import GuideComingSoon from '@/src/components/guide/GuideComingSoon';
@@ -10,7 +10,7 @@ const GuidePage = () => {
   return (
     <MaintenanceWrapper>
       <div className="min-h-screen bg-casino-dark">
-      <SimpleNavbar />
+      <ProfessionalNavbar />
       <GuideHero />
       <div className="py-16">
         <div className="container mx-auto px-4">

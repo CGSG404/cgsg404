@@ -104,9 +104,9 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
   // Show loading state only if not mounted or still loading
   if (!isMounted || loading) {
     return (
-      <div className={`w-full ${isHomePage ? 'h-screen min-h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'} bg-gradient-to-br from-casino-dark via-casino-darker to-casino-dark flex items-center justify-center relative overflow-hidden`}>
+      <div className={`w-full ${isHomePage ? 'h-screen min-h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'} bg-black flex items-center justify-center relative overflow-hidden`}>
         {/* Animated background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-casino-dark via-casino-darker to-purple-900 animate-pulse"></div>
+        <div className="absolute inset-0 bg-black animate-pulse"></div>
         
         {/* Loading content */}
         <div className="text-center text-white relative z-10">
@@ -145,7 +145,7 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
           <SwiperSlide key={`${banner.id}-${idx}`}>
             <div className={`relative w-full ${isHomePage ? 'h-screen min-h-screen' : 'h-[400px] md:h-[550px] lg:h-[650px]'}`}>
               {/* Fallback Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-casino-dark via-casino-darker to-purple-900 z-[1]" />
+              <div className="absolute inset-0 bg-black z-[1]" />
 
               {/* Background Image */}
               <div className="absolute inset-0 z-[2]">
@@ -172,7 +172,7 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
               <div className="absolute inset-0 bg-black/20 z-[3]" />
 
               {/* Content Overlay for better text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-[4]" />
+              <div className="absolute inset-0 bg-black/30 z-[4]" />
 
               {/* Banner Content - Optional for fullscreen mode */}
               {!isHomePage && (
@@ -199,24 +199,38 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
                 </div>
               )}
 
-              {/* Scroll Indicator - Only show on homepage */}
+              {/* Professional Minimal Scroll Indicator - Only show on homepage */}
               {isHomePage && (
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-[15] flex items-center justify-center">
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-[15] flex items-center justify-center">
                   <div 
-                    className="flex flex-col items-center cursor-pointer group animate-bounce hover:animate-none transition-all duration-500"
+                    className="flex flex-col items-center cursor-pointer group transition-all duration-500 ease-out hover:scale-110"
                     onClick={() => {
                       window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
                     }}
                   >
-                    {/* Modern scroll indicator circle */}
-                    <div className="relative w-8 h-12 border-2 border-white/60 rounded-full flex justify-center group-hover:border-white transition-all duration-300">
-                      {/* Scroll dot */}
-                      <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse group-hover:bg-white group-hover:animate-none transition-all duration-300"></div>
+                    {/* Compact animated scroll indicator */}
+                    <div className="relative">
+                      {/* Animated pulse ring */}
+                      <div className="absolute inset-0 w-8 h-8 rounded-full border border-white/20 animate-ping opacity-75"></div>
+                      
+                      {/* Main circle - smaller and more compact */}
+                      <div className="relative w-8 h-8 rounded-full border border-white/25 flex items-center justify-center backdrop-blur-md bg-white/10 group-hover:border-casino-neon-green/60 group-hover:bg-casino-neon-green/20 transition-all duration-500 shadow-lg group-hover:shadow-casino-neon-green/25">
+                        {/* Animated chevron down */}
+                        <svg 
+                          className="w-3 h-3 text-white/60 group-hover:text-casino-neon-green transition-all duration-500 transform group-hover:translate-y-0.5 animate-bounce" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
                     </div>
                     
-                    {/* Simple text below */}
-                    <span className="text-white/60 text-xs font-light mt-2 group-hover:text-white transition-all duration-300 tracking-wide">
-                      SCROLL
+                    {/* Compact text with fade animation */}
+                    <span className="text-white/40 text-xs font-light mt-3 group-hover:text-casino-neon-green transition-all duration-500 tracking-wider uppercase opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
+                      Scroll
                     </span>
                   </div>
                 </div>

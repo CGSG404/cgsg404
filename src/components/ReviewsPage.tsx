@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Head from 'next/head';
-import SimpleNavbar from '@/src/components/SimpleNavbar';
+import ProfessionalNavbar from '@/src/components/ProfessionalNavbar';
 import Footer from '@/src/components/Footer';
 import ReviewsHero from '@/src/components/reviews/ReviewsHero';
 import ReviewsGrid from '@/src/components/reviews/ReviewsGrid';
@@ -24,7 +24,7 @@ const ReviewsPage = () => {
       </Head>
       
       {/* Add SimpleNavbar */}
-      <SimpleNavbar />
+      <ProfessionalNavbar />
       
       <main className="relative overflow-hidden">
         <ReviewsHero />

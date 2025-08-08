@@ -5,6 +5,7 @@ import { useEffect, useState, FormEvent } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import { formatDistanceToNow } from 'date-fns';
+import Image from 'next/image';
 
 // Define the data type for a comment
 interface Comment {
@@ -147,11 +148,13 @@ const ReviewComments = ({ reviewSlug }: ReviewCommentsProps) => {
           ) : comments.length > 0 ? (
             comments.map((comment) => (
               <div key={comment.id} className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-gray-700 flex-shrink-0 border border-white/10 overflow-hidden">
-                  <img 
+                <div className="w-12 h-12 rounded-full bg-gray-700 flex-shrink-0 border border-white/10 overflow-hidden relative">
+                  <Image 
                     src={getAvatarUrl(comment.profile?.username || 'User', comment.profile?.avatar_url)} 
                     alt={`${comment.profile?.username}'s avatar`}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="48px"
                     onError={(e) => {
                       // Fallback if image fails to load
                       e.currentTarget.src = `https://ui-avatars.com/api/?name=${comment.profile?.username || 'User'}&size=200&background=374151&color=fff&bold=true`;

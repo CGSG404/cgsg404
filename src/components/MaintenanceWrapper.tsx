@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useMaintenanceMode } from '@/src/hooks/useMaintenanceMode';
 import { useAdminCheck } from '@/src/hooks/useAdminCheck';
 import MaintenancePage from './MaintenancePage';

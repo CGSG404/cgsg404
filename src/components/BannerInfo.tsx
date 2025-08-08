@@ -45,7 +45,7 @@ export default function BannerInfo() {
 
   return (
     <ClientOnly fallback={
-      <section className="relative py-16 md:py-24 bg-gradient-to-b from-casino-dark via-casino-darker to-casino-dark overflow-hidden">
+      <section className="relative py-16 md:py-24 bg-black overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6">
@@ -58,7 +58,7 @@ export default function BannerInfo() {
         </div>
       </section>
     }>
-      <section className="relative py-16 md:py-24 bg-gradient-to-b from-casino-dark via-casino-darker to-casino-dark overflow-hidden">
+      <section className="relative py-16 md:py-24 bg-black overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div
@@ -95,8 +95,8 @@ export default function BannerInfo() {
               viewport={{ once: true }}
               className="group"
             >
-              <div className="bg-gradient-to-br from-casino-card-bg/60 to-casino-darker/60 backdrop-blur-sm border border-casino-neon-green/20 rounded-2xl p-6 text-center transition-all duration-300 hover:border-casino-neon-green/40 hover:shadow-lg hover:shadow-casino-neon-green/10 transform hover:scale-105">
-                <div className={`inline-flex p-4 rounded-xl bg-gradient-to-r ${feature.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+              <div className="bg-black backdrop-blur-sm border border-casino-neon-green/20 rounded-2xl p-6 text-center transition-all duration-300 hover:border-casino-neon-green/40 hover:shadow-lg hover:shadow-casino-neon-green/10">
+                <div className="inline-flex p-4 rounded-xl bg-black border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-300">
                   <div className="text-white">
                     {feature.icon}
                   </div>
@@ -114,7 +114,7 @@ export default function BannerInfo() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-r from-casino-card-bg/40 to-casino-darker/40 backdrop-blur-sm border border-casino-neon-green/20 rounded-3xl p-8 md:p-12"
+          className="bg-black backdrop-blur-sm border border-casino-neon-green/20 rounded-3xl p-8 md:p-12"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat, index) => (

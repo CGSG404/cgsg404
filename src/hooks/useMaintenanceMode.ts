@@ -34,7 +34,7 @@ export const useMaintenanceMode = () => {
       
       // Add timeout to prevent hanging
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
       const response = await fetch(`/api/maintenance/${encodeURIComponent(pathForApi)}`, {
         cache: 'no-store',
@@ -79,25 +79,31 @@ export const useMaintenanceMode = () => {
     // Convert pathname to match database format (remove leading slash)
     const pathForSubscription = pathname === '/' ? 'home' : pathname.substring(1);
     
-    const channel = supabase
-      .channel(`maintenance_${pathForSubscription}_${Date.now()}`) // Unique channel name
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'page_maintenance',
-          filter: `page_path=eq.${pathForSubscription}`
-        },
-        (payload) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('🔄 Maintenance status changed:', payload);
+    // Setup realtime subscription only if Supabase is properly configured
+    let channel;
+    try {
+      channel = supabase
+        .channel(`maintenance_${pathForSubscription}_${Date.now()}`) // Unique channel name
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'page_maintenance',
+            filter: `page_path=eq.${pathForSubscription}`
+          },
+          (payload) => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('🔄 Maintenance status changed:', payload);
+            }
+            // Refresh maintenance status when changes occur
+            checkMaintenanceStatus();
           }
-          // Refresh maintenance status when changes occur
-          checkMaintenanceStatus();
-        }
-      )
-      .subscribe();
+        )
+        .subscribe();
+    } catch (subscriptionError) {
+      console.warn('⚠️ Failed to setup realtime subscription:', subscriptionError);
+    }
 
     // Auto-refresh every 2 minutes as fallback
     const autoRefreshInterval = setInterval(() => {
@@ -106,7 +112,13 @@ export const useMaintenanceMode = () => {
 
     // Cleanup
     return () => {
-      supabase.removeChannel(channel);
+      if (channel) {
+        try {
+          supabase.removeChannel(channel);
+        } catch (error) {
+          console.warn('⚠️ Error removing channel:', error);
+        }
+      }
       clearInterval(autoRefreshInterval);
     };
   }, [pathname, checkMaintenanceStatus]);

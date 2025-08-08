@@ -4,19 +4,12 @@ import { Button } from '@/src/components/ui/button';
 import { motion } from 'framer-motion';
 import { useIsDesktop } from '@/src/hooks/useIsDesktop';
 import { Shield, Users, Gift, Award } from 'lucide-react';
-import CountUp from 'react-countup';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import ClientOnly from './ClientOnly';
 
 const FaqSection = dynamic(() => import('@/src/components/FaqSection'), { ssr: false });
 
-const stats = [
-  { icon: <Shield className="w-8 h-8 mx-auto text-casino-neon-green mb-2" />, value: '87+', label: 'Casinos Reviewed' },
-  { icon: <Users className="w-8 h-8 mx-auto text-casino-neon-green mb-2" />, value: '1081+', label: 'Forum Activities' },
-  { icon: <Gift className="w-8 h-8 mx-auto text-casino-neon-green mb-2" />, value: '800+', label: 'Bonus Offers' },
-  { icon: <Award className="w-8 h-8 mx-auto text-casino-neon-green mb-2" />, value: '99%', label: 'Trust Score' }
-];
+
 
 const HeroSection: React.FC = () => {
   const isDesktop = useIsDesktop();
@@ -24,7 +17,7 @@ const HeroSection: React.FC = () => {
 
   return (
     <>
-      <section className="relative text-center pt-16 pb-12 md:pt-24 md:pb-20 bg-gradient-to-b from-casino-dark via-casino-darker to-casino-dark">
+      <section className="relative text-center pt-20 pb-16 md:pt-24 md:pb-20 bg-black safe-area-top">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div
@@ -60,7 +53,7 @@ const HeroSection: React.FC = () => {
           >
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-semibold px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25 group"
+              className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-semibold min-h-[44px] px-6 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25 group touch-target"
               onClick={() => {
                 const section = document.getElementById('top-casinos');
                 section?.scrollIntoView({ behavior: 'smooth' });
@@ -78,7 +71,7 @@ const HeroSection: React.FC = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full border-2 border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green hover:text-casino-dark px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-transparent backdrop-blur-sm group"
+                className="w-full border-2 border-casino-neon-green text-casino-neon-green hover:bg-casino-neon-green hover:text-casino-dark min-h-[44px] px-6 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg rounded-lg sm:rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-transparent backdrop-blur-sm group touch-target"
               >
                 <span className="flex items-center gap-1.5 sm:gap-2">
                   <span className="hidden xs:inline">Read Reviews</span>
@@ -91,52 +84,48 @@ const HeroSection: React.FC = () => {
             </Link>
           </motion.div>
 
-        {/* Stats Grid */}
+        {/* Trust Badges */}
         <motion.div
           initial={isDesktop ? { opacity: 0, y: 20 } : false}
           animate={isDesktop ? { opacity: 1, y: 0 } : false}
           transition={isDesktop ? { duration: 0.8, delay: 0.4, ease: 'easeOut' } : {}}
-          className="mt-12 md:mt-16 max-w-4xl mx-auto"
+          className="mt-16 md:mt-20 max-w-5xl mx-auto"
         >
+          <div className="text-center mb-8">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-3">
+              <span className="bg-gradient-to-r from-casino-neon-green to-emerald-400 bg-clip-text text-transparent">
+                Why Choose CGSG?
+              </span>
+            </h2>
+            <p className="text-gray-400 text-base max-w-xl mx-auto">
+              Your trusted partner for safe and reliable online casino experiences.
+            </p>
+          </div>
+          
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {stats.map((stat, index) => (
+            {[
+              { icon: <Shield />, title: "Verified", subtitle: "Casinos", color: "from-blue-500 to-cyan-400" },
+              { icon: <Users />, title: "Expert", subtitle: "Reviews", color: "from-purple-500 to-pink-400" },
+              { icon: <Gift />, title: "Best", subtitle: "Bonuses", color: "from-orange-500 to-red-400" },
+              { icon: <Award />, title: "Trusted", subtitle: "Platform", color: "from-green-500 to-emerald-400" }
+            ].map((item, index) => (
               <motion.div
                 key={index}
-                className="bg-gradient-to-br from-casino-card-bg/60 to-casino-darker/60 border border-casino-neon-green/20 rounded-xl p-6 text-center transition-all duration-300 hover:border-casino-neon-green/40 hover:shadow-lg hover:shadow-casino-neon-green/10 backdrop-blur-sm"
+                className="group relative overflow-hidden rounded-xl bg-black border border-gray-700/50 hover:border-casino-neon-green/40 transition-all duration-300 backdrop-blur-sm"
                 whileHover={{ scale: isDesktop ? 1.05 : 1 }}
                 initial={isDesktop ? { opacity: 0, y: 20 } : false}
                 animate={isDesktop ? { opacity: 1, y: 0 } : false}
                 transition={isDesktop ? { duration: 0.6, delay: 0.6 + index * 0.1 } : {}}
               >
-                <div className="mb-3 flex justify-center">
-                  <div className="p-3 rounded-xl bg-casino-neon-green/10 border border-casino-neon-green/20">
-                    {stat.icon}
+                <div className="p-4 md:p-6 text-center">
+                  <div className="mb-3 flex justify-center">
+                    <div className="p-3 rounded-lg bg-black border border-white/10">
+                      {React.cloneElement(item.icon, { className: "w-6 h-6 md:w-8 md:h-8 text-white" })}
+                    </div>
                   </div>
+                  <h3 className="text-sm md:text-base font-bold text-white mb-1">{item.title}</h3>
+                  <p className="text-xs md:text-sm text-gray-400 font-medium">{item.subtitle}</p>
                 </div>
-                <p className="text-2xl md:text-3xl font-black text-casino-neon-green mb-2">
-                  <ClientOnly fallback={<span>{stat.value}</span>}>
-                    {stat.value.includes('+') ? (
-                      <CountUp
-                        end={parseInt(stat.value)}
-                        duration={2.5}
-                        suffix="+"
-                        className="inline-block"
-                        delay={0.8 + index * 0.2}
-                      />
-                    ) : stat.value.includes('%') ? (
-                      <CountUp
-                        end={parseInt(stat.value)}
-                        duration={2.5}
-                        suffix="%"
-                        className="inline-block"
-                        delay={0.8 + index * 0.2}
-                      />
-                    ) : (
-                      stat.value
-                    )}
-                  </ClientOnly>
-                </p>
-                <p className="text-sm md:text-base text-gray-300 font-medium">{stat.label}</p>
               </motion.div>
             ))}
           </div>
@@ -180,7 +169,7 @@ const HeroSection: React.FC = () => {
             className="mt-14 max-w-4xl mx-auto"
           >
             <Link href="/about-us" className="block group" prefetch>
-              <div className="rounded-xl border border-gray-700/60 bg-gray-800/60 hover:border-casino-neon-green/60 transition-colors p-6 md:p-8">
+              <div className="rounded-xl border border-gray-700/60 bg-black/60 hover:border-casino-neon-green/60 transition-colors p-6 md:p-8 backdrop-blur-sm">
                 <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 group-hover:text-casino-neon-green transition-colors">
                   Learn more about CGSG
                 </h3>

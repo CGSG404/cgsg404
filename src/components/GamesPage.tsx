@@ -1,6 +1,6 @@
 "use client";
 
-import SimpleNavbar from '@/src/components/SimpleNavbar';
+import ProfessionalNavbar from '@/src/components/ProfessionalNavbar';
 import Footer from '@/components/Footer';
 import CasinoSlideshow from '@/components/CasinoSlideshow';
 import TopCasinosLeaderboard from '@/components/TopCasinosLeaderboard';
@@ -8,13 +8,14 @@ import HeroBannerSliderSimple from './HeroBannerSliderSimple';
 import RunningTextTicker from './RunningTextTicker';
 import SimpleDivider from './ui/SimpleDivider';
 import MaintenanceWrapper from './MaintenanceWrapper';
+import Image from 'next/image';
 
 
 const GamesPage: React.FC = () => {
   return (
     <MaintenanceWrapper>
       <div className="min-h-screen bg-casino-dark">
-      <SimpleNavbar />
+      <ProfessionalNavbar />
       {/* Hero Banner Slider for Games Page */}
       <HeroBannerSliderSimple pageType="games" />
 
@@ -44,7 +45,7 @@ const GamesPage: React.FC = () => {
             </h1>
 
             <div className="mt-4 flex items-center gap-3 text-sm text-gray-400">
-              <img src="/founder.png" alt="Author avatar" width={32} height={32} className="rounded-full" />
+              <Image src="/founder.png" alt="Author avatar" width={32} height={32} className="rounded-full" />
               <span className="font-medium text-gray-200">GuruSG.</span>
               <span>·</span>
               <time dateTime="2025-07-10">10 Jul 2025</time>
@@ -57,7 +58,7 @@ const GamesPage: React.FC = () => {
 
           {/* RIGHT IMAGE */}
           <div className="relative mx-auto h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-56 lg:w-56 flex-shrink-0">
-            <img src="/cgsg-logos.png" alt="Fair game badge" className="object-contain" />
+            <Image src="/cgsg-logos.png" alt="Fair game badge" fill className="object-contain" />
           </div>
         </div>
       </section>

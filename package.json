@@ -59,7 +59,7 @@
     "dotenv": "^17.2.1",
     "embla-carousel-react": "^8.3.0",
     "formidable": "^3.5.4",
-    "framer-motion": "^12.23.6",
+    "framer-motion": "^12.23.12",
     "i18next": "^25.3.2",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",

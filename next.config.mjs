@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false, // ✅ Fixed: Enable TypeScript error checking for production safety
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false, // ✅ Fixed: Enable ESLint checking for code quality
   },
   // Enable React Strict Mode for better development experience
   reactStrictMode: true,
@@ -14,13 +14,33 @@ const nextConfig = {
     // Disable console logging in production
     NEXT_PUBLIC_ENABLE_LOGGING: process.env.NODE_ENV === 'development' ? 'true' : 'false',
     NEXT_PUBLIC_LOG_LEVEL: process.env.NODE_ENV === 'development' ? 'debug' : 'error',
+    // Explicitly pass Supabase environment variables
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
   },
 
   // Performance optimizations for production
   experimental: {
-    optimizePackageImports: ['lucide-react', '@tanstack/react-query'],
+    optimizePackageImports: [
+      'lucide-react', 
+      '@tanstack/react-query',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-select',
+      '@radix-ui/react-toast',
+      'framer-motion'
+    ],
     optimizeCss: true,
     scrollRestoration: true,
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
 
   images: {

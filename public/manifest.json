@@ -1,0 +1,144 @@
+{
+  "name": "GuruSingapore - Casino Guide",
+  "short_name": "GuruSG",
+  "description": "Your ultimate guide to online casinos, bonuses, and expert reviews in Singapore",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00ff88",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["entertainment", "lifestyle", "games"],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Homepage on desktop"
+    },
+    {
+      "src": "/screenshots/mobile-home.jpg",
+      "sizes": "390x844",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Homepage on mobile"
+    },
+    {
+      "src": "/screenshots/mobile-casinos.jpg",
+      "sizes": "390x844",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Casino listings on mobile"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Top Casinos",
+      "short_name": "Top Casinos",
+      "description": "View the best rated casinos",
+      "url": "/top-casinos",
+      "icons": [
+        {
+          "src": "/icons/shortcut-star.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Casino Reviews",
+      "short_name": "Reviews",
+      "description": "Read expert casino reviews",
+      "url": "/reviews",
+      "icons": [
+        {
+          "src": "/icons/shortcut-review.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Bonuses",
+      "short_name": "Bonuses",
+      "description": "Find the best casino bonuses",
+      "url": "/casinos",
+      "icons": [
+        {
+          "src": "/icons/shortcut-bonus.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Forum",
+      "short_name": "Forum",
+      "description": "Join the casino community",
+      "url": "/forum",
+      "icons": [
+        {
+          "src": "/icons/shortcut-forum.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
+}

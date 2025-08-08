@@ -4,6 +4,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { Loader2 } from 'lucide-react';
 import Footer from '@/components/Footer';
+import Image from 'next/image';
 
 interface Profile {
   id: string;
@@ -99,12 +100,13 @@ const Profile = () => {
       <div className="flex-1 container mx-auto px-4 py-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+            <div className="relative w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
               {profile.avatar_url ? (
-                <img 
+                <Image 
                   src={profile.avatar_url} 
                   alt={profile.full_name ?? ""}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               ) : (
                 <span className="text-2xl text-gray-500">

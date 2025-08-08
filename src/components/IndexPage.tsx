@@ -1,12 +1,13 @@
 'use client';
 
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import HeroSection from '@/src/components/HeroSection';
 import HeroSlider from '@/src/components/HeroSlider';
 import InfoCard from '@/src/components/InfoCard';
-import SimpleNavbar from '@/src/components/SimpleNavbar';
+import ProfessionalNavbar from '@/src/components/ProfessionalNavbar';
 import CookieConsent from '@/src/components/CookieConsent';
 import '@/src/styles/parallax.css';
+import { initViewportFix } from '@/src/utils/viewportFix';
 
 // Direct import untuk HeroBannerSlider - no more dynamic import
 import HeroBannerSlider from '@/src/components/HeroBannerSlider';
@@ -27,19 +28,24 @@ const Chart = lazy(() => import('@/src/components/Chart'));
 const Footer = lazy(() => import('@/src/components/Footer'));
 
 const IndexPage = () => {
-// Semua logic dan UI utama Index sudah di sini.
+  // Initialize viewport fix for mobile browsers
+  useEffect(() => {
+    initViewportFix();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-casino-dark">
+    <div className="app-container bg-black smooth-scroll relative overflow-hidden">
       {/* Metadata moved to app/page.tsx - removed Head component to prevent conflicts */}
       
-      {/* Add Navbar */}
-      <SimpleNavbar />
+      {/* Add Navbar with safe area support */}
+      <div className="safe-area-top">
+        <ProfessionalNavbar />
+      </div>
       
       <HeroBannerSlider isHomePage={true} />
 
-      {/* Content Container with proper z-index and background */}
-      <div className="parallax-content">
+      {/* Content Container with proper z-index, background, and mobile optimizations */}
+      <div className="parallax-content safe-area-all">
         {/* Smooth transition overlay */}
         <div className="content-overlay">
           {/* Running Text Ticker */}
@@ -47,42 +53,62 @@ const IndexPage = () => {
         </div>
 
       {/* Divider after Ticker */}
-      <SimpleDivider variant="default" spacing="lg" />
+      <div className="bg-black relative py-2">
+        <SectionDivider
+          icon="sparkles"
+          variant="gradient"
+          spacing="sm"
+        />
+      </div>
 
       <HeroSection />
 
       {/* Divider after Hero Section */}
-      <SectionDivider
-        title="Why Choose CGSG?"
-        subtitle="Your trusted partner for safe and exciting online gambling"
-        icon="star"
-        variant="premium"
-        spacing="xl"
-      />
+      <div className="bg-black relative py-2">
+        <SectionDivider
+          icon="star"
+          variant="premium"
+          spacing="sm"
+        />
+      </div>
 
-      <BannerInfo />
+      <div className="bg-black relative">
+        <div className="relative z-10">
+          <BannerInfo />
+        </div>
+      </div>
 
       {/* Divider after Banner Info */}
-      <SimpleDivider variant="casino" spacing="lg">
-        Top Casinos
-      </SimpleDivider>
+      <div className="bg-black relative py-2">
+        <SectionDivider
+          icon="crown"
+          variant="premium"
+          spacing="sm"
+        />
+      </div>
 
-      <HeroSlider />
+      <div className="bg-black relative">
+        <div className="relative z-10">
+          <HeroSlider />
+        </div>
+      </div>
 
       {/* Divider before FAQ Section */}
-      <SectionDivider
-        title="Frequently Asked Questions"
-        subtitle="Everything you need to know about FWF bonuses and rewards"
-        icon="gift"
-        variant="default"
-        spacing="xl"
-      />
+      <div className="bg-black relative py-2">
+        <SectionDivider
+          icon="gift"
+          variant="default"
+          spacing="sm"
+        />
+      </div>
 
       {/* Bonus Info Section */}
-      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-casino-darker">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
-            FAQ: What is FWF?
+      <div className="py-12 px-4 sm:px-6 lg:px-8 bg-black relative">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <h2 className="text-4xl font-bold text-white text-center mb-8 tracking-tight">
+            <span className="bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
+              FAQ: What is FWF?
+            </span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <InfoCard
@@ -108,38 +134,56 @@ const IndexPage = () => {
       </div>
 
       {/* Divider before Logo Slider */}
-      <SectionDivider
-        title="Our Partners"
-        subtitle="Trusted casino brands we work with"
-        icon="sparkles"
-        variant="minimal"
-        spacing="xl"
-      />
+      <div className="bg-black relative py-2">
+        <SectionDivider
+          icon="sparkles"
+          variant="minimal"
+          spacing="sm"
+        />
+      </div>
 
       {/* Enhanced Suspense Boundaries - Professional Loading States */}
-      <Suspense fallback={<LogoSliderSkeleton />}>
-        <LogoSlider />
-      </Suspense>
+      <div className="bg-black relative">
+        <div className="relative z-10">
+          <Suspense fallback={<LogoSliderSkeleton />}>
+            <LogoSlider />
+          </Suspense>
+        </div>
+      </div>
 
       {/* Divider before Chart */}
-      <SectionDivider
-        title="Statistics & Analytics"
-        subtitle="Data-driven insights for better gaming decisions"
-        icon="crown"
-        variant="minimal"
-        spacing="lg"
-      />
+      <div className="bg-black relative py-2">
+        <SectionDivider
+          icon="crown"
+          variant="minimal"
+          spacing="sm"
+        />
+      </div>
 
-      <Suspense fallback={<ChartSkeleton />}>
-        <Chart />
-      </Suspense>
+      <div className="bg-black relative">
+        <div className="relative z-10">
+          <Suspense fallback={<ChartSkeleton />}>
+            <Chart />
+          </Suspense>
+        </div>
+      </div>
 
       {/* Divider before Footer */}
-      <SimpleDivider variant="minimal" spacing="xl" />
+      <div className="bg-black relative py-2">
+        <SectionDivider
+          icon="users"
+          variant="minimal"
+          spacing="sm"
+        />
+      </div>
 
-        <Suspense fallback={<FooterSkeleton />}>
-          <Footer />
-        </Suspense>
+      <div className="bg-black relative">
+        <div className="relative z-10">
+          <Suspense fallback={<FooterSkeleton />}>
+            <Footer />
+          </Suspense>
+        </div>
+      </div>
       </div>
       
       {/* Add Cookie Consent */}

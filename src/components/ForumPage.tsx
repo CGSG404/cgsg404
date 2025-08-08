@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Footer from '@/components/Footer';
-import SimpleNavbar from '@/src/components/SimpleNavbar';
+import ProfessionalNavbar from '@/src/components/ProfessionalNavbar';
 import ForumHero from '@/components/forum/ForumHero';
 import ForumPostsList from '@/src/components/forum/ForumPostsList';
 import TweetComposer from '@/src/components/forum/TweetComposer';
@@ -49,7 +49,7 @@ const ForumPage = () => {
     <MaintenanceWrapper>
       <div className="min-h-screen bg-casino-dark">
       {/* Add SimpleNavbar */}
-      <SimpleNavbar />
+      <ProfessionalNavbar />
       
       <ForumHero />
 
