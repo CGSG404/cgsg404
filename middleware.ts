@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
-import { createClient } from '@supabase/supabase-js'
 
 // Pages that should be checked for maintenance mode
 const MAINTENANCE_PAGES = [
@@ -16,9 +14,13 @@ const MAINTENANCE_PAGES = [
 ];
 
 export async function middleware(request: NextRequest) {
-  // 🔄 URL REDIRECTS: Handle legacy URLs
   const url = request.nextUrl.clone();
   const hostname = request.headers.get('host') || '';
+
+  // 1) Preview/dev: allow all, especially /admin paths on *.vercel.app
+  if (process.env.VERCEL_ENV !== 'production') {
+    return NextResponse.next();
+  }
 
   // 🔐 ADMIN SUBDOMAIN ROUTING: Handle sg44admin subdomain (standardized)
   if ((hostname.startsWith('sg44admin.') && hostname.endsWith('.gurusingapore.com')) || hostname.includes('sg44admin.localhost')) {
@@ -26,12 +28,6 @@ export async function middleware(request: NextRequest) {
     if (!url.pathname.startsWith('/admin')) {
       url.pathname = '/admin' + url.pathname;
       return NextResponse.redirect(url);
-    }
-  } else {
-    // Treat only VERCEL_ENV=production as production. Preview uses NODE_ENV=production but should be allowed.
-    const isProduction = process.env.VERCEL_ENV === 'production';
-    if (isProduction && url.pathname.startsWith('/admin')) {
-      return new NextResponse('Not Found', { status: 404 });
     }
   }
 
@@ -124,11 +120,7 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 🚀 MAINTENANCE MODE: Handled client-side by MaintenanceWrapper
-  // Removed server-side check to prevent duplicate Supabase clients and slow middleware
-
-
-
+  // 🚀 MAINTENANCE MODE: handled client-side; no server checks here
   // Set CORS headers
   response.headers.set('Access-Control-Allow-Origin', '*')
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
