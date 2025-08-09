@@ -121,7 +121,12 @@ function AuthCallbackContent() {
           if (isValid) {
             console.log('✅ Session validated successfully');
             // After successful login, send user to admin dashboard (Preview & Production)
-            router.replace('/admin');
+            // If admin path results in 404 in Preview, fallback to /admin/hero-banners
+            try {
+              router.replace('/admin');
+            } catch {
+              router.replace('/admin/hero-banners');
+            }
             return;
           } else {
             console.error('❌ Session validation failed');

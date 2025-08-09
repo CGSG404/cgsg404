@@ -20,7 +20,7 @@ export default async function AdminLayout({
   } = await supabase.auth.getSession();
 
   // In preview/dev, allow accessing admin without forcing sign-in to validate UI flows
-  const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+  const isProduction = process.env.VERCEL_ENV === 'production';
   if (!session && isProduction) {
     redirect('/signin');
   }
@@ -32,7 +32,7 @@ export default async function AdminLayout({
     .map(e => e.trim().toLowerCase())
     .filter(Boolean);
 
-  const userEmail = (session.user.email || '').toLowerCase();
+  const userEmail = (session?.user?.email || '').toLowerCase();
   const isAdmin = allowedEmails.length > 0 ? allowedEmails.includes(userEmail) : !isProduction; // allow in preview/dev
 
   if (!isAdmin) {
