@@ -28,9 +28,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
   } else {
-    // In production: Block access to /admin routes on non-admin hosts
-    // In preview/dev: allow /admin so testing can be done on vercel.app or localhost
-    const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+    // Treat only VERCEL_ENV=production as production. Preview uses NODE_ENV=production but should be allowed.
+    const isProduction = process.env.VERCEL_ENV === 'production';
     if (isProduction && url.pathname.startsWith('/admin')) {
       return new NextResponse('Not Found', { status: 404 });
     }
