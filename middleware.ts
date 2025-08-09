@@ -28,9 +28,10 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
   } else {
-    // Main domain: Block access to /admin routes (no redirect, just block)
-    if (url.pathname.startsWith('/admin')) {
-      // Return 404 for admin routes on main domain
+    // In production: Block access to /admin routes on non-admin hosts
+    // In preview/dev: allow /admin so testing can be done on vercel.app or localhost
+    const isProduction = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+    if (isProduction && url.pathname.startsWith('/admin')) {
       return new NextResponse('Not Found', { status: 404 });
     }
   }
