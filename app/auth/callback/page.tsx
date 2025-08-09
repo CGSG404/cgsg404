@@ -120,7 +120,8 @@ function AuthCallbackContent() {
 
           if (isValid) {
             console.log('✅ Session validated successfully');
-            router.replace('/?success=login');
+            // After successful login, send user to admin dashboard (Preview & Production)
+            router.replace('/admin');
             return;
           } else {
             console.error('❌ Session validation failed');
