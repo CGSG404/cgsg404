@@ -13,6 +13,12 @@ export async function GET() {
       .order('display_order', { ascending: true });
 
     if (error) {
+      // Graceful fallback when table is missing or RLS denies access in preview
+      const errorCode = (error as any)?.code || '';
+      if (errorCode === '42P01' /* relation does not exist */ || errorCode === '42501' /* insufficient_privilege */) {
+        console.warn('Hero banners table not available or RLS denied. Returning empty list.');
+        return NextResponse.json({ data: [] }, { status: 200 });
+      }
       console.error('Error fetching hero banners:', error);
       return NextResponse.json(
         { error: 'Failed to fetch hero banners' },
