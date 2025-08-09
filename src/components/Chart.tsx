@@ -1,23 +1,21 @@
 
+'use client';
+
 import { Card } from '@/src/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { useQuery } from '@tanstack/react-query';
+import { fetchChartData, fallbackChartData } from '@/src/lib/homepage-data';
 
 const Chart = () => {
-  const reviewData = [
-    { month: 'Jan', casinos: 0, reviews: 0 },
-    { month: 'Feb', casinos: 0, reviews: 0 },
-    { month: 'Mar', casinos: 0, reviews: 0 },
-    { month: 'Apr', casinos: 20, reviews: 20 },
-    { month: 'May', casinos: 91, reviews: 91 },
-    { month: 'Jun', casinos: 106, reviews: 106 },
-  ];
+  const { data: chartData = fallbackChartData } = useQuery({
+    queryKey: ['chartData'],
+    queryFn: fetchChartData,
+    initialData: fallbackChartData,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-  const safetyData = [
-    { rating: 'Very High', count: 10, color: '#10b981' },
-    { rating: 'High', count: 10, color: '#3b82f6' },
-    { rating: 'Medium', count: 129, color: '#f59e0b' },
-    { rating: 'Low', count: 203, color: '#ef4444' },
-  ];
+  const reviewData = chartData.filter(item => item.chart_type === 'review');
+  const safetyData = chartData.filter(item => item.chart_type === 'safety');
 
   return (
     <section className="py-16">
@@ -39,7 +37,7 @@ const Chart = () => {
               <LineChart data={reviewData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#2a3441" />
                 <XAxis 
-                  dataKey="month" 
+                  dataKey="label" 
                   stroke="#9ca3af"
                   fontSize={12}
                 />
@@ -58,20 +56,11 @@ const Chart = () => {
                 <Line 
                   isAnimationActive={false}
                   type="monotone" 
-                  dataKey="casinos" 
+                  dataKey="value" 
                   stroke="#00ff99" 
                   strokeWidth={3}
                   dot={{ fill: '#00ff99', strokeWidth: 2, r: 4 }}
                   name="New Casinos"
-                />
-                <Line 
-                  isAnimationActive={false}
-                  type="monotone" 
-                  dataKey="reviews" 
-                  stroke="#8b5cf6" 
-                  strokeWidth={3}
-                  dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
-                  name="Total Reviews"
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -84,7 +73,7 @@ const Chart = () => {
               <BarChart data={safetyData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#2a3441" />
                 <XAxis 
-                  dataKey="rating" 
+                  dataKey="label" 
                   stroke="#9ca3af"
                   fontSize={12}
                 />
@@ -102,7 +91,7 @@ const Chart = () => {
                 />
                 <Bar 
                   isAnimationActive={false}
-                  dataKey="count" 
+                  dataKey="value" 
                   fill="#00ff99"
                   radius={[4, 4, 0, 0]}
                   name="Casinos"

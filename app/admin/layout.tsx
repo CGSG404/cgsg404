@@ -1,55 +1,67 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { Home, Settings, Database, FileText, Upload, Monitor, BarChart3, Image } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: 'Admin Panel | CGSG',
-  description: 'Content Management System for CGSG',
+  title: 'Admin Dashboard | CGSG404',
+  description: 'Content Management System for CGSG404',
 };
 
-const adminMenuItems = [
-  { href: '/admin', label: 'Dashboard', icon: Home },
-  { href: '/admin/banners', label: 'Banners', icon: Image },
-  { href: '/admin/casinos', label: 'Casinos', icon: BarChart3 },
-  { href: '/admin/content', label: 'Content', icon: FileText },
-  { href: '/admin/database', label: 'Database', icon: Database },
-  { href: '/admin/file-upload', label: 'File Upload', icon: Upload },
-  { href: '/admin/monitoring', label: 'Monitoring', icon: Monitor },
-  { href: '/admin/maintenance', label: 'Maintenance', icon: Settings },
-];
-
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-casino-dark flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-casino-card-bg border-r border-casino-border-subtle">
-        <div className="p-6">
-          <h1 className="text-xl font-bold text-white mb-6">CGSG Admin</h1>
-          <nav className="space-y-2">
-            {adminMenuItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center space-x-3 px-4 py-2 text-gray-300 hover:text-white hover:bg-casino-dark rounded-lg transition-colors"
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      </div>
+  const supabase = createServerComponentClient({ cookies });
+  
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        {children}
+  if (!session) {
+    redirect('/signin');
+  }
+
+  // Simple admin check - you can enhance this later
+  const isAdmin = session.user.email?.includes('admin') || 
+                  session.user.email === 'admin@cgsg404.com';
+
+  if (!isAdmin) {
+    redirect('/');
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <nav className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-semibold text-gray-900">
+                CGSG404 Admin
+              </h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">
+                {session.user.email}
+              </span>
+              <form action="/auth/signout" method="post">
+                <button
+                  type="submit"
+                  className="text-sm text-red-600 hover:text-red-800"
+                >
+                  Sign Out
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          {children}
+        </div>
       </div>
     </div>
   );

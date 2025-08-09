@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/src/components/ui/button';
@@ -6,6 +8,8 @@ import { useIsDesktop } from '@/src/hooks/useIsDesktop';
 import { Shield, Users, Gift, Award } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { fetchHeroSectionContent, fallbackHeroSectionData } from '@/src/lib/homepage-data';
 
 const FaqSection = dynamic(() => import('@/src/components/FaqSection'), { ssr: false });
 
@@ -14,6 +18,13 @@ const FaqSection = dynamic(() => import('@/src/components/FaqSection'), { ssr: f
 const HeroSection: React.FC = () => {
   const isDesktop = useIsDesktop();
   const backgroundPattern = "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff9a' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E";
+
+  const { data: heroContent = fallbackHeroSectionData } = useQuery({
+    queryKey: ['heroSectionContent'],
+    queryFn: fetchHeroSectionContent,
+    initialData: fallbackHeroSectionData,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   return (
     <>
@@ -34,14 +45,18 @@ const HeroSection: React.FC = () => {
             className="max-w-5xl mx-auto"
           >
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-6">
-              Your Trusted
-              <br />
+              {heroContent.subtitle && (
+                <>
+                  {heroContent.subtitle}
+                  <br />
+                </>
+              )}
               <span className="bg-gradient-to-r from-casino-neon-green via-emerald-400 to-green-400 bg-clip-text text-transparent">
-                Casino Guide
+                {heroContent.title}
               </span>
             </h1>
             <p className="mt-6 text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Discover first-class online casinos with expert reviews, trusted reports, and safe gambling platforms recommended by CGSG professionals.
+              {heroContent.description || "Discover first-class online casinos with expert reviews, trusted reports, and safe gambling platforms recommended by CGSG professionals."}
             </p>
           </motion.div>
 
@@ -51,22 +66,28 @@ const HeroSection: React.FC = () => {
             transition={isDesktop ? { duration: 0.8, delay: 0.3, ease: 'easeOut' } : {}}
             className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center items-center"
           >
-            <Button
-              size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-semibold min-h-[44px] px-6 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25 group touch-target"
-              onClick={() => {
-                const section = document.getElementById('top-casinos');
-                section?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              <span className="flex items-center gap-1.5 sm:gap-2">
-                <span className="hidden xs:inline">Find Best Casinos</span>
-                <span className="xs:hidden">Best Casinos</span>
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </span>
-            </Button>
+            {heroContent.cta_text && (
+              <Button
+                size="lg"
+                className="w-full sm:w-auto bg-gradient-to-r from-casino-neon-green to-emerald-400 hover:from-emerald-400 hover:to-casino-neon-green text-casino-dark font-semibold min-h-[44px] px-6 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg rounded-lg sm:rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-casino-neon-green/25 group touch-target"
+                onClick={() => {
+                  if (heroContent.cta_url) {
+                    window.location.href = heroContent.cta_url;
+                  } else {
+                    const section = document.getElementById('top-casinos');
+                    section?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
+                <span className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="hidden xs:inline">{heroContent.cta_text}</span>
+                  <span className="xs:hidden">{heroContent.cta_text.split(' ')[0]}</span>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+              </Button>
+            )}
             <Link href="/reviews" className="w-full sm:w-auto">
               <Button
                 size="lg"

@@ -155,7 +155,7 @@ export function OptimizedImage({
       }}
     >
       <div className="text-center">
-        <div className="text-2xl mb-2">📷</div>
+        <div className="text-2xl mb-2">Image</div>
         <div className="text-sm">Image not available</div>
       </div>
     </div>

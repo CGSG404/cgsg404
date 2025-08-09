@@ -10,7 +10,7 @@ interface InfoCardProps {
 
 const InfoCard: React.FC<InfoCardProps> = ({ title, description, icon, className = '' }) => {
   return (
-    <Card className={`bg-casino-card-bg border-casino-border-subtle p-4 sm:p-6 h-full touch-target card-hover transition-all duration-300 hover:scale-105 ${className}`}>
+    <Card className={`bg-white/5 backdrop-blur-md border border-white/10 p-4 sm:p-6 h-full ${className}`}>
       <div className="flex items-start gap-3 sm:gap-4">
         {icon && (
           <div className="text-casino-neon-green flex-shrink-0 mt-1 p-2 rounded-lg bg-casino-neon-green/10">

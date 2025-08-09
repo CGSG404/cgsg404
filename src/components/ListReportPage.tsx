@@ -22,7 +22,7 @@ const ListReportPage = () => {
           
           <div className="text-center py-20">
             <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-full flex items-center justify-center">
-              <span className="text-4xl">📋</span>
+              <span className="text-4xl">Reports</span>
             </div>
             <h2 className="text-2xl font-bold text-white mb-4">Coming Soon</h2>
             <p className="text-gray-400 max-w-md mx-auto">

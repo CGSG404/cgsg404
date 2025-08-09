@@ -1,14 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { Button } from '@/src/components/ui/button';
-import { Card, CardContent } from '@/src/components/ui/card';
-import { X, Cookie, Shield, Settings } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '@/src/lib/supabaseClient';
-import { useAuth } from '@/src/contexts/AuthContext';
-import { conditionalLog } from '@/src/utils/production-ready-console';
+import { Cookie, Settings, Shield, X, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface CookiePreferences {
   necessary: boolean;
@@ -17,135 +13,78 @@ interface CookiePreferences {
   marketing: boolean;
 }
 
+interface ModernToggleProps {
+  enabled: boolean;
+  onChange: (enabled: boolean) => void;
+  disabled?: boolean;
+  label: string;
+}
+
+const ModernToggle: React.FC<ModernToggleProps> = ({ enabled, onChange, disabled = false, label }) => {
+  return (
+    <button
+      onClick={() => !disabled && onChange(!enabled)}
+      className={`
+        relative inline-flex h-8 w-16 items-center justify-center rounded-full transition-all duration-300 ease-in-out
+        ${enabled 
+          ? 'bg-gradient-to-r from-green-500 to-green-600 shadow-lg shadow-green-500/30' 
+          : 'bg-gray-500 hover:bg-gray-400'
+        }
+        ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:scale-105'}
+        focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-1 focus:ring-offset-casino-dark
+        border-2 border-white/20
+      `}
+      aria-label={`Toggle ${label}`}
+      disabled={disabled}
+    >
+      {/* Background text */}
+      <div className="absolute inset-0 flex items-center justify-between px-2 text-xs font-bold text-white">
+        <span className={`transition-opacity duration-300 ${enabled ? 'opacity-100' : 'opacity-50'}`}>ON</span>
+        <span className={`transition-opacity duration-300 ${!enabled ? 'opacity-100' : 'opacity-50'}`}>OFF</span>
+      </div>
+      
+      {/* Moving circle */}
+      <span
+        className={`
+          absolute inline-block h-6 w-6 transform rounded-full bg-white transition-all duration-300 ease-in-out
+          shadow-lg z-10 left-1
+          ${enabled ? 'translate-x-8' : 'translate-x-0'}
+          ${!disabled && 'hover:scale-110'}
+        `}
+      />
+    </button>
+  );
+};
+
 export default function CookieConsent() {
-  const { user } = useAuth();
-  const pathname = usePathname();
-  const [showBanner, setShowBanner] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [preferences, setPreferences] = useState<CookiePreferences>({
-    necessary: true, // Always required
+    necessary: true,
     functional: false,
     analytics: false,
     marketing: false,
   });
 
-  // Check if current page is homepage
-  const isHomePage = pathname === '/';
-
   useEffect(() => {
-    const loadPreferences = async () => {
+    const consent = localStorage.getItem('cookie-consent');
+    if (!consent) {
+      setIsVisible(true);
+    } else {
       try {
-        if (user) {
-          // For logged-in users, try to load from Supabase
-          const { data, error } = await supabase
-            .from('user_preferences')
-            .select('cookie_preferences')
-            .eq('user_id', user.id)
-            .single();
-
-          if (!error && data?.cookie_preferences) {
-            setPreferences(data.cookie_preferences);
-            return;
-          }
-        }
-
-        // Fallback to localStorage for cookie consent (GDPR compliance requirement)
-        const consent = localStorage.getItem('cookie-consent');
-        if (!consent) {
-          // Show banner after a short delay
-          const timer = setTimeout(() => setShowBanner(true), 1000);
-          return () => clearTimeout(timer);
-        } else {
-          // Load saved preferences
-          try {
-            const savedPrefs = JSON.parse(consent);
-            setPreferences(savedPrefs);
-          } catch (error) {
-            conditionalLog.error('Error parsing cookie preferences:', error);
-          }
-        }
+        const savedPreferences = JSON.parse(consent);
+        setPreferences(savedPreferences);
       } catch (error) {
-        conditionalLog.error('Error loading cookie preferences:', error);
-        // Fallback to localStorage
-        const consent = localStorage.getItem('cookie-consent');
-        if (!consent) {
-          const timer = setTimeout(() => setShowBanner(true), 1000);
-          return () => clearTimeout(timer);
-        }
+        console.error('Error parsing cookie preferences:', error);
+        setIsVisible(true);
       }
-    };
-
-    loadPreferences();
-  }, [user]);
-
-  // Scroll detection for homepage - ROBUST VERSION SAME AS NAVBAR
-  useEffect(() => {
-    if (!isHomePage || !showBanner) {
-      setIsVisible(true); // Always show on non-homepage or when banner not shown
-      return;
     }
+  }, []);
 
-    // Check initial scroll position
-    const initialScroll = window.scrollY;
-    setIsVisible(initialScroll > 50);
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Show cookie banner when scrolling down past 50px
-      setIsVisible(currentScrollY > 50);
-      setLastScrollY(currentScrollY);
-    };
-
-    // Add event listener
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Cleanup
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [isHomePage, showBanner]);
-
-  const savePreferences = async (prefs: CookiePreferences) => {
-    try {
-      // Always save to localStorage for GDPR compliance
-      localStorage.setItem('cookie-consent', JSON.stringify(prefs));
-      
-      // If user is logged in, also save to Supabase
-      if (user) {
-        await supabase
-          .from('user_preferences')
-          .upsert({
-            user_id: user.id,
-            cookie_preferences: prefs,
-            updated_at: new Date().toISOString()
-          });
-      }
-
-      setPreferences(prefs);
-      setShowBanner(false);
-      setShowSettings(false);
-      
-      // Apply preferences
-      if (prefs.analytics) {
-        conditionalLog.dev('🍪 Analytics cookies enabled');
-      }
-      if (prefs.marketing) {
-        conditionalLog.dev('🍪 Marketing cookies enabled');
-      }
-      if (prefs.functional) {
-        conditionalLog.dev('🍪 Functional cookies enabled');
-      }
-    } catch (error) {
-      conditionalLog.error('Error saving cookie preferences:', error);
-      // Still save to localStorage as fallback
-      localStorage.setItem('cookie-consent', JSON.stringify(prefs));
-      setPreferences(prefs);
-      setShowBanner(false);
-      setShowSettings(false);
-    }
+  const savePreferences = (prefs: CookiePreferences) => {
+    localStorage.setItem('cookie-consent', JSON.stringify(prefs));
+    setIsVisible(false);
+    setShowSettings(false);
   };
 
   const acceptAll = () => {
@@ -155,6 +94,7 @@ export default function CookieConsent() {
       analytics: true,
       marketing: true,
     };
+    setPreferences(allAccepted);
     savePreferences(allAccepted);
   };
 
@@ -165,67 +105,65 @@ export default function CookieConsent() {
       analytics: false,
       marketing: false,
     };
+    setPreferences(necessaryOnly);
     savePreferences(necessaryOnly);
   };
 
   const updatePreference = (key: keyof CookiePreferences, value: boolean) => {
-    if (key === 'necessary') return; // Can't disable necessary cookies
     setPreferences(prev => ({ ...prev, [key]: value }));
   };
 
-  if (!showBanner) return null;
+  if (!isVisible) return null;
 
   return (
     <AnimatePresence>
-      {showBanner && (
+      {isVisible && (
         <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{
-            y: 0,
-            opacity: 1,
-            // Apply visibility logic for homepage
-            transform: isHomePage && !isVisible ? 'translateY(100%)' : 'translateY(0)'
-          }}
-          exit={{ y: 100, opacity: 0 }}
-          className={`fixed bottom-0 left-0 right-0 z-40 p-4 transition-transform duration-300 ease-in-out ${
-            isHomePage && !isVisible ? 'translate-y-full' : 'translate-y-0'
-          }`}
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 100 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="fixed bottom-2 left-2 right-2 z-50 max-w-sm mx-auto lg:max-w-2xl lg:left-auto lg:right-4 lg:mx-0"
         >
-          <Card className="bg-casino-dark/95 backdrop-blur-lg border-casino-neon-green/20 shadow-2xl">
-            <CardContent className="p-6">
+          <Card className="bg-casino-dark/95 backdrop-blur-xl border-casino-neon-green/20 shadow-2xl overflow-hidden">
+            <CardContent className="p-3 sm:p-4 lg:p-6">
               {!showSettings ? (
                 // Main banner
-                <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
-                  <div className="flex items-center gap-3 flex-1">
-                    <Cookie className="w-8 h-8 text-casino-neon-green flex-shrink-0" />
+                <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3">
+                  <div className="flex items-center gap-2 flex-1">
+                    <div className="p-1.5 bg-casino-neon-green/10 rounded-full">
+                      <Cookie className="w-5 h-5 text-casino-neon-green" />
+                    </div>
                     <div className="text-white">
-                      <h3 className="font-bold text-lg mb-1">🍪 Cookie Preferences</h3>
-                      <p className="text-gray-300 text-sm">
-                        We use cookies to enhance your experience, analyze site traffic, and personalize content. 
-                        Choose your preferences or accept all to continue.
+                      <h3 className="font-bold text-base mb-0.5">Cookie Preferences</h3>
+                      <p className="text-gray-300 text-xs leading-tight">
+                        We use cookies to enhance your experience and analyze site traffic.
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                  <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
                     <Button
                       variant="outline"
+                      size="sm"
                       onClick={() => setShowSettings(true)}
-                      className="border-casino-neon-green/30 text-casino-neon-green hover:bg-casino-neon-green/10"
+                      className="border-casino-neon-green/30 text-casino-neon-green hover:bg-casino-neon-green/10 transition-all duration-300"
                     >
-                      <Settings className="w-4 h-4 mr-2" />
+                      <Settings className="w-3 h-3 mr-1" />
                       Customize
                     </Button>
                     <Button
                       variant="outline"
+                      size="sm"
                       onClick={acceptNecessary}
-                      className="border-gray-500 text-gray-300 hover:bg-gray-700"
+                      className="border-gray-500 text-gray-300 hover:bg-gray-700 transition-all duration-300"
                     >
                       Necessary Only
                     </Button>
                     <Button
+                      size="sm"
                       onClick={acceptAll}
-                      className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold"
+                      className="bg-gradient-to-r from-casino-neon-green to-green-400 text-casino-dark hover:from-green-400 hover:to-casino-neon-green font-semibold transition-all duration-300 shadow-lg hover:shadow-casino-neon-green/30"
                     >
                       Accept All
                     </Button>
@@ -233,116 +171,100 @@ export default function CookieConsent() {
                 </div>
               ) : (
                 // Settings panel
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                      <Shield className="w-6 h-6 text-casino-neon-green" />
+                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                      <div className="p-1 bg-casino-neon-green/10 rounded-full">
+                        <Shield className="w-4 h-4 text-casino-neon-green" />
+                      </div>
                       Cookie Settings
                     </h3>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowSettings(false)}
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-white hover:bg-gray-700/50 transition-all duration-300"
                     >
                       <X className="w-4 h-4" />
                     </Button>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {/* Necessary Cookies */}
-                    <div className="flex items-center justify-between p-4 bg-casino-dark/50 rounded-lg border border-casino-neon-green/20">
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-white">Necessary Cookies</h4>
-                        <p className="text-sm text-gray-400 mt-1">
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-casino-neon-green/10 to-green-400/5 rounded-lg border border-casino-neon-green/20">
+                      <div className="flex-1 pr-3">
+                        <h4 className="font-semibold text-white text-sm mb-0.5">Necessary Cookies</h4>
+                        <p className="text-xs text-gray-400 leading-tight">
                           Essential for the website to function properly. Cannot be disabled.
                         </p>
                       </div>
-                      <div className="ml-4">
-                        <div className="w-12 h-6 bg-casino-neon-green rounded-full flex items-center justify-end px-1">
-                          <div className="w-4 h-4 bg-casino-dark rounded-full"></div>
-                        </div>
-                      </div>
+                      <ModernToggle
+                        enabled={preferences.necessary}
+                        onChange={() => {}}
+                        disabled={true}
+                        label="Necessary Cookies"
+                      />
                     </div>
 
                     {/* Functional Cookies */}
-                    <div className="flex items-center justify-between p-4 bg-casino-dark/30 rounded-lg border border-gray-600">
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-white">Functional Cookies</h4>
-                        <p className="text-sm text-gray-400 mt-1">
+                    <div className="flex items-center justify-between p-3 bg-casino-dark/30 rounded-lg border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300">
+                      <div className="flex-1 pr-3">
+                        <h4 className="font-semibold text-white text-sm mb-0.5">Functional Cookies</h4>
+                        <p className="text-xs text-gray-400 leading-tight">
                           Enable enhanced functionality like live chat and personalized content.
                         </p>
                       </div>
-                      <div className="ml-4">
-                        <button
-                          onClick={() => updatePreference('functional', !preferences.functional)}
-                          className={`w-12 h-6 rounded-full flex items-center transition-colors ${
-                            preferences.functional 
-                              ? 'bg-casino-neon-green justify-end' 
-                              : 'bg-gray-600 justify-start'
-                          } px-1`}
-                        >
-                          <div className="w-4 h-4 bg-white rounded-full"></div>
-                        </button>
-                      </div>
+                      <ModernToggle
+                        enabled={preferences.functional}
+                        onChange={(value) => updatePreference('functional', value)}
+                        label="Functional Cookies"
+                      />
                     </div>
 
                     {/* Analytics Cookies */}
-                    <div className="flex items-center justify-between p-4 bg-casino-dark/30 rounded-lg border border-gray-600">
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-white">Analytics Cookies</h4>
-                        <p className="text-sm text-gray-400 mt-1">
+                    <div className="flex items-center justify-between p-3 bg-casino-dark/30 rounded-lg border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300">
+                      <div className="flex-1 pr-3">
+                        <h4 className="font-semibold text-white text-sm mb-0.5">Analytics Cookies</h4>
+                        <p className="text-xs text-gray-400 leading-tight">
                           Help us understand how visitors interact with our website.
                         </p>
                       </div>
-                      <div className="ml-4">
-                        <button
-                          onClick={() => updatePreference('analytics', !preferences.analytics)}
-                          className={`w-12 h-6 rounded-full flex items-center transition-colors ${
-                            preferences.analytics 
-                              ? 'bg-casino-neon-green justify-end' 
-                              : 'bg-gray-600 justify-start'
-                          } px-1`}
-                        >
-                          <div className="w-4 h-4 bg-white rounded-full"></div>
-                        </button>
-                      </div>
+                      <ModernToggle
+                        enabled={preferences.analytics}
+                        onChange={(value) => updatePreference('analytics', value)}
+                        label="Analytics Cookies"
+                      />
                     </div>
 
                     {/* Marketing Cookies */}
-                    <div className="flex items-center justify-between p-4 bg-casino-dark/30 rounded-lg border border-gray-600">
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-white">Marketing Cookies</h4>
-                        <p className="text-sm text-gray-400 mt-1">
+                    <div className="flex items-center justify-between p-3 bg-casino-dark/30 rounded-lg border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300">
+                      <div className="flex-1 pr-3">
+                        <h4 className="font-semibold text-white text-sm mb-0.5">Marketing Cookies</h4>
+                        <p className="text-xs text-gray-400 leading-tight">
                           Used to deliver relevant advertisements and track campaign performance.
                         </p>
                       </div>
-                      <div className="ml-4">
-                        <button
-                          onClick={() => updatePreference('marketing', !preferences.marketing)}
-                          className={`w-12 h-6 rounded-full flex items-center transition-colors ${
-                            preferences.marketing 
-                              ? 'bg-casino-neon-green justify-end' 
-                              : 'bg-gray-600 justify-start'
-                          } px-1`}
-                        >
-                          <div className="w-4 h-4 bg-white rounded-full"></div>
-                        </button>
-                      </div>
+                      <ModernToggle
+                        enabled={preferences.marketing}
+                        onChange={(value) => updatePreference('marketing', value)}
+                        label="Marketing Cookies"
+                      />
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-2 pt-3 border-t border-gray-600/30">
                     <Button
                       variant="outline"
+                      size="sm"
                       onClick={acceptNecessary}
-                      className="border-gray-500 text-gray-300 hover:bg-gray-700 flex-1"
+                      className="border-gray-500 text-gray-300 hover:bg-gray-700 flex-1 transition-all duration-300"
                     >
                       Save Necessary Only
                     </Button>
                     <Button
+                      size="sm"
                       onClick={() => savePreferences(preferences)}
-                      className="bg-casino-neon-green text-casino-dark hover:bg-casino-neon-green/90 font-semibold flex-1"
+                      className="bg-gradient-to-r from-casino-neon-green to-green-400 text-casino-dark hover:from-green-400 hover:to-casino-neon-green font-semibold flex-1 transition-all duration-300 shadow-lg hover:shadow-casino-neon-green/30"
                     >
                       Save Preferences
                     </Button>

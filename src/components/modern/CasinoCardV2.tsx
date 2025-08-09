@@ -59,22 +59,22 @@ const getSafetyConfig = (index: string) => {
     'Very High': {
       color: 'bg-emerald-500 text-white border-emerald-400',
       glow: 'shadow-emerald-500/20',
-      icon: '🛡️'
+      icon: 'Shield'
     },
     'High': {
       color: 'bg-blue-500 text-white border-blue-400',
       glow: 'shadow-blue-500/20',
-      icon: '🔒'
+      icon: 'Lock'
     },
     'Medium': {
       color: 'bg-amber-500 text-black border-amber-400',
       glow: 'shadow-amber-500/20',
-      icon: '⚠️'
+      icon: 'Warning'
     },
     'Low': {
       color: 'bg-red-500 text-white border-red-400',
       glow: 'shadow-red-500/20',
-      icon: '🚨'
+      icon: 'Alert'
     }
   };
   return configs[index as keyof typeof configs] || configs.Medium;

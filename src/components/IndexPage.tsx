@@ -74,11 +74,11 @@ const IndexPage = () => {
 
       <div className="bg-black relative">
         <div className="relative z-10">
-          <BannerInfo />
+          <HeroSlider />
         </div>
       </div>
 
-      {/* Divider after Banner Info */}
+      {/* Divider after Top Casinos */}
       <div className="bg-black relative py-2">
         <SectionDivider
           icon="crown"
@@ -89,7 +89,7 @@ const IndexPage = () => {
 
       <div className="bg-black relative">
         <div className="relative z-10">
-          <HeroSlider />
+          <BannerInfo />
         </div>
       </div>
 

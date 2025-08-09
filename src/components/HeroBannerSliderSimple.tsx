@@ -27,7 +27,7 @@ const defaultBanners = [
     img: '/news-banner/domain.png',
     title: 'Welcome to CGSG!',
     subtitle: 'Your Trusted Casino Guide Singapore',
-    highlight: 'DISCOVER THE BEST CASINOS! 🎰',
+    highlight: 'DISCOVER THE BEST CASINOS!',
     cta: 'Get Started',
     ctaLink: '/casinos',
 
@@ -37,7 +37,7 @@ const defaultBanners = [
     img: '/news-banner/domain1.png',
     title: 'Exclusive Bonuses',
     subtitle: 'Up to 200% Welcome Bonus + Free Spins',
-    highlight: 'CLAIM YOUR BONUS NOW! 🎁',
+    highlight: 'CLAIM YOUR BONUS NOW!',
     cta: 'View Bonuses',
     ctaLink: '/best-bonuses',
 
@@ -47,7 +47,7 @@ const defaultBanners = [
     img: '/success-stories-cgsg.png',
     title: 'Success Stories',
     subtitle: 'Join Our Winning Community',
-    highlight: 'BE THE NEXT WINNER! 🏆',
+    highlight: 'BE THE NEXT WINNER!',
     cta: 'Read Stories',
     ctaLink: '/success-stories',
 

@@ -102,7 +102,7 @@ const SimpleAuthError = () => {
               justifyContent: 'center',
               fontSize: '20px'
             }}>
-              ⚠️
+              Warning
             </div>
             <h3 style={{
               fontSize: '18px',
@@ -205,7 +205,7 @@ const SimpleAuthError = () => {
               e.currentTarget.style.backgroundColor = '#00ff88';
             }}
           >
-            <span>🔄</span>
+            <span>Refresh</span>
             <span>Try Again</span>
           </button>
           <button
@@ -231,7 +231,7 @@ const SimpleAuthError = () => {
               e.currentTarget.style.backgroundColor = '#4b5563';
             }}
           >
-            <span>🏠</span>
+            <span>Home</span>
             <span>Continue</span>
           </button>
         </div>

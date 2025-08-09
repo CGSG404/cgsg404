@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Search, Calendar, ExternalLink, Shield, Users, AlertCircle, RefreshCw } from 'lucide-react';
 import MaintenanceWrapper from './MaintenanceWrapper';
-import { devConsole } from '@/src/utils/production-console-override';
+// Development console logging removed
 
 interface CasinoReport {
   id: number;

@@ -119,11 +119,11 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
   };
 
   const getGameIcon = (game: string) => {
-    if (game.toLowerCase().includes('slot')) return '🎰';
-    if (game.toLowerCase().includes('live')) return '🎲';
-    if (game.toLowerCase().includes('sport')) return '⚽';
-    if (game.toLowerCase().includes('arcade')) return '🕹️';
-    return '🎮';
+    if (game.toLowerCase().includes('slot')) return 'Slot';
+    if (game.toLowerCase().includes('live')) return 'Live';
+    if (game.toLowerCase().includes('sport')) return 'Sport';
+    if (game.toLowerCase().includes('arcade')) return 'Arcade';
+    return 'Game';
   };
 
   // Helper function to get auth headers
@@ -139,7 +139,7 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
         'Authorization': `Bearer ${session.access_token}`
       };
     } catch (error) {
-      console.error('❌ Error getting auth headers:', error);
+      console.error('Error getting auth headers:', error);
       throw new Error('Authentication failed');
     }
   };
@@ -490,7 +490,7 @@ const CasinoCardHorizontal: React.FC<CasinoCardHorizontalProps> = ({
             
             <div className="grid grid-cols-4 gap-2">
               {/* Mock payment methods */}
-              {['💳', '💰', '🏦', '₿', '💎', '🎯', '⚡', '🔒'].map((icon, idx) => (
+              {['Card', 'Cash', 'Bank', 'BTC', 'Gem', 'Target', 'Fast', 'Lock'].map((icon, idx) => (
                 <div key={idx} className="w-10 h-8 bg-gray-700 rounded border border-gray-600 flex items-center justify-center text-sm">
                   {icon}
                 </div>

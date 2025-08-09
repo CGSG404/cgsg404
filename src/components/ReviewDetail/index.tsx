@@ -36,10 +36,10 @@ export default function ReviewDetail({ review }: Props) {
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
               <span className="inline-flex items-center gap-1 bg-white/10 px-3 py-1 rounded-full text-sm font-semibold">
-                ⭐ {review.rating}/10
+                Rating: {review.rating}/10
               </span>
               <span className="inline-flex items-center gap-1 bg-white/10 px-3 py-1 rounded-full text-sm font-semibold">
-                🎁 {review.bonus}
+                Bonus: {review.bonus}
               </span>
               {review.isNew && (
                 <span className="bg-pink-500/90 px-3 py-1 rounded-full text-sm font-semibold">

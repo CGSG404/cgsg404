@@ -18,6 +18,22 @@ const MAINTENANCE_PAGES = [
 export async function middleware(request: NextRequest) {
   // 🔄 URL REDIRECTS: Handle legacy URLs
   const url = request.nextUrl.clone();
+  const hostname = request.headers.get('host') || '';
+
+  // 🔐 ADMIN SUBDOMAIN ROUTING: Handle sg44admin subdomain
+  if (hostname.includes('sg44admin.gurusingapore.com') || hostname.includes('sg44admin.www.gurusingapore.com') || hostname.includes('sg44admin.localhost')) {
+    // Force redirect to /admin if not already there
+    if (!url.pathname.startsWith('/admin')) {
+      url.pathname = '/admin' + url.pathname;
+      return NextResponse.redirect(url);
+    }
+  } else {
+    // Main domain: Block access to /admin routes (no redirect, just block)
+    if (url.pathname.startsWith('/admin')) {
+      // Return 404 for admin routes on main domain
+      return new NextResponse('Not Found', { status: 404 });
+    }
+  }
 
   // Redirect /games to /top-casinos
   if (url.pathname === '/games') {
@@ -33,9 +49,7 @@ export async function middleware(request: NextRequest) {
 
   // 🌐 DOMAIN REDIRECT: Force www.gurusingapore.com (only in production)
   if (process.env.NODE_ENV === 'production') {
-    const hostname = request.headers.get('host') || '';
-
-    // Redirect from gurusingapore.com to www.gurusingapore.com
+    // Redirect from gurusingapore.com to www.gurusingapore.com (except admin subdomain)
     if (hostname === 'gurusingapore.com') {
       url.host = 'www.gurusingapore.com';
       url.protocol = 'https:';
@@ -46,13 +60,9 @@ export async function middleware(request: NextRequest) {
   // Handle CORS for all requests
   const response = NextResponse.next()
 
-  // Skip middleware for auth callback routes and debug pages to prevent redirect loops
+  // Skip middleware for auth callback routes to prevent redirect loops
   if (request.nextUrl.pathname.startsWith('/auth/callback') ||
       request.nextUrl.pathname.startsWith('/signin') ||
-      request.nextUrl.pathname.startsWith('/session-fix') ||
-      request.nextUrl.pathname.startsWith('/debug-admin') ||
-      request.nextUrl.pathname.startsWith('/debug-session') ||
-      request.nextUrl.pathname.startsWith('/fix-admin') ||
       request.nextUrl.pathname.startsWith('/api/')) {
     if (process.env.NODE_ENV === 'development') {
       console.log('🔄 Skipping middleware for route:', request.nextUrl.pathname);
@@ -60,13 +70,11 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 🚀 SIMPLIFIED ADMIN PROTECTION: Use client-side protection instead
-  // This prevents middleware session issues
-  if (request.nextUrl.pathname.startsWith('/admin')) {
+  // 🚀 ADMIN SUBDOMAIN: Let admin routes pass through when on sg44admin subdomain
+  if ((hostname.includes('sg44admin.gurusingapore.com') || hostname.includes('sg44admin.localhost')) && request.nextUrl.pathname.startsWith('/admin')) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Admin route accessed, letting client handle auth:', request.nextUrl.pathname);
+      console.log('🔄 Admin subdomain route accessed:', request.nextUrl.pathname);
     }
-    // Let the page handle authentication client-side
     return response;
   }
 

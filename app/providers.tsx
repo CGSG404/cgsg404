@@ -10,7 +10,7 @@ import { LoadingProvider } from '../src/contexts/LoadingContext';
 import { TooltipProvider } from '../src/components/ui/tooltip';
 import { Toaster } from '../src/components/ui/sonner';
 import { NotificationProvider } from '../src/components/ui/notification';
-import { setupProductionConsole } from '../src/utils/production-console-override';
+// Production console setup removed
 
 // Create a client
 const queryClient = new QueryClient({
@@ -23,10 +23,6 @@ const queryClient = new QueryClient({
 });
 
 export default function Providers({ children }: { children: ReactNode }) {
-  // Setup production console override
-  useEffect(() => {
-    setupProductionConsole();
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

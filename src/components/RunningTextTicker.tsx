@@ -13,63 +13,32 @@ import {
   Award,
   Gem
 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTickerItems, fallbackTickerData } from '@/src/lib/homepage-data';
 
 interface TickerItem {
   id: string;
-  icon: React.ReactNode;
   text: string;
   highlight?: string;
   type: 'bonus' | 'news' | 'promo' | 'winner' | 'update';
+  is_active?: boolean;
 }
 
 const RunningTextTicker: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
 
-  // Data ticker items - memoized to prevent re-creation on every render
-  const tickerItems = useMemo<TickerItem[]>(() => [
-    {
-      id: '1',
-      icon: <Gift className="w-4 h-4" />,
-      text: 'Find Your Best Bonuses In Our Platform & Claim Your Bonus Now!',
-      highlight: 'Exlusive Bonuses',
-      type: 'bonus'
-    },
-    {
-      id: '2',
-      icon: <Star className="w-4 h-4" />,
-      text: 'Check Our Best Recommend CGSG Platform & Start Playing Now!',
-      highlight: 'First Class Casinos',
-      type: 'news'
-    },
-    {
-      id: '3',
-      icon: <Trophy className="w-4 h-4" />,
-      text: 'Website Recommend Trophy & Best Monthly Winner!',
-      highlight: 'Star Platform',
-      type: 'winner'
-    },
-    {
-      id: '4',
-      icon: <Zap className="w-4 h-4" />,
-      text: 'Find Your Favorite Promotions & Start Playing Now!',
-      highlight: '500+ More Promotions',
-      type: 'promo'
-    },
-    {
-      id: '5',
-      icon: <Crown className="w-4 h-4" />,
-      text: 'VIP Program: Unlock Exclusive Benefits and Higher Cashback Rates',
-      highlight: 'VIP Program',
-      type: 'update'
-    },
-    {
-      id: '6',
-      icon: <Sparkles className="w-4 h-4" />,
-      text: 'Weekly Bonuses VIP: Become VIP & Get Exclusive Benefits!',
-      highlight: 'Exclusive Benefits',
-      type: 'promo'
-    }
-  ], []);
+  const { data: rawTickerItems = fallbackTickerData } = useQuery({
+    queryKey: ['tickerItems'],
+    queryFn: fetchTickerItems,
+    initialData: fallbackTickerData,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Filter active items and memoize
+  const tickerItems = useMemo(() => 
+    rawTickerItems.filter(item => item.is_active !== false),
+    [rawTickerItems]
+  );
 
 
 

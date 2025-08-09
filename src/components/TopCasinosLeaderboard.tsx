@@ -19,7 +19,7 @@ const TopCasinosLeaderboard = () => {
       withdrawalTime: '24h',
       license: 'Curacao',
       established: '2020',
-      specialOffer: 'Hot Deal! 🔥'
+      specialOffer: 'Hot Deal!'
     },
     {
       rank: 2,
@@ -35,7 +35,7 @@ const TopCasinosLeaderboard = () => {
       withdrawalTime: '12h',
       license: 'Malta',
       established: '2019',
-      specialOffer: 'Popular Choice ⭐'
+      specialOffer: 'Popular Choice'
     },
     {
       rank: 3,
@@ -51,7 +51,7 @@ const TopCasinosLeaderboard = () => {
       withdrawalTime: '6h',
       license: 'Curacao',
       established: '2021',
-      specialOffer: 'New Player Bonus 🎁'
+      specialOffer: 'New Player Bonus'
     },
     {
       rank: 4,
@@ -67,7 +67,7 @@ const TopCasinosLeaderboard = () => {
       withdrawalTime: '24h',
       license: 'Curacao',
       established: '2022',
-      specialOffer: 'Weekly Missions 🎯'
+      specialOffer: 'Weekly Missions'
     },
     {
       rank: 5,
@@ -83,7 +83,7 @@ const TopCasinosLeaderboard = () => {
       withdrawalTime: '12h',
       license: 'Malta',
       established: '2020',
-      specialOffer: 'High Rescue Bonus 💰'
+      specialOffer: 'High Rescue Bonus'
     }
   ];
 

@@ -16,7 +16,7 @@ interface PromoBannerProps {
 }
 
 const PromoBanner: React.FC<PromoBannerProps> = ({
-  title = "🎉 Welcome Bonus Available!",
+  title = "Welcome Bonus Available!",
   subtitle = "Get up to 200% bonus + 100 free spins on your first deposit",
   ctaText = "Claim Now",
   ctaLink = "/best-bonuses",

@@ -13,6 +13,17 @@
       ],
       "destination": "https://www.gurusingapore.com/$1",
       "permanent": true
+    },
+    {
+      "source": "/admin/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gurusingapore.com"
+        }
+      ],
+      "destination": "https://admin.gurusingapore.com/admin/:path*",
+      "permanent": true
     }
   ],
   "headers": [
@@ -21,7 +32,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://www.gurusingapore.com"
+          "value": "https://www.gurusingapore.com, https://admin.gurusingapore.com"
         },
         {
           "key": "Access-Control-Allow-Methods",
@@ -34,6 +45,25 @@
         {
           "key": "Access-Control-Allow-Credentials",
           "value": "true"
+        }
+      ]
+    },
+    {
+      "source": "/admin/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "admin.gurusingapore.com"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Admin-Subdomain",
+          "value": "true"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
         }
       ]
     },
@@ -59,6 +89,16 @@
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "admin.gurusingapore.com"
+        }
+      ],
+      "destination": "/$1"
     }
   ],
   "env": {

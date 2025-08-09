@@ -76,11 +76,11 @@ CREATE TABLE IF NOT EXISTS site_features (
 
 -- Insert default banners
 INSERT INTO banners (title, subtitle, highlight, cta_text, cta_link, image_url, gradient_class, page_type, display_order) VALUES
-('Welcome to CGSG!', 'Your Trusted Casino Guide Singapore', 'DISCOVER THE BEST CASINOS! 🎰', 'Get Started', '/casinos', '/news-banner/domain.png', 'from-purple-600/80 via-blue-600/60 to-cyan-500/80', 'home', 1),
-('Exclusive Bonuses', 'Up to 200% Welcome Bonus + Free Spins', 'CLAIM YOUR BONUS NOW! 🎁', 'View Bonuses', '/best-bonuses', '/news-banner/domain1.png', 'from-green-600/80 via-emerald-600/60 to-teal-500/80', 'home', 2),
-('Success Stories', 'Join Our Winning Community', 'BE THE NEXT WINNER! 🏆', 'Read Stories', '/success-stories', '/success-stories-cgsg.png', 'from-orange-600/80 via-red-600/60 to-pink-500/80', 'home', 3),
-('Top Casino Games', 'Play the Best Games Online', 'START WINNING TODAY! 🎮', 'Play Now', '/casinos', '/news-banner/domain.png', 'from-blue-600/80 via-purple-600/60 to-indigo-500/80', 'games', 1),
-('Game Bonuses', 'Special Bonuses for Game Players', 'CLAIM GAME BONUS! 🎯', 'Get Bonus', '/best-bonuses', '/news-banner/domain1.png', 'from-cyan-600/80 via-blue-600/60 to-purple-500/80', 'games', 2);
+('Welcome to CGSG!', 'Your Trusted Casino Guide Singapore', 'DISCOVER THE BEST CASINOS!', 'Get Started', '/casinos', '/news-banner/domain.png', 'from-purple-600/80 via-blue-600/60 to-cyan-500/80', 'home', 1),
+('Exclusive Bonuses', 'Up to 200% Welcome Bonus + Free Spins', 'CLAIM YOUR BONUS NOW!', 'View Bonuses', '/best-bonuses', '/news-banner/domain1.png', 'from-green-600/80 via-emerald-600/60 to-teal-500/80', 'home', 2),
+('Success Stories', 'Join Our Winning Community', 'BE THE NEXT WINNER!', 'Read Stories', '/success-stories', '/success-stories-cgsg.png', 'from-orange-600/80 via-red-600/60 to-pink-500/80', 'home', 3),
+('Top Casino Games', 'Play the Best Games Online', 'START WINNING TODAY!', 'Play Now', '/casinos', '/news-banner/domain.png', 'from-blue-600/80 via-purple-600/60 to-indigo-500/80', 'games', 1),
+('Game Bonuses', 'Special Bonuses for Game Players', 'CLAIM GAME BONUS!', 'Get Bonus', '/best-bonuses', '/news-banner/domain1.png', 'from-cyan-600/80 via-blue-600/60 to-purple-500/80', 'games', 2);
 
 -- Insert default statistics
 INSERT INTO site_statistics (stat_key, stat_value, stat_label, icon_name, display_order) VALUES

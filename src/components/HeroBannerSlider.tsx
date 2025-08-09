@@ -30,7 +30,7 @@ const defaultBanners = [
     img: '/news-banner/domain.png',
     title: 'Welcome to CGSG!',
     subtitle: 'Your Trusted Casino Guide Singapore',
-    highlight: 'DISCOVER THE BEST CASINOS! 🎰',
+    highlight: 'DISCOVER THE BEST CASINOS!',
     cta: 'Get Started',
     ctaLink: '/casinos',
   },
@@ -39,7 +39,7 @@ const defaultBanners = [
     img: '/news-banner/domain1.png',
     title: 'Exclusive Bonuses',
     subtitle: 'Up to 200% Welcome Bonus + Free Spins',
-    highlight: 'CLAIM YOUR BONUS NOW! 🎁',
+    highlight: 'CLAIM YOUR BONUS NOW!',
     cta: 'View Bonuses',
     ctaLink: '/best-bonuses',
   },
@@ -48,7 +48,7 @@ const defaultBanners = [
     img: '/success-stories-cgsg.png',
     title: 'Success Stories',
     subtitle: 'Join Our Winning Community',
-    highlight: 'BE THE NEXT WINNER! 🏆',
+    highlight: 'BE THE NEXT WINNER!',
     cta: 'Read Stories',
     ctaLink: '/success-stories',
   },
@@ -65,12 +65,12 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
     
     const fetchBanners = async () => {
       try {
-        const response = await fetch(`/api/admin/banners?page_type=${pageType}`);
+        const response = await fetch(`/api/admin/hero-banners?page_type=${pageType}`);
         const data = await response.json();
 
-        if (data.banners && data.banners.length > 0) {
+        if (data.success && data.data && data.data.length > 0) {
           // Transform API data to component format
-          const transformedBanners = data.banners.map((banner: {
+          const transformedBanners = data.data.map((banner: {
             id: number;
             title: string;
             subtitle: string;
@@ -78,7 +78,7 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
             cta_text: string;
             cta_link: string;
             image_url: string;
-            gradient_class: string;
+            page_type: string;
           }) => ({
             id: banner.id,
             img: banner.image_url || '/news-banner/domain.png',
@@ -91,7 +91,7 @@ export default function HeroBannerSlider({ pageType = 'home', isHomePage = false
           setBanners(transformedBanners);
         }
       } catch (error) {
-        console.error('Error fetching banners:', error);
+        console.error('Error fetching hero banners:', error);
         // Keep default banners on error
       } finally {
         setLoading(false);

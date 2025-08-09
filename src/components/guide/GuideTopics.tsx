@@ -114,19 +114,19 @@ const GuideTopics = () => {
       </div>
 
       {renderTopicSection(
-        "🎯 Beginner Essentials", 
+        "Beginner Essentials", 
         beginnerTopics, 
         "bg-casino-neon-green/20"
       )}
 
       {renderTopicSection(
-        "🚀 Advanced Strategies", 
+        "Advanced Strategies", 
         advancedTopics, 
         "bg-casino-neon-purple/20"
       )}
 
       {renderTopicSection(
-        "❤️ Responsible Gaming", 
+        "Responsible Gaming", 
         responsibleGaming, 
         "bg-red-500/20"
       )}

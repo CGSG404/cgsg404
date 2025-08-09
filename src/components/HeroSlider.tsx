@@ -13,7 +13,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { Star, Shield, Gift, ExternalLink } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchTopCasinos } from '@/lib/api';
+import { fetchHeroSliderCasinos, fallbackHeroSliderData } from '@/src/lib/homepage-data';
 import { Button } from '@/src/components/ui/button';
 
 // Import Swiper styles
@@ -21,94 +21,14 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-const casinoData = [
-  {
-    id: 1,
-    name: 'OnePlay Singapore',
-    rating: 4.8,
-    bonus: '168% Welcome Bonus',
-    safetyIndex: 90,
-    url: 'https://1playsg.vip/RF29551A809',
-  },
-  {
-    id: 2,
-    name: 'BK888 Singapore',
-    rating: 4.5,
-    bonus: '150% Welcome Bonus',
-    safetyIndex: 80,
-    url: 'https://bk888.co/BK88829A860350',
-  },
-  {
-    id: 3,
-    name: 'MBS888 Singapore',
-    rating: 4.5,
-    bonus: '100% Welcome Bonus',
-    safetyIndex: 80,
-    url: 'https://mbs888.online/RF295818622',
-  },
-  {
-    id: 4,
-    name: 'GE8 Singapore',
-    rating: 4.8,
-    bonus: 'Welcome Bonus Up To 120%',
-    safetyIndex: 90,
-    url: 'https://ge88sg.com/RF295830131',
-  },
-  {
-    id: 5,
-    name: 'PHOENIX168 Singapore',
-    rating: 4.8,
-    bonus: 'Welcome Bonus Up To 168%',
-    safetyIndex: 90,
-    url: 'https://ph168sg.com/RF12500610',
-  },
-  {
-    id: 6,
-    name: 'RR4WIN Singapore',
-    rating: 4.5,
-    bonus: '100% Welcome Bonus',
-    safetyIndex: 80,
-    url: 'https://rr4winsg.com/RF301019686',
-  },
-  {
-    id: 7,
-    name: 'EEBET77 Singapore',
-    rating: 4.5,
-    bonus: 'Slot Welcome Bonus Up To 200%',
-    safetyIndex: 80,
-    url: 'https://eebet77.net/RF29555120A',
-  },
-  {
-    id: 8,
-    name: 'SGD2U Singapore',
-    rating: 4.5,
-    bonus: 'Welcome Bonus Up To 240%',
-    safetyIndex: 80,
-    url: 'https://iclub365.com/RF29555299A',
-  },
-  {
-    id: 9,
-    name: 'KOI8 Singapore',
-    rating: 4.5,
-    bonus: 'Welcome Bonus Up To 120%',
-    safetyIndex: 80,
-    url: 'https://koi8.me/RF295196092',
-  },
-    {
-    id: 10,
-    name: 'TOP1 Singapore',
-    rating: 4.8,
-    bonus: '80% Welcome Bonus',
-    safetyIndex: 90,
-    url: 'https://top1sg.com/RF295196839',
-  },
-];
+// Fallback data will be imported from homepage-data.ts
 
 const HeroSlider: React.FC = () => {
-  const { data: casinos = casinoData } = useQuery({
-    queryKey: ['topCasinos'],
-    queryFn: () => fetchTopCasinos(10),
-    initialData: casinoData,
+  const { data: casinos = fallbackHeroSliderData } = useQuery({
+    queryKey: ['heroSliderCasinos'],
+    queryFn: fetchHeroSliderCasinos,
+    initialData: fallbackHeroSliderData,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
   return (
     <div id="top-casinos" className="relative w-full container mx-auto py-8 md:py-12 safe-area-all">
@@ -207,10 +127,10 @@ const HeroSlider: React.FC = () => {
                           <div className="w-10 md:w-16 h-1 md:h-2 bg-gray-700 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-gradient-to-r from-casino-neon-green to-green-400 transition-all duration-1000 ease-out"
-                              style={{ width: `${casino.safetyIndex}%` }}
+                              style={{ width: `${casino.safety_index}%` }}
                             ></div>
                           </div>
-                          <span className="text-casino-neon-green font-bold text-xs md:text-sm whitespace-nowrap">{casino.safetyIndex}%</span>
+                          <span className="text-casino-neon-green font-bold text-xs md:text-sm whitespace-nowrap">{casino.safety_index}%</span>
                         </div>
                       </div>
                     </div>

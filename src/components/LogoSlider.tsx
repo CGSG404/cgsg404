@@ -1,18 +1,10 @@
+'use client';
+
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-
-// Define the logos
-const logos = [
-  { name: 'Game Curacao', src: '/logos/gaming_curacao.png' },
-  { name: 'PAGCOR', src: '/logos/PAGCOR.png' },
-  { name: 'bmm', src: '/logos/bmm-logo.png' },
-  { name: 'iTechLabs', src: '/logos/itechlabs.png' },
-  { name: 'GODADDY', src: '/logos/godaddy.png' },
-  { name: 'iovation', src: '/logos/iovation.png' },
-  { name: 'ThreatMetrix', src: '/logos/TM.jpg' },
-  { name: 'TST VERIFIED', src: '/logos/TST.jpg' },
-];
+import { useQuery } from '@tanstack/react-query';
+import { fetchLogoSliderItems, fallbackLogoSliderData } from '@/src/lib/homepage-data';
 
 const PIXELS_PER_SECOND = 30;
 
@@ -20,6 +12,13 @@ const LogoSlider: React.FC = () => {
   const logosRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [animationConfig, setAnimationConfig] = useState({ width: 0, duration: 20 });
+
+  const { data: logos = fallbackLogoSliderData } = useQuery({
+    queryKey: ['logoSliderItems'],
+    queryFn: fetchLogoSliderItems,
+    initialData: fallbackLogoSliderData,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   useEffect(() => {
     const calculateAnimation = () => {
@@ -86,7 +85,7 @@ const LogoSlider: React.FC = () => {
           >
             {logos.map((logo, index) => (
               <motion.div
-                key={`${logo.name}-${index}`}
+                key={logo.id || `${logo.name}-${index}`}
                 className="flex-shrink-0"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
@@ -94,13 +93,14 @@ const LogoSlider: React.FC = () => {
                 <div
                   className="w-36 h-20 sm:w-44 sm:h-24 bg-black rounded-xl flex items-center justify-center relative overflow-hidden group cursor-pointer"
                   style={{ backgroundColor: '#000000' }}
+                  onClick={() => logo.website_url && window.open(logo.website_url, '_blank')}
                 >
                   {/* Subtle glow effect on hover */}
                   <div className="absolute inset-0 bg-gradient-to-r from-casino-neon-green/0 via-casino-neon-green/5 to-casino-neon-green/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   
                   <Image
-                    src={logo.src}
-                    alt={`${logo.name} certification`}
+                    src={logo.logo_url}
+                    alt={logo.alt_text || `${logo.name} certification`}
                     fill
                     sizes="(max-width: 640px) 144px, 176px"
                     className="object-contain p-3 filter brightness-90 group-hover:brightness-100 transition-all duration-300"

@@ -3,7 +3,6 @@
 import { useEffect, Suspense, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { handleOAuthCallback, clearAuthState, validateSession } from '@/src/lib/authSimple';
-import { debugCallback, debugAuthFlow } from '@/src/lib/authDebug';
 import { validateAuthCode, sanitizeErrorMessage, isSupabaseSplitError } from '@/src/lib/authUtils';
 import { supabase } from '@/src/lib/supabaseClient';
 
@@ -34,8 +33,11 @@ function AuthCallbackContent() {
 
         // Debug current state
         if (process.env.NODE_ENV === 'development') {
-          debugAuthFlow();
-          debugCallback(searchParams);
+          console.log('🔍 Auth callback debug info:', {
+            hasCode: !!searchParams?.get('code'),
+            hasError: !!searchParams?.get('error'),
+            paramsCount: searchParams ? Array.from(searchParams.keys()).length : 0
+          });
         }
 
         // Check for redirect loops by examining URL length
@@ -85,51 +87,17 @@ function AuthCallbackContent() {
             return;
           }
           
-          // Try to use the safe exchange method first
-          try {
-            // Import the safe exchange method
-            const { safeExchangeCodeForSession } = await import('@/src/lib/authWorkaround');
+          // Use simplified OAuth handling directly
+            console.log('🔄 Processing authorization code...');
             
-            console.log('🔄 Using safe exchange method...');
-            const exchangeResult = await safeExchangeCodeForSession(code);
-            
-            if (exchangeResult.error) {
-              // Check for split error specifically using the utility function
-              if (isSupabaseSplitError(exchangeResult.error)) {
-                console.log('🔧 Detected Supabase split error, attempting recovery...');
-                
-                // Clear auth state and retry
-                await clearAuthState();
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                router.replace('/?error=auth_retry&details=OAuth data format issue detected. Please try signing in again.');
-                return;
-              }
-              
-              console.error('❌ Safe exchange failed:', exchangeResult.error);
-              throw new Error(sanitizeErrorMessage(exchangeResult.error));
+            // Check for potential split error in code
+            if (isSupabaseSplitError(code)) {
+              console.log('🔧 Detected potential split error in code, clearing state...');
+              await clearAuthState();
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              router.replace('/?error=auth_retry&details=OAuth data format issue detected. Please try signing in again.');
+              return;
             }
-            
-            if (exchangeResult.data?.session) {
-              console.log('✅ Safe exchange successful');
-              // Continue with session validation
-              const isValid = await validateSession();
-              
-              if (isValid) {
-                console.log('✅ Session validated successfully');
-                router.replace('/?success=login');
-                return;
-              } else {
-                console.error('❌ Session validation failed');
-                await clearAuthState();
-                router.replace('/?error=session_validation_failed&details=Session validation failed');
-                return;
-              }
-            }
-          } catch (safeExchangeError) {
-            console.error('❌ Safe exchange method failed:', safeExchangeError);
-            // Fall back to simplified OAuth handling
-          }
         } else {
           console.log('ℹ️ No authorization code in URL - will try session detection');
         }

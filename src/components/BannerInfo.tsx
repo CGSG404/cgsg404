@@ -4,44 +4,32 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Shield, Gift, Users, Award, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { fetchBannerInfoContent, fallbackBannerInfoData } from '@/src/lib/homepage-data';
 import ClientOnly from './ClientOnly';
 
-const features = [
-  {
-    icon: <Shield className="w-6 h-6" />,
-    title: "Trusted & Secure",
-    description: "Licensed casinos with verified security measures",
-    color: "from-blue-500 to-cyan-500"
-  },
-  {
-    icon: <Gift className="w-6 h-6" />,
-    title: "Exclusive Bonuses",
-    description: "Special offers and promotions for our members",
-    color: "from-purple-500 to-pink-500"
-  },
-  {
-    icon: <Users className="w-6 h-6" />,
-    title: "Community Driven",
-    description: "Real reviews from verified players",
-    color: "from-green-500 to-emerald-500"
-  },
-  {
-    icon: <Award className="w-6 h-6" />,
-    title: "Expert Reviews",
-    description: "Professional analysis and ratings",
-    color: "from-orange-500 to-red-500"
-  }
-];
-
-const stats = [
-  { label: "Casinos Reviewed", value: "87+", icon: <Star className="w-5 h-5" /> },
-  { label: "Active Members", value: "1,081+", icon: <Users className="w-5 h-5" /> },
-  { label: "Bonus Offers", value: "800+", icon: <Gift className="w-5 h-5" /> },
-  { label: "Success Rate", value: "99%", icon: <TrendingUp className="w-5 h-5" /> }
-];
+// Icon mapping for dynamic content
+const iconMap: Record<string, React.ReactNode> = {
+  Shield: <Shield className="w-6 h-6" />,
+  Gift: <Gift className="w-6 h-6" />,
+  Users: <Users className="w-6 h-6" />,
+  Award: <Award className="w-6 h-6" />,
+  Star: <Star className="w-5 h-5" />,
+  TrendingUp: <TrendingUp className="w-5 h-5" />
+};
 
 export default function BannerInfo() {
   const backgroundPattern = "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff9a' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E";
+
+  const { data: bannerData = fallbackBannerInfoData } = useQuery({
+    queryKey: ['bannerInfoContent'],
+    queryFn: fetchBannerInfoContent,
+    initialData: fallbackBannerInfoData,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const features = bannerData.features;
+  const stats = bannerData.statistics;
 
   return (
     <ClientOnly fallback={
@@ -88,7 +76,7 @@ export default function BannerInfo() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16">
           {features.map((feature, index) => (
             <motion.div
-              key={index}
+              key={feature.id || index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -98,7 +86,7 @@ export default function BannerInfo() {
               <div className="bg-black backdrop-blur-sm border border-casino-neon-green/20 rounded-2xl p-6 text-center transition-all duration-300 hover:border-casino-neon-green/40 hover:shadow-lg hover:shadow-casino-neon-green/10">
                 <div className="inline-flex p-4 rounded-xl bg-black border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-300">
                   <div className="text-white">
-                    {feature.icon}
+                    {iconMap[feature.icon_name || 'Shield'] || <Shield className="w-6 h-6" />}
                   </div>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
@@ -119,7 +107,7 @@ export default function BannerInfo() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat, index) => (
               <motion.div
-                key={index}
+                key={stat.id || index}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
@@ -128,14 +116,14 @@ export default function BannerInfo() {
               >
                 <div className="inline-flex p-3 rounded-xl bg-casino-neon-green/10 border border-casino-neon-green/20 mb-3 group-hover:bg-casino-neon-green/20 transition-colors duration-300">
                   <div className="text-casino-neon-green">
-                    {stat.icon}
+                    {iconMap[stat.icon_name || 'Star'] || <Star className="w-5 h-5" />}
                   </div>
                 </div>
                 <div className="text-2xl md:text-3xl font-black text-casino-neon-green mb-1">
                   {stat.value}
                 </div>
                 <div className="text-sm md:text-base text-gray-300 font-medium">
-                  {stat.label}
+                  {stat.title}
                 </div>
               </motion.div>
             ))}

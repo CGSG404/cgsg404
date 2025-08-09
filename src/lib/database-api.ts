@@ -408,7 +408,7 @@ export const databaseApi = {
         text: casino.name,
         subtitle: `Rating: ${casino.rating}/5`,
         href: `/casinos/${casino.slug}`,
-        icon: '🎰'
+        icon: 'Casino'
       })),
 
       // Feature suggestions
@@ -417,7 +417,7 @@ export const databaseApi = {
         text: feature.feature,
         subtitle: 'Casino Feature',
         href: `/casinos?feature=${encodeURIComponent(feature.feature)}`,
-        icon: '⭐'
+        icon: 'Star'
       })),
 
       // Category suggestions
@@ -426,7 +426,7 @@ export const databaseApi = {
         text: category.name,
         subtitle: 'Casino Category',
         href: `/casinos?category=${encodeURIComponent(category.name)}`,
-        icon: '📂'
+        icon: 'Folder'
       }))
     ];
 

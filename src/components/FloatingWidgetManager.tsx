@@ -22,7 +22,7 @@ import { useAuth } from '@/src/contexts/AuthContext';
 import { useAdmin } from '@/src/contexts/AdminContext';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/src/lib/supabaseClient';
-import { devConsole } from '@/src/utils/production-console-override';
+// Development console logging removed
 
 interface FloatingWidget {
   id: string;
