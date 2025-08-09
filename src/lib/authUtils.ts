@@ -10,7 +10,7 @@ export const validateAuthCode = (code: string): boolean => {
   }
   
   // Should contain only URL-safe characters
-  const validPattern = /^[a-zA-Z0-9\-_\.~]+$/;
+  const validPattern = /^[A-Za-z0-9._~-]+$/;
   return validPattern.test(code);
 };
 
@@ -35,4 +35,12 @@ export const sanitizeErrorMessage = (error: any): string => {
   }
   
   return String(error).substring(0, 200);
+};
+
+// Detect potentially malformed/split OAuth code values
+// Returns true if suspicious delimiters or spaces are present
+export const isSupabaseSplitError = (code: string): boolean => {
+  if (!code || typeof code !== 'string') return false;
+  // If code contains whitespace or URL query delimiters, it's likely broken
+  return /\s|[&=%]/.test(code);
 };

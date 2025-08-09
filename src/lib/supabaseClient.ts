@@ -1,22 +1,36 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Direct configuration with fallback values to avoid environment variable issues
-const supabaseUrl = 'https://plhpubcmugqosexcgdhj.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsaHB1YmNtdWdxb3NleGNnZGhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2OTM1MjQsImV4cCI6MjA2NjI2OTUyNH0.RvL-jUkEiCBrCywqC5dC2c8VxSt6ifjBRekkm82sMH4';
+// Read from environment variables (do not hardcode secrets)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// Log configuration status in development
+// Basic validation and safe logging
+const hasValidEnv = Boolean(
+  supabaseUrl && supabaseAnonKey &&
+  !supabaseUrl.includes('placeholder') &&
+  !supabaseAnonKey.includes('placeholder')
+);
+
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-  console.log('🔧 Supabase configured with direct values');
+  // Only log high-level status without exposing secrets
+  // eslint-disable-next-line no-console
+  console.log(`🔧 Supabase client env status: ${hasValidEnv ? 'configured' : 'missing'}`);
 }
 
-// Create Supabase client with proper configuration
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce'
-  }
-});
+export const supabase = hasValidEnv
+  ? createClient(supabaseUrl as string, supabaseAnonKey as string, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce',
+      },
+    })
+  : createClient('https://placeholder.supabase.co', 'placeholder_key', {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
 
-export const isSupabaseConfigured = true;
+export const isSupabaseConfigured = hasValidEnv;

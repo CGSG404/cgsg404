@@ -1,5 +1,5 @@
 export async function fetchFeaturedCasinos() {
-  const res = await fetch("https://gurusingapore.com/api/featured", {
+  const res = await fetch("/api/featured", {
     cache: 'force-cache',
     next: {
       revalidate: 3600, // 1 hour - casino data doesn't change frequently
@@ -11,7 +11,7 @@ export async function fetchFeaturedCasinos() {
 }
 
 export async function fetchAllCasinos() {
-  const res = await fetch("https://gurusingapore.com/api/casinos", {
+  const res = await fetch("/api/casinos", {
     cache: 'force-cache',
     next: {
       revalidate: 1800, // 30 minutes - more frequent for casino list

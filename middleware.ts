@@ -20,8 +20,8 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   const hostname = request.headers.get('host') || '';
 
-  // 🔐 ADMIN SUBDOMAIN ROUTING: Handle sg44admin subdomain
-  if (hostname.includes('sg44admin.gurusingapore.com') || hostname.includes('sg44admin.www.gurusingapore.com') || hostname.includes('sg44admin.localhost')) {
+  // 🔐 ADMIN SUBDOMAIN ROUTING: Handle sg44admin subdomain (standardized)
+  if ((hostname.startsWith('sg44admin.') && hostname.endsWith('.gurusingapore.com')) || hostname.includes('sg44admin.localhost')) {
     // Force redirect to /admin if not already there
     if (!url.pathname.startsWith('/admin')) {
       url.pathname = '/admin' + url.pathname;
@@ -71,10 +71,56 @@ export async function middleware(request: NextRequest) {
   }
 
   // 🚀 ADMIN SUBDOMAIN: Let admin routes pass through when on sg44admin subdomain
-  if ((hostname.includes('sg44admin.gurusingapore.com') || hostname.includes('sg44admin.localhost')) && request.nextUrl.pathname.startsWith('/admin')) {
+  if (((hostname.startsWith('sg44admin.') && hostname.endsWith('.gurusingapore.com')) || hostname.includes('sg44admin.localhost')) && request.nextUrl.pathname.startsWith('/admin')) {
     if (process.env.NODE_ENV === 'development') {
       console.log('🔄 Admin subdomain route accessed:', request.nextUrl.pathname);
     }
+
+    // Optional IP allowlist (comma-separated). Example: "1.2.3.4,5.6.7.8"
+    const allowedIps = (process.env.ADMIN_ALLOWED_IPS || '')
+      .split(',')
+      .map(ip => ip.trim())
+      .filter(Boolean);
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
+      || request.headers.get('x-real-ip')
+      || request.headers.get('cf-connecting-ip')
+      || '';
+    if (allowedIps.length > 0 && clientIp && !allowedIps.includes(clientIp)) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
+
+    // Optional Basic Auth for admin subdomain
+    const basicUser = process.env.ADMIN_BASIC_AUTH_USER;
+    const basicPass = process.env.ADMIN_BASIC_AUTH_PASS;
+    if (basicUser && basicPass) {
+      const authHeader = request.headers.get('authorization') || '';
+      const [scheme, encoded] = authHeader.split(' ');
+      if (scheme !== 'Basic' || !encoded) {
+        return new NextResponse('Unauthorized', {
+          status: 401,
+          headers: { 'WWW-Authenticate': 'Basic realm="Admin"' }
+        });
+      }
+      try {
+        // Edge runtime-safe base64 decode
+        const decoded = typeof atob !== 'undefined' ? atob(encoded) : '';
+        const [user, pass] = decoded.split(':');
+        if (user !== basicUser || pass !== basicPass) {
+          return new NextResponse('Unauthorized', {
+            status: 401,
+            headers: { 'WWW-Authenticate': 'Basic realm="Admin"' }
+          });
+        }
+      } catch {
+        return new NextResponse('Unauthorized', {
+          status: 401,
+          headers: { 'WWW-Authenticate': 'Basic realm="Admin"' }
+        });
+      }
+    }
+
+    // Add noindex header for admin
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
     return response;
   }
 

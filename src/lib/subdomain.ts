@@ -12,8 +12,8 @@ export function isAdminSubdomain(hostname?: string): boolean {
   
   if (!hostname) return false;
   
-  return hostname.includes('sg44admin.gurusingapore.com') || 
-         hostname.includes('sg44admin.www.gurusingapore.com') ||
+  return hostname === 'sg44admin.gurusingapore.com' || 
+         hostname === 'sg44admin.www.gurusingapore.com' ||
          hostname.includes('sg44admin.localhost');
 }
 
@@ -41,8 +41,8 @@ export function getBaseUrl(isAdmin: boolean = false): string {
   
   // Server-side fallback
   return isAdmin 
-    ? process.env.NEXT_PUBLIC_ADMIN_URL || 'https://sg44admin.gurusingapore.com'
-    : process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gurusingapore.com';
+    ? (process.env.NEXT_PUBLIC_ADMIN_URL || 'https://sg44admin.gurusingapore.com')
+    : (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gurusingapore.com');
 }
 
 /**

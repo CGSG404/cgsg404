@@ -2,7 +2,7 @@
 // Unified endpoint for all homepage content management
 // Replaces complex casino system with focused homepage CRUD
 
-import { createClient } from '@/src/lib/supabaseServer'
+import { supabaseServer } from '@/src/lib/supabaseServer'
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
@@ -51,7 +51,7 @@ interface Feature {
 // GET: Fetch all homepage data
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = supabaseServer
     
     // Get all homepage data using the SQL function
     const { data: homepageData, error: dataError } = await supabase
@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
 // POST: Create new homepage content
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = supabaseServer
     const body = await request.json()
     const { type, data } = body
 
@@ -226,7 +226,7 @@ export async function POST(request: NextRequest) {
 // PUT: Update existing homepage content
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = supabaseServer
     const body = await request.json()
     const { type, id, data } = body
 

@@ -23,9 +23,15 @@ export default async function AdminLayout({
     redirect('/signin');
   }
 
-  // Simple admin check - you can enhance this later
-  const isAdmin = session.user.email?.includes('admin') || 
-                  session.user.email === 'admin@cgsg404.com';
+  // Whitelist admin emails from ENV (comma-separated)
+  const allowedEmailsEnv = process.env.ADMIN_ALLOWED_EMAILS || '';
+  const allowedEmails = allowedEmailsEnv
+    .split(',')
+    .map(e => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  const userEmail = (session.user.email || '').toLowerCase();
+  const isAdmin = allowedEmails.length > 0 ? allowedEmails.includes(userEmail) : false;
 
   if (!isAdmin) {
     redirect('/');

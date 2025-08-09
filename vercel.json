@@ -22,7 +22,7 @@
           "value": "www.gurusingapore.com"
         }
       ],
-      "destination": "https://admin.gurusingapore.com/admin/:path*",
+      "destination": "https://sg44admin.gurusingapore.com/admin/:path*",
       "permanent": true
     }
   ],
@@ -32,7 +32,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://www.gurusingapore.com, https://admin.gurusingapore.com"
+          "value": "https://www.gurusingapore.com, https://sg44admin.gurusingapore.com"
         },
         {
           "key": "Access-Control-Allow-Methods",
@@ -53,13 +53,17 @@
       "has": [
         {
           "type": "host",
-          "value": "admin.gurusingapore.com"
+          "value": "sg44admin.gurusingapore.com"
         }
       ],
       "headers": [
         {
           "key": "X-Admin-Subdomain",
           "value": "true"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
         },
         {
           "key": "Cache-Control",
@@ -95,7 +99,7 @@
       "has": [
         {
           "type": "host",
-          "value": "admin.gurusingapore.com"
+          "value": "sg44admin.gurusingapore.com"
         }
       ],
       "destination": "/$1"
