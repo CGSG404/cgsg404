@@ -21,7 +21,7 @@ export default async function AdminLayout({
 
   // In preview/dev, allow accessing admin without forcing sign-in to validate UI flows
   const isProduction = process.env.VERCEL_ENV === 'production';
-  if (!session && isProduction) {
+  if (isProduction && !session) {
     redirect('/signin');
   }
 
@@ -33,10 +33,13 @@ export default async function AdminLayout({
     .filter(Boolean);
 
   const userEmail = (session?.user?.email || '').toLowerCase();
-  const isAdmin = allowedEmails.length > 0 ? allowedEmails.includes(userEmail) : !isProduction; // allow in preview/dev
-
-  if (!isAdmin) {
-    redirect('/');
+  // Preview/dev: always allow access to admin (whitelist ignored)
+  // Production: enforce email whitelist when provided
+  if (isProduction) {
+    const isAdmin = allowedEmails.length > 0 && allowedEmails.includes(userEmail);
+    if (!isAdmin) {
+      redirect('/');
+    }
   }
 
   return (
@@ -50,9 +53,11 @@ export default async function AdminLayout({
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                {session.user.email}
-              </span>
+              {session?.user?.email && (
+                <span className="text-sm text-gray-600">
+                  {session.user.email}
+                </span>
+              )}
               <form action="/auth/signout" method="post">
                 <button
                   type="submit"
